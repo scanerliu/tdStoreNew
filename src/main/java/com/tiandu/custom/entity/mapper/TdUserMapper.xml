@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tiandu.custom.entity.mapper.TdUserMapper" >
+  <resultMap id="BaseResultMap" type="com.tiandu.custom.entity.TdUser" >
+    <id column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="uname" property="uname" jdbcType="VARCHAR" />
+    <result column="upassword" property="upassword" jdbcType="VARCHAR" />
+    <result column="ustatus" property="ustatus" jdbcType="TINYINT" />
+    <result column="utype" property="utype" jdbcType="TINYINT" />
+    <!-- 进行 多表关联插叙，先关联user和role -->
+	<collection property="roleSet" column="roleid" ofType="com.tiandu.custom.entity.TdRole">
+		<id property="id" column="ROLE_ID"/>
+		<result property="name" column="ROLE_NAME"/>
+		<!-- 再在role中关联role和permission -->
+		<collection property="permissionSet" column="permissionid" ofType="com.tiandu.custom.entity.TdPermission">
+			<id property="id" column="permission_id"/>
+			<result property="name" column="permission_name"/>
+		</collection>
+	</collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    uid, uname, upassword, ustatus, utype
+  </sql>
+  <sql id="Base_Role_Column_List" >
+    SELECT u.uid, u.uname,u.upassword,r.id as ROLE_ID, r.name as ROLE_NAME, p.id as PERMISSION_ID, p.name as PERMISSION_NAME  
+	FROM td_user as u, td_role as r, td_permission as p, td_role_permission as pr, td_user_role as ru WHERE
+	u.uid = ru.uid AND r.id = ru.rid AND p.id = pr.pid AND r.id = pr.rid
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_user
+    where uid = #{uid,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByUname" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <include refid="Base_Role_Column_List" />
+    and u.uname = #{uname,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from td_user
+    where uid = #{uid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tiandu.custom.entity.TdUser" >
+    <selectKey resultType="java.lang.Integer" keyProperty="uid" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into td_user (uname, upassword, ustatus, 
+      utype)
+    values (#{uname,jdbcType=VARCHAR}, #{upassword,jdbcType=VARCHAR}, #{ustatus,jdbcType=TINYINT}, 
+      #{utype,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tiandu.custom.entity.TdUser" >
+    <selectKey resultType="java.lang.Integer" keyProperty="uid" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into td_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uname != null" >
+        uname,
+      </if>
+      <if test="upassword != null" >
+        upassword,
+      </if>
+      <if test="ustatus != null" >
+        ustatus,
+      </if>
+      <if test="utype != null" >
+        utype,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uname != null" >
+        #{uname,jdbcType=VARCHAR},
+      </if>
+      <if test="upassword != null" >
+        #{upassword,jdbcType=VARCHAR},
+      </if>
+      <if test="ustatus != null" >
+        #{ustatus,jdbcType=TINYINT},
+      </if>
+      <if test="utype != null" >
+        #{utype,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tiandu.custom.entity.TdUser" >
+    update td_user
+    <set >
+      <if test="uname != null" >
+        uname = #{uname,jdbcType=VARCHAR},
+      </if>
+      <if test="upassword != null" >
+        upassword = #{upassword,jdbcType=VARCHAR},
+      </if>
+      <if test="ustatus != null" >
+        ustatus = #{ustatus,jdbcType=TINYINT},
+      </if>
+      <if test="utype != null" >
+        utype = #{utype,jdbcType=TINYINT},
+      </if>
+    </set>
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tiandu.custom.entity.TdUser" >
+    update td_user
+    set uname = #{uname,jdbcType=VARCHAR},
+      upassword = #{upassword,jdbcType=VARCHAR},
+      ustatus = #{ustatus,jdbcType=TINYINT},
+      utype = #{utype,jdbcType=TINYINT}
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+</mapper>

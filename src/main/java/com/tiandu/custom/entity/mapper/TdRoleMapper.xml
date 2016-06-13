@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tiandu.custom.entity.mapper.TdRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.tiandu.custom.entity.TdRole" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <collection property="permissionSet" column="permissionid" ofType="com.tiandu.custom.entity.TdPermission">
+        <id property="id" column="permission_id"/>
+        <result property="name" column="permission_name"/>
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_role
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByPrimaryKeyPermiision" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT r.id, r.name , p.id as PERMISSION_ID, p.name as PERMISSION_NAME  
+    FROM td_role as r, td_permission as p, td_role_permission as pr WHERE
+    p.id = pr.pid AND r.id = pr.rid and r.id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.custom.search.TdRoleSearchCriteria" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_role
+    where 1=1 
+  </select>
+  <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.custom.search.TdRoleSearchCriteria" >
+    select count(id)
+    from td_role
+    where 1=1 
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from td_role
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tiandu.custom.entity.TdRole" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into td_role (name)
+    values (#{name,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tiandu.custom.entity.TdRole" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into td_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tiandu.custom.entity.TdRole" >
+    update td_role
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tiandu.custom.entity.TdRole" >
+    update td_role
+    set name = #{name,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
