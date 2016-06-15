@@ -5,21 +5,17 @@
 <div class="J_tablelist table_list">
 <table width="100%" cellspacing="0">
 <thead>
-    <tr>
-        <th width="8"><input type="checkbox" class="J_checkall" id="J_checkall" name="checkall"></th><th align="left">全部选择/取消</th>
-    </tr>
-<thead>
+<tr>
+<th width="8"><input type="checkbox" class="J_checkall" id="J_checkall" name="checkall"></th>
+<th align="left">全部选择/取消</th>
+</tr>
+</thead>
+</table>
+<ul id="menuTree"></ul>
+<table width="100%" cellspacing="0">
 <tbody>
-    <#if permissionList??>
-    <#list permissionList as permission>
     <tr>
-        <td width="8"><input type="checkbox" value="${permission.id}" name="permissionList[${permission_index}].id" class="J_checkitem" <#if role?? && role.hasPermissionId(permission.id)==true>checked=checked</#if>></td>
-        <td align="left">${permission.title!''}</td>
-    </tr>
-    </#list>
-    </#if>
-    <tr>
-        <td><input type="hidden" name="id" value="${role.id!''}"></td>
+        <td width="8"><input type="hidden" id="roleId" name="id" value="${role.id!''}"></td>
         <td>
             <button type="button" class="d-button" onclick="savePermissions()">保存</button>
         </td>
@@ -31,12 +27,54 @@
 </div>
 <script>
 $(function(){
-$("#permissionForm #J_checkall").click(function() {
-        $("#permissionForm :input[class='J_checkitem']").prop("checked",this.checked); 
+	var menuData = ${jsonTree};
+	
+	$("#permissionForm #J_checkall").click(function() {
+        treeChecked(this.checked); 
     });
-    var $subBox = $("#permissionForm :input[class='J_checkitem']");
-    $subBox.click(function(){
-        $("#permissionForm #J_checkall").prop("checked",$subBox.length == $("#permissionForm input[name='J_checkitem']:checked").length ? true : false);
-    });
+    $('#menuTree').tree({
+	    lines:true,
+	    checkbox:true,
+	    animate:true,
+	    cascadeCheck: false,
+		data: menuData,
+		onCheck: function (node, checked) {
+            if (checked) {
+                var parentNode = $("#menuTree").tree('getParent', node.target);
+                if (parentNode != null) {
+                    $("#menuTree").tree('check', parentNode.target);
+                }
+            } else {
+                var childNode = $("#menuTree").tree('getChildren', node.target);
+                if (childNode.length > 0) {
+                    for (var i = 0; i < childNode.length; i++) {
+                        $("#menuTree").tree('uncheck', childNode[i].target);
+                    }
+                }
+            }
+        }
+	});
+	
 });
+function treeChecked(checked){
+		var roots = $('#menuTree').tree('getRoots');//返回tree的所有根节点数组  
+	    if (checked) {  
+	        for ( var i = 0; i < roots.length; i++) {  
+	            var node = $('#menuTree').tree('find', roots[i].id);//查找节点  
+	            $('#menuTree').tree('check', node.target);//将得到的节点选中  
+	            var childNode = $("#menuTree").tree('getChildren', node.target);
+                if (childNode.length > 0) {
+                    for (var j = 0; j < childNode.length; j++) {
+                        $("#menuTree").tree('check', childNode[j].target);
+                    }
+                }
+	        }  
+	    } else {  
+	        for ( var i = 0; i < roots.length; i++) {  
+	            var node = $('#menuTree').tree('find', roots[i].id);  
+	            $('#menuTree').tree('uncheck', node.target);  
+	        }  
+	    }  
+		
+	}
 </script>

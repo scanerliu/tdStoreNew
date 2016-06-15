@@ -11,11 +11,11 @@
     <result column="sort" property="sort" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="BIT" />
     <result column="type" property="type" jdbcType="TINYINT" />
-    <result column="model_name" property="modelName" jdbcType="VARCHAR" />
     <result column="action_name" property="actionName" jdbcType="VARCHAR" />
+    <result column="display" property="display" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, title, url, parent_id, level, sort, status, type, model_name, action_name
+    id, name, title, url, parent_id, level, sort, status, type, display, action_name
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -31,6 +31,7 @@
     <if test="parentId != null" >
         and parent_id=#{parentId,jdbcType=INTEGER}
     </if>
+    order by sort asc
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from td_menu
@@ -42,12 +43,10 @@
     </selectKey>
     insert into td_menu (name, title, url, 
       parent_id, level, sort, 
-      status, type, model_name, 
-      action_name)
+      status, type, action_name,display)
     values (#{name,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
       #{parentId,jdbcType=INTEGER}, #{level,jdbcType=TINYINT}, #{sort,jdbcType=INTEGER}, 
-      #{status,jdbcType=BIT}, #{type,jdbcType=TINYINT}, #{modelName,jdbcType=VARCHAR}, 
-      #{actionName,jdbcType=VARCHAR})
+      #{status,jdbcType=BIT}, #{type,jdbcType=TINYINT}, #{actionName,jdbcType=VARCHAR}, #{display,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.tiandu.menu.entity.TdMenu" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -80,7 +79,7 @@
         type,
       </if>
       <if test="modelName != null" >
-        model_name,
+        display,
       </if>
       <if test="actionName != null" >
         action_name,
@@ -111,8 +110,8 @@
       <if test="type != null" >
         #{type,jdbcType=TINYINT},
       </if>
-      <if test="modelName != null" >
-        #{modelName,jdbcType=VARCHAR},
+      <if test="display != null" >
+        #{display,jdbcType=TINYINT},
       </if>
       <if test="actionName != null" >
         #{actionName,jdbcType=VARCHAR},
@@ -146,8 +145,8 @@
       <if test="type != null" >
         type = #{type,jdbcType=TINYINT},
       </if>
-      <if test="modelName != null" >
-        model_name = #{modelName,jdbcType=VARCHAR},
+      <if test="display != null" >
+        display = #{display,jdbcType=TINYINT},
       </if>
       <if test="actionName != null" >
         action_name = #{actionName,jdbcType=VARCHAR},
@@ -165,7 +164,7 @@
       sort = #{sort,jdbcType=INTEGER},
       status = #{status,jdbcType=BIT},
       type = #{type,jdbcType=TINYINT},
-      model_name = #{modelName,jdbcType=VARCHAR},
+      display = #{display,jdbcType=TINYINT},
       action_name = #{actionName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>

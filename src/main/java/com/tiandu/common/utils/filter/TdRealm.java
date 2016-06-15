@@ -20,6 +20,7 @@ import com.tiandu.custom.entity.TdPermission;
 import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.service.TdUserService;
+import com.tiandu.menu.entity.TdMenu;
 
 public class TdRealm extends AuthorizingRealm {
 
@@ -47,8 +48,8 @@ public class TdRealm extends AuthorizingRealm {
 	    while(it.hasNext()){
 	    	TdRole role = it.next();
 	    	roles.add(role.getName());
-			for(TdPermission per:role.getPermissionSet()){
-				permissions.add(per.getName());
+			for(TdMenu per:role.getMenuSet()){
+				permissions.add(per.getActionName());
 			}
 	    }
 

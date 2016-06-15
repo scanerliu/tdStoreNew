@@ -16,7 +16,7 @@
     <tr>
         <td><input type="hidden" name="id" value="${role.id!''}"></td>
         <td>
-            <button type="button" class="loginbtn" onclick="saveRole()">保存</button>
+            <button type="button" class="d-button" onclick="saveRole()">保存</button>
         </td>
     </tr>
 </table>

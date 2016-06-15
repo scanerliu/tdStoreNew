@@ -38,7 +38,7 @@
 </div>
 <div class="btn_wrap_fixed">
 <#assign pageId="Roles" />
-<#include "/common/common_postpage.ftl" />
+<#include "/admin/common/common_postpage.ftl" />
 </div>
 <script>
 $(function(){

@@ -81,6 +81,7 @@
 	    <tx:method name="query*" propagation="REQUIRED" />
 	    <tx:method name="insert*" propagation="REQUIRED" />
 	    <tx:method name="update*" propagation="REQUIRED" />
+	    <tx:method name="save*" propagation="REQUIRED" />
 	  </tx:attributes>
 	</tx:advice>
   

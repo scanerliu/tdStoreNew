@@ -9,7 +9,7 @@ function searchRoles(f){
 	$("#results").load(url,loadData);
 }
 
-function gotoPageRoles(num){
+function fnGotoPageRoles(num){
 	searchRoles(false);
 }
 
@@ -78,7 +78,20 @@ function editPermissions(id){
 
 function savePermissions(){
 	var url = basePath+"/admin/role/savepermission";
-	var postData = $("#permissionForm").serializeArray();
+	var nodes = $('#permissionForm #menuTree').tree('getChecked');
+	var s = '';
+	for(var i=0; i<nodes.length; i++){
+		if(nodes[i].id>0){
+			if (s != '') {s += ',';}
+			s += nodes[i].id;
+		}
+	}
+	var roleId = $("#permissionForm #roleId").val();
+	if(roleId==""||roleId==undefined){
+		$.messager.alert('消息提醒','角色未选择，请重新操作!');
+		return ;
+	}
+	var postData = {"id":roleId,"menuIds":s};
 	$.post(url,postData,savePermissionsCallback,"text");
 }
 

@@ -37,7 +37,7 @@
   <insert id="insertRolePermissions" useGeneratedKeys="true" parameterType="com.tiandu.custom.entity.TdRole">  
     insert into td_role_permission (rid, pid)   
     values  
-    <foreach collection="permissionList" item="item" index="index" separator="," >  
+    <foreach collection="menuList" item="item" index="index" separator="," >  
         (#{id},#{item.id})  
     </foreach>  
   </insert>  

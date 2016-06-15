@@ -7,9 +7,7 @@
 <div id="rightlist">
 <form id="rolelistform">
 <div id="results"></div>
-</form
-<div id="w" class="easyui-window" data-options="title:'Inline Window',inline:true" style="width:250px;height:150px;padding:10px">
-</div>
+</form>
 </div>
 <div id="rightform"></div>
 

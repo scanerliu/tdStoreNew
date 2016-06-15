@@ -1,18 +1,22 @@
 package com.tiandu.custom.service.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tiandu.common.db.DBContextHolder;
+import com.tiandu.custom.entity.TdPermission;
 import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.entity.TdRolePermission;
 import com.tiandu.custom.entity.mapper.TdRoleMapper;
 import com.tiandu.custom.entity.mapper.TdRolePermissionMapper;
 import com.tiandu.custom.search.TdRoleSearchCriteria;
 import com.tiandu.custom.service.TdRoleService;
+import com.tiandu.menu.entity.TdMenu;
 
 /**
  * 
@@ -64,9 +68,26 @@ public class TdRoleServiceImpl implements TdRoleService {
 	public Integer saveRolePermission(TdRole role) {
 		if(null!=role&&null!=role.getId()){
 			rolePermissionMapper.deleteByRole(role);
-			if(null!=role.getPermissionList()&&role.getPermissionList().size()>0){
-				role.getPermissionList().removeAll(Collections.singleton(null));
-				rolePermissionMapper.insertRolePermissions(role);
+			if(StringUtils.isNotEmpty(role.getMenuIds())){
+				String[] menuIds =  role.getMenuIds().split(",");
+				List<TdMenu> menuList = new ArrayList<TdMenu>();
+				for(String id : menuIds){
+					if(StringUtils.isNotEmpty(id)){
+						try {
+							Integer mid = Integer.valueOf(id);
+							TdMenu menu = new TdMenu();
+							menu.setId(mid);
+							menuList.add(menu);
+						} catch (NumberFormatException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+				if(menuList.size()>0){
+					role.setMenuList(menuList);
+					rolePermissionMapper.insertRolePermissions(role);
+				}
 			}
 		}
 		return null;

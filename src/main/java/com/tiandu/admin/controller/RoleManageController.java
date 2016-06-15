@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.shiro.authc.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -16,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.tiandu.custom.entity.TdPermission;
+import com.google.gson.Gson;
 import com.tiandu.custom.entity.TdRole;
-import com.tiandu.custom.entity.TdRolePermission;
-import com.tiandu.custom.search.TdPermissionSearchCriteria;
 import com.tiandu.custom.search.TdRoleSearchCriteria;
-import com.tiandu.custom.service.TdPermissionService;
 import com.tiandu.custom.service.TdRoleService;
 import com.tiandu.custom.service.TdUserService;
+import com.tiandu.menu.entity.TdMenu;
+import com.tiandu.menu.search.TdMenuSearchCriteria;
+import com.tiandu.menu.service.TdMenuService;
 
 @Controller
 @RequestMapping("/admin/role")
@@ -35,7 +34,7 @@ public class RoleManageController {
 	private TdUserService tdUserService;
 	
 	@Autowired
-	private TdPermissionService tdPermissionService;
+	private TdMenuService tdMenuService;
 	
 	@Autowired
 	private TdRoleService tdRoleService;
@@ -79,13 +78,16 @@ public class RoleManageController {
 		}
 		TdRole rolep = tdRoleService.findOneWithPermiisions(roleId);
 		if(null!=rolep){
-			role.setPermissionSet(rolep.getPermissionSet());
+			role.setMenuSet(rolep.getMenuSet());
 		}
-		TdPermissionSearchCriteria sc = new TdPermissionSearchCriteria();
-		sc.setFlag(false);
-		List<TdPermission> permissionList = tdPermissionService.findBySearchCriteria(sc);
+		//获取菜单目录树
+		List<TdMenu> menuList = tdMenuService.getMenuTreeAll();
+		//jsonTree转换
+		String jsonTree = tdMenuService.getGsonTree(role,menuList);
+		
 		modelMap.addAttribute("role", role);
-		modelMap.addAttribute("permissionList", permissionList);
+		modelMap.addAttribute("menuList", menuList);
+		modelMap.addAttribute("jsonTree", jsonTree);
 		return "/admin/role/permissionform";
 	}
 	

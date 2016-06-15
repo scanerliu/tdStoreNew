@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.tiandu.menu.entity.TdMenu;
+
 /**
  * 
  * @author Administrator
@@ -17,12 +19,13 @@ public class TdRole {
 	
 	private String title;
 
-	private Set<TdPermission> permissionSet = new HashSet<TdPermission>();
+	private Set<TdMenu> menuSet = new HashSet<TdMenu>();
 	
 	/**
 	 * 后台保存权限使用
 	 */
-	private List<TdPermission> permissionList = new ArrayList<TdPermission>();
+	private List<TdMenu> menuList = new ArrayList<TdMenu>();
+	private String menuIds; //多个menuId 用逗号隔开
 
 	public Integer getId() {
 		return id;
@@ -48,25 +51,33 @@ public class TdRole {
 		this.title = title;
 	}
 
-	public Set<TdPermission> getPermissionSet() {
-		return permissionSet;
+	public Set<TdMenu> getMenuSet() {
+		return menuSet;
 	}
 
-	public void setPermissionSet(Set<TdPermission> permissionSet) {
-		this.permissionSet = permissionSet;
-	}
-	
-	public List<TdPermission> getPermissionList() {
-		return permissionList;
+	public void setMenuSet(Set<TdMenu> menuSet) {
+		this.menuSet = menuSet;
 	}
 
-	public void setPermissionList(List<TdPermission> permissionList) {
-		this.permissionList = permissionList;
+	public List<TdMenu> getMenuList() {
+		return menuList;
+	}
+
+	public void setMenuList(List<TdMenu> menuList) {
+		this.menuList = menuList;
+	}
+
+	public String getMenuIds() {
+		return menuIds;
+	}
+
+	public void setMenuIds(String menuIds) {
+		this.menuIds = menuIds;
 	}
 
 	public Boolean hasPermissionId(Integer permId){
-		if(null!=this.permissionSet){
-			for(TdPermission per : this.permissionSet){
+		if(null!=this.getMenuSet()){
+			for(TdMenu per : this.getMenuSet()){
 				if(per.getId().equals(permId)){
 					return true;
 				}

@@ -21,9 +21,8 @@ public class TdMenu {
 
     private Byte type;
 
-    private String modelName;
-
     private String actionName;
+    private Byte display;
     
     private List<TdMenu> subList;
 
@@ -99,14 +98,6 @@ public class TdMenu {
         this.type = type;
     }
 
-    public String getModelName() {
-        return modelName;
-    }
-
-    public void setModelName(String modelName) {
-        this.modelName = modelName == null ? null : modelName.trim();
-    }
-
     public String getActionName() {
         return actionName;
     }
@@ -114,6 +105,14 @@ public class TdMenu {
     public void setActionName(String actionName) {
         this.actionName = actionName == null ? null : actionName.trim();
     }
+
+	public Byte getDisplay() {
+		return display;
+	}
+
+	public void setDisplay(Byte display) {
+		this.display = display;
+	}
 
 	public List<TdMenu> getSubList() {
 		return subList;
