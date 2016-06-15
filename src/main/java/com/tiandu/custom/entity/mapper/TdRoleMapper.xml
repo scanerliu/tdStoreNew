@@ -4,13 +4,14 @@
   <resultMap id="BaseResultMap" type="com.tiandu.custom.entity.TdRole" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
     <collection property="permissionSet" column="permissionid" ofType="com.tiandu.custom.entity.TdPermission">
         <id property="id" column="permission_id"/>
         <result property="name" column="permission_name"/>
     </collection>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name
+    id, name, title
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -44,8 +45,8 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into td_role (name)
-    values (#{name,jdbcType=VARCHAR})
+    insert into td_role (name, title)
+    values (#{name,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tiandu.custom.entity.TdRole" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -56,10 +57,16 @@
       <if test="name != null" >
         name,
       </if>
+      <if test="title != null" >
+        title,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -69,12 +76,15 @@
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
       </if>
+      <if test="title != null" >
+        name = #{title,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tiandu.custom.entity.TdRole" >
     update td_role
-    set name = #{name,jdbcType=VARCHAR}
+    set name = #{name,jdbcType=VARCHAR}, title = #{title,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

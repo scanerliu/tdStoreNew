@@ -32,8 +32,12 @@ public class TdRealm extends AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		String username = (String) principals.getPrimaryPrincipal();
+		TdUser user = tdUserService.selectByUname(username);
 	    
-	    Set<TdRole> roleSet =  tdUserService.selectByUname(username).getRoleSet();
+	    Set<TdRole> roleSet =  new HashSet<TdRole>();
+	    if(null!=user && null!= user.getRoleSet()){
+	    	roleSet = user.getRoleSet();
+	    }
 	    //角色名的集合
 	    Set<String> roles = new HashSet<String>();
 	    //权限名的集合

@@ -4,6 +4,8 @@ public class TdPermission {
 	private Integer id;
 
 	private String name;
+	
+	private String title;
 
 	public Integer getId() {
 		return id;
@@ -19,6 +21,14 @@ public class TdPermission {
 
 	public void setName(String name) {
 		this.name = name == null ? null : name.trim();
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	@Override

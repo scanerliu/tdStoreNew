@@ -1,16 +1,20 @@
 <#import "/common/app.ftl" as app>
 <#if menuList??>
 <#list menuList as menu>
+	<@shiro.hasPermission name="${menu.modelName!''}_${menu.actionName!''}">
     <h3 class="f14">
         <span class="J_switchs cu on" title="展开或关闭"></span>${menu.name!''}
     </h3>
     <#if menu.subList??>
     <ul>
         <#list menu.subList as menu>
+        <@shiro.hasPermission name="${menu.modelName!''}_${menu.actionName!''}">
         <li class="sub_menu"><a data-id="${menu.id!''}" data-uri="${app.basePath}${menu.url!''}" href="javascript:;" title="${menu.name!''}">${menu.name!''}</a></li>
+        </@shiro.hasPermission>
         </#list>
     </ul>
     </#if>
+    </@shiro.hasPermission>
 </#list>
 <script>
 $(function(){

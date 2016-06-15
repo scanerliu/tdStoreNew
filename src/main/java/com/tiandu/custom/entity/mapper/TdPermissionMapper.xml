@@ -4,15 +4,22 @@
   <resultMap id="BaseResultMap" type="com.tiandu.custom.entity.TdPermission" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name
+    id, name, title
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from td_permission
     where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.custom.search.TdPermissionSearchCriteria" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_permission
+    where 1=1 
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from td_permission
@@ -22,8 +29,8 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into td_permission (name)
-    values (#{name,jdbcType=VARCHAR})
+    insert into td_permission (name,title)
+    values (#{name,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tiandu.custom.entity.TdPermission" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -34,10 +41,16 @@
       <if test="name != null" >
         name,
       </if>
+      <if test="title != null" >
+        title,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -47,12 +60,15 @@
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
       </if>
+      <if test="title != null" >
+        name = #{title,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tiandu.custom.entity.TdPermission" >
     update td_permission
-    set name = #{name,jdbcType=VARCHAR}
+    set name = #{name,jdbcType=VARCHAR}, title=#{title,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

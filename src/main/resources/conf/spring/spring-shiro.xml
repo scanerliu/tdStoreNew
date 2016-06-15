@@ -61,7 +61,7 @@
 				/index/getVerifyCodeImage=anon
 				/main**=authc
 				/user/**=authc
-				/admin/**=authc,roles[admin],perms[manage]
+				/admin/**=authc,roles[admin]<!-- ,perms[manage] -->
 			</value>
 		</property>
 	</bean>

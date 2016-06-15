@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="${app.basePath}/static/js/easyui/easyui.css"/>
     <script src="${app.basePath}/static/js/jquery-1.12.3.min.js" type="text/javascript"></script>
     <script src="${app.basePath}/static/js/easyui/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="${app.basePath}/static/js/admin/core.js" type="text/javascript"></script>
     <script src="${app.basePath}/static/js/admin/index.js" type="text/javascript"></script>
 </head>
 <body>
@@ -28,7 +29,9 @@
     <ul class="nav white" id="J_tmenu">
         <#if mainList??>
         <#list mainList as menu>
+        	<@shiro.hasPermission name="${menu.modelName!''}_${menu.actionName!''}">
             <li class="top_menu"><a href="javascript:;" data-id="${menu.id!''}" hidefocus="true" style="outline:none;">${menu.name!''}</a></li>
+            </@shiro.hasPermission>
         </#list>
         </#if>
     </ul>

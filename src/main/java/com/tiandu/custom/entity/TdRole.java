@@ -1,14 +1,28 @@
 package com.tiandu.custom.entity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+/**
+ * 
+ * @author Administrator
+ *
+ */
 public class TdRole {
 	private Integer id;
 
 	private String name;
+	
+	private String title;
 
 	private Set<TdPermission> permissionSet = new HashSet<TdPermission>();
+	
+	/**
+	 * 后台保存权限使用
+	 */
+	private List<TdPermission> permissionList = new ArrayList<TdPermission>();
 
 	public Integer getId() {
 		return id;
@@ -26,12 +40,39 @@ public class TdRole {
 		this.name = name == null ? null : name.trim();
 	}
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 	public Set<TdPermission> getPermissionSet() {
 		return permissionSet;
 	}
 
 	public void setPermissionSet(Set<TdPermission> permissionSet) {
 		this.permissionSet = permissionSet;
+	}
+	
+	public List<TdPermission> getPermissionList() {
+		return permissionList;
+	}
+
+	public void setPermissionList(List<TdPermission> permissionList) {
+		this.permissionList = permissionList;
+	}
+
+	public Boolean hasPermissionId(Integer permId){
+		if(null!=this.permissionSet){
+			for(TdPermission per : this.permissionSet){
+				if(per.getId().equals(permId)){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override

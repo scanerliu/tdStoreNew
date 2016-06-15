@@ -5,6 +5,11 @@
     <result column="rid" property="rid" jdbcType="INTEGER" />
     <result column="pid" property="pid" jdbcType="INTEGER" />
   </resultMap>
+  <select id="findRolePermissionsByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select rid,pid
+    from td_role_permission
+    where rid = #{id,jdbcType=INTEGER}
+  </select>
   <insert id="insert" parameterType="com.tiandu.custom.entity.TdRolePermission" >
     insert into td_role_permission (rid, pid)
     values (#{rid,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER})
@@ -28,4 +33,17 @@
       </if>
     </trim>
   </insert>
+  
+  <insert id="insertRolePermissions" useGeneratedKeys="true" parameterType="com.tiandu.custom.entity.TdRole">  
+    insert into td_role_permission (rid, pid)   
+    values  
+    <foreach collection="permissionList" item="item" index="index" separator="," >  
+        (#{id},#{item.id})  
+    </foreach>  
+  </insert>  
+  
+  <delete id="deleteByRole" parameterType="com.tiandu.custom.entity.TdRole" >
+    delete from td_role_permission
+    where rid = #{id,jdbcType=INTEGER}
+  </delete>
 </mapper>
