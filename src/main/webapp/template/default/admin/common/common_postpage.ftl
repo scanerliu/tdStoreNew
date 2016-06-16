@@ -15,10 +15,10 @@ function gotopage${pageId!''}(num){
 </script>
 <div id="pages">
         显示 <input name="pageSize" type="text" value="${sc.pageSize}" onblur="gotopage${pageId!''}(${sc.pageNo})" class="pagenum">条/页
-    ${sc.totalCount!"0"} 条记录 <#if sc.totalPageCount==0>0<#else>${sc.pageNo+1}</#if>/${sc.totalPageCount} 页
+    ${sc.totalCount!"0"} 条记录 <#if sc.totalPageCount==0>0<#else>${sc.pageNo}</#if>/${sc.totalPageCount} 页
     <#if sc??>
             <#assign continueEnter=false>
-            <#if sc.pageNo == 0>
+            <#if sc.pageNo == 1>
             <#else>
                  <a href="javascript:;" onclick="gotopage${pageId!''}(${sc.pageNo-1})">上一页</a>
             </#if>
@@ -27,7 +27,7 @@ function gotopage${pageId!''}(num){
             <#assign continueEnter=false>
             <#if sc.totalPageCount gt 0>
                 <#list 1..sc.totalPageCount as page>
-                    <#if page <= 3 || (sc.totalPageCount-page) < 3 || (sc.pageNo+1-page)?abs<3 >
+                    <#if page <= 3 || (sc.totalPageCount-page) < 3 || (sc.pageNo-page)?abs<3 >
                         <#if page == sc.pageNo>
                             <span class="current">${page}</span>
                         <#else>
@@ -43,7 +43,7 @@ function gotopage${pageId!''}(num){
                 </#list>
             </#if>
         </#if>
-        <#if sc.pageNo+1 == sc.totalPageCount || sc.totalPageCount==0>
+        <#if sc.pageNo == sc.totalPageCount || sc.totalPageCount==0>
         <#else>
             <a href="javascript:;" onclick="gotopage${pageId!''}(${sc.pageNo+1})">下一页 &gt;</a>
         </#if>

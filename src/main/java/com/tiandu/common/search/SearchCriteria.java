@@ -19,7 +19,7 @@ public class SearchCriteria<T> implements Serializable {
 	/**
 	 * 当前页码
 	 */
-	private int pageNo = 0;
+	private int pageNo = 1;
 
 	/**
 	 * 每页的记录数
