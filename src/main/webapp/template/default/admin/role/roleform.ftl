@@ -7,12 +7,12 @@
 <table>
     <tr>
         <td>角色名称：</td>
-        <td><input type="text" name="name" class="easyui-textbox" value="${role.name!''}" style="width:200px;height:30px" data-options="required:true" validType="length[2,10]"></td>
+        <td><input type="text" name="name" class="easyui-textbox" value="${role.name!''}" style="width:200px;height:30px" data-options="required:true" validType="length[2,20]"></td>
     </tr>
     <tr>
         <td>角色说明：</td>
         <td>
-            <input type="text" name="title" class="easyui-textbox" value="${role.title!''}" style="width:200px;height:30px" data-options="required:true" validType="length[2,10]">
+            <input type="text" name="title" class="easyui-textbox" value="${role.title!''}" style="width:200px;height:30px" data-options="required:true" validType="length[2,20]">
         </td>
     </tr>
     <tr>
