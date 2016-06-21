@@ -69,6 +69,7 @@ a:hover { text-decoration: underline; }
 .pad_6 { padding: 6px; overflow: hidden }
 .pad_10 { padding: 10px; overflow: hidden }
 .pad_lr_10 { padding: 0 10px }
+.overflowauto {height: 800px;overflow: auto;}
 .pad_lr_6 { padding: 0 6px }
 .lh20 { line-height: 20px }
 .lh22 { line-height: 22px }
@@ -257,7 +258,7 @@ vertical-align: middle; background: url('../images/msg_bg.png') no-repeat; color
 .admin_unfull { background-position: -27px 3px; }
 .flush_cache, .admin_map { width: 60px; color: #989898; text-align: center; }
 .admin_map { width: 62px; }
-.rframe_b { background: #fff; border: 1px solid #c2d1d8; position: relative; overflow: hidde; }
+.rframe_b { background: #fff; border: 1px solid #c2d1d8; position: relative; overflow: auto; }
 .subnav { padding: 10px; }
 /*容器样式*/
 .col_tab ul.tab_but { height: 27px; position: relative; bottom: -1px }
@@ -412,3 +413,9 @@ table.table3 { border: none; background: none; }
 table.table3 tr td { padding: 5px 8px; }
 table.table3 tr th { width: 100px; }
 table.table3 thead tr td { background: #eee; color: #333; }
+/*************************地区选择框**************************/
+#district{
+		margin-top: 7px;
+		margin-bottom: 7px;
+		margin-left: 3px; 
+}
