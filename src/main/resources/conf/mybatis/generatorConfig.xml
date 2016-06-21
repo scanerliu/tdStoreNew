@@ -20,7 +20,7 @@
                         connectionURL="jdbc:mysql://localhost:3306/tdstore_com" userId="root"
                         password="root"/>
 
-        <javaModelGenerator targetPackage="com.tiandu.admin.menu.entity"
+        <javaModelGenerator targetPackage="com.tiandu.user.entity"
                             targetProject="tdStore\src\main\java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
