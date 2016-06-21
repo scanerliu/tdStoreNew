@@ -48,5 +48,5 @@ function gotopage${pageId!''}(num){
             <a href="javascript:;" onclick="gotopage${pageId!''}(${sc.pageNo+1})">下一页 &gt;</a>
         </#if>
     </#if>
-    <input type="hidden" name="pageNo" id="sc_page${pageId!''}" value="0"/>
+    <input type="hidden" name="pageNo" id="sc_page${pageId!''}" value="${sc.pageNo}"/>
 </div>

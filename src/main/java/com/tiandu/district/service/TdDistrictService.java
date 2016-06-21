@@ -2,6 +2,8 @@ package com.tiandu.district.service;
 
 import java.util.List;
 
+import com.tiandu.custom.entity.TdRole;
+import com.tiandu.custom.search.TdRoleSearchCriteria;
 import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.search.TdDistrictSearchCriteria;
 
