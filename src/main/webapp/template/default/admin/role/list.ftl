@@ -3,6 +3,7 @@
 <script src="${app.basePath}/static/js/jquery-1.12.3.min.js" type="text/javascript"></script>
 <script src="${app.basePath}/static/js/easyui/jquery.easyui.min.js" type="text/javascript"></script>
 <script src="${app.basePath}/static/js/easyui/easyui-lang-zh_CN.js" type="text/javascript"></script>
+<script src="${app.basePath}/static/js/admin/core.js" type="text/javascript"></script>
 <script src="${app.basePath}/static/js/admin/role/rolelist.js" type="text/javascript"></script>
 <div id="rightlist">
 <form id="rolelistform">
