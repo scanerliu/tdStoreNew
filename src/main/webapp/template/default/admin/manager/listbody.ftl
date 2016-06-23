@@ -1,5 +1,5 @@
 <#import "/common/app.ftl" as app>
-<div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="editRole(0)"><em>添加管理员</em></a>&#12288;</div></div>
+<div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="editManager(0)"><em>添加管理员</em></a>&#12288;</div></div>
 <div class="pad_lr_10">
 <div class="J_tablelist table_list">
 <table width="100%" cellspacing="0">
