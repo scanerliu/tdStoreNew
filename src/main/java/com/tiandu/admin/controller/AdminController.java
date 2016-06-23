@@ -38,8 +38,6 @@ public class AdminController {
 	private final Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired
-	private TdUserService tdUserService;
-	@Autowired
 	private TdMenuService tdMenuService;
 	
 	@RequestMapping("")

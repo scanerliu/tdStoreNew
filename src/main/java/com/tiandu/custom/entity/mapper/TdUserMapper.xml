@@ -5,8 +5,27 @@
     <id column="uid" property="uid" jdbcType="INTEGER" />
     <result column="uname" property="uname" jdbcType="VARCHAR" />
     <result column="upassword" property="upassword" jdbcType="VARCHAR" />
+    <result column="joint_id" property="jointId" jdbcType="VARCHAR" />
+    <result column="unick" property="unick" jdbcType="VARCHAR" />
+    <result column="utel" property="utel" jdbcType="VARCHAR" />
+    <result column="uverification" property="uverification" jdbcType="TINYINT" />
     <result column="ustatus" property="ustatus" jdbcType="TINYINT" />
     <result column="utype" property="utype" jdbcType="TINYINT" />
+    <result column="uparent_id" property="uparentId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP" />
+    <result column="last_login_ip" property="lastLoginIp" jdbcType="VARCHAR" />
+    <result column="uavatar" property="uavatar" jdbcType="VARCHAR" />
+    <result column="uregion_id" property="uregionId" jdbcType="INTEGER" />
+    <result column="uprovince_id" property="uprovinceId" jdbcType="INTEGER" />
+    <result column="uregion_path" property="uregionPath" jdbcType="VARCHAR" />
+    <result column="uaddress" property="uaddress" jdbcType="VARCHAR" />
+    <result column="ubirthday" property="ubirthday" jdbcType="DATE" />
+    <result column="ugenter" property="ugenter" jdbcType="TINYINT" />
+    <result column="membership_id" property="membershipId" jdbcType="INTEGER" />
+    <result column="supplier_type" property="supplierType" jdbcType="TINYINT" />
     <!-- 进行 多表关联插叙，先关联user和role -->
 	<collection property="roleSet" column="roleid" ofType="com.tiandu.custom.entity.TdRole">
 		<id property="id" column="ROLE_ID"/>
@@ -19,7 +38,9 @@
 	</collection>
   </resultMap>
   <sql id="Base_Column_List" >
-    uid, uname, upassword, ustatus, utype
+    uid, uname, upassword, joint_id, unick, utel, uverification, ustatus, utype, uparent_id, 
+    create_time, update_by, update_time, last_login_time, last_login_ip, uavatar, uregion_id, 
+    uprovince_id, uregion_path, uaddress, ubirthday, ugenter, membership_id, supplier_type
   </sql>
   <sql id="Base_Role_Column_List" >
     SELECT u.uid, u.uname,u.upassword,r.id as ROLE_ID, r.name as ROLE_NAME, m.id as MENU_ID, m.action_name as PERMISSION_NAME  
@@ -33,10 +54,46 @@
     from td_user
     where uid = #{uid,jdbcType=INTEGER}
   </select>
+  <select id="selectByPrimaryKeyWithRoles" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT u.uid, u.uname , r.id as ROLE_ID
+    from td_user as u , td_user_role as r 
+    where u.uid=r.uid and uid = #{uid,jdbcType=INTEGER}
+  </select>
   
   <select id="selectByUname" resultMap="BaseResultMap" parameterType="java.lang.String" >
     <include refid="Base_Role_Column_List" />
     and u.uname = #{uname,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.custom.search.TdUserSearchCriteria" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_user
+    where 1=1 
+    <if test="ustatus != null" >
+        and ustatus=#{ustatus,jdbcType=TINYINT}
+    </if>
+    <if test="utype != null" >
+        and utype=#{utype,jdbcType=TINYINT}
+    </if>
+    <if test="name != null" >
+        and name=#{name,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+  <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.custom.search.TdUserSearchCriteria" >
+    select count(uid)
+    from td_user
+    where 1=1 
+    <if test="ustatus != null" >
+        and ustatus=#{ustatus,jdbcType=TINYINT}
+    </if>
+    <if test="utype != null" >
+        and utype=#{utype,jdbcType=TINYINT}
+    </if>
+    <if test="name != null" >
+        and name=#{name,jdbcType=VARCHAR}
+    </if>
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
@@ -47,10 +104,22 @@
     <selectKey resultType="java.lang.Integer" keyProperty="uid" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into td_user (uname, upassword, ustatus, 
-      utype)
-    values (#{uname,jdbcType=VARCHAR}, #{upassword,jdbcType=VARCHAR}, #{ustatus,jdbcType=TINYINT}, 
-      #{utype,jdbcType=TINYINT})
+    insert into td_user (uname, upassword, joint_id, 
+      unick, utel, uverification, 
+      ustatus, utype, uparent_id, 
+      create_time, update_by, update_time, 
+      last_login_time, last_login_ip, uavatar, 
+      uregion_id, uprovince_id, uregion_path, 
+      uaddress, ubirthday, ugenter, 
+      membership_id, supplier_type)
+    values (#{uname,jdbcType=VARCHAR}, #{upassword,jdbcType=VARCHAR}, #{jointId,jdbcType=VARCHAR}, 
+      #{unick,jdbcType=VARCHAR}, #{utel,jdbcType=VARCHAR}, #{uverification,jdbcType=TINYINT}, 
+      #{ustatus,jdbcType=TINYINT}, #{utype,jdbcType=TINYINT}, #{uparentId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{lastLoginTime,jdbcType=TIMESTAMP}, #{lastLoginIp,jdbcType=VARCHAR}, #{uavatar,jdbcType=VARCHAR}, 
+      #{uregionId,jdbcType=INTEGER}, #{uprovinceId,jdbcType=INTEGER}, #{uregionPath,jdbcType=VARCHAR}, 
+      #{uaddress,jdbcType=VARCHAR}, #{ubirthday,jdbcType=DATE}, #{ugenter,jdbcType=TINYINT}, 
+      #{membershipId,jdbcType=INTEGER}, #{supplierType,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.tiandu.custom.entity.TdUser" >
     <selectKey resultType="java.lang.Integer" keyProperty="uid" order="AFTER" >
@@ -64,11 +133,68 @@
       <if test="upassword != null" >
         upassword,
       </if>
+      <if test="jointId != null" >
+        joint_id,
+      </if>
+      <if test="unick != null" >
+        unick,
+      </if>
+      <if test="utel != null" >
+        utel,
+      </if>
+      <if test="uverification != null" >
+        uverification,
+      </if>
       <if test="ustatus != null" >
         ustatus,
       </if>
       <if test="utype != null" >
         utype,
+      </if>
+      <if test="uparentId != null" >
+        uparent_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="lastLoginTime != null" >
+        last_login_time,
+      </if>
+      <if test="lastLoginIp != null" >
+        last_login_ip,
+      </if>
+      <if test="uavatar != null" >
+        uavatar,
+      </if>
+      <if test="uregionId != null" >
+        uregion_id,
+      </if>
+      <if test="uprovinceId != null" >
+        uprovince_id,
+      </if>
+      <if test="uregionPath != null" >
+        uregion_path,
+      </if>
+      <if test="uaddress != null" >
+        uaddress,
+      </if>
+      <if test="ubirthday != null" >
+        ubirthday,
+      </if>
+      <if test="ugenter != null" >
+        ugenter,
+      </if>
+      <if test="membershipId != null" >
+        membership_id,
+      </if>
+      <if test="supplierType != null" >
+        supplier_type,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -78,11 +204,68 @@
       <if test="upassword != null" >
         #{upassword,jdbcType=VARCHAR},
       </if>
+      <if test="jointId != null" >
+        #{jointId,jdbcType=VARCHAR},
+      </if>
+      <if test="unick != null" >
+        #{unick,jdbcType=VARCHAR},
+      </if>
+      <if test="utel != null" >
+        #{utel,jdbcType=VARCHAR},
+      </if>
+      <if test="uverification != null" >
+        #{uverification,jdbcType=TINYINT},
+      </if>
       <if test="ustatus != null" >
         #{ustatus,jdbcType=TINYINT},
       </if>
       <if test="utype != null" >
         #{utype,jdbcType=TINYINT},
+      </if>
+      <if test="uparentId != null" >
+        #{uparentId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginTime != null" >
+        #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginIp != null" >
+        #{lastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="uavatar != null" >
+        #{uavatar,jdbcType=VARCHAR},
+      </if>
+      <if test="uregionId != null" >
+        #{uregionId,jdbcType=INTEGER},
+      </if>
+      <if test="uprovinceId != null" >
+        #{uprovinceId,jdbcType=INTEGER},
+      </if>
+      <if test="uregionPath != null" >
+        #{uregionPath,jdbcType=VARCHAR},
+      </if>
+      <if test="uaddress != null" >
+        #{uaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="ubirthday != null" >
+        #{ubirthday,jdbcType=DATE},
+      </if>
+      <if test="ugenter != null" >
+        #{ugenter,jdbcType=TINYINT},
+      </if>
+      <if test="membershipId != null" >
+        #{membershipId,jdbcType=INTEGER},
+      </if>
+      <if test="supplierType != null" >
+        #{supplierType,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -95,21 +278,99 @@
       <if test="upassword != null" >
         upassword = #{upassword,jdbcType=VARCHAR},
       </if>
+      <if test="jointId != null" >
+        joint_id = #{jointId,jdbcType=VARCHAR},
+      </if>
+      <if test="unick != null" >
+        unick = #{unick,jdbcType=VARCHAR},
+      </if>
+      <if test="utel != null" >
+        utel = #{utel,jdbcType=VARCHAR},
+      </if>
+      <if test="uverification != null" >
+        uverification = #{uverification,jdbcType=TINYINT},
+      </if>
       <if test="ustatus != null" >
         ustatus = #{ustatus,jdbcType=TINYINT},
       </if>
       <if test="utype != null" >
         utype = #{utype,jdbcType=TINYINT},
       </if>
+      <if test="uparentId != null" >
+        uparent_id = #{uparentId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginTime != null" >
+        last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginIp != null" >
+        last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="uavatar != null" >
+        uavatar = #{uavatar,jdbcType=VARCHAR},
+      </if>
+      <if test="uregionId != null" >
+        uregion_id = #{uregionId,jdbcType=INTEGER},
+      </if>
+      <if test="uprovinceId != null" >
+        uprovince_id = #{uprovinceId,jdbcType=INTEGER},
+      </if>
+      <if test="uregionPath != null" >
+        uregion_path = #{uregionPath,jdbcType=VARCHAR},
+      </if>
+      <if test="uaddress != null" >
+        uaddress = #{uaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="ubirthday != null" >
+        ubirthday = #{ubirthday,jdbcType=DATE},
+      </if>
+      <if test="ugenter != null" >
+        ugenter = #{ugenter,jdbcType=TINYINT},
+      </if>
+      <if test="membershipId != null" >
+        membership_id = #{membershipId,jdbcType=INTEGER},
+      </if>
+      <if test="supplierType != null" >
+        supplier_type = #{supplierType,jdbcType=TINYINT},
+      </if>
     </set>
     where uid = #{uid,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tiandu.custom.entity.TdUser" >
     update td_user
-    set uname = #{uname,jdbcType=VARCHAR},
-      upassword = #{upassword,jdbcType=VARCHAR},
+    set unick = #{unick,jdbcType=VARCHAR},
+      utel = #{utel,jdbcType=VARCHAR},
       ustatus = #{ustatus,jdbcType=TINYINT},
-      utype = #{utype,jdbcType=TINYINT}
+      update_by = #{updateBy,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      uavatar = #{uavatar,jdbcType=VARCHAR},
+      uregion_id = #{uregionId,jdbcType=INTEGER},
+      uprovince_id = #{uprovinceId,jdbcType=INTEGER},
+      uregion_path = #{uregionPath,jdbcType=VARCHAR},
+      uaddress = #{uaddress,jdbcType=VARCHAR},
+      ubirthday = #{ubirthday,jdbcType=DATE},
+      ugenter = #{ugenter,jdbcType=TINYINT},
+      membership_id = #{membershipId,jdbcType=INTEGER},
+      supplier_type = #{supplierType,jdbcType=TINYINT}
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <update id="updateManagerByPrimaryKey" parameterType="com.tiandu.custom.entity.TdUser" >
+    update td_user
+    set unick = #{unick,jdbcType=VARCHAR},
+      utel = #{utel,jdbcType=VARCHAR},
+      ustatus = #{ustatus,jdbcType=TINYINT},
+      update_by = #{updateBy,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      ubirthday = #{ubirthday,jdbcType=DATE},
+      ugenter = #{ugenter,jdbcType=TINYINT}
     where uid = #{uid,jdbcType=INTEGER}
   </update>
 </mapper>

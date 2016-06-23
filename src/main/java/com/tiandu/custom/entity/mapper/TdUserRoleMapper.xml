@@ -28,4 +28,15 @@
       </if>
     </trim>
   </insert>
+  <insert id="insertUserRoles" useGeneratedKeys="true" parameterType="com.tiandu.custom.entity.TdUser">  
+    insert into td_user_role (uid, rid)   
+    values  
+    <foreach collection="roleSet" item="item" index="index" separator="," >  
+        (#{uid},#{item.id})  
+    </foreach>  
+  </insert>
+  <delete id="deleteByUser" parameterType="com.tiandu.custom.entity.TdUser" >
+    delete from td_user_role
+    where uid = #{uid,jdbcType=INTEGER}
+  </delete>
 </mapper>

@@ -40,7 +40,7 @@
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
-            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+            <generatedKey column="uid" sqlStatement="Mysql" identity="true" />
         </table>
         <!-- <table tableName="td_user" domainObjectName="TdUser"
                enableCountByExample="false" enableUpdateByExample="false"
