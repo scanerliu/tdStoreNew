@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" class="off">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <meta name="description" content=""/>
     <meta name="keywords" content=""/>
     <meta name="author" content=""/>
