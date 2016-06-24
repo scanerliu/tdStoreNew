@@ -29,9 +29,14 @@ public class TdUserServiceImpl implements TdUserService {
 	TdUserRoleMapper userRoleMapper;
 
 	public int insert(TdUser u) {
-		DBContextHolder.setDbType(DBContextHolder.DB_RW);
 		return userMapper.insert(u);
 	}
+	
+	@Override
+	public int updateByPrimaryKeySelective(TdUser record) {
+		return userMapper.updateByPrimaryKeySelective(record);
+	}
+
 	/**
 	 * 删除用户所有信息
 	 * @param id
@@ -107,6 +112,16 @@ public class TdUserServiceImpl implements TdUserService {
 	@Override
 	public TdUser findOneWithRoles(Integer id) {
 		return userMapper.selectByPrimaryKeyWithRoles(id);
+	}
+	@Override
+	public Integer saveUserPassword(TdUser user) {
+		String password = WebUtils.generatePassword(user.getUname(), user.getUpassword());
+		user.setUpassword(password);
+		return userMapper.saveUserPassword(user);
+	}
+	@Override
+	public Integer saveUserStatus(TdUser user) {
+		return userMapper.saveUserStatus(user);
 	}
 	
 	

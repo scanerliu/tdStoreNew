@@ -8,6 +8,7 @@ import com.tiandu.custom.search.TdUserSearchCriteria;
 public interface TdUserService {
 
 	public int insert(TdUser u);
+	public int updateByPrimaryKeySelective(TdUser record);
 	/**
 	 * 删除用户所有信息
 	 * @param id
@@ -31,4 +32,16 @@ public interface TdUserService {
 	 * @return
 	 */
 	public Integer saveUserRole(TdUser user);
+	/**
+	 * 保存用户密码
+	 * @param user
+	 * @return
+	 */
+	public Integer saveUserPassword(TdUser user);
+	/**
+	 * 保存用户状态
+	 * @param user
+	 * @return
+	 */
+	public Integer saveUserStatus(TdUser user);
 }

@@ -12,9 +12,10 @@
 <th align="left">性别</th>
 <th align="left">状态</th>
 <th align="left">最近登陆时间</th>
+<th align="left">登陆ip</th>
 <th align="left">更新时间</th>
 <th align="left">更新人</th>
-<th width="150">管理操作</th>
+<th width="200">管理操作</th>
 </tr>
 </thead>
 <tbody>
@@ -29,13 +30,30 @@
         <td>${user.getUgenterStr()!''}</td>
         <td>${user.getUstatusStr()!''}</td>
         <td><#if user.lastLoginTime??>${user.lastLoginTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+        <td>${user.lastLoginIp!''}</td>
         <td><#if user.updateTime??>${user.updateTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
         <td><#if user.updateUser??>${user.updateUser.unick!''}</#if></td>
         <td align="center">
-            <#if user.uid!=1><a href="javascript:;" onclick="changePassword(${user.uid})">修改密码</a> | 
-            <a href="javascript:;" onclick="editRoles(${user.uid})">授权</a> | 
-            <a class="J_showdialog" href="javascript:;" onclick="editManager(${user.uid})">编辑</a> | 
-            <a class="J_confirmurl" href="javascript:;" onclick="delManager(${user.uid})">删除</a>
+        	<#if manager.uid==1>
+        		<a href="javascript:;" onclick="changePassword(${user.uid})">修改密码</a> | 
+        		<#if user.ustatus==2>
+        			<a href="javascript:;" onclick="activeManager(${user.uid})">启用</a> | 
+        		<#else>
+        			<a href="javascript:;" onclick="forbiddenManager(${user.uid})">锁定</a> | 
+        		</#if>
+	            <a href="javascript:;" onclick="editRoles(${user.uid})">授权</a> | 
+	            <a class="J_showdialog" href="javascript:;" onclick="editManager(${user.uid})">编辑</a> | 
+	            <a class="J_confirmurl" href="javascript:;" onclick="delManager(${user.uid})">删除</a>
+            <#elseif user.uid!=1>
+            	<a href="javascript:;" onclick="changePassword(${user.uid})">修改密码</a> |
+            	<#if user.ustatus==2>
+        			<a href="javascript:;" onclick="activeManager(${user.uid})">启用</a> | 
+        		<#else>
+        			<a href="javascript:;" onclick="forbiddenManager(${user.uid})">锁定</a> | 
+        		</#if> 
+	            <a href="javascript:;" onclick="editRoles(${user.uid})">授权</a> | 
+	            <a class="J_showdialog" href="javascript:;" onclick="editManager(${user.uid})">编辑</a> | 
+	            <a class="J_confirmurl" href="javascript:;" onclick="delManager(${user.uid})">删除</a>
             </#if>
         </td>
     </tr>

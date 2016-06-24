@@ -26,4 +26,7 @@ public interface TdUserMapper {
     public List<TdUser> findBySearchCriteria(TdUserSearchCriteria sc);
     public Integer 		countByCriteria(TdUserSearchCriteria sc);
     public TdUser selectByPrimaryKeyWithRoles(Integer uid);
+    
+    public int saveUserPassword(TdUser record);
+    public int saveUserStatus(TdUser record);
 }

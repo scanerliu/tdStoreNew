@@ -50,6 +50,8 @@ public class ManagerController extends BaseController {
 		List<TdUser> userList = tdUserService.findBySearchCriteria(sc);
 	    modelMap.addAttribute("userList", userList) ;
 	    modelMap.addAttribute("sc", sc) ;
+	    TdUser manager = this.getCurrentUser();
+	    modelMap.addAttribute("manager", manager) ;
 		return "/admin/manager/listbody";
 	}
 	
@@ -93,11 +95,11 @@ public class ManagerController extends BaseController {
 	
 	@RequestMapping(value="/saverole", method = RequestMethod.POST)
 	@ResponseBody
-	public void saverole(TdUser mananger, HttpServletRequest request, HttpServletResponse response) {
+	public void saverole(TdUser manager, HttpServletRequest request, HttpServletResponse response) {
 		Map<String,String> res = new HashMap<String,String>(); 
-		if(null!=mananger){
+		if(null!=manager){
 		    try {
-		    	tdUserService.saveUserRole(mananger);
+		    	tdUserService.saveUserRole(manager);
 				res.put("code", "1");
 				WebUtils.responseJson(response, res);
 		    }catch (Exception e) {
@@ -155,4 +157,67 @@ public class ManagerController extends BaseController {
 		}
 	}
 	
+	@RequestMapping("/changepassword")
+	public String changepassword(Integer id, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser manager = null;
+		if(null!=id){
+			manager = tdUserService.findOne(id);		    
+		}
+		if(null==manager){
+			modelMap.addAttribute("errmsg", "未找到相关人员，请重新操作！");
+			return "/admin/error";
+		}
+		modelMap.addAttribute("manager", manager);
+		return "/admin/manager/passwordform";
+	}
+	
+	@RequestMapping(value="/savepassword", method = RequestMethod.POST)
+	@ResponseBody
+	public void savepassword(TdUser manager, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>(); 
+		if(null!=manager){
+		    try {
+		    	Date now = new Date();
+		    	TdUser currManager = this.getCurrentUser();
+				manager.setUpdateBy(currManager.getUid());
+				manager.setUpdateTime(now);
+				manager.setCreateTime(now);
+		    	tdUserService.saveUserPassword(manager);
+				res.put("code", "1");
+				WebUtils.responseJson(response, res);
+		    }catch (Exception e) {
+		    	logger.error("角色保存失败错误信息:"+e);
+		    	res.put("code", "0");
+		    	WebUtils.responseJson(response, res);
+		    }
+		}else{
+			res.put("code", "0");
+			WebUtils.responseJson(response, res);
+		}
+	}
+	
+	@RequestMapping(value="/updatestatus", method = RequestMethod.POST)
+	@ResponseBody
+	public void updatestatus(TdUser manager, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>(); 
+		if(null!=manager){
+		    try {
+		    	Date now = new Date();
+		    	TdUser currManager = this.getCurrentUser();
+				manager.setUpdateBy(currManager.getUid());
+				manager.setUpdateTime(now);
+				manager.setCreateTime(now);
+		    	tdUserService.saveUserStatus(manager);
+				res.put("code", "1");
+				WebUtils.responseJson(response, res);
+		    }catch (Exception e) {
+		    	logger.error("角色保存失败错误信息:"+e);
+		    	res.put("code", "0");
+		    	WebUtils.responseJson(response, res);
+		    }
+		}else{
+			res.put("code", "0");
+			WebUtils.responseJson(response, res);
+		}
+	}
 }

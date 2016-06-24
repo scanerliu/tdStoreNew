@@ -28,9 +28,11 @@
         <td><#if role.updateTime??>${role.updateTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
         <td><#if role.updateUser??>${role.updateUser.unick!''}</#if></td>
         <td align="center">
+        	<#if role.id!=2>
             <a href="javascript:;" onclick="editPermissions(${role.id})">授权</a><#if role.id!=1> | 
             <a class="J_showdialog" href="javascript:;" onclick="editRole(${role.id})">编辑</a> | 
             <a class="J_confirmurl" href="javascript:;" onclick="delRole(${role.id})">删除</a>
+            </#if>
             </#if>
         </td>
     </tr>

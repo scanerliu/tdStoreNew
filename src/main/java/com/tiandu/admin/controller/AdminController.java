@@ -1,5 +1,6 @@
 package com.tiandu.admin.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdUser;
-import com.tiandu.custom.service.TdUserService;
 import com.tiandu.custom.vo.LoginForm;
 import com.tiandu.menu.entity.TdMenu;
 import com.tiandu.menu.search.TdMenuSearchCriteria;
@@ -33,7 +34,7 @@ import com.tiandu.menu.service.TdMenuService;
  */
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminController extends BaseController {
 	
 	private final Logger logger = Logger.getLogger(getClass());
 	
@@ -83,6 +84,18 @@ public class AdminController {
 	//	    token.setRememberMe(true);
 		    try {
 		      user.login(token);
+		      Date now = new Date();
+		      String hostip = request.getRemoteHost();
+		      //记录登陆时间 host ip
+		      TdUser muser = tdUserService.selectByUname(cuser.getUname());
+		      if(null!=muser && null!=muser.getUid()){
+			      TdUser upuser = new TdUser();
+			      upuser.setUid(muser.getUid());
+			      upuser.setLastLoginIp(hostip);
+			      upuser.setLastLoginTime(now);
+			      tdUserService.updateByPrimaryKeySelective(upuser);
+		      }
+		      
 		      res.put("code", "1");
 		      WebUtils.responseJson(response, res);
 		      return null;

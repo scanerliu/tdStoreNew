@@ -112,3 +112,55 @@ function changePassword(id){
 	showForm();
 }
 
+function savePassword(id){
+	var f = $('#passwordForm').form('enableValidation').form('validate');
+	if(f){
+		$('#passwordForm').form('submit',{
+			  success : function(data){
+				  var result = eval("("+data+")");
+				  if(result.code==1){
+					  $.messager.alert('消息提醒','密码修改成功。');
+					  returnList();
+				  }else{
+					  $.messager.alert('消息提醒','密码修改失败!');
+				  }
+			  }
+			 });
+	};
+}
+
+/**
+ * 启用账号
+ */
+function activeManager(id){
+	var url = basePath+"/admin/manager/updatestatus";
+	if(id==""||id==undefined){
+		$.messager.alert('消息提醒','管理员未选择，请重新操作!');
+		return ;
+	}
+	var postData = {"uid":id,"ustatus":1};
+	$.post(url,postData,updateCallback,"text");
+}
+/**
+ * 禁用账号
+ */
+function forbiddenManager(id){
+	var url = basePath+"/admin/manager/updatestatus";
+	if(id==""||id==undefined){
+		$.messager.alert('消息提醒','管理员未选择，请重新操作!');
+		return ;
+	}
+	var postData = {"uid":id,"ustatus":2};
+	$.post(url,postData,updateCallback,"text");
+}
+
+function updateCallback(data){
+	var result = eval("("+data+")");
+	if(result.code==1){
+		$.messager.alert('消息提醒','更新成功。');
+		refreshList();
+	}else{
+	  $.messager.alert('消息提醒','更新失败!');
+	}
+}
+
