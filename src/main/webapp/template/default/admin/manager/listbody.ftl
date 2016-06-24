@@ -10,6 +10,10 @@
 <th align="left">管理员账号</th>
 <th align="left">姓名</th>
 <th align="left">性别</th>
+<th align="left">状态</th>
+<th align="left">最近登陆时间</th>
+<th align="left">更新时间</th>
+<th align="left">更新人</th>
 <th width="150">管理操作</th>
 </tr>
 </thead>
@@ -22,9 +26,14 @@
         <td align="center">${user.uid}</td>
         <td>${user.uname}</td>
         <td>${user.unick!''}</td>
-        <td>${user.gender!''}</td>
+        <td>${user.getUgenterStr()!''}</td>
+        <td>${user.getUstatusStr()!''}</td>
+        <td><#if user.lastLoginTime??>${user.lastLoginTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+        <td><#if user.updateTime??>${user.updateTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+        <td><#if user.updateUser??>${user.updateUser.unick!''}</#if></td>
         <td align="center">
-            <#if user.uid!=1><a href="javascript:;" onclick="editRoles(${user.uid})">授权</a> | 
+            <#if user.uid!=1><a href="javascript:;" onclick="changePassword(${user.uid})">修改密码</a> | 
+            <a href="javascript:;" onclick="editRoles(${user.uid})">授权</a> | 
             <a class="J_showdialog" href="javascript:;" onclick="editManager(${user.uid})">编辑</a> | 
             <a class="J_confirmurl" href="javascript:;" onclick="delManager(${user.uid})">删除</a>
             </#if>

@@ -9,6 +9,9 @@
 <th>ID</th>
 <th align="left">角色名称</th>
 <th align="left">角色说明</th>
+<th align="left">角色类型</th>
+<th align="left">更新时间</th>
+<th align="left">更新人</th>
 <th width="150">管理操作</th>
 </tr>
 </thead>
@@ -21,6 +24,9 @@
         <td align="center">${role.id}</td>
         <td>${role.name}</td>
         <td>${role.title}</td>
+        <td>${role.getTypeStr()!''}</td>
+        <td><#if role.updateTime??>${role.updateTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+        <td><#if role.updateUser??>${role.updateUser.unick!''}</#if></td>
         <td align="center">
             <a href="javascript:;" onclick="editPermissions(${role.id})">授权</a><#if role.id!=1> | 
             <a class="J_showdialog" href="javascript:;" onclick="editRole(${role.id})">编辑</a> | 

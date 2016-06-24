@@ -15,6 +15,14 @@
         <th width="150">账号：</th>
         <td><input type="text" name="uname" class="easyui-textbox" value="${manager.uname!''}" style="width:200px;height:30px" data-options="required:true" validType="length[2,20]"></td>
     </tr>
+    <tr>
+    	<th width="150">密码</th>
+    	<td><input type="password" id="upassword" name="upassword" class="easyui-textbox" value="${manager.upassword!''}" style="width:200px;height:30px" data-options="required:true" validType="length[2,20]"></td>
+    <tr>
+    <tr>
+    	<th width="150">确认密码</th>
+    	<td><input type="password" class="easyui-textbox" name="repassword" id="repassword" value="" style="width:200px;height:30px" data-options="required:true" validType="equalTo['#upassword']" invalidMessage="两次输入密码不匹配"></td>
+    <tr>
     </#if>
     <tr>
         <th>姓名：</th>
@@ -27,10 +35,17 @@
         </td>
     </tr>
     <tr>
+        <th>性别：</th>
+        <td>
+            <label><input type="radio" name="ugenter" class="J_change_zidong" value="1" <#if !manager.ugenter?? || (manager.ugenter?? && manager.ugenter==1)>checked</#if>>男&nbsp;&nbsp;</label>
+            <label><input type="radio" name="ugenter" class="J_change_zidong" value="2" <#if manager.ugenter?? && manager.ugenter==2>checked</#if>>女</label>
+        </td>
+    </tr>
+    <tr>
         <th>状态：</th>
         <td>
-            <input type="radio" name="ustatus" value="1" <#if !manager.ustatus?? || (manager.ustatus?? && manager.ustatus==1)>checked</#if>>启用
-            <input type="radio" name="ustatus" value="2" <#if manager.ustatus?? && manager.ustatus==2>checked</#if>>禁用
+            <label><input type="radio" name="ustatus" value="2" <#if !manager.ustatus?? || (manager.ustatus?? && manager.ustatus==2)>checked</#if>>锁定&nbsp;&nbsp;</label>
+           <label><input type="radio" name="ustatus" value="1" <#if manager.ustatus?? && manager.ustatus==1>checked</#if>>启用</label>
         </td>
     </tr>
     <tr>

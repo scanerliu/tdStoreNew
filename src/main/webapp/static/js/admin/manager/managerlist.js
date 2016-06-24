@@ -78,20 +78,21 @@ function editRoles(id){
 
 function saveRoles(){
 	var url = basePath+"/admin/manager/saverole";
-	var nodes = $('#roleForm #roleTree').tree('getChecked');
+	var nodes = $("#roleForm input[name='subbox']:checked");
 	var s = '';
-	for(var i=0; i<nodes.length; i++){
-		if(nodes[i].id>0){
+	$.each(nodes, function(){
+		var rid = $(this).val();
+		if(rid>0){
 			if (s != '') {s += ',';}
-			s += nodes[i].id;
+			s += rid;
 		}
-	}
+	});
 	var uId = $("#roleForm #uId").val();
 	if(uId==""||uId==undefined){
 		$.messager.alert('消息提醒','管理员未选择，请重新操作!');
 		return ;
 	}
-	var postData = {"id":uId,"roleIds":s};
+	var postData = {"uid":uId,"roleIds":s};
 	$.post(url,postData,saveRolesCallback,"text");
 }
 
@@ -102,5 +103,12 @@ function saveRolesCallback(data){
 	}else{
 	  $.messager.alert('消息提醒','角色保存失败!');
 	}
+}
+
+function changePassword(id){
+	var url = basePath+"/admin/manager/changepassword";
+	var loadData={"id":id};
+	$("#rightform").loading().load(url,loadData);
+	showForm();
 }
 

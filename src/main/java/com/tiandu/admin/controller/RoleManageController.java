@@ -1,5 +1,6 @@
 package com.tiandu.admin.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
+import com.tiandu.common.controller.BaseController;
+import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdRole;
+import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.search.TdRoleSearchCriteria;
 import com.tiandu.custom.service.TdRoleService;
 import com.tiandu.custom.service.TdUserService;
@@ -26,7 +30,7 @@ import com.tiandu.menu.service.TdMenuService;
 
 @Controller
 @RequestMapping("/admin/role")
-public class RoleManageController {
+public class RoleManageController extends BaseController {
 	
 	private final Logger logger = Logger.getLogger(getClass());
 	
@@ -47,6 +51,7 @@ public class RoleManageController {
 	@RequestMapping("/search")
 	public String search(TdRoleSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		//获取主菜单
+		sc.setGetUpdateUser(true);
 		List<TdRole> roleList = tdRoleService.findBySearchCriteria(sc);
 	    modelMap.addAttribute("roleList", roleList) ;
 	    modelMap.addAttribute("sc", sc) ;
@@ -93,60 +98,64 @@ public class RoleManageController {
 	
 	@RequestMapping(value="/savepermission", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,String> savepermission(TdRole role, HttpServletRequest request, HttpServletResponse response) {
+	public void savepermission(TdRole role, HttpServletRequest request, HttpServletResponse response) {
 		Map<String,String> res = new HashMap<String,String>(); 
 		if(null!=role){
 		    try {
 		      tdRoleService.saveRolePermission(role);
 		      res.put("code", "1");
-		      return res;
+		      WebUtils.responseJson(response, res);
 		    }catch (Exception e) {
 		    	logger.error("角色保存失败错误信息:"+e);
 		    	res.put("code", "0");
-		    	return res;
+		    	WebUtils.responseJson(response, res);
 		    }
 		}else{
 			res.put("code", "0");
-	    	return res;
+			WebUtils.responseJson(response, res);
 		}
 	}
 	@RequestMapping(value="/save", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,String> save(TdRole role, HttpServletRequest request, HttpServletResponse response) {
+	public void save(TdRole role, HttpServletRequest request, HttpServletResponse response) {
 		Map<String,String> res = new HashMap<String,String>(); 
 		if(null!=role){
 			try {
+				Date now = new Date();
+				TdUser currManager = this.getCurrentUser();
+				role.setUpdateBy(currManager.getUid());
+				role.setUpdateTime(now);
 				tdRoleService.save(role);
 				res.put("code", "1");
-				return res;
+				WebUtils.responseJson(response, res);
 			}catch (Exception e) {
 				logger.error("角色保存失败错误信息:"+e);
 				res.put("code", "0");
-				return res;
+				WebUtils.responseJson(response, res);
 			}
 		}else{
 			res.put("code", "0");
-			return res;
+			WebUtils.responseJson(response, res);
 		}
 	}
 	
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,String> delete(Integer id, HttpServletRequest request, HttpServletResponse response) {
+	public void delete(Integer id, HttpServletRequest request, HttpServletResponse response) {
 		Map<String,String> res = new HashMap<String,String>(); 
 		if(null!=id){
 			try {
 				tdRoleService.delete(id);
 				res.put("code", "1");
-				return res;
+				WebUtils.responseJson(response, res);
 			}catch (Exception e) {
 				logger.error("角色删除失败错误信息:"+e);
 				res.put("code", "0");
-				return res;
+				WebUtils.responseJson(response, res);
 			}
 		}else{
 			res.put("code", "0");
-			return res;
+			WebUtils.responseJson(response, res);
 		}
 	}
 	

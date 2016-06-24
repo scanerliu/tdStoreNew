@@ -84,16 +84,19 @@ public class AdminController {
 		    try {
 		      user.login(token);
 		      res.put("code", "1");
-		      return res;
+		      WebUtils.responseJson(response, res);
+		      return null;
 		    }catch (AuthenticationException e) {
 		    	logger.error("登录失败错误信息:"+e);
 		    	token.clear();
 		    	res.put("code", "0");
-		    	return res;
+		    	WebUtils.responseJson(response, res);
+			    return null;
 		    }
 		}else{
 			res.put("code", "0");
-	    	return res;
+			WebUtils.responseJson(response, res);
+		    return null;
 		}
 	}
 	

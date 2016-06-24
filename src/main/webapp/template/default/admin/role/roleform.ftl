@@ -16,6 +16,13 @@
         </td>
     </tr>
     <tr>
+        <th width="150">角色类型：</th>
+        <td>
+            <label><input type="radio" name="type" class="J_change_zidong" value="1" <#if !role.type?? || (role.type?? && role.type==1)>checked</#if>>平台角色&nbsp;&nbsp;</label>
+            <label><input type="radio" name="type" class="J_change_zidong" value="2" <#if role.type?? && role.type==2>checked</#if>>会员角色</label>
+        </td>
+    </tr>
+    <tr>
         <td><input type="hidden" name="id" value="${role.id!''}"></td>
         <td>
             <button type="button" class="smt mr10" onclick="saveRole()">保存</button>

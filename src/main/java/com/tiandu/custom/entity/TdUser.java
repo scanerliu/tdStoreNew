@@ -72,6 +72,8 @@ public class TdUser {
 	 * 后台保存角色使用
 	 */
 	private String roleIds; //多个roleId 用逗号隔开
+	
+	private TdUser updateUser;
 
     public Integer getUid() {
         return uid;
@@ -280,6 +282,14 @@ public class TdUser {
 	public void setRoleIds(String roleIds) {
 		this.roleIds = roleIds;
 	}
+	
+	public TdUser getUpdateUser() {
+		return updateUser;
+	}
+
+	public void setUpdateUser(TdUser updateUser) {
+		this.updateUser = updateUser;
+	}
 
 	public Boolean isLocked(){
 		if(TdUser.USTATUS_FORBBIDEN==this.getUstatus()){
@@ -287,5 +297,49 @@ public class TdUser {
 		}
 		return false;
 	}
-    
+    /**
+     * 获取用户状态文字说明
+     * @return
+     */
+	public String getUstatusStr(){
+		StringBuffer sb = new StringBuffer(); 
+		if(null!=this.getUstatus()){
+			if(this.getUstatus().equals(TdUser.USTATUS_ACTIVE)){
+				sb.append("启用");
+			}else{
+				sb.append("锁定");
+			}
+		}
+		return sb.toString();
+	}
+	/**
+	 * 获取用户性别文字说明
+	 * @return
+	 */
+	public String getUgenterStr(){
+		StringBuffer sb = new StringBuffer(); 
+		if(null!=this.getUgenter()){
+			if(this.getUgenter().equals(Byte.valueOf("2"))){
+				sb.append("女");
+			}else{
+				sb.append("男");
+			}
+		}
+		return sb.toString();
+	}
+	/**
+	 * 判断是否角色id
+	 * @param roleId 角色id
+	 * @return
+	 */
+	public Boolean hasRoleId(Integer roleId){
+		if(null!=this.getRoleSet()){
+			for(TdRole role : this.getRoleSet()){
+				if(role.getId().equals(roleId)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }

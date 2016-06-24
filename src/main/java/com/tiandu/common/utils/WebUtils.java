@@ -38,7 +38,7 @@ public class WebUtils {
 		Gson gson = new Gson();
 		String json = gson.toJson(map);
 		response.setCharacterEncoding("UTF-8");  
-		response.setContentType("application/json; charset=utf-8");  
+		response.setContentType("text/html; charset=utf-8");  
 		PrintWriter out = null;  
 		try {  
 		    out = response.getWriter();  

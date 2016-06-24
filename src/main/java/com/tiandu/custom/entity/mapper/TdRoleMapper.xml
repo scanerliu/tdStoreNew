@@ -5,19 +5,31 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <!-- 更新人信息 -->
+	<association property="updateUser" resultMap="updateUserResult"/>
+	
     <collection property="menuSet" column="permissionid" ofType="com.tiandu.menu.entity.TdMenu">
         <id property="id" column="permission_id"/>
         <result property="actionName" column="permission_name"/>
     </collection>
   </resultMap>
+  
+  <resultMap id="updateUserResult" type="com.tiandu.custom.entity.TdUser" >
+  	<result column="up_uname" property="uname" jdbcType="VARCHAR" />
+  	<result column="up_unick" property="unick" jdbcType="VARCHAR" />
+  </resultMap>
+  
   <sql id="Base_Column_List" >
-    id, name, title
+    r.id, r.name, r.title, r.type, r.update_by, r.update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from td_role
-    where id = #{id,jdbcType=INTEGER}
+    from td_role as r
+    where r.id = #{id,jdbcType=INTEGER}
   </select>
   
   <select id="selectByPrimaryKeyPermiision" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -28,13 +40,25 @@
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.custom.search.TdRoleSearchCriteria" >
     select 
     <include refid="Base_Column_List" />
-    from td_role
+    <if test="getUpdateUser" >
+        , u.uname as up_uname, u.unick as up_unick
+    </if>
+    from td_role as r
+    <if test="getUpdateUser" >
+        left join td_user u on u.uid= r.update_by
+    </if>
     where 1=1 
+    <if test="type != null" >
+        and r.type=#{type,jdbcType=TINYINT}
+    </if>
   </select>
   <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.custom.search.TdRoleSearchCriteria" >
-    select count(id)
-    from td_role
+    select count(r.id)
+    from td_role as r
     where 1=1 
+    <if test="type != null" >
+        and r.type=#{type,jdbcType=TINYINT}
+    </if>
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
@@ -45,8 +69,8 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into td_role (name, title)
-    values (#{name,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR})
+    insert into td_role (name, title,type, update_by, update_time)
+    values (#{name,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, #{updateBy,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.tiandu.custom.entity.TdRole" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -60,6 +84,15 @@
       <if test="title != null" >
         title,
       </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="name != null" >
@@ -67,6 +100,15 @@
       </if>
       <if test="title != null" >
         #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP}
       </if>
     </trim>
   </insert>
@@ -79,12 +121,21 @@
       <if test="title != null" >
         name = #{title,jdbcType=VARCHAR},
       </if>
+      <if test="type != null" >
+        type = #{utype,jdbcType=TINYINT},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tiandu.custom.entity.TdRole" >
     update td_role
-    set name = #{name,jdbcType=VARCHAR}, title = #{title,jdbcType=VARCHAR}
+    set name = #{name,jdbcType=VARCHAR}, title = #{title,jdbcType=VARCHAR}, type = #{utype,jdbcType=TINYINT}, update_by = #{updateBy,jdbcType=INTEGER}, update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -26,6 +26,8 @@
     <result column="ugenter" property="ugenter" jdbcType="TINYINT" />
     <result column="membership_id" property="membershipId" jdbcType="INTEGER" />
     <result column="supplier_type" property="supplierType" jdbcType="TINYINT" />
+    <!-- 更新人信息 -->
+	<association property="updateUser" resultMap="updateUserResult"/>
     <!-- 进行 多表关联插叙，先关联user和role -->
 	<collection property="roleSet" column="roleid" ofType="com.tiandu.custom.entity.TdRole">
 		<id property="id" column="ROLE_ID"/>
@@ -37,10 +39,15 @@
 		</collection>
 	</collection>
   </resultMap>
+  
+  <resultMap id="updateUserResult" type="com.tiandu.custom.entity.TdUser" >
+  	<result column="up_uname" property="uname" jdbcType="VARCHAR" />
+  	<result column="up_unick" property="unick" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Base_Column_List" >
-    uid, uname, upassword, joint_id, unick, utel, uverification, ustatus, utype, uparent_id, 
-    create_time, update_by, update_time, last_login_time, last_login_ip, uavatar, uregion_id, 
-    uprovince_id, uregion_path, uaddress, ubirthday, ugenter, membership_id, supplier_type
+    a.uid, a.uname, a.upassword, a.joint_id, a.unick, a.utel, a.uverification, a.ustatus, a.utype, a.uparent_id, 
+    a.create_time, a.update_by, a.update_time, a.last_login_time, a.last_login_ip, a.uavatar, a.uregion_id, 
+    a.uprovince_id, a.uregion_path, a.uaddress, a.ubirthday, a.ugenter, a.membership_id, a.supplier_type
   </sql>
   <sql id="Base_Role_Column_List" >
     SELECT u.uid, u.uname,u.upassword,r.id as ROLE_ID, r.name as ROLE_NAME, m.id as MENU_ID, m.action_name as PERMISSION_NAME  
@@ -51,13 +58,13 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from td_user
+    from td_user a
     where uid = #{uid,jdbcType=INTEGER}
   </select>
   <select id="selectByPrimaryKeyWithRoles" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    SELECT u.uid, u.uname , r.id as ROLE_ID
+    SELECT u.uid, u.uname , r.rid as ROLE_ID
     from td_user as u , td_user_role as r 
-    where u.uid=r.uid and uid = #{uid,jdbcType=INTEGER}
+    where u.uid=r.uid and u.uid = #{uid,jdbcType=INTEGER}
   </select>
   
   <select id="selectByUname" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -68,16 +75,22 @@
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.custom.search.TdUserSearchCriteria" >
     select 
     <include refid="Base_Column_List" />
-    from td_user
+    <if test="getUpdateUser" >
+        , b.uname as up_uname, b.unick as up_unick
+    </if>
+    from td_user a
+    <if test="getUpdateUser" >
+        left join td_user b on b.uid= a.update_by
+    </if>
     where 1=1 
     <if test="ustatus != null" >
-        and ustatus=#{ustatus,jdbcType=TINYINT}
+        and a.ustatus=#{ustatus,jdbcType=TINYINT}
     </if>
     <if test="utype != null" >
-        and utype=#{utype,jdbcType=TINYINT}
+        and a.utype=#{utype,jdbcType=TINYINT}
     </if>
     <if test="name != null" >
-        and name=#{name,jdbcType=VARCHAR}
+        and a.name=#{name,jdbcType=VARCHAR}
     </if>
   </select>
   

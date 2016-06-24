@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tiandu.common.db.DBContextHolder;
+import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.mapper.TdUserMapper;
@@ -48,6 +49,12 @@ public class TdUserServiceImpl implements TdUserService {
 			if(null!=user.getUid()){//更新
 				return userMapper.updateManagerByPrimaryKey(user);
 			}else{
+				String password = WebUtils.generatePassword(user.getUname(), user.getUpassword());
+				user.setUpassword(password);
+				user.setJointId("sys_"+user.getUname());
+				user.setUparentId(0);
+				user.setUtype(Byte.valueOf("2"));//平台管理员
+				user.setUverification(Byte.valueOf("1"));
 				return userMapper.insert(user);
 			}
 		}

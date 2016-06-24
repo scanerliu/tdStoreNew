@@ -1,6 +1,7 @@
 package com.tiandu.custom.entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,13 +14,27 @@ import com.tiandu.menu.entity.TdMenu;
  *
  */
 public class TdRole {
+	
+	public static final Byte ROLE_TYPE_ADMIN = 1; //平台角色类型
+	public static final Byte ROLE_TYPE_CLIENT = 2; //前台角色类型
 	private Integer id;
 
 	private String name;
 	
 	private String title;
+	
+	private Integer updateBy;
+
+	private Date updateTime;
+	
+	private Byte type; //类型：1-平台角色，2-会员角色
 
 	private Set<TdMenu> menuSet = new HashSet<TdMenu>();
+	
+	/**
+	 * 更新人
+	 */
+	private TdUser updateUser;
 	
 	/**
 	 * 后台保存权限使用
@@ -51,6 +66,38 @@ public class TdRole {
 		this.title = title;
 	}
 
+	public Byte getType() {
+		return type;
+	}
+
+	public void setType(Byte type) {
+		this.type = type;
+	}
+
+	public Integer getUpdateBy() {
+		return updateBy;
+	}
+
+	public void setUpdateBy(Integer updateBy) {
+		this.updateBy = updateBy;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public TdUser getUpdateUser() {
+		return updateUser;
+	}
+
+	public void setUpdateUser(TdUser updateUser) {
+		this.updateUser = updateUser;
+	}
+
 	public Set<TdMenu> getMenuSet() {
 		return menuSet;
 	}
@@ -75,6 +122,11 @@ public class TdRole {
 		this.menuIds = menuIds;
 	}
 
+	/**
+	 * 判断是否权限id
+	 * @param permId 权限id
+	 * @return
+	 */
 	public Boolean hasPermissionId(Integer permId){
 		if(null!=this.getMenuSet()){
 			for(TdMenu per : this.getMenuSet()){
@@ -84,6 +136,22 @@ public class TdRole {
 			}
 		}
 		return false;
+	}
+	
+	/**
+     * 获取角色类型文字说明
+     * @return
+     */
+	public String getTypeStr(){
+		StringBuffer sb = new StringBuffer(); 
+		if(null!=this.getType()){
+			if(this.getType().equals(TdRole.ROLE_TYPE_ADMIN)){
+				sb.append("平台角色");
+			}else{
+				sb.append("会员角色");
+			}
+		}
+		return sb.toString();
 	}
 
 	@Override

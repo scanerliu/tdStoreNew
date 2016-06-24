@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.search.TdRoleSearchCriteria;
@@ -44,6 +45,8 @@ public class ManagerController extends BaseController {
 	@RequestMapping("/search")
 	public String search(TdUserSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		//获取主菜单
+		sc.setGetUpdateUser(true);
+		sc.setUtype(Byte.valueOf("2"));
 		List<TdUser> userList = tdUserService.findBySearchCriteria(sc);
 	    modelMap.addAttribute("userList", userList) ;
 	    modelMap.addAttribute("sc", sc) ;
@@ -80,6 +83,7 @@ public class ManagerController extends BaseController {
 		//获取角色列表
 		TdRoleSearchCriteria sc = new TdRoleSearchCriteria();
 		sc.setFlag(false);
+		sc.setType(TdRole.ROLE_TYPE_ADMIN);
 		List<TdRole> roleList = tdRoleService.findBySearchCriteria(sc);
 		
 		modelMap.addAttribute("manager", manager);
@@ -89,26 +93,26 @@ public class ManagerController extends BaseController {
 	
 	@RequestMapping(value="/saverole", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,String> saverole(TdUser mananger, HttpServletRequest request, HttpServletResponse response) {
+	public void saverole(TdUser mananger, HttpServletRequest request, HttpServletResponse response) {
 		Map<String,String> res = new HashMap<String,String>(); 
 		if(null!=mananger){
 		    try {
 		    	tdUserService.saveUserRole(mananger);
-		      res.put("code", "1");
-		      return res;
+				res.put("code", "1");
+				WebUtils.responseJson(response, res);
 		    }catch (Exception e) {
 		    	logger.error("角色保存失败错误信息:"+e);
 		    	res.put("code", "0");
-		    	return res;
+		    	WebUtils.responseJson(response, res);
 		    }
 		}else{
 			res.put("code", "0");
-	    	return res;
+			WebUtils.responseJson(response, res);
 		}
 	}
 	@RequestMapping(value="/save", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,String> save(TdUser manager, HttpServletRequest request, HttpServletResponse response) {
+	public void save(TdUser manager, HttpServletRequest request, HttpServletResponse response) {
 		Map<String,String> res = new HashMap<String,String>(); 
 		if(null!=manager){
 			Date now = new Date();
@@ -119,35 +123,35 @@ public class ManagerController extends BaseController {
 				manager.setCreateTime(now);
 				tdUserService.saveManager(manager);
 				res.put("code", "1");
-				return res;
+				WebUtils.responseJson(response, res);
 			}catch (Exception e) {
 				logger.error("管理员保存失败错误信息:"+e);
 				res.put("code", "0");
-				return res;
+				WebUtils.responseJson(response, res);
 			}
 		}else{
 			res.put("code", "0");
-			return res;
+			WebUtils.responseJson(response, res);
 		}
 	}
 	
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,String> delete(Integer id, HttpServletRequest request, HttpServletResponse response) {
+	public void delete(Integer id, HttpServletRequest request, HttpServletResponse response) {
 		Map<String,String> res = new HashMap<String,String>(); 
 		if(null!=id){
 			try {
 				tdUserService.deleteUserAll(id);
 				res.put("code", "1");
-				return res;
+				WebUtils.responseJson(response, res);
 			}catch (Exception e) {
 				logger.error("管理员删除失败错误信息:"+e);
 				res.put("code", "0");
-				return res;
+				WebUtils.responseJson(response, res);
 			}
 		}else{
 			res.put("code", "0");
-			return res;
+			WebUtils.responseJson(response, res);
 		}
 	}
 	
