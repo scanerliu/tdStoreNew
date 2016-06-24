@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tiandu.article.entity.TdArticleCategory;
 import com.tiandu.article.search.TdArticleCategorySearchCriteria;
 import com.tiandu.article.service.TdArticleCategoryService;
+import com.tiandu.common.controller.BaseController;
 import com.tiandu.district.entity.TdDistrict;
 
 /**
@@ -28,7 +29,7 @@ import com.tiandu.district.entity.TdDistrict;
  */
 @Controller
 @RequestMapping("/admin/articlecategory")
-public class ArticleCategoryController {
+public class ArticleCategoryController extends BaseController {
 
 	private final Logger logger = Logger.getLogger(getClass());
 
@@ -86,14 +87,12 @@ public class ArticleCategoryController {
 						tac.setSort(articleCategory.getSort());
 						tac.setStatus(articleCategory.getStatus());
 						tac.setUpdateTime(new Date());
-						//设置当前用户，待修改
-						articleCategory.setUpdateBy(1);
+						tac.setUpdateBy(this.getCurrentUser().getUid());
 						tdArticleCategoryService.save(tac);
 						res.put("msg", "资讯类别修改成功。");
 					}
 				}else{
-					//设置当前用户，待修改
-					articleCategory.setUpdateBy(1);
+					articleCategory.setUpdateBy(this.getCurrentUser().getUid());
 					articleCategory.setArticles(0);
 					articleCategory.setUpdateTime(new Date());
 					tdArticleCategoryService.save(articleCategory);

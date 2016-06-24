@@ -16,7 +16,7 @@ public interface TdArticleCategoryService {
 	public int insert(TdArticleCategory u);
 	public TdArticleCategory findOne(Integer id);
 	public List<TdArticleCategory> findBySearchCriteria(TdArticleCategorySearchCriteria sc);
-	public Integer save(TdArticleCategory tdExpress);
+	public Integer save(TdArticleCategory tdArticleCategory);
 	public Integer delete(Integer id);
 	public List<TdArticleCategory> getArticleCategoryAll();
 	// 出自己以外的所有资讯目录
