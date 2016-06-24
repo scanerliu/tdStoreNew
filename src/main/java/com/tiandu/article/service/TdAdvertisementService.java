@@ -11,7 +11,7 @@ public interface TdAdvertisementService {
 	public void deleteByPrimaryKey(Integer id);
 
 	public Integer insert(TdAdvertisement record);
-	
+	public TdAdvertisement findOne(Integer id);
     public List<TdAdvertisement> findBySearchCriteria(TdAdvertisementSearchCriteria sc);
     public Integer save(TdAdvertisement e);
 }

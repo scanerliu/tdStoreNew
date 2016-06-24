@@ -9,12 +9,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.article.entity.TdAdsense;
+import com.tiandu.article.entity.TdAdvertisement;
 import com.tiandu.article.search.TdAdsenseSearchCriteria;
 import com.tiandu.article.search.TdAdvertisementSearchCriteria;
 import com.tiandu.article.service.TdAdsenseService;
@@ -122,5 +126,75 @@ public class AdSenseController extends BaseController{
 		map.addAttribute("sc", sc);
 		return "/admin/article/adlistbody";
 	}
+	
+	@RequestMapping(value="/advert/edit")
+	public String adEdit(Integer id,HttpServletRequest req,ModelMap map)
+	{
+		TdAdsenseSearchCriteria sc = new TdAdsenseSearchCriteria();
+		sc.setFlag(false);
+		map.addAttribute("adsenseList", tdAdsenseService.findBySearchCriteria(sc));
+		
+		if(null != id)
+		{
+			map.addAttribute("ad", tdAdvertService.findOne(id));
+		}
+		return "/admin/article/adfrom";
+	}
+	
+	@RequestMapping(value = "/advert/save",method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> adSave(TdAdvertisement tdAdvertisement,HttpServletRequest req,HttpServletResponse resp)
+	{
+		Map<String,String> res = new HashMap<>();
+		res.put("code", "0");
+		if(null != tdAdvertisement)
+		{
+			if(null != tdAdvertisement.getCreateTime()){
+				// 创建时间
+				tdAdvertisement.setCreateTime(new Date());
+			}
+			// 更新时间
+			tdAdvertisement.setUpdateTime(new Date());
+			TdUser user = getCurrentUser();
+			if(user!= null )
+			{
+				if(null == tdAdvertisement.getCreateBy())
+				{
+					// 创建人
+					tdAdvertisement.setCreateBy(user.getUid());
+				}
+				// 最后更新人
+				tdAdvertisement.setUpdateBy(user.getUid());
+				
+				tdAdvertService.save(tdAdvertisement);
+				res.put("code", "1");
+			}
+		}
+		return res;
+	}
+	
+	@RequestMapping(value="/advert/delete",method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> adDelete(Integer id,HttpServletRequest req,HttpServletResponse resp)
+	{
+		Map<String,String> res = new HashMap<>();
+		res.put("code", "0");
+		if(null != id)
+		{
+			tdAdvertService.deleteByPrimaryKey(id);
+			res.put("code", "1");
+		}
+		return res;
+	}
+	
+	
+	
+	@ModelAttribute
+    public void getModel(@RequestParam(value = "adId", required = false) Integer adId,
+                        Model model) {
+        if (null != adId) {
+            model.addAttribute("tdAdvertisement", tdAdvertService.findOne(adId));
+        }
+    }
 	
 }
