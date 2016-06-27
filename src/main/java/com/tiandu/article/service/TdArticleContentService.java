@@ -16,6 +16,6 @@ public interface TdArticleContentService {
 	public int insert(TdArticleContent u);
 	public TdArticleContent findOne(Integer id);
 	public List<TdArticleContent> findBySearchCriteria(TdArticleContentSearchCriteria sc);
-	public Integer save(TdArticleContent tdArticleContent);
+	public Integer save(TdArticleContent tdArticleContent, boolean isUpdate);
 	public Integer delete(Integer id);
 }

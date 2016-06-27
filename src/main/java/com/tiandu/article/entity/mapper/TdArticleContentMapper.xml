@@ -29,8 +29,8 @@
     <selectKey resultType="java.lang.Integer" keyProperty="aid" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into td_article_content (content)
-    values (#{content,jdbcType=LONGVARCHAR})
+    insert into td_article_content (aid, content)
+    values (#{aid,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tiandu.article.entity.TdArticleContent" >
     <selectKey resultType="java.lang.Integer" keyProperty="aid" order="AFTER" >

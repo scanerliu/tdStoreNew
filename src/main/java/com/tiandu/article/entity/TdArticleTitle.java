@@ -25,7 +25,7 @@ public class TdArticleTitle {
 
 	private String imageUrl;
 
-	private Byte status;
+	private Byte status = 1; // 默认启用
 	
 	private Integer sort;
 
