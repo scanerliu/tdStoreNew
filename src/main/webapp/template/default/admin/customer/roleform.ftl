@@ -1,7 +1,7 @@
 <#import "/common/app.ftl" as app>
 <div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="returnList()"><em>返回列表</em></a>&#12288;</div></div>
 <div class="pad_lr_10">
-<form id="roleForm" action="${app.basePath}/admin/manager/saverole" method="post">
+<form id="roleForm" action="${app.basePath}/admin/customer/saverole" method="post">
 <div class="J_tablelist table_list">
 <table width="100%" cellspacing="0">
 	<thead>
@@ -15,7 +15,7 @@
 		<#list roleList as role>
 		    <tr>
 		        <td align="center">
-		        	<input type="checkbox" value="${role.id}" name="subbox" class="J_checkitem" <#if manager.hasRoleId(role.id)>checked=checked</#if>>
+		        	<input type="checkbox" value="${role.id}" name="subbox" class="J_checkitem" <#if customer.hasRoleId(role.id)>checked=checked</#if>>
 		        </td>
 		        <td align="left">
 		        	${role.title}
@@ -24,7 +24,7 @@
 		</#list>
 		</#if>
 	    <tr>
-	        <td width="8"><input type="hidden" id="uId" name="uid" value="${manager.uid!''}"></td>
+	        <td width="8"><input type="hidden" id="uId" name="uid" value="${customer.uid!''}"></td>
 	        <td>
 	            <button type="button" class="smt mr10" onclick="saveRoles()">保存</button>
 	        </td>
