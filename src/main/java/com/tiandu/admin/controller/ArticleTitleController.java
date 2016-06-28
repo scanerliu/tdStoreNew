@@ -111,6 +111,7 @@ public class ArticleTitleController extends BaseController {
 						tat.setStatus(articleTitle.getStatus());
 						tat.setSort(articleTitle.getSort());
 						tat.setHotRecommend(articleTitle.getHotRecommend());
+						tat.setUpdateTime(articleTitle.getUpdateTime());
 						tat.setUpdateBy(this.getCurrentUser().getUid());
 						tdArticleTitleService.save(tat);
 						// 保存对应的内容表
