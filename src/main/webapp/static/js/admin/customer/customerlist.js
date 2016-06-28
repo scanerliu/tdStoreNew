@@ -2,7 +2,7 @@ function searchCustomers(f){
 	var url = basePath+"/admin/customer/search";
 	var loadData = "";
 	if(f){
-		loadData = null;
+		loadData = $("#searchform").serializeArray();;
 	}else{
 		loadData = $("#listform").serializeArray();
 	}

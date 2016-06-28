@@ -3,6 +3,8 @@ package com.tiandu.system.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +22,12 @@ public class ConfigUtil {
 
 	private static final Logger logger = Logger.getLogger(ConfigUtil.class);
 
-	@Autowired
+	@Resource
 	private TdSystemConfigService tdSystemConfigService;
+	
+	public void setTdSystemConfigService(TdSystemConfigService tdSystemConfigService) {
+		this.tdSystemConfigService = tdSystemConfigService;
+	}
 
 	public static ConfigUtil getInstance() {
 		if(configUtil==null){

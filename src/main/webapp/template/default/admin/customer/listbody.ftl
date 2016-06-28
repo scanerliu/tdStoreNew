@@ -1,5 +1,4 @@
 <#import "/common/app.ftl" as app>
-<div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="editCustomer(0)"><em>添加会员</em></a>&#12288;</div></div>
 <div class="pad_lr_10">
 <div class="J_tablelist table_list">
 <table width="100%" cellspacing="0" id="customer_tree">
@@ -15,7 +14,7 @@
 <th align="left">登陆ip</th>
 <th align="left">更新时间</th>
 <th align="left">更新人</th>
-<th width="200">管理操作</th>
+<th width="220">管理操作</th>
 </tr>
 </thead>
 <tbody>
@@ -52,6 +51,12 @@
 </table>
 </div>
 <div class="btn_wrap_fixed">
+	<input type="hidden" name="uanme" value="${sc.uname!''}"/>
+	<input type="hidden" name="ustatus" value="${sc.ustatus!''}"/>
+	<input type="hidden" name="uverification" value="${sc.uverification!''}"/>
+	<input type="hidden" name="supplierType" value="${sc.supplierType!''}"/>
+	<input type="hidden" name="agent" value="${sc.agent}"/>
+	<input type="hidden" name="branch" value="${sc.branch}"/>
 </div>
 </div>
 <div class="btn_wrap_fixed">
