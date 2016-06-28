@@ -8,7 +8,7 @@
 <table class="table_form" width="100%">
     <tr>
         <th width="150">广告位名称：</th>
-        <td><input type="text" name="name" class="easyui-textbox" value="<#if adsense??>${adsense.name!''}</#if>" <#if adsense??>reaonly</#if> style="width:200px;height:30px" data-options="required:true" validType="length[2,20]">*广告位名称，添加后不可修改</td>
+        <td><input type="text" name="name" class="easyui-textbox" value="<#if adsense??>${adsense.name!''}</#if>" <#if adsense??>readonly</#if> style="width:200px;height:30px" data-options="required:true" validType="length[2,20]">*广告位名称，不能同名且添加后不可修改</td>
     </tr>
     <tr>
         <th>宽度：</th>

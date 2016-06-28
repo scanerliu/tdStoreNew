@@ -9,7 +9,7 @@
     <tr>
         <th width="150">所属广告位：</th>
         <td>
-        	<select name="adsId" calss="easyui-combobox" style="listWidth:200px;listHeight:30px;">
+        	<select name="adsId" class="easyui-combobox" style="width:200px;">
         		<#if adsenseList ??>
         		<#list adsenseList as ads>
         			<option value="${ads.id?c}" <#if ad?? && ad.adsId == ads.id>select</#if>>${ads.name!''}</option>
