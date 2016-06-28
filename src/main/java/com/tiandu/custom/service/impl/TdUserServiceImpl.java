@@ -37,6 +37,11 @@ public class TdUserServiceImpl implements TdUserService {
 		return userMapper.updateByPrimaryKeySelective(record);
 	}
 
+	@Override
+	public TdUser findDetail(Integer id) {
+		return userMapper.selectDetailByPrimaryKey(id);
+	}
+
 	/**
 	 * 删除用户所有信息
 	 * @param id

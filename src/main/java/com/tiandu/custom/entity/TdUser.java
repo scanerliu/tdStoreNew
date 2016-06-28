@@ -328,6 +328,21 @@ public class TdUser {
 		return sb.toString();
 	}
 	/**
+	 * 获取用户验证状态文字说明
+	 * @return
+	 */
+	public String getUverificationStr(){
+		StringBuffer sb = new StringBuffer(); 
+		if(null!=this.getUverification()){
+			if(this.getUverification().equals(Byte.valueOf("1"))){
+				sb.append("已验证");
+			}else{
+				sb.append("未验证");
+			}
+		}
+		return sb.toString();
+	}
+	/**
 	 * 判断是否角色id
 	 * @param roleId 角色id
 	 * @return

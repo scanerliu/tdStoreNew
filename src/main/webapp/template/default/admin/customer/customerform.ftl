@@ -16,11 +16,11 @@
         <td><input type="text" name="uname" class="easyui-textbox" value="${customer.uname!''}" style="width:200px;height:30px" data-options="required:true" validType="length[2,20]"></td>
     </tr>
     <tr>
-    	<th width="150">密码</th>
+    	<th width="150">密码：</th>
     	<td><input type="password" id="upassword" name="upassword" class="easyui-textbox" value="${customer.upassword!''}" style="width:200px;height:30px" data-options="required:true" validType="length[2,20]"></td>
     <tr>
     <tr>
-    	<th width="150">确认密码</th>
+    	<th width="150">确认密码：</th>
     	<td><input type="password" class="easyui-textbox" name="repassword" id="repassword" value="" style="width:200px;height:30px" data-options="required:true" validType="equalTo['#upassword']" invalidMessage="两次输入密码不匹配"></td>
     <tr>
     </#if>
@@ -48,6 +48,12 @@
            <label><input type="radio" name="ustatus" value="1" <#if customer.ustatus?? && customer.ustatus==1>checked</#if>>启用</label>
         </td>
     </tr>
+    <#if customer.uid??>
+	<tr>
+        <th width="150">注册地区：</th>
+        <td id="regionlist"></td>
+    </tr>
+	</#if>
     <tr>
         <td><input type="hidden" name="uid" value="${customer.uid!''}"></td>
         <td>
