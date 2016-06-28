@@ -82,6 +82,15 @@ public class AdSenseController extends BaseController{
 		res.put("code", "0");
 		if(null != tdAdsense)
 		{
+			// 新增
+			if(null == tdAdsense.getId())
+			{
+				// 判断是否为同名广告位
+				if(null != tdAdsenseService.findByName(tdAdsense.getName())){
+					return res;
+				}
+			}
+			
 			tdAdsense.setUpdateTime(new Date());
 			TdUser user = getCurrentUser();
 			if(user!= null )
@@ -107,6 +116,7 @@ public class AdSenseController extends BaseController{
 		}
 		return res;
 	}
+	
 	
 	/**
 	 * @author Max

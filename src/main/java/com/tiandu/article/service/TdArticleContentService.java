@@ -2,7 +2,6 @@ package com.tiandu.article.service;
 
 import java.util.List;
 
-import com.tiandu.article.entity.TdArticleCategory;
 import com.tiandu.article.entity.TdArticleContent;
 import com.tiandu.article.search.TdArticleContentSearchCriteria;
 

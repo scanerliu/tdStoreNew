@@ -60,5 +60,10 @@ public class TdAdsenseServiceImpl implements TdAdsenseService{
 		}
 		
 	}
+
+	@Override
+	public TdAdsense findByName(String name) {
+		return adsenseMapper.findByName(name);
+	}
 	
 }

@@ -20,51 +20,67 @@
                         connectionURL="jdbc:mysql://localhost:3306/tdstore_com" userId="root"
                         password="root"/>
 
+<<<<<<< HEAD
         <javaModelGenerator targetPackage="com.tiandu.system.entity"
+=======
+        <javaModelGenerator targetPackage="com.tiandu.product.entity"
+>>>>>>> refs/remotes/origin/master
                             targetProject="tdStore\src\main\java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
+<<<<<<< HEAD
         <sqlMapGenerator targetPackage="com.tiandu.system.entity.mapper"
+=======
+        <sqlMapGenerator targetPackage="com.tiandu.product.entity.mapper"
+>>>>>>> refs/remotes/origin/master
                          targetProject="tdStore\src\main\java">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
+<<<<<<< HEAD
         <javaClientGenerator targetPackage="com.tiandu.system.entity.mapper"
+=======
+        <javaClientGenerator targetPackage="com.tiandu.product.entity.mapper"
+>>>>>>> refs/remotes/origin/master
                              targetProject="tdStore\src\main\java" type="XMLMAPPER">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
+<<<<<<< HEAD
         <table tableName="td_system_config" domainObjectName="TdSystemConfig"
+=======
+        <table tableName="td_product_type" domainObjectName="TdProductType"
+>>>>>>> refs/remotes/origin/master
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
             <generatedKey column="id" sqlStatement="Mysql" identity="true" />
         </table>
-        <!-- <table tableName="td_user" domainObjectName="TdUser"
+         <table tableName="td_product_attribute" domainObjectName="TdProductAttribute"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
             <generatedKey column="uid" sqlStatement="Mysql" identity="true" />
         </table>
-        <table tableName="td_role" domainObjectName="TdRole"
+        <table tableName="td_product_attribute_option" domainObjectName="TdProductAttributeOption"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
             <generatedKey column="id" sqlStatement="Mysql" identity="true" />
         </table>
-        <table tableName="td_permission" domainObjectName="TdPermission"
+        <table tableName="td_product_type_attribute" domainObjectName="TdProductTypeAttribute"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
             <generatedKey column="id" sqlStatement="Mysql" identity="true" />
         </table>
-        <table tableName="td_user_role" domainObjectName="TdUserRole"
+        <table tableName="td_product_tag" domainObjectName="TdProductTag"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
-        </table>
+        </table><!--
         <table tableName="td_role_permission" domainObjectName="TdRolePermission"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
