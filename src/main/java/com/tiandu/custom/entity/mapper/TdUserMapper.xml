@@ -82,6 +82,12 @@
     <if test="getUpdateUser" >
         left join td_user b on b.uid= a.update_by
     </if>
+    <if test="branch" >
+        left join td_user_role r on r.uid= a.uid
+    </if>
+    <if test="agent" >
+        left join td_user_role rr on rr.uid= a.uid
+    </if>
     where 1=1 
     <if test="ustatus != null" >
         and a.ustatus=#{ustatus,jdbcType=TINYINT}
@@ -89,23 +95,53 @@
     <if test="utype != null" >
         and a.utype=#{utype,jdbcType=TINYINT}
     </if>
-    <if test="name != null" >
-        and a.name=#{name,jdbcType=VARCHAR}
+    <if test="supplierType != null" >
+        and a.supplier_type =#{supplierType,jdbcType=TINYINT}
+    </if>
+    <if test="uverification != null" >
+        and a.uverification =#{uverification,jdbcType=TINYINT}
+    </if>
+    <if test="uname != null and uname !=''" >
+        and a.uname like '%'||#{uname,jdbcType=VARCHAR}||'%'
+    </if>
+    <if test="branch" >
+        and r.rid=11
+    </if>
+    <if test="agent" >
+        and rr.rid=12
     </if>
   </select>
   
   <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.custom.search.TdUserSearchCriteria" >
-    select count(uid)
-    from td_user
+    select count(a.uid)
+    from td_user a
+    <if test="branch" >
+        left join td_user_role r on r.uid= a.uid
+    </if>
+    <if test="agent" >
+        left join td_user_role rr on rr.uid= a.uid
+    </if>
     where 1=1 
     <if test="ustatus != null" >
-        and ustatus=#{ustatus,jdbcType=TINYINT}
+        and a.ustatus=#{ustatus,jdbcType=TINYINT}
     </if>
     <if test="utype != null" >
-        and utype=#{utype,jdbcType=TINYINT}
+        and a.utype=#{utype,jdbcType=TINYINT}
     </if>
-    <if test="name != null" >
-        and name=#{name,jdbcType=VARCHAR}
+    <if test="supplierType != null" >
+        and a.supplier_type =#{supplierType,jdbcType=TINYINT}
+    </if>
+    <if test="uverification != null" >
+        and a.uverification =#{uverification,jdbcType=TINYINT}
+    </if>
+    <if test="uname != null and uname !=''" >
+        and a.uname like '%'||#{uname,jdbcType=VARCHAR}||'%'
+    </if>
+    <if test="branch" >
+        and r.rid=11
+    </if>
+    <if test="agent" >
+        and rr.rid=12
     </if>
   </select>
   

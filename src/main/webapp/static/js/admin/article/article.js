@@ -29,15 +29,17 @@ function returnList(){
 	$("#rightform").html("").hide();
 }
 
-////////////////////////////
 function refreshList(){
-	searchArticleCategory(false);
+	searchArticle(false);
 }
 
-function saveArticleCategory(){
-	var f = $('#articleCategoryForm').form('enableValidation').form('validate');
+function saveArticle(){
+	// 设置百度编辑器的内容到#cd中
+	var content = UE.getEditor('articleContent').getContent();
+	$("#ac").html(content);
+	var f = $('#articleForm').form('enableValidation').form('validate');
 	if(f){
-		$('#articleCategoryForm').form('submit',{
+		$('#articleForm').form('submit',{
 			  success : function(data){
 				  var result = eval("("+data+")");
 				  if(result.code==1){
@@ -52,27 +54,27 @@ function saveArticleCategory(){
 	};
 }
 
-function delArticleCategory(cid){
-	// 判断是否有下级
-	var url = basePath+"/admin/articlecategory/hasChrildrenOrExistArticle";
-	var loadData = {"cidStr":cid};
-	$.post(url,loadData,hasChrildrenOrExistArticleCallback,"text");
+function delArticle(aid){
+	$.messager.confirm('消息提醒', '确定要删掉资讯吗?', function(r){
+		if (r){
+			var url = basePath+"/admin/article/delete";
+			var loadData={"aidStr":aid};
+			$.post(url,loadData,commonCallback,"text");
+		}
+	});
 }
 
-function hasChrildrenOrExistArticleCallback(data){
-	var result = eval("("+data+")");
-	var cidStr = result.cidStr;
-	if(result.code==0){
-		$.messager.alert('消息提醒',result.msg);
+function batchDelete(){
+	var ids = $("input[name='subbox']:checked");
+	if(ids.length == 0){
+		$.messager.alert('消息提醒','请选择要删除的资讯。');
 		return;
 	}else{
-		$.messager.confirm('消息提醒', '确定要删掉该资讯目录吗?', function(r){
-			if (r){
-				var url = basePath+"/admin/articlecategory/delete";
-				var loadData={"cidStr":cidStr};
-				$.post(url,loadData,commonCallback,"text");
-			}
-		});
+		var aidStr = "";
+		for(var i = 0; i < ids.length; i ++){
+			aidStr += $(ids[i]).val() + ",";
+		}
+		delArticle(aidStr);
 	}
 }
 
@@ -83,25 +85,3 @@ function commonCallback(data){
 		refreshList();
 	}
 }
-
-function batchDelete(){
-	var ids = $("input[name='subbox']:checked");
-	if(ids.length == 0){
-		$.messager.alert('消息提醒','请选择要删除的资讯目录。');
-		return;
-	}else{
-		var idStr = "";
-		for(var i = 0; i < ids.length; i ++){
-			idStr += $(ids[i]).val() + ",";
-		}
-		delArticleCategory(idStr);
-	}
-}
-
-
-
-
-
-
-
-

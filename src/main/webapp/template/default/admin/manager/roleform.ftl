@@ -1,7 +1,7 @@
 <#import "/common/app.ftl" as app>
 <div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="returnList()"><em>返回列表</em></a>&#12288;</div></div>
 <div class="pad_lr_10">
-<form id="roleForm" action="${app.basePath}/admin/role/saverole" method="post">
+<form id="roleForm" action="${app.basePath}/admin/manager/saverole" method="post">
 <div class="J_tablelist table_list">
 <table width="100%" cellspacing="0">
 	<thead>

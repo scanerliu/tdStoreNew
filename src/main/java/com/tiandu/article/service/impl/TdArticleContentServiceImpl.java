@@ -52,9 +52,9 @@ public class TdArticleContentServiceImpl implements TdArticleContentService {
 	}
 	
 	@Override
-	public Integer save(TdArticleContent tdArticleContent) {
+	public Integer save(TdArticleContent tdArticleContent, boolean isUpdate) {
 		if(null!=tdArticleContent){
-			if(null!=tdArticleContent.getAid()){//更新
+			if(isUpdate){//更新
 				return articleContentMapper.updateByPrimaryKeyWithBLOBs(tdArticleContent);
 			}else{
 				return articleContentMapper.insert(tdArticleContent);

@@ -122,7 +122,7 @@
         name = #{title,jdbcType=VARCHAR},
       </if>
       <if test="type != null" >
-        type = #{utype,jdbcType=TINYINT},
+        type = #{type,jdbcType=TINYINT},
       </if>
       <if test="updateBy != null" >
         update_by = #{updateBy,jdbcType=INTEGER},
@@ -135,7 +135,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tiandu.custom.entity.TdRole" >
     update td_role
-    set name = #{name,jdbcType=VARCHAR}, title = #{title,jdbcType=VARCHAR}, type = #{utype,jdbcType=TINYINT}, update_by = #{updateBy,jdbcType=INTEGER}, update_time = #{updateTime,jdbcType=TIMESTAMP}
+    set name = #{name,jdbcType=VARCHAR}, title = #{title,jdbcType=VARCHAR}, type = #{type,jdbcType=TINYINT}, update_by = #{updateBy,jdbcType=INTEGER}, update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

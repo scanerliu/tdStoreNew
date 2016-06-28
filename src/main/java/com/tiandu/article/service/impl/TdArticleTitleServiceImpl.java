@@ -20,7 +20,7 @@ import com.tiandu.custom.service.TdUserService;
  * @author L. Gao
  *
  */
-@Service("TdArticleTitleService")
+@Service("tdArticleTitleService")
 public class TdArticleTitleServiceImpl implements TdArticleTitleService {
 	
 	@Autowired

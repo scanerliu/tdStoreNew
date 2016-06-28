@@ -88,7 +88,7 @@ public class ArticleTitleController extends BaseController {
 		
 		modelMap.addAttribute("tdArticleTitle", tdArticleTitle);
 		modelMap.addAttribute("articleCategoryList", articleCategoryList);
-		modelMap.addAttribute("type", "资讯");
+		modelMap.addAttribute("type", "article");
 		return "/admin/article/articleForm";
 	}
 	
@@ -111,12 +111,13 @@ public class ArticleTitleController extends BaseController {
 						tat.setStatus(articleTitle.getStatus());
 						tat.setSort(articleTitle.getSort());
 						tat.setHotRecommend(articleTitle.getHotRecommend());
+						tat.setUpdateTime(articleTitle.getUpdateTime());
 						tat.setUpdateBy(this.getCurrentUser().getUid());
 						tdArticleTitleService.save(tat);
-						// 保存对应的类容表
+						// 保存对应的内容表
 						TdArticleContent tac = tdArticleContentService.findOne(tat.getAid());
 						tac.setContent(articleTitle.getArticleContent());
-						tdArticleContentService.save(tac);
+						tdArticleContentService.save(tac, true);
 						res.put("msg", "资讯修改成功。");
 					}
 				}else{
@@ -129,6 +130,7 @@ public class ArticleTitleController extends BaseController {
 					// 保存对应的内容，待debug数据
 					articleContent.setAid(articleTitle.getAid());
 					articleContent.setContent(articleTitle.getArticleContent());
+					tdArticleContentService.save(articleContent, false);
 					res.put("msg", "资讯添加成功。");
 				}
 				res.put("code", "1");
@@ -137,6 +139,7 @@ public class ArticleTitleController extends BaseController {
 				logger.error("资讯保存失败错误信息:"+e);
 				res.put("code", "0");
 				res.put("msg", "资讯保存失败。");
+				e.printStackTrace();
 				return res;
 			}
 		}else{
@@ -164,6 +167,7 @@ public class ArticleTitleController extends BaseController {
 				logger.error("资讯删除失败，错误信息:" + e);
 				res.put("code", "0");
 				res.put("msg", "资讯删除失败。");
+				e.printStackTrace();
 				return res;
 			}
 		} else {
