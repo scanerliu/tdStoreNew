@@ -5,6 +5,9 @@ import com.tiandu.common.search.SearchCriteria;
 public class TdDistrictSearchCriteria extends SearchCriteria {
 
 	private Integer upid;
+	private Integer provinceId;	//省id
+	private Integer cityId;	//市id
+	private Integer regionId; //区id
 
 	private Byte level;
 
@@ -22,6 +25,30 @@ public class TdDistrictSearchCriteria extends SearchCriteria {
 
 	public void setLevel(Byte level) {
 		this.level = level;
+	}
+
+	public Integer getProvinceId() {
+		return provinceId;
+	}
+
+	public void setProvinceId(Integer provinceId) {
+		this.provinceId = provinceId;
+	}
+
+	public Integer getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(Integer cityId) {
+		this.cityId = cityId;
+	}
+
+	public Integer getRegionId() {
+		return regionId;
+	}
+
+	public void setRegionId(Integer regionId) {
+		this.regionId = regionId;
 	}
 
 }

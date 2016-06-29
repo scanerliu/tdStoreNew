@@ -31,6 +31,22 @@ public class TdDistrictServiceImpl implements TdDistrictService {
 	public TdDistrict findOne(Integer id) {
 		return districtMapper.selectByPrimaryKey(id);
 	}
+	
+	@Override
+	public TdDistrict findOneFull(Integer id) {
+		TdDistrict region = this.findOne(id);
+		if(null!=region){
+			if(region.getUpid()>0){
+				TdDistrict p1 = this.findOne(region.getUpid());
+				if(null!=p1 && p1.getUpid()>0){
+					TdDistrict p2 = this.findOne(p1.getUpid());
+					p1.setParent(p2);
+				}
+				region.setParent(p1);
+			}
+		}
+		return region;
+	}
 
 	public List<TdDistrict> findBySearchCriteria(TdDistrictSearchCriteria sc) {
 		return districtMapper.findBySearchCriteria(sc);

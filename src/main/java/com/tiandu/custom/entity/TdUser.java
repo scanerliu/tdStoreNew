@@ -1,12 +1,10 @@
 package com.tiandu.custom.entity;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import com.tiandu.menu.entity.TdMenu;
+import com.tiandu.district.entity.TdDistrict;
 
 public class TdUser {
 	
@@ -74,6 +72,10 @@ public class TdUser {
 	private String roleIds; //多个roleId 用逗号隔开
 	
 	private TdUser updateUser;
+	/**
+	 * 注册地区，显示用
+	 */
+	private TdDistrict region;
 
     public Integer getUid() {
         return uid;
@@ -289,6 +291,14 @@ public class TdUser {
 
 	public void setUpdateUser(TdUser updateUser) {
 		this.updateUser = updateUser;
+	}
+
+	public TdDistrict getRegion() {
+		return region;
+	}
+
+	public void setRegion(TdDistrict region) {
+		this.region = region;
 	}
 
 	public Boolean isLocked(){

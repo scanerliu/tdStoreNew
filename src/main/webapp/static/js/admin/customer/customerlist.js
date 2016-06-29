@@ -38,11 +38,11 @@ function saveCustomer(){
 			  success : function(data){
 				  var result = eval("("+data+")");
 				  if(result.code==1){
-					  $.messager.alert('消息提醒','管理员保存成功。');
+					  $.messager.alert('消息提醒','会员保存成功。');
 					  returnList();
 					  refreshList();
 				  }else{
-					  $.messager.alert('消息提醒','管理员保存失败!');
+					  $.messager.alert('消息提醒','会员保存失败!');
 				  }
 			  }
 			 });
@@ -175,13 +175,29 @@ function customerDetail(id){
 	showForm();
 }
 
-function getDistricts(num){
-	var url = basePath+"/admin/district/search";
+function getDistricts(obj,num){
+	var url = basePath+"/admin/district/regionselect";
 	var loadData = "";
-	if(f){
-		loadData = null;
-	}else{
-		loadData = $("#districtlistform").serializeArray();
+	if(num==0){
+		loadData = {'upid':0};
+		$("#provincespn").loading().load(url,loadData);
+		$("#cityspn").html("");
+		$("#regionspn").html("");
+		$("#uregionId").val("");
+	}else if(num==1){
+		var upid = $(obj).val();
+		loadData = {'upid':upid,'provinceId':upid};
+		$("#cityspn").loading().load(url,loadData);
+		$("#regionspn").html("");
+		$("#uregionId").val("");
+	}else if(num==2){
+		var upid = $(obj).val();
+		var provinceid = $("#provinceId").val();
+		loadData = {'upid':upid,'provinceId':provinceid};
+		$("#regionspn").loading().load(url,loadData);
+		$("#uregionId").val("");
+	}else if(num==3){
+		var upid = $(obj).val();
+		$("#uregionId").val(upid);
 	}
-	$("#results").load(url,loadData);
 }

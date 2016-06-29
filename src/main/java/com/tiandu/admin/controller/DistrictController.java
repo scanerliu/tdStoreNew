@@ -222,6 +222,26 @@ public class DistrictController {
 		res.put("code", "1");
 		return res;
 	}
+	
+	@RequestMapping("/regionselect")
+	public String regionselect(TdDistrictSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		sc.setFlag(false);
+		TdDistrict parent = new TdDistrict();	//上级
+		TdDistrict province = new TdDistrict();	//省份
+		if(null!=sc.getUpid()&&sc.getUpid()>0){
+			parent = tdDistrictService.findOne(sc.getUpid());
+			if(parent!=null && parent.getLevel()==1){
+				province = parent;
+			}else if(null!=sc.getProvinceId()&&sc.getProvinceId()>0){
+				province = tdDistrictService.findOne(sc.getProvinceId());
+			}
+		}
+		List<TdDistrict> regionList = tdDistrictService.findBySearchCriteria(sc);
+		modelMap.addAttribute("regionList", regionList);
+		modelMap.addAttribute("parent", parent);
+		modelMap.addAttribute("province", province);
+		return "/admin/district/regionselect";
+	}
 
 	// 是否是直辖市
 	private boolean isCentralCity(String cityName) {

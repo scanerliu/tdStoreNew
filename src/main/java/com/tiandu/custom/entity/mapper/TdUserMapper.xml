@@ -408,6 +408,18 @@
       supplier_type = #{supplierType,jdbcType=TINYINT}
     where uid = #{uid,jdbcType=INTEGER}
   </update>
+  <update id="updateCustomerByPrimaryKey" parameterType="com.tiandu.custom.entity.TdUser" >
+    update td_user
+    set unick = #{unick,jdbcType=VARCHAR},
+      utel = #{utel,jdbcType=VARCHAR},
+      ustatus = #{ustatus,jdbcType=TINYINT},
+      update_by = #{updateBy,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      ubirthday = #{ubirthday,jdbcType=DATE},
+      uverification = #{uverification,jdbcType=TINYINT},
+      ugenter = #{ugenter,jdbcType=TINYINT}
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
   <update id="updateManagerByPrimaryKey" parameterType="com.tiandu.custom.entity.TdUser" >
     update td_user
     set unick = #{unick,jdbcType=VARCHAR},
