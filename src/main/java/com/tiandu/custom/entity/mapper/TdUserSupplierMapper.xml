@@ -16,7 +16,6 @@
 	<association property="user" resultMap="userResult"/>
 	<!-- 审核人信息 -->
 	<association property="updatePerson" resultMap="updatePersonResult"/>
-	
   </resultMap>
   <resultMap id="userResult" type="com.tiandu.custom.entity.TdUser" >
   	<result column="username" property="uname" jdbcType="VARCHAR" />

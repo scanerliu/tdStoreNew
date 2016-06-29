@@ -90,6 +90,7 @@ public class UserSupplierController extends BaseController {
 				tus.setUpdateBy(this.getCurrentUser().getUid());
 				tus.setUpdateTime(new Date());
 				tus.setNote(userSupplier.getNote());
+				tus.setStatus(userSupplier.getStatus());
 				tdUserSupplierService.save(tus);
 				res.put("msg", "供应商资质审核成功。");
 				res.put("code", "1");
@@ -114,8 +115,8 @@ public class UserSupplierController extends BaseController {
 		Map<String,String> res = new HashMap<String,String>(); 
 		if(id == null){
 			res.put("code", "0");
-			res.put("msg", "审核失败。");
-			logger.error("由于审核Id为空，审核失败。");
+			res.put("msg", "资质审核失败。");
+			logger.error("由于审核Id为空，资质审核失败。");
 			return res;
 		}
 		TdUserSupplier tus = tdUserSupplierService.findOne(id);
@@ -129,7 +130,7 @@ public class UserSupplierController extends BaseController {
 		tus.setReply(replyContent);
 		tdUserSupplierService.save(tus);
 		res.put("code", "1");
-		res.put("msg", "审核成功。");
+		res.put("msg", "资质审核成功。");
 		return res;
 	}
 }
