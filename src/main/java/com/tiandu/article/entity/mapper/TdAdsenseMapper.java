@@ -20,4 +20,5 @@ public interface TdAdsenseMapper {
     
     public Integer countByCriteria(TdAdsenseSearchCriteria sc);
     public List<TdAdsense> findBySearchCriteria(TdAdsenseSearchCriteria sc);
+    public TdAdsense findByName(String name);
 }

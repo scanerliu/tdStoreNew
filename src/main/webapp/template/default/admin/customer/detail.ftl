@@ -2,71 +2,107 @@
 <div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="returnList()"><em>返回列表</em></a>&#12288;</div></div>
 <div class="pad_lr_10">
 <div class="J_tablelist table_list">
-<table width="100%" cellspacing="0" id="customer_tree">
-<thead>
-<tr>
-<th width="40"><input type="checkbox" class="J_checkall" id="J_checkall" name="checkall"></th>
-<th>ID</th>
-<th align="left">账号</th>
-<th align="left">昵称</th>
-<th align="left">性别</th>
-<th align="left">状态</th>
-<th align="left">最近登陆时间</th>
-<th align="left">登陆ip</th>
-<th align="left">更新时间</th>
-<th align="left">更新人</th>
-<th width="200">管理操作</th>
-</tr>
-</thead>
-<tbody>
-<#if userList??>
-<#list userList as user>
-    <tr uid="${user.uid}">
-        <td align="center">
-        <input type="checkbox" value="${user.uid}" name="subbox" class="J_checkitem"></td>
-        <td align="center">${user.uid}</td>
-        <td>${user.uname}</td>
-        <td>${user.unick!''}</td>
-        <td>${user.getUgenterStr()!''}</td>
-        <td>${user.getUstatusStr()!''}</td>
-        <td><#if user.lastLoginTime??>${user.lastLoginTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
-        <td>${user.lastLoginIp!''}</td>
-        <td><#if user.updateTime??>${user.updateTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
-        <td><#if user.updateUser??>${user.updateUser.unick!''}</#if></td>
-        <td align="center">
-        	<a href="javascript:;" onclick="customerDetail(${user.uid})">详情</a> |
-        	<a href="javascript:;" onclick="changePassword(${user.uid})">修改密码</a> |
-        	<#if user.ustatus==2>
-    			<a href="javascript:;" onclick="activeCustomer(${user.uid})">启用</a> | 
-    		<#else>
-    			<a href="javascript:;" onclick="forbiddenCustomer(${user.uid})">锁定</a> | 
-    		</#if> 
-            <a href="javascript:;" onclick="editRoles(${user.uid})">授权</a> | 
-            <a class="J_showdialog" href="javascript:;" onclick="editCustomer(${user.uid})">编辑</a> | 
-            <a class="J_confirmurl" href="javascript:;" onclick="delCustomer(${user.uid})">删除</a>
-        </td>
-    </tr>
-</#list>
-</#if>
-</tbody>
-</table>
+<div id="dg" style="width:800px;height:650px;">
+    <div title="基本信息" style="padding:20px;">
+    	<table class="tabcontent" width="100%" cellspacing="0">
+        <tr>
+            <td width="150" align="right">账号:</td>
+            <td><img src="${customer.uavatar!''}" alt="头像地址"/> ${customer.uname}</td>
+        </tr>
+        <tr>
+            <td width="150" align="right">等级:</td>
+            <td>${customer.membershipId!''}</td>
+        </tr>
+        <tr>
+            <td align="right">昵称:</td>
+            <td>${customer.unick!''}</td>
+        </tr>
+        <tr>
+            <td align="right">性别:</td>
+            <td>${customer.getUgenterStr()!''}</td>
+        </tr>
+        <tr>
+            <td align="right">手机号:</td>
+            <td>${customer.utel!''}</td>
+        </tr>
+        <tr>
+            <td align="right">生日:</td>
+            <td><#if customer.ubirthday??>${customer.ubirthday?string("yyyy-MM-dd")}</#if></td>
+        </tr>
+        <tr>
+            <td align="right">注册地址:</td>
+            <td>${customer.uregionPath!''} ${customer.uaddress!''}</td>
+        </tr>
+        <tr>
+            <td align="right">验证状态:</td>
+            <td>${customer.getUverificationStr()!''}</td>
+        </tr>
+        <tr>
+            <td align="right">状态:</td>
+            <td>${customer.getUstatusStr()!''}</td>
+        </tr>
+        <tr>
+            <td align="right">最近登陆时间:</td>
+            <td><#if customer.lastLoginTime??>${customer.lastLoginTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+        </tr>
+        <tr>
+            <td align="right">登陆ip:</td>
+            <td>${customer.lastLoginIp!''}</td>
+        </tr>
+        </table>
+    </div>
+    <div title="钱包信息" style="overflow:auto;padding:20px;">
+    	<table class="tabcontent"  width="100%" cellspacing="0">
+        <tr>
+            <td width="120" align="right">接口地址:</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td align="right">开发者主账号:</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td align="right">开发者主账号令牌:</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td align="right">应用Id:</td>
+            <td></td>
+        </tr>
+        </table>
+    </div>
+    <div title="积分信息" style="overflow:auto;padding:20px;">
+    	<table class="tabcontent"  width="100%" cellspacing="0">
+        <tr>
+            <td width="120" align="right">接口地址:</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td align="right">开发者主账号:</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td align="right">开发者主账号令牌:</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td align="right">应用Id:</td>
+            <td></td>
+        </tr>
+        </table>
+    </div>
+</div>
 </div>
 <div class="btn_wrap_fixed">
 </div>
 </div>
 <div class="btn_wrap_fixed">
-<#assign pageId="Customers" />
-<#include "/admin/common/common_postpage.ftl" />
 </div>
 <script>
 $(function(){
-    $("#J_checkall").click(function() {
-        $('input[name="subbox"]').prop("checked",this.checked); 
-    });
-    var $subBox = $("input[name='subbox']");
-    $subBox.click(function(){
-        $("#J_checkall").prop("checked",$subBox.length == $("input[name='subbox']:checked").length ? true : false);
-    }); 
-    //$("#customer_tree").treetable({expandable: true, indent:20, initialState: "collapsed",expanderTemplate:"<a href='javascript:;'></a>",stringExpand:"查看详情",stringCollapse:"收起",onNodeExpand:nodeExpand});
+     $('#dg').tabs({
+	    border:false,
+	    fit:true
+	});
 });
 </script>

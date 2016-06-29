@@ -55,8 +55,8 @@
 	<input type="hidden" name="ustatus" value="${sc.ustatus!''}"/>
 	<input type="hidden" name="uverification" value="${sc.uverification!''}"/>
 	<input type="hidden" name="supplierType" value="${sc.supplierType!''}"/>
-	<input type="hidden" name="agent" value="${sc.agent}"/>
-	<input type="hidden" name="branch" value="${sc.branch}"/>
+	<input type="hidden" name="agent" value="${sc.agent?c}"/>
+	<input type="hidden" name="branch" value="${sc.branch?c}"/>
 </div>
 </div>
 <div class="btn_wrap_fixed">

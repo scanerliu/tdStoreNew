@@ -175,3 +175,13 @@ function customerDetail(id){
 	showForm();
 }
 
+function getDistricts(num){
+	var url = basePath+"/admin/district/search";
+	var loadData = "";
+	if(f){
+		loadData = null;
+	}else{
+		loadData = $("#districtlistform").serializeArray();
+	}
+	$("#results").load(url,loadData);
+}

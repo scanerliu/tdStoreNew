@@ -61,6 +61,12 @@
     from td_user a
     where uid = #{uid,jdbcType=INTEGER}
   </select>
+  <select id="selectDetailByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_user a
+    where uid = #{uid,jdbcType=INTEGER}
+  </select>
   <select id="selectByPrimaryKeyWithRoles" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     SELECT u.uid, u.uname , r.rid as ROLE_ID
     from td_user as u , td_user_role as r 
@@ -102,7 +108,7 @@
         and a.uverification =#{uverification,jdbcType=TINYINT}
     </if>
     <if test="uname != null and uname !=''" >
-        and a.uname like '%'||#{uname,jdbcType=VARCHAR}||'%'
+        and a.uname like CONCAT('%',#{uname,jdbcType=VARCHAR},'%')
     </if>
     <if test="branch" >
         and r.rid=11
@@ -135,7 +141,7 @@
         and a.uverification =#{uverification,jdbcType=TINYINT}
     </if>
     <if test="uname != null and uname !=''" >
-        and a.uname like '%'||#{uname,jdbcType=VARCHAR}||'%'
+        and a.uname like CONCAT('%',#{uname,jdbcType=VARCHAR},'%')
     </if>
     <if test="branch" >
         and r.rid=11

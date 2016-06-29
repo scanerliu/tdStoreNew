@@ -127,4 +127,10 @@
     from td_adsense  where 1=1 
   </select>
   
+  <select id="findByName" resultType="com.tiandu.article.entity.TdAdsense" parameterType="java.lang.String">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from td_adsense where name = #{name,jdbcType=VARCHAR}
+  </select>
+  
 </mapper>

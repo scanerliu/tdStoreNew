@@ -27,13 +27,12 @@ function returnList(){
 }
 
 function refreshList(){
-	searchRoles(false);
+	searchAdsense(false);
 }
 
 // 提交新增、修改广告为内容
 function saveAdsense(){
 	var f = $('#adsenseForm').form('enableValidation').form('validate');
-	console.debug(f)
 	if(f){
 		$("#adsenseForm").form("submit",{
 			success : function(data){
@@ -106,7 +105,7 @@ function saveAd(){
 				  if(result.code==1){
 					  $.messager.alert('消息提醒','广告位保存成功。');
 					  returnList();
-					  refreshList();
+					  refreshListAd();
 				  }else{
 					  $.messager.alert('消息提醒','广告位保存失败!');
 				  }
@@ -114,6 +113,10 @@ function saveAd(){
 		});
 		
 	}
+}
+
+function refreshListAd(){
+	searchAd(false);
 }
 
 function delAdsense(id){

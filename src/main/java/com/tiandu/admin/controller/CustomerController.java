@@ -16,18 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.Gson;
 import com.tiandu.common.controller.BaseController;
-import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.search.TdRoleSearchCriteria;
 import com.tiandu.custom.search.TdUserSearchCriteria;
 import com.tiandu.custom.service.TdRoleService;
-import com.tiandu.custom.service.TdUserService;
-import com.tiandu.menu.entity.TdMenu;
-import com.tiandu.menu.search.TdMenuSearchCriteria;
-import com.tiandu.menu.service.TdMenuService;
 
 @Controller
 @RequestMapping("/admin/customer")
@@ -42,6 +36,7 @@ public class CustomerController extends BaseController {
 	public String list(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 	    return "/admin/customer/list";
 	}
+	
 	@RequestMapping("/search")
 	public String search(TdUserSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		//获取主菜单
@@ -50,8 +45,6 @@ public class CustomerController extends BaseController {
 		List<TdUser> userList = tdUserService.findBySearchCriteria(sc);
 	    modelMap.addAttribute("userList", userList) ;
 	    modelMap.addAttribute("sc", sc) ;
-	    TdUser manager = this.getCurrentUser();
-	    modelMap.addAttribute("manager", manager) ;
 		return "/admin/customer/listbody";
 	}
 	
@@ -232,7 +225,7 @@ public class CustomerController extends BaseController {
 	public String details(Integer id, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser customer = null;
 		if(null!=id){
-			customer = tdUserService.findOne(id);		    
+			customer = tdUserService.findDetail(id);		    
 		}
 		if(null==customer){
 			modelMap.addAttribute("errmsg", "未找到相关人员，请重新操作！");

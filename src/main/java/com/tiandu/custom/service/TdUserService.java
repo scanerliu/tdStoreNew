@@ -25,7 +25,12 @@ public interface TdUserService {
 	public TdUser selectByUname(String uname);
 	public List<TdUser> findBySearchCriteria(TdUserSearchCriteria sc);
 	public TdUser findOneWithRoles(Integer id);
-	
+	/**
+	 * 查找用户详情
+	 * @param id
+	 * @return
+	 */
+	public TdUser findDetail(Integer id);
 	/**
 	 * 保存管理员角色信息
 	 * @param user

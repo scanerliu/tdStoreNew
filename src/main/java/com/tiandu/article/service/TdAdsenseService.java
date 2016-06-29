@@ -12,5 +12,6 @@ public interface TdAdsenseService {
 	public TdAdsense findOne(Integer id);
 	public List<TdAdsense> findBySearchCriteria(TdAdsenseSearchCriteria sc);
 	public Integer save(TdAdsense e);
+	public TdAdsense findByName(String name);
 	
 }
