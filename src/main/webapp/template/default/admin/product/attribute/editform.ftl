@@ -7,7 +7,7 @@
 <input type="hidden" name="attriId" value="<#if attribute??>${attribute.attriId?c}</#if>">
 <table class="table_form" width="100%">
     <tr>
-        <th width="150">规格名称：</th>
+        <th width="150">类型名称：</th>
         <td><input type="text" name="name" class="easyui-textbox" value="<#if attribute??>${attribute.name!''}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="length[2,20]"></td>
     </tr>
     <tr>

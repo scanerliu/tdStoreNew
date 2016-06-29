@@ -1,6 +1,9 @@
 package com.tiandu.product.entity.mapper;
 
+import java.util.List;
+
 import com.tiandu.product.entity.TdProductAttributeOption;
+import com.tiandu.product.search.TdProductAttributeOptionCriteria;
 
 public interface TdProductAttributeOptionMapper {
     int deleteByPrimaryKey(Integer id);
@@ -16,4 +19,7 @@ public interface TdProductAttributeOptionMapper {
     int updateByPrimaryKey(TdProductAttributeOption record);
     
     Integer deleteByAttriId(Integer attrid);
+    
+    Integer countByCriteria(TdProductAttributeOptionCriteria sc);
+    List<TdProductAttributeOption> findBySearchCriteria(TdProductAttributeOptionCriteria sc);
 }

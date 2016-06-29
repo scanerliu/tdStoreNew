@@ -31,7 +31,7 @@ function refreshList(){
 }
 
 // 提交新增、修改广告为内容
-function saveProductType(){
+function saveAttribute(){
 	var f = $('#attributeForm').form('enableValidation').form('validate');
 	if(f){
 		$("#attributeForm").form("submit",{
@@ -70,6 +70,12 @@ function delProductTypeCallback(data){
 	}
 }
 
+function searchOption(id)
+{
+	var url = basePath+"/admin/attribute/option/search";
+	var loadData = {"attriId":id};
+	$("#results").load(url,loadData);
+}
 
 /*
 function myLoadFilter(data,parentId){
