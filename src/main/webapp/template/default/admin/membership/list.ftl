@@ -3,16 +3,16 @@
 <link rel="stylesheet" href="${app.basePath}/static/js/easyui/easyui.css"/>
 <script src="${app.basePath}/static/js/easyui/jquery.easyui.min.js" type="text/javascript"></script>
 <script src="${app.basePath}/static/js/easyui/easyui-lang-zh_CN.js" type="text/javascript"></script>
-<script src="${app.basePath}/static/js/admin/article/ad.js" type="text/javascript"></script>
+<script src="${app.basePath}/static/js/admin/membership/membership.js" type="text/javascript"></script>
 <div id="rightlist">
-	<form id="adsenseform">
-		<div id="results"></div>
-	</form>
+<form id="membershipListForm">
+<div id="results"></div>
+</form>
 </div>
 <div id="rightform"></div>
 
 <script type="text/javascript">
-	$(function(){
-	    searchAdsense(true);
-	});
+$(function(){
+    searchMembership(true);
+});
 </script>

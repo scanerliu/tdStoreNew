@@ -1,10 +1,13 @@
 package com.tiandu.product.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tiandu.product.entity.TdProductAttributeOption;
 import com.tiandu.product.entity.mapper.TdProductAttributeOptionMapper;
+import com.tiandu.product.search.TdProductAttributeOptionCriteria;
 import com.tiandu.product.service.TdProductAttributeOptionService;
 
 @Service("tdProductAttributeOptionService")
@@ -41,6 +44,13 @@ public class TdProductAttributeOptionImpl implements TdProductAttributeOptionSer
 	@Override
 	public Integer deleteByAttriId(Integer id) {
 		return optionMapper.deleteByAttriId(id);
+	}
+
+	@Override
+	public List<TdProductAttributeOption> findBySearchCriteria(TdProductAttributeOptionCriteria sc) {
+		Integer count = optionMapper.countByCriteria(sc);
+		sc.setTotalCount(count);
+		return optionMapper.findBySearchCriteria(sc);
 	}
 	
 	

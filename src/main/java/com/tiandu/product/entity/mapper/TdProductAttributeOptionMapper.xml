@@ -107,5 +107,16 @@
     where attri_id = #{attriId,jdbcType=INTEGER}
   </delete>
   
+  <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.product.search.TdProductAttributeOptionCriteria">
+  	select count(attri_id)
+    from td_product_attribute_option
+    where 1=1 
+  </select>
+  
+  <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.product.search.TdProductAttributeOptionCriteria">
+  	select 
+  	<include refid="Base_Column_List" />
+    from td_product_attribute_option 
+  </select>
   
 </mapper>
