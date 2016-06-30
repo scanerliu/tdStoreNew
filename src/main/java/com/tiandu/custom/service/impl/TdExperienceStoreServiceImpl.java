@@ -43,13 +43,13 @@ public class TdExperienceStoreServiceImpl implements TdExperienceStoreService {
 		if(sc.getStatus() != null && sc.getStatus() == -1){
 			sc.setStatus(null);
 		}
-		Integer count = experienceStoreMapper.countByCriteria(sc);
-		sc.setTotalCount(count);
 		sc.setAssociationUser(true);
 		sc.setAssociationUpdatePerson(true);
 		if(sc.getSearchName() != null && sc.getSearchName().trim().equals("")){
 			sc.setSearchName(null);
 		}
+		Integer count = experienceStoreMapper.countByCriteria(sc);
+		sc.setTotalCount(count);
 		List<TdExperienceStore> experienceStoreList = experienceStoreMapper.findBySearchCriteria(sc);
 		return experienceStoreList;
 	}
