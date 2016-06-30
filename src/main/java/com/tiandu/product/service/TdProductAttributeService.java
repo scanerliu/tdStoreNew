@@ -13,5 +13,5 @@ public interface TdProductAttributeService {
 	Integer save(TdProductAttribute e);
 	TdProductAttribute findOne(Integer id);
 	
-	List<TdProductType> findBySearchCriteria(TdProductAttributeCriteria sc);
+	List<TdProductAttribute> findBySearchCriteria(TdProductAttributeCriteria sc);
 }

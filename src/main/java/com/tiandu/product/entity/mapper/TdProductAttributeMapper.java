@@ -3,7 +3,6 @@ package com.tiandu.product.entity.mapper;
 import java.util.List;
 
 import com.tiandu.product.entity.TdProductAttribute;
-import com.tiandu.product.entity.TdProductType;
 import com.tiandu.product.search.TdProductAttributeCriteria;
 
 public interface TdProductAttributeMapper {
@@ -20,5 +19,5 @@ public interface TdProductAttributeMapper {
     int updateByPrimaryKey(TdProductAttribute record);
     
     public Integer countByCriteria(TdProductAttributeCriteria sc);
-	public List<TdProductType> findBySearchCriteria(TdProductAttributeCriteria sc);
+	public List<TdProductAttribute> findBySearchCriteria(TdProductAttributeCriteria sc);
 }

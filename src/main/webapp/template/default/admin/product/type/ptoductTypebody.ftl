@@ -15,16 +15,16 @@
     <ul id="tt" class="easyui-tree">
     	<#list productTypeList as pro>
 	    <li >
-			<span ><a href="javascript:editProductType(${pro.id?c});">${pro.name!''}</a>&emsp;&emsp;&emsp;&emsp;<a href="javascript:" onclick="deleteProduct(${pro.id?c});">删除</a></span>
+			<span ><a href="javascript:editProductType(${pro.id?c});">${pro.name!''}</a>&emsp;&emsp;&emsp;&emsp;<a href="javascript:;" onclick="searchTypeAttrbute(${pro.id?c})">属性</a>&emsp;/&emsp;<a href="javascript:" onclick="deleteProduct(${pro.id?c});">删除</a></span>
 			<#if pro.subList??>
 			<ul>
 				<#list pro.subList as spro>
 				<li>
-					<span><a href="javascript:editProductType(${spro.id?c});">${spro.name!''}</a>&emsp;&emsp;&emsp;&emsp;<a href="javascript:;" onclick="deleteProduct(${spro.id?c});">删除</a></span>
+					<span><a href="javascript:editProductType(${spro.id?c});">${spro.name!''}</a>&emsp;&emsp;&emsp;&emsp;<a href="javascript:;" onclick="searchTypeAttrbute(${spro.id?c})">属性</a>&emsp;/&emsp;<a href="javascript:;" onclick="deleteProduct(${spro.id?c});">删除</a></span>
 					<#if spro.subList??>
 					<ul>
 						<#list spro.subList as tpro>
-						<li><span><a href="javascript:editProductType(${tpro.id?c});">${tpro.name!''}</a>&emsp;&emsp;&emsp;&emsp;<a href="javascript:;" onclick="deleteProduct(${tpro.id?c});">删除</a></span></li>
+						<li><span><a href="javascript:editProductType(${tpro.id?c});">${tpro.name!''}</a>&emsp;&emsp;&emsp;&emsp;<a href="javascript:;" onclick="searchTypeAttrbute(${tpro.id?c})">属性</a>&emsp;/&emsp;<a href="javascript:;" onclick="deleteProduct(${tpro.id?c});">删除</a></span></li>
 						</#list>
 					</ul>
 					</#if>
