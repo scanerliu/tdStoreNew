@@ -1,6 +1,6 @@
 package com.tiandu.custom.service.impl;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,30 +9,38 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tiandu.common.db.DBContextHolder;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.custom.entity.TdUserAccount;
+import com.tiandu.custom.entity.TdUserIntegral;
 import com.tiandu.custom.entity.mapper.TdUserMapper;
 import com.tiandu.custom.entity.mapper.TdUserRoleMapper;
 import com.tiandu.custom.search.TdUserSearchCriteria;
+import com.tiandu.custom.service.TdUserAccountService;
+import com.tiandu.custom.service.TdUserIntegralService;
 import com.tiandu.custom.service.TdUserService;
 import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.service.TdDistrictService;
-import com.tiandu.menu.entity.TdMenu;
 
 @Service("tdUserService")
 public class TdUserServiceImpl implements TdUserService {
 
 	@Autowired
-	TdUserMapper userMapper;
+	private TdUserMapper userMapper;
 	
 	@Autowired
-	TdUserRoleMapper userRoleMapper;
+	private TdUserRoleMapper userRoleMapper;
 	
 	@Autowired
-	TdDistrictService tdDistrictService;
+	private TdDistrictService tdDistrictService;
 
+	@Autowired
+	private TdUserIntegralService tdUserIntegralService;
+	
+	@Autowired
+	private TdUserAccountService tdUserAccountService;
+	
 	public int insert(TdUser u) {
 		return userMapper.insert(u);
 	}
@@ -106,7 +114,25 @@ public class TdUserServiceImpl implements TdUserService {
 				user.setSupplierType(Byte.valueOf("0"));
 				user.setUprovinceId(provinceId);
 				user.setUregionPath(regionPath);
-				return userMapper.insert(user);
+				int result = userMapper.insert(user);
+				//保存积分信息
+				TdUserIntegral integral = new TdUserIntegral();
+				integral.setIntegral(0);
+				integral.setTotalIntegral(0);
+				integral.setUid(user.getUid());
+				integral.setUpdateTime(user.getUpdateTime());
+				integral.setUpdateBy(user.getUpdateBy());
+				tdUserIntegralService.insert(integral);
+				//保存钱包信息
+				TdUserAccount account = new TdUserAccount();
+				account.setAmount(BigDecimal.ZERO);
+				account.setStatus(TdUserAccount.ACCOUNT_STATUS_ACTIVE);
+				account.setUid(user.getUid());
+				account.setUpdateBy(user.getUpdateBy());
+				account.setUpdateTime(user.getUpdateTime());
+				tdUserAccountService.insert(account);
+				
+				return result;
 			}
 		}
 		return null;

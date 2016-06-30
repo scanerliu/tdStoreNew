@@ -19,12 +19,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.custom.entity.TdUserAccount;
+import com.tiandu.custom.entity.TdUserAccountLog;
 import com.tiandu.custom.entity.TdUserIntegral;
 import com.tiandu.custom.entity.TdUserIntegralLog;
 import com.tiandu.custom.search.TdRoleSearchCriteria;
+import com.tiandu.custom.search.TdUserAccountLogSearchCriteria;
 import com.tiandu.custom.search.TdUserIntegralLogSearchCriteria;
 import com.tiandu.custom.search.TdUserSearchCriteria;
 import com.tiandu.custom.service.TdRoleService;
+import com.tiandu.custom.service.TdUserAccountLogService;
+import com.tiandu.custom.service.TdUserAccountService;
 import com.tiandu.custom.service.TdUserIntegralLogService;
 import com.tiandu.custom.service.TdUserIntegralService;
 
@@ -42,6 +47,12 @@ public class CustomerController extends BaseController {
 	
 	@Autowired
 	private TdUserIntegralLogService tdUserIntegralLogService;
+	
+	@Autowired
+	private TdUserAccountService tdUserAccountService;
+	
+	@Autowired
+	private TdUserAccountLogService tdUserAccountLogService;
 	
 	@RequestMapping("/list")
 	public String list(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
@@ -268,11 +279,137 @@ public class CustomerController extends BaseController {
 		return "/admin/customer/points";
 	}
 	
+	/**
+	 * 积分变更记录列表
+	 * @param sc
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
 	@RequestMapping("/customerpointslog")
 	public String customerpointslog(TdUserIntegralLogSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		sc.setPageSize(1);
 		List<TdUserIntegralLog> logList = tdUserIntegralLogService.findBySearchCriteria(sc);
 		modelMap.addAttribute("logList", logList);
 		modelMap.addAttribute("sc", sc);
 		return "/admin/customer/pointslog";
+	}
+	/**
+	 * 积分变更
+	 * @param integralLog
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/addintegral", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> addintegral(TdUserIntegralLog integralLog, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>(); 
+		if(null!=integralLog){
+		    try {
+		    	Date now = new Date();
+		    	TdUser currManager = this.getCurrentUser();
+		    	TdUserIntegral integral = tdUserIntegralService.findOne(integralLog.getUid());
+		    	if(null==integral||null==integral.getUid()){
+		    		res.put("code", "0");
+		    		res.put("errmsg", "客户积分变更失败：未匹配到积分记录！");
+			    	return res;
+		    	}
+		    	integral.setUpdateBy(currManager.getUid());
+		    	integral.setUpdateTime(now);
+		    	integralLog.setType(TdUserIntegralLog.USERINTEGRALLOG_TYPE_SYSTEM);
+		    	integralLog.setCreateTime(now);
+		    	tdUserIntegralService.addIntegral(integral, integralLog);
+				res.put("code", "1");
+				res.put("integral", integral.getIntegral().toString());
+				return res;
+		    }catch (Exception e) {
+		    	logger.error("积分变更失败错误信息:"+e);
+		    	res.put("code", "0");
+		    	return res;
+		    }
+		}else{
+			res.put("code", "0");
+			return res;
+		}
+	}
+	
+	/**
+	 * 获取客户积分信息
+	 * @param id 客户id
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
+	@RequestMapping("/customeraccount")
+	public String customeraccount(Integer id, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUserAccount account = null;
+		if(null!=id){
+			account = tdUserAccountService.findOne(id);		    
+		}
+		if(null==account){
+			modelMap.addAttribute("errmsg", "未找到相关人员，请重新操作！");
+			return "/admin/error";
+		}
+		modelMap.addAttribute("account", account);
+		return "/admin/customer/account";
+	}
+	
+	/**
+	 * 钱包变更记录列表
+	 * @param sc
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
+	@RequestMapping("/customeraccountlog")
+	public String customeraccountlog(TdUserAccountLogSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		sc.setPageSize(1);
+		List<TdUserAccountLog> logList = tdUserAccountLogService.findBySearchCriteria(sc);
+		modelMap.addAttribute("logList", logList);
+		modelMap.addAttribute("sc", sc);
+		return "/admin/customer/accountlog";
+	}
+	/**
+	 * 钱包金额变更
+	 * @param integralLog
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/addamount", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> addamount(TdUserAccountLog accountlog, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>(); 
+		if(null!=accountlog){
+		    try {
+		    	Date now = new Date();
+		    	TdUser currManager = this.getCurrentUser();
+		    	TdUserAccount account = tdUserAccountService.findOne(accountlog.getUid());
+		    	if(null==account||null==account.getUid()){
+		    		res.put("code", "0");
+		    		res.put("errmsg", "客户金额变更失败：未匹配到账号记录！");
+			    	return res;
+		    	}
+		    	account.setUpdateBy(currManager.getUid());
+		    	account.setUpdateTime(now);
+		    	accountlog.setType(TdUserIntegralLog.USERINTEGRALLOG_TYPE_SYSTEM);
+		    	accountlog.setCreateTime(now);
+		    	tdUserAccountService.addAmount(account, accountlog);
+				res.put("code", "1");
+				res.put("integral", account.getAmount().toString());
+				return res;
+		    }catch (Exception e) {
+		    	logger.error("客户金额变更失败错误信息:"+e);
+		    	res.put("code", "0");
+		    	return res;
+		    }
+		}else{
+			res.put("code", "0");
+			return res;
+		}
 	}
 }

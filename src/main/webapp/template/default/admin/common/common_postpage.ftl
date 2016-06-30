@@ -18,7 +18,7 @@ function gotopage${pageId!''}(num){
     ${sc.totalCount!"0"} 条记录 <#if sc.totalPageCount==0>0<#else>${sc.pageNo}</#if>/${sc.totalPageCount} 页
     <#if sc??>
             <#assign continueEnter=false>
-            <#if sc.pageNo == 1>
+            <#if sc.pageNo <=1>
             <#else>
                  <a href="javascript:;" onclick="gotopage${pageId!''}(${sc.pageNo-1})">上一页</a>
             </#if>

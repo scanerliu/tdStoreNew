@@ -43,7 +43,7 @@
     <tr>
         <th>生日：</th>
         <td>
-            <input type="text" name="ubirthday" class="easyui-datebox" value="${customer.ubirthday!''}" style="width:200px;height:30px" data-options="required:true,sharedCalendar:'#cc'">
+            <input type="text" name="ubirthday" class="easyui-datebox" value="<#if customer.ubirthday??>${customer.ubirthday?string("yyyy-MM-dd")}</#if>" style="width:200px;height:30px" data-options="required:true,sharedCalendar:'#cc'">
         </td>
     </tr>
     <tr>
