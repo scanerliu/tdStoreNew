@@ -5,8 +5,7 @@
 <thead>
 <tr>
 <th width="40"><input type="checkbox" class="J_checkall" id="J_checkall" name="checkall"></th>
-<th>ID</th>
-<th align="left">账号</th>
+<th>账号</th>
 <th align="left">昵称</th>
 <th align="left">性别</th>
 <th align="left">状态</th>
@@ -23,8 +22,7 @@
     <tr uid="${user.uid}">
         <td align="center">
         <input type="checkbox" value="${user.uid}" name="subbox" class="J_checkitem"></td>
-        <td align="center">${user.uid}</td>
-        <td>${user.uname}</td>
+        <td align="center">${user.uname}</td>
         <td>${user.unick!''}</td>
         <td>${user.getUgenterStr()!''}</td>
         <td>${user.getUstatusStr()!''}</td>

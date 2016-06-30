@@ -20,6 +20,7 @@ public interface TdUserMapper {
 
     int updateByPrimaryKey(TdUser record);
     int updateManagerByPrimaryKey(TdUser record);
+    int updateCustomerByPrimaryKey(TdUser record);
     
     TdUser selectByUname(String uname);
     

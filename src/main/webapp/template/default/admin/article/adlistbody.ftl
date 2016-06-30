@@ -1,4 +1,7 @@
 <#import "/common/app.ftl" as app>
+<link rel="stylesheet" href="${app.basePath}/static/js/easyui/easyui.css"/>
+<script src="${app.basePath}/static/js/easyui/jquery.easyui.min.js" type="text/javascript"></script>
+<script src="${app.basePath}/static/js/easyui/easyui-lang-zh_CN.js" type="text/javascript"></script>
 <div class="subnav"><div class="content_menu ib_a blue line_x"><a data-height="190" data-width="450" data-id="add" data-title="添加广告" href="javascript:;" class="add fb J_showdialog" onclick="editAd(0)"><em>添加广告</em></a>&#12288;</div></div>
 <div class="pad_lr_10">
 <div class="J_tablelist table_list">

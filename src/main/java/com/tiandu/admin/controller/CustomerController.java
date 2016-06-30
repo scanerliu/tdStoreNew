@@ -19,9 +19,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.custom.entity.TdUserIntegral;
+import com.tiandu.custom.entity.TdUserIntegralLog;
 import com.tiandu.custom.search.TdRoleSearchCriteria;
+import com.tiandu.custom.search.TdUserIntegralLogSearchCriteria;
 import com.tiandu.custom.search.TdUserSearchCriteria;
 import com.tiandu.custom.service.TdRoleService;
+import com.tiandu.custom.service.TdUserIntegralLogService;
+import com.tiandu.custom.service.TdUserIntegralService;
 
 @Controller
 @RequestMapping("/admin/customer")
@@ -31,6 +36,12 @@ public class CustomerController extends BaseController {
 	
 	@Autowired
 	private TdRoleService tdRoleService;
+	
+	@Autowired
+	private TdUserIntegralService tdUserIntegralService;
+	
+	@Autowired
+	private TdUserIntegralLogService tdUserIntegralLogService;
 	
 	@RequestMapping("/list")
 	public String list(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
@@ -116,7 +127,7 @@ public class CustomerController extends BaseController {
 				customer.setUpdateBy(currManager.getUid());
 				customer.setUpdateTime(now);
 				customer.setCreateTime(now);
-				tdUserService.saveManager(customer);
+				tdUserService.saveCustomer(customer);
 				res.put("code", "1");
 				return res;
 			}catch (Exception e) {
@@ -233,5 +244,35 @@ public class CustomerController extends BaseController {
 		}
 		modelMap.addAttribute("customer", customer);
 		return "/admin/customer/detail";
+	}
+	
+	/**
+	 * 获取客户积分信息
+	 * @param id 客户id
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
+	@RequestMapping("/customerpoints")
+	public String customerpoints(Integer id, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUserIntegral integral = null;
+		if(null!=id){
+			integral = tdUserIntegralService.findOne(id);		    
+		}
+		if(null==integral){
+			modelMap.addAttribute("errmsg", "未找到相关人员，请重新操作！");
+			return "/admin/error";
+		}
+		modelMap.addAttribute("integral", integral);
+		return "/admin/customer/points";
+	}
+	
+	@RequestMapping("/customerpointslog")
+	public String customerpointslog(TdUserIntegralLogSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		List<TdUserIntegralLog> logList = tdUserIntegralLogService.findBySearchCriteria(sc);
+		modelMap.addAttribute("logList", logList);
+		modelMap.addAttribute("sc", sc);
+		return "/admin/customer/pointslog";
 	}
 }

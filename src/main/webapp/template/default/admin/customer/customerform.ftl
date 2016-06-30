@@ -1,5 +1,4 @@
 <#import "/common/app.ftl" as app>
-<script src="${app.basePath}/static/js/easyui/jquery.easyui.min.js" type="text/javascript"></script>
 <script src="${app.basePath}/static/js/easyui/easyui-lang-zh_CN.js" type="text/javascript"></script>
 <div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="returnList()"><em>返回列表</em></a>&#12288;</div></div>
 <div class="pad_lr_10">
@@ -42,16 +41,39 @@
         </td>
     </tr>
     <tr>
+        <th>生日：</th>
+        <td>
+            <input type="text" name="ubirthday" class="easyui-datebox" value="${customer.ubirthday!''}" style="width:200px;height:30px" data-options="required:true,sharedCalendar:'#cc'">
+        </td>
+    </tr>
+    <tr>
         <th>状态：</th>
         <td>
             <label><input type="radio" name="ustatus" value="2" <#if !customer.ustatus?? || (customer.ustatus?? && customer.ustatus==2)>checked</#if>>锁定&nbsp;&nbsp;</label>
            <label><input type="radio" name="ustatus" value="1" <#if customer.ustatus?? && customer.ustatus==1>checked</#if>>启用</label>
         </td>
     </tr>
+    <tr>
+        <th>验证状态：</th>
+        <td>
+           <label><input type="radio" name="uverification" value="2" <#if !customer.uverification?? || (customer.uverification?? && customer.uverification==2)>checked</#if>>未验证&nbsp;&nbsp;</label>
+           <label><input type="radio" name="uverification" value="1" <#if customer.uverification?? && customer.uverification==1>checked</#if>>已验证</label>
+        </td>
+    </tr>
     <#if customer.uid??>
+    <#else>
 	<tr>
         <th width="150">注册地区：</th>
-        <td id="regionlist"></td>
+        <td>
+        	<span id="provincespn"></span><span id="cityspn"></span><span id="regionspn"></span>
+        	<input type="hidden" id="uregionId" name="uregionId" value="${customer.uregionId!''}">
+        </td>
+    </tr>
+	<tr>
+        <th width="150">详细地址：</th>
+        <td>
+        	<input type="text" name="uaddress" class="easyui-textbox" value="${customer.uaddress!''}" style="width:200px;height:30px" data-options="required:true" validType="length[2,20]">
+        </td>
     </tr>
 	</#if>
     <tr>
@@ -63,7 +85,9 @@
 </table>
 </form>
 </div>
+<div id="cc" class="easyui-calendar"></div>
 <script>
 $(function(){
+	getDistricts(null,0);
 });
 </script>
