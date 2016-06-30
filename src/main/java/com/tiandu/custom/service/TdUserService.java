@@ -21,6 +21,12 @@ public interface TdUserService {
 	 * @return
 	 */
 	public Integer saveManager(TdUser user);
+	/**
+	 * 保存会员员信息
+	 * @param user
+	 * @return
+	 */
+	public Integer saveCustomer(TdUser user);
 	public TdUser findOne(Integer id);
 	public TdUser selectByUname(String uname);
 	public List<TdUser> findBySearchCriteria(TdUserSearchCriteria sc);

@@ -17,6 +17,8 @@ import com.tiandu.custom.entity.mapper.TdUserMapper;
 import com.tiandu.custom.entity.mapper.TdUserRoleMapper;
 import com.tiandu.custom.search.TdUserSearchCriteria;
 import com.tiandu.custom.service.TdUserService;
+import com.tiandu.district.entity.TdDistrict;
+import com.tiandu.district.service.TdDistrictService;
 import com.tiandu.menu.entity.TdMenu;
 
 @Service("tdUserService")
@@ -27,6 +29,9 @@ public class TdUserServiceImpl implements TdUserService {
 	
 	@Autowired
 	TdUserRoleMapper userRoleMapper;
+	
+	@Autowired
+	TdDistrictService tdDistrictService;
 
 	public int insert(TdUser u) {
 		return userMapper.insert(u);
@@ -39,7 +44,11 @@ public class TdUserServiceImpl implements TdUserService {
 
 	@Override
 	public TdUser findDetail(Integer id) {
-		return userMapper.selectDetailByPrimaryKey(id);
+		TdUser user = userMapper.selectDetailByPrimaryKey(id);
+		//查询注册地区
+		TdDistrict region = tdDistrictService.findOneFull(user.getUregionId());
+		user.setRegion(region);
+		return user;
 	}
 
 	/**
@@ -71,6 +80,38 @@ public class TdUserServiceImpl implements TdUserService {
 		return null;
 	}
 	
+	@Override
+	public Integer saveCustomer(TdUser user) {
+		if(null!=user){
+			if(null!=user.getUid()){//更新
+				return userMapper.updateCustomerByPrimaryKey(user);
+			}else{
+				//地区获取
+				Integer provinceId = 1;
+				String regionPath = "";
+				if(null!=user.getUregionId()){
+					TdDistrict region = tdDistrictService.findOneFull(user.getUregionId());
+					if(null!=region){
+						provinceId = region.getRegionProvinceId();
+						regionPath = region.getRegionPath();
+					}
+				}
+				String password = WebUtils.generatePassword(user.getUname(), user.getUpassword());
+				user.setUpassword(password);
+				user.setJointId("sys_"+user.getUname());
+				user.setUparentId(0);
+				user.setUtype(Byte.valueOf("1"));//普通会员
+				user.setUverification(Byte.valueOf("1"));
+				user.setMembershipId(1);
+				user.setSupplierType(Byte.valueOf("0"));
+				user.setUprovinceId(provinceId);
+				user.setUregionPath(regionPath);
+				return userMapper.insert(user);
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public Integer saveUserRole(TdUser user) {
 		if(null!=user&&null!=user.getUid()){

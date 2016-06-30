@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tiandu.product.entity.TdProductAttribute;
-import com.tiandu.product.entity.TdProductType;
 import com.tiandu.product.entity.mapper.TdProductAttributeMapper;
 import com.tiandu.product.search.TdProductAttributeCriteria;
 import com.tiandu.product.service.TdProductAttributeOptionService;
@@ -50,7 +49,7 @@ public class TdProductAttributeImpl implements TdProductAttributeService{
 	}
 
 	@Override
-	public List<TdProductType> findBySearchCriteria(TdProductAttributeCriteria sc) {
+	public List<TdProductAttribute> findBySearchCriteria(TdProductAttributeCriteria sc) {
 		Integer count = tdProductAttributorMapper.countByCriteria(sc);
 		sc.setTotalCount(count);
 		return tdProductAttributorMapper.findBySearchCriteria(sc);

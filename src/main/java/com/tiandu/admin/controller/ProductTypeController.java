@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.product.entity.TdProductType;
+import com.tiandu.product.entity.TdProductTypeAttribute;
+import com.tiandu.product.entity.TypeAttribute;
 import com.tiandu.product.search.TdProductTypeCriteria;
+import com.tiandu.product.service.TdProductTypeAttributeService;
 import com.tiandu.product.service.TdProductTypeService;
 /**
  * 
@@ -27,20 +30,25 @@ import com.tiandu.product.service.TdProductTypeService;
  *
  */
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admin/producttype")
 public class ProductTypeController extends BaseController{
 
 	@Autowired
 	private TdProductTypeService tdProductTypeService;
 	
+//	@Autowired
+//	private TdProductAttributeService tdProductAttributeService;
+	@Autowired
 	
-	@RequestMapping(value="/producttype/list")
+	private TdProductTypeAttributeService tdProductTypeAttributeService;
+	
+	@RequestMapping(value="/list")
 	public String list(HttpServletRequest req,ModelMap map){
 		
 		return "/admin/product/type/productList";
 	}
 	
-	@RequestMapping(value="/producttype/search")
+	@RequestMapping(value="/search")
 	public String productTypeSearch(TdProductTypeCriteria sc,HttpServletRequest req,ModelMap map)
 	{
 		map.addAttribute("productTypeList", tdProductTypeService.findAll());
@@ -48,7 +56,7 @@ public class ProductTypeController extends BaseController{
 		return "/admin/product/type/ptoductTypebody";
 	}
 	
-	@RequestMapping(value="/producttype/edit")
+	@RequestMapping(value="/edit")
 	public String productTypeEdit(Integer id,HttpServletRequest req,ModelMap map)
 	{
 		map.addAttribute("productTypeList", tdProductTypeService.findAll());
@@ -59,7 +67,7 @@ public class ProductTypeController extends BaseController{
 		return "/admin/product/type/producttypeform";
 	}
 	
-	@RequestMapping(value="/producttype/save",method=RequestMethod.POST)
+	@RequestMapping(value="/save",method=RequestMethod.POST)
 	@ResponseBody
 	public Map<String,Object> productSave(TdProductType tdProductType,HttpServletRequest req)
 	{
@@ -88,7 +96,7 @@ public class ProductTypeController extends BaseController{
 		return res;
 	}
 	
-	@RequestMapping(value="/producttype/delete")
+	@RequestMapping(value="/delete")
 	@ResponseBody
 	public Map<String,Object> producttypeDelete(Integer id,HttpServletRequest req)
 	{
@@ -102,6 +110,49 @@ public class ProductTypeController extends BaseController{
 		
 		return res;
 	}
+	
+	@RequestMapping("/attribute/edit")
+	public String typeAttrEdit(Integer typeId, HttpServletRequest req,ModelMap map)
+	{
+		
+		map.addAttribute("attrList", tdProductTypeService.findProducrAttribute(typeId));
+		map.addAttribute("otherList", tdProductTypeService.findNotProducrAttribute(typeId));
+		map.addAttribute("typeId", typeId);
+		
+		return "/admin/product/type/attributeform";
+	}
+	
+	@RequestMapping(value="/attribute/save",method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> typeAttrSave(TypeAttribute typeAttribute ,HttpServletRequest req)
+	{
+		Map<String,Object> res = new HashMap<>();
+		res.put("code", 0);
+		
+		if(null != typeAttribute)
+		{
+			// 删除原有关联，重新储存
+			tdProductTypeAttributeService.deleteByTypeId(typeAttribute.getTypeId());
+			
+			String attrIds = typeAttribute.getAttrIds();
+			// 截取选择的属性ID
+			String[] ids = attrIds.split(",");
+			for (String str : ids) {
+				TdProductTypeAttribute attribute = new TdProductTypeAttribute();
+				
+				attribute.setAttriId(Integer.parseInt(str));
+				attribute.setTypeId(typeAttribute.getTypeId());
+				
+				tdProductTypeAttributeService.save(attribute);
+			}
+			res.put("code", 1);
+			res.put("typeId", typeAttribute.getTypeId());
+		}
+		
+		
+		return res;
+	}
+	
 	
 	@ModelAttribute
     public void getModel(@RequestParam(value = "productId", required = false) Integer productId,

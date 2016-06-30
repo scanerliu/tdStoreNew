@@ -31,7 +31,7 @@
         </tr>
         <tr>
             <td align="right">注册地址:</td>
-            <td>${customer.uregionPath!''} ${customer.uaddress!''}</td>
+            <td><#if customer.region??>${customer.region.getRegionFullName()!''}</#if> ${customer.uaddress!''}</td>
         </tr>
         <tr>
             <td align="right">验证状态:</td>
@@ -51,25 +51,8 @@
         </tr>
         </table>
     </div>
-    <div title="钱包信息" style="overflow:auto;padding:20px;">
-    	<table class="tabcontent"  width="100%" cellspacing="0">
-        <tr>
-            <td width="120" align="right">接口地址:</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td align="right">开发者主账号:</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td align="right">开发者主账号令牌:</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td align="right">应用Id:</td>
-            <td></td>
-        </tr>
-        </table>
+    <div title="钱包信息" style="overflow:auto;padding:20px;" href="/admin/customer/customerpoints?id=${customer.uid!''}">
+    	
     </div>
     <div title="积分信息" style="overflow:auto;padding:20px;">
     	<table class="tabcontent"  width="100%" cellspacing="0">

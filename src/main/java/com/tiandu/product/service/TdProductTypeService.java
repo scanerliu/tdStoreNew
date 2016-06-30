@@ -2,6 +2,7 @@ package com.tiandu.product.service;
 
 import java.util.List;
 
+import com.tiandu.product.entity.TdProductAttribute;
 import com.tiandu.product.entity.TdProductType;
 import com.tiandu.product.search.TdProductTypeCriteria;
 /**
@@ -24,4 +25,11 @@ public interface TdProductTypeService {
 	public List<TdProductType> findAll();
 	
 	public List<TdProductType> findByParentId(Integer id);
+	
+	// 查找分类已有属性
+	List<TdProductAttribute> findProducrAttribute(Integer typeId);
+	// 查找分类为关联属性
+	List<TdProductAttribute> findNotProducrAttribute(Integer typeId);
+	
+	
 }

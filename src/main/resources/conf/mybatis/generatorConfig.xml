@@ -6,7 +6,7 @@
 <generatorConfiguration>
 <!--     <classPathEntry location="C:/Oracle/Middleware/wlserver_10.3/server/lib/ojdbc6.jar"/> -->
     <!-- <classPathEntry location="E:\tools\plugins\mysql-connector-java-6.0.2.jar"/> -->
-    <classPathEntry location="D:\gaolu\gitProject\tdStore\target\tdStore/WEB-INF/lib/mysql-connector-java-5.1.39.jar" />
+    <classPathEntry location="E:/workspace/tdStore/target/tdStore/WEB-INF/lib/mysql-connector-java-5.1.39.jar" />
     <context id="my" targetRuntime="MyBatis3">
         <commentGenerator>
             <property name="suppressDate" value="false"/>
@@ -36,13 +36,13 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table tableName="td_branche_company" domainObjectName="TdBrancheCompany"
+        <table tableName="td_user_integral_log" domainObjectName="TdUserIntegralLog"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
             <generatedKey column="id" sqlStatement="Mysql" identity="true" />
         </table>
-         <!--
+        <!--
         <table tableName="td_role_permission" domainObjectName="TdRolePermission"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"

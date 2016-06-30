@@ -71,6 +71,55 @@ function delProductTypeCallback(data){
 }
 
 
+function searchTypeAttrbute(id)
+{
+	var url = basePath + "/admin/producttype/attribute/edit";
+	var loadData = {"typeId" : id};
+	$("#rightform").loading().load(url,loadData);
+	showForm();
+}
+
+function saveTypeAttribute(){
+	
+	var typeId = parseInt($("#typeId").val())
+	
+	var attrIds = new Array(); // 定义数组存属性ID
+    var ids = "";
+	
+    $("#select2 option").each(function () {
+        var attrid = $(this).val(); //获取单个value
+        attrIds.push(attrid);
+        ids += attrid+",";
+    });
+    
+    if(attrIds.length == 0)
+    {
+    	$.messager.confirm('信息提示', '未选择属性，放弃编辑返回列表页吗？', function(r){
+    		if (r){
+    			returnList();
+    			refreshList();
+    		}
+    	});
+    	return ;
+    }
+    
+    var url =  basePath + "/admin/producttype/attribute/save";
+    var postData = {"typeId":typeId,"attrIds":ids};
+	$.post(url,postData,saveTypeAttr,"text");
+    
+}
+
+function saveTypeAttr(data){
+	var result = eval("("+data+")");
+	if(result.code==1){
+		$.messager.alert('消息提醒','分类属性关联成功。');
+		returnList();
+		searchTypeAttrbute(result.typeId);
+	}else{
+		$.messager.alert('消息提醒','分类是属性关联失败');
+	}
+}
+
 /*
 function myLoadFilter(data,parentId){
 	concole.debug("json in")
