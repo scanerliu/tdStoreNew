@@ -208,9 +208,10 @@ function searchCustomerPointLogs(f){
 	if(f){
 		loadData = null;
 	}else{
-		loadData = $("#integrallist_form").serializeArray();
+		var tab = $('#dg').tabs('getSelected');
+		form = tab.find("form");
+		loadData = $(form).serializeArray();
 	}
-	alert(loadData);
 	$("#integrallog_div").loading().load(url,loadData);
 }
 
@@ -260,7 +261,9 @@ function searchCustomerAccountLogs(f){
 	if(f){
 		loadData = null;
 	}else{
-		loadData = $("#accountlist_form").serializeArray();
+		var tab = $('#dg').tabs('getSelected');
+		form = tab.find("form");
+		loadData = $(form).serializeArray();
 	}
 	$("#accountlog_div").loading().load(url,loadData);
 }

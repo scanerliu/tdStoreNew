@@ -289,7 +289,6 @@ public class CustomerController extends BaseController {
 	 */
 	@RequestMapping("/customerpointslog")
 	public String customerpointslog(TdUserIntegralLogSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		sc.setPageSize(1);
 		List<TdUserIntegralLog> logList = tdUserIntegralLogService.findBySearchCriteria(sc);
 		modelMap.addAttribute("logList", logList);
 		modelMap.addAttribute("sc", sc);
@@ -367,7 +366,6 @@ public class CustomerController extends BaseController {
 	 */
 	@RequestMapping("/customeraccountlog")
 	public String customeraccountlog(TdUserAccountLogSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		sc.setPageSize(1);
 		List<TdUserAccountLog> logList = tdUserAccountLogService.findBySearchCriteria(sc);
 		modelMap.addAttribute("logList", logList);
 		modelMap.addAttribute("sc", sc);

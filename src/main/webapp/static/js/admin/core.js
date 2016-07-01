@@ -13,6 +13,13 @@ $.extend($.fn.validatebox.defaults.rules, {
             return $(param[0]).val() == value;
         },
         message:'字段不匹配'
+    },
+    /*验证价格*/
+    price: {
+    	validator:function(value){
+            return /^\d{1,9}\.?\d{0,2}$/i.test(value);
+        },
+        message:'金额格式不正确'
     }
            
 });
