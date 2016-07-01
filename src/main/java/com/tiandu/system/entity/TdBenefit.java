@@ -1,27 +1,21 @@
-package com.tiandu.product.entity;
+package com.tiandu.system.entity;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import com.tiandu.common.entity.TdBaseEntity;
 import com.tiandu.common.utils.ConstantsUtils;
 
-public class TdAgentProduct extends TdBaseEntity {
+public class TdBenefit extends TdBaseEntity {
+	
     private Integer id;
 
-    private String title;
-
-    private String note;
-
-    private String imageUrl;
-
-    private BigDecimal supplierPrice;
-
-    private BigDecimal salesPrice;
+    private Byte benefitType;
 
     private Integer groupId;
 
     private Integer level;
+
+    private Byte percent;
 
     private Date updateTime;
 
@@ -35,44 +29,12 @@ public class TdAgentProduct extends TdBaseEntity {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public Byte getBenefitType() {
+        return benefitType;
     }
 
-    public void setTitle(String title) {
-        this.title = title == null ? null : title.trim();
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note == null ? null : note.trim();
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl == null ? null : imageUrl.trim();
-    }
-
-    public BigDecimal getSupplierPrice() {
-        return supplierPrice;
-    }
-
-    public void setSupplierPrice(BigDecimal supplierPrice) {
-        this.supplierPrice = supplierPrice;
-    }
-
-    public BigDecimal getSalesPrice() {
-        return salesPrice;
-    }
-
-    public void setSalesPrice(BigDecimal salesPrice) {
-        this.salesPrice = salesPrice;
+    public void setBenefitType(Byte benefitType) {
+        this.benefitType = benefitType;
     }
 
     public Integer getGroupId() {
@@ -89,6 +51,14 @@ public class TdAgentProduct extends TdBaseEntity {
 
     public void setLevel(Integer level) {
         this.level = level;
+    }
+
+    public Byte getPercent() {
+        return percent;
+    }
+
+    public void setPercent(Byte percent) {
+        this.percent = percent;
     }
 
     public Date getUpdateTime() {
@@ -117,7 +87,9 @@ public class TdAgentProduct extends TdBaseEntity {
     			sb.append("单类代理");
     		}else if(ConstantsUtils.AGENT_GROUPID_BRANCH.equals(this.getGroupId())){
     			sb.append("分公司");
-    		}    		
+    		}else if(ConstantsUtils.AGENT_GROUPID_DISTRIBUTION.equals(this.getGroupId())){
+    			sb.append("三级分销");
+    		}
     	}
     	return sb.toString();
     }
@@ -162,5 +134,4 @@ public class TdAgentProduct extends TdBaseEntity {
     	}
     	return sb.toString();
     }
-    
 }
