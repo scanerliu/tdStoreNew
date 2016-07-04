@@ -30,7 +30,7 @@ import com.tiandu.district.service.TdDistrictService;
  */
 @Controller
 @RequestMapping("/admin/branch")
-public class BrancheCoampanyController extends BaseController {
+public class BrancheCompanyController extends BaseController {
 
 	private final Logger logger = Logger.getLogger(getClass());
 	

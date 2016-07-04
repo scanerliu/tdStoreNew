@@ -242,6 +242,27 @@ public class DistrictController {
 		modelMap.addAttribute("province", province);
 		return "/admin/district/regionselect";
 	}
+	
+	@RequestMapping("/getDistrictSelections")
+	public String getDistrictSelections(Integer level, Integer selectedDistrictId,HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdDistrictSearchCriteria sc = new TdDistrictSearchCriteria();
+		sc.setFlag(false);
+		sc.setUpid(selectedDistrictId);
+		List<TdDistrict> districtList = tdDistrictService.findBySearchCriteria(sc);
+		modelMap.addAttribute("districtList", districtList);
+		
+		String selectedInputName = ""; // 根据level，即根据要加载的区域来确定加载区域中select框的inputName
+		if(level == 0){
+			selectedInputName = "firstDistrictId";
+		}else if(level == 1){
+			selectedInputName = "secondDistrictId";
+		}else if(level == 2){
+			selectedInputName = "thirdDistrictId";
+		}
+		modelMap.addAttribute("selectedInputName", selectedInputName);
+		modelMap.addAttribute("level", level+1);  // 用于设置加载区域中select框的的级别
+		return "/admin/district/districtSelections";
+	}
 
 	// 是否是直辖市
 	private boolean isCentralCity(String cityName) {

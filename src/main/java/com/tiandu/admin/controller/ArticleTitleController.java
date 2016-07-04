@@ -177,6 +177,4 @@ public class ArticleTitleController extends BaseController {
 			return res;
 		}
 	}
-	
-	
 }
