@@ -201,3 +201,112 @@ function getDistricts(obj,num){
 		$("#uregionId").val(upid);
 	}
 }
+
+function searchCustomerPointLogs(f){
+	var url = basePath+"/admin/customer/customerpointslog";
+	var loadData = "";
+	if(f){
+		loadData = null;
+	}else{
+		var tab = $('#dg').tabs('getSelected');
+		form = tab.find("form");
+		loadData = $(form).serializeArray();
+	}
+	$("#integrallog_div").loading().load(url,loadData);
+}
+
+function fnGotoPageCustomerPointLogs(num){
+	searchCustomerPointLogs(false);
+}
+
+function changeUserIntegral(){
+	var uid = $("#customeruid").val();
+	var changetype = $("#changetype").val();
+	var integral = $("#changeintegral").val();
+	var preintegral = $("#preintegral").val();
+	var changenote = $("#changenote").val();
+	if(integral==""){
+		$.messager.alert('消息提醒','请填写积分变更数量!');
+		return;
+	}
+	if(changetype==2){
+		if(preintegral < integral){
+			$.messager.alert('消息提醒','减少数量不能大于会员已有数量!');
+			return;
+		}
+		integral = 0-integral;
+	}
+	$.messager.confirm('消息提醒', '确定要变更积分吗?', function(r){
+		if (r){
+			var url = basePath+"/admin/customer/addintegral";
+			var postData = {"uid":uid,"integral":integral,"note":changenote};
+			$.post(url,postData,changeUserIntegralCallback,"text");
+		}
+	});
+}
+
+function changeUserIntegralCallback(data){
+	var result = eval("("+data+")");
+	if(result.code==1){
+		$.messager.alert('消息提醒','更新成功。');
+		$("#customer_integral").html(result.integral);
+		searchCustomerPointLogs(true);
+	}else{
+	  $.messager.alert('消息提醒','更新失败!');
+	}
+}
+function searchCustomerAccountLogs(f){
+	var url = basePath+"/admin/customer/customeraccountlog";
+	var loadData = "";
+	if(f){
+		loadData = null;
+	}else{
+		var tab = $('#dg').tabs('getSelected');
+		form = tab.find("form");
+		loadData = $(form).serializeArray();
+	}
+	$("#accountlog_div").loading().load(url,loadData);
+}
+
+function fnGotoPageCustomerAccountLogs(num){
+	searchCustomerAccountLogs(false);
+}
+
+function changeUserAccount(){
+	var uid = $("#customeruid").val();
+	var changetype = $("#changetype").val();
+	var upamount = $("#changeamount").val();
+	var preamount = $("#preamount").val();
+	var changenote = $("#changenote").val();
+	if(upamount==""){
+		$.messager.alert('消息提醒','请填写变更金额!');
+		return;
+	}
+	preamount = parseFloat(preamount);
+	upamount = parseFloat(upamount);
+	if(changetype==2){
+		if(preamount < upamount){
+			$.messager.alert('消息提醒','减少金额不能大于会员已有金额!');
+			return;
+		}
+		upamount = 0-upamount;
+	}
+	$.messager.confirm('消息提醒', '确定要变更金额吗?', function(r){
+		if (r){
+			var url = basePath+"/admin/customer/addamount";
+			var postData = {"uid":uid,"upamount":upamount,"note":changenote};
+			$.post(url,postData,changeUserAccountCallback,"text");
+		}
+	});
+}
+
+function changeUserAccountCallback(data){
+	var result = eval("("+data+")");
+	if(result.code==1){
+		$.messager.alert('消息提醒','更新成功。');
+		$("#customer_amount").html(result.amount);
+		searchCustomerAccountLogs(false);
+	}else{
+		$.messager.alert('消息提醒','更新失败!');
+	}
+}

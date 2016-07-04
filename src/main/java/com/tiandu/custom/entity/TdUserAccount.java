@@ -4,6 +4,16 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class TdUserAccount {
+	
+	/**
+	 * 账户状态，1-正常
+	 */
+	public static final Byte ACCOUNT_STATUS_ACTIVE = 1;
+	/**
+	 * 账户状态，2-锁定
+	 */
+	public static final Byte ACCOUNT_STATUS_FORBBIDEN = 2;
+	
     private Integer uid;
 
     private BigDecimal amount;

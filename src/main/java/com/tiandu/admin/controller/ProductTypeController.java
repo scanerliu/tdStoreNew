@@ -2,6 +2,7 @@ package com.tiandu.admin.controller;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -153,6 +154,29 @@ public class ProductTypeController extends BaseController{
 		return res;
 	}
 	
+	// L. Gao
+	@RequestMapping("/getProductTypeSelections")
+	public String getProductTypeSelections(Integer level, Integer selectedProductTypeId, HttpServletRequest req, ModelMap map){
+		TdProductTypeCriteria sc= new TdProductTypeCriteria();
+		sc.setFlag(false);
+		sc.setParentId(selectedProductTypeId);
+		List<TdProductType> productTypeList = tdProductTypeService.findBySearchCriteria(sc);
+		map.addAttribute("productTypeList", productTypeList);
+		
+		String selectInputName = ""; // 根据level，即根据要加载的区域来确定加载区域中select框的inputName
+		if(level == 0){
+			selectInputName = "firstProductTypeId";
+		}else if(level == 1){
+			selectInputName = "secondProductTypeId";
+		}else if(level == 2){
+			selectInputName = "thirdProductTypeId";
+		}
+		map.addAttribute("selectInputName", selectInputName);
+		
+		map.addAttribute("level", level+1);  // 用于设置加载区域中select框的的级别
+		
+		return "/admin/product/type/productTypeSelections";
+	}
 	
 	@ModelAttribute
     public void getModel(@RequestParam(value = "productId", required = false) Integer productId,

@@ -3,6 +3,23 @@ package com.tiandu.custom.entity;
 import java.util.Date;
 
 public class TdUserIntegralLog {
+	/**
+	 * 后台调整
+	 */
+	public static final Byte USERINTEGRALLOG_TYPE_SYSTEM = 1;
+	/**
+	 * 签到送积分
+	 */
+	public static final Byte USERINTEGRALLOG_TYPE_SIGN = 2;
+	/**
+	 * 礼品兑换
+	 */
+	public static final Byte USERINTEGRALLOG_TYPE_GIFT_EXCHANGE = 3;
+	/**
+	 * 抵扣订单金额
+	 */
+	public static final Byte USERINTEGRALLOG_TYPE_DEDUCTIBLE_AMOUNT = 4;
+	
     private Integer id;
 
     private Integer uid;
@@ -81,5 +98,25 @@ public class TdUserIntegralLog {
 
     public void setRelation(String relation) {
         this.relation = relation == null ? null : relation.trim();
+    }
+    /**
+     * 获取积分变更类型文字说明
+     * @return
+     */
+    public String getTypeStr(){
+    	StringBuffer sb = new StringBuffer();
+    	if(null!=this.getType()){
+    		if(this.getType().equals(USERINTEGRALLOG_TYPE_SYSTEM)){
+    			sb.append("后台调整");
+    		}else if(this.getType().equals(USERINTEGRALLOG_TYPE_SIGN)){
+    			sb.append("签到送积分");
+    		}else if(this.getType().equals(USERINTEGRALLOG_TYPE_GIFT_EXCHANGE)){
+    			sb.append("积分兑换礼品");
+    		}else if(this.getType().equals(USERINTEGRALLOG_TYPE_DEDUCTIBLE_AMOUNT)){
+    			sb.append("抵扣订单金额");
+    		}
+    		
+    	}
+    	return sb.toString();
     }
 }

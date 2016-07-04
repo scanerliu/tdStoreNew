@@ -232,8 +232,20 @@
   </update>
   <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.custom.search.TdExperienceStoreSearchCriteria" >
     select count(id)
-    from td_experience_store
+    from td_experience_store as s
+    <if test="isAssociationUser">
+        left join td_user u on u.uid= s.uid
+    </if>
+    <if test="isAssociationUpdatePerson" >
+        left join td_user c on c.uid= s.update_by
+    </if>
     where 1=1 
+    <if test="status != null" >
+        and s.status=#{status,jdbcType=TINYINT}
+    </if>
+    <if test="searchName != null">
+        and u.uname like CONCAT('%','${searchName}','%' )
+    </if>
   </select>
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.custom.search.TdExperienceStoreSearchCriteria" >
     select 
