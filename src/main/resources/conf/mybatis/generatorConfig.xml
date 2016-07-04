@@ -37,6 +37,8 @@
         </javaClientGenerator>
 <!-- 
         <table tableName="td_product" domainObjectName="TdProduct"
+
+        <table tableName="td_benefit" domainObjectName="TdBenefit"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
