@@ -38,7 +38,7 @@
 		        <td align="center">${ad.id?c}</td>
 		        <td>${ad.title!''}</td>
 		        <td align="center">${ad.adsId?c}</td>
-		        <td align="center">${ad.imageUrl!''}</td>
+		        <td align="center"><img width='100' height='60' src='${ad.imageUrl!''}'/></td>
 		        <td align="center">${ad.linkUrl!''}</td>
 		        <td align="center">${ad.updateTime?string('yyyy-MM-dd')}</td>
 		        <td align="center"><#if ad.status==1>正常<#else>屏蔽</#if></td>
