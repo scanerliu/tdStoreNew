@@ -20,23 +20,23 @@
                         connectionURL="jdbc:mysql://localhost:3306/tdstore_com" userId="root"
                         password="root"/>
 
-        <javaModelGenerator targetPackage="com.tiandu.custom.entity"
+        <javaModelGenerator targetPackage="com.tiandu.system.entity"
                             targetProject="tdStore\src\main\java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="com.tiandu.custom.entity.mapper"
+        <sqlMapGenerator targetPackage="com.tiandu.system.entity.mapper"
                          targetProject="tdStore\src\main\java">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
-        <javaClientGenerator targetPackage="com.tiandu.custom.entity.mapper"
+        <javaClientGenerator targetPackage="com.tiandu.system.entity.mapper"
                              targetProject="tdStore\src\main\java" type="XMLMAPPER">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table tableName="td_user_integral_log" domainObjectName="TdUserIntegralLog"
+        <table tableName="td_benefit" domainObjectName="TdBenefit"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
