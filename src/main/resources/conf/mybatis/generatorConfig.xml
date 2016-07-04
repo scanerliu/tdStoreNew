@@ -20,29 +20,80 @@
                         connectionURL="jdbc:mysql://localhost:3306/tdstore_com" userId="root"
                         password="root"/>
 
-        <javaModelGenerator targetPackage="com.tiandu.custom.entity"
+        <javaModelGenerator targetPackage="com.tiandu.psku.entity"
                             targetProject="tdStore\src\main\java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="com.tiandu.custom.entity.mapper"
+        <sqlMapGenerator targetPackage="com.tiandu.psku.entity.mapper"
                          targetProject="tdStore\src\main\java">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
-        <javaClientGenerator targetPackage="com.tiandu.custom.entity.mapper"
+        <javaClientGenerator targetPackage="com.tiandu.psku.entity.mapper"
                              targetProject="tdStore\src\main\java" type="XMLMAPPER">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
-
-        <table tableName="td_user_integral_log" domainObjectName="TdUserIntegralLog"
+<!-- 
+        <table tableName="td_product" domainObjectName="TdProduct"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
             <generatedKey column="id" sqlStatement="Mysql" identity="true" />
         </table>
-        <!--
+        <table tableName="td_product_attachment" domainObjectName="TdProductAttachment"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+        <table tableName="td_product_sku" domainObjectName="TdProductSku"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+        <table tableName="td_product_description" domainObjectName="TdProductDescription"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+        <table tableName="td_product_stat" domainObjectName="TdProductStat"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+        <table tableName="td_product_package_item" domainObjectName="TdProductPackageItem"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+        -->
+        <table tableName="td_psku_stock" domainObjectName="TdPskuStock"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+        <table tableName="td_psku_stock_log" domainObjectName="TdPskuStockLog"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+       <!-- 
+        <table tableName="td_agent_product" domainObjectName="TdAgentProduct"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+         -->
+         <!-- 
         <table tableName="td_role_permission" domainObjectName="TdRolePermission"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
