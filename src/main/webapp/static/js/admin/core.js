@@ -20,7 +20,7 @@ $.extend($.fn.validatebox.defaults.rules, {
             return /^\d{1,9}\.?\d{0,2}$/i.test(value);
         },
         message:'金额格式不正确'
-    }
+    },
            
 });
 

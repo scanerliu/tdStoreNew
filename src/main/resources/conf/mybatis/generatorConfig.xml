@@ -6,7 +6,7 @@
 <generatorConfiguration>
 <!--     <classPathEntry location="C:/Oracle/Middleware/wlserver_10.3/server/lib/ojdbc6.jar"/> -->
     <!-- <classPathEntry location="E:\tools\plugins\mysql-connector-java-6.0.2.jar"/> -->
-    <classPathEntry location="D:\gaolu\gitProject\tdStore\target/tdStore/WEB-INF/lib/mysql-connector-java-5.1.39.jar" />
+    <classPathEntry location="E:/workspace/tdStore/target/tdStore/WEB-INF/lib/mysql-connector-java-5.1.39.jar" />
     <context id="my" targetRuntime="MyBatis3">
         <commentGenerator>
             <property name="suppressDate" value="false"/>
@@ -36,7 +36,7 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table tableName="td_benefit" domainObjectName="TdBenefit"
+        <table tableName="td_benefit_type" domainObjectName="TdBenefitType"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

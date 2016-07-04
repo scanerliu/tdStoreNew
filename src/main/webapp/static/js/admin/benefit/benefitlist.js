@@ -38,11 +38,11 @@ function saveBenefit(){
 			  success : function(data){
 				  var result = eval("("+data+")");
 				  if(result.code==1){
-					  $.messager.alert('消息提醒','代理产品保存成功。');
+					  $.messager.alert('消息提醒','分润设置保存成功。');
 					  returnList();
 					  refreshList();
 				  }else{
-					  $.messager.alert('消息提醒','代理产品保存失败!');
+					  $.messager.alert('消息提醒','分润设置保存失败!');
 				  }
 			  }
 			 });
@@ -50,21 +50,21 @@ function saveBenefit(){
 }
 
 function delBenefit(id){
-	$.messager.confirm('消息提醒', '确定要删掉该设置吗?', function(r){
+	/*$.messager.confirm('消息提醒', '确定要删掉该设置吗?', function(r){
 		if (r){
 			var url = basePath+"/admin/benefit/delete";
 			var loadData={"id":id};
 			$.post(url,loadData,delBenefitCallback,"text");
 		}
-	});
+	});*/
 }
 
 function delBenefitCallback(data){
 	var result = eval("("+data+")");
 	if(result.code==1){
-		$.messager.alert('消息提醒','代理产品删除成功。');
+		$.messager.alert('消息提醒','分润设置删除成功。');
 		refreshList();
 	}else{
-	  $.messager.alert('消息提醒','代理产品删除失败!');
+	  $.messager.alert('消息提醒','分润设置删除失败!');
 	}
 }

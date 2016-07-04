@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.system.entity.TdBenefit;
+import com.tiandu.system.entity.TdBenefitType;
 import com.tiandu.system.search.TdBenefitSearchCriteria;
+import com.tiandu.system.search.TdBenefitTypeSearchCriteria;
 import com.tiandu.system.service.TdBenefitService;
+import com.tiandu.system.service.TdBenefitTypeService;
 
 @Controller
 @RequestMapping("/admin/benefit")
@@ -31,43 +34,52 @@ public class BenefitController extends BaseController {
 	@Autowired
 	private TdBenefitService tdBenefitService;
 	
+	@Autowired
+	private TdBenefitTypeService tdBenefitTypeService;
+	
 	@RequestMapping("/list")
 	public String list(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 	    return "/admin/benefit/list";
 	}
 	@RequestMapping("/search")
-	public String search(TdBenefitSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	public String search(TdBenefitTypeSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		sc.setGetUpdateUser(true);
-		List<TdBenefit> benefitList = tdBenefitService.findBySearchCriteria(sc);
-	    modelMap.addAttribute("benefitList", benefitList) ;
+		List<TdBenefitType> benefitTypeList = tdBenefitTypeService.findBySearchCriteria(sc);
+	    modelMap.addAttribute("benefitTypeList", benefitTypeList) ;
 	    modelMap.addAttribute("sc", sc) ;
 		return "/admin/benefit/listbody";
 	}
 	
 	@RequestMapping("/edit")
 	public String edit(Integer id, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		TdBenefit tdbenefit = null;
+		TdBenefitType benefitType = null;
 		if(null!=id){
-			tdbenefit = tdBenefitService.findOne(id);		    
+			benefitType = tdBenefitTypeService.findOne(id);		    
 		}
-		if(null==tdbenefit){
-			tdbenefit = new TdBenefit();
+		if(null==benefitType){
+			benefitType = new TdBenefitType();
+		}else{
+			TdBenefitSearchCriteria sc = new TdBenefitSearchCriteria();
+			sc.setFlag(false);
+			sc.setTypeId(id);
+			List<TdBenefit> benefitList =  tdBenefitService.findBySearchCriteria(sc);
+			benefitType.setBenefitList(benefitList);
 		}
-		modelMap.addAttribute("tdbenefit", tdbenefit);
+		modelMap.addAttribute("benefitType", benefitType);
 		return "/admin/benefit/benefitform";
 	}
 	
 	@RequestMapping(value="/save", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,String> save(TdBenefit benefit, HttpServletRequest request, HttpServletResponse response) {
+	public Map<String,String> save(TdBenefitType benefitType, HttpServletRequest request, HttpServletResponse response) {
 		Map<String,String> res = new HashMap<String,String>(); 
-		if(null!=benefit){
+		if(null!=benefitType){
 			Date now = new Date();
 			try {
 				TdUser currManager = this.getCurrentUser();
-				benefit.setUpdateBy(currManager.getUid());
-				benefit.setUpdateTime(now);
-				tdBenefitService.save(benefit);
+				benefitType.setUpdateBy(currManager.getUid());
+				benefitType.setUpdateTime(now);
+				tdBenefitTypeService.saveFull(benefitType);
 				res.put("code", "1");
 				return res;
 			}catch (Exception e) {

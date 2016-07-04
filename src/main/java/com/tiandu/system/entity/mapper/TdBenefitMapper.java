@@ -17,6 +17,7 @@ public interface TdBenefitMapper {
     int updateByPrimaryKeySelective(TdBenefit record);
 
     int updateByPrimaryKey(TdBenefit record);
+    public int batchupdate(List<TdBenefit> benefitList);
     
     public List<TdBenefit> findBySearchCriteria(TdBenefitSearchCriteria sc);
     public Integer countBySearchCriteria(TdBenefitSearchCriteria sc);

@@ -16,7 +16,7 @@
         <td>
         	<div id="showImg">
         		<#if product.imageUrl??>
-        			<img width='200' height='200' src='${product.imageUrl!''}'/>
+        			<img width='200' height='200' src='${app.basePath}${product.imageUrl!''}'/>
 				</#if>
         	</div>
         	<input type="hidden" id="image" name="imageUrl" value="${product.imageUrl!''}">
@@ -85,7 +85,7 @@ $(function(){
 					var result = eval("("+data+")");
 					$("#showImg").empty();
 					$("#showImg").append("<img width='200' height='200' src='"+basePath+result.savedFile+"'/>");
-					$("#image").val(basePath+result.savedFile);
+					$("#image").val(result.savedFile);
 					$.messager.alert('消息提醒','图片' + file.name + ' 上传成功。 ');
 		        },
 		        'onUploadError' : function(file, errorCode, errorMsg, errorString) {

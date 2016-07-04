@@ -9,7 +9,7 @@ public class TdBenefit extends TdBaseEntity {
 	
     private Integer id;
 
-    private Byte benefitType;
+    private Integer benefitType;
 
     private Integer groupId;
 
@@ -29,15 +29,15 @@ public class TdBenefit extends TdBaseEntity {
         this.id = id;
     }
 
-    public Byte getBenefitType() {
-        return benefitType;
-    }
+    public Integer getBenefitType() {
+		return benefitType;
+	}
 
-    public void setBenefitType(Byte benefitType) {
-        this.benefitType = benefitType;
-    }
+	public void setBenefitType(Integer benefitType) {
+		this.benefitType = benefitType;
+	}
 
-    public Integer getGroupId() {
+	public Integer getGroupId() {
         return groupId;
     }
 
@@ -127,6 +127,22 @@ public class TdBenefit extends TdBaseEntity {
 						break;
 					case 3:
 						sb.append("区县");
+						break;
+					default:
+				}
+    		}else if(ConstantsUtils.AGENT_GROUPID_DISTRIBUTION.equals(this.getGroupId())){
+    			switch(this.getLevel()){
+					case 1:
+						sb.append("一级");
+						break;
+					case 2:
+						sb.append("二级");
+						break;
+					case 3:
+						sb.append("三级");
+						break;
+					case 4:
+						sb.append("自己购买");
 						break;
 					default:
 				}

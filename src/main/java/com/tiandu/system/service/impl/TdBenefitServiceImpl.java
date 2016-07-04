@@ -39,11 +39,18 @@ public class TdBenefitServiceImpl implements TdBenefitService {
 			return tdBenefitMapper.updateByPrimaryKey(record);
 		}
 	}
+	
+	@Override
+	public int saveAll(List<TdBenefit> benefitList) {
+		return tdBenefitMapper.batchupdate(benefitList);
+	}
 
 	@Override
 	public List<TdBenefit> findBySearchCriteria(TdBenefitSearchCriteria sc) {
-		Integer count = tdBenefitMapper.countBySearchCriteria(sc);
-		sc.setTotalCount(count);
+		if(sc.isFlag()){
+			Integer count = tdBenefitMapper.countBySearchCriteria(sc);
+			sc.setTotalCount(count);
+		}
 		return tdBenefitMapper.findBySearchCriteria(sc);
 	}
 

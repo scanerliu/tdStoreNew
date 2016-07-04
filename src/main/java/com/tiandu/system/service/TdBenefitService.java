@@ -11,5 +11,6 @@ public interface TdBenefitService {
 	public int deleteByPrimaryKey(Integer id);
 	public TdBenefit findOne(Integer id);
 	public int save(TdBenefit record);
+	public int saveAll(List<TdBenefit> benefitList);
 	public List<TdBenefit> findBySearchCriteria(TdBenefitSearchCriteria sc);
 }
