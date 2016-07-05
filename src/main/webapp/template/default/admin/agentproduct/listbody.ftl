@@ -23,7 +23,7 @@
 <#list productList as product>
     <tr>
         <td>${product.id}</td>
-        <td>${product.title}<br/><img src="${product.imageUrl!''}" alt="产品图片" width="200"/></td>
+        <td>${product.title}<br/><img src="${app.basePath}${product.imageUrl!''}" alt="产品图片" width="200"/></td>
         <td>${product.supplierPrice!''}</td>
         <td>${product.salesPrice!''}</td>
         <td>${product.getGroupIdStr()!''}</td>

@@ -12,6 +12,18 @@
         <tr>
             <td align="right">会员统计通知电话号码:</td><td><input type="hidden" name="configKey" value="customer_statistics_telphone"/><input type="text" name="customer_statistics_telphone" id="customer_statistics_telphone" value="${configMap.customer_statistics_telphone!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="length[10,50]"/>（多个用英文逗号,隔开）</td>
         </tr>
+        <tr>
+            <td align="right">注册赠送积分数:</td><td><input type="hidden" name="configKey" value="registerdeliveryintegral"/><input type="text" name="registerdeliveryintegral" id="registerdeliveryintegral" value="${configMap.registerdeliveryintegral!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[0,100000000]"/>（如：注册赠送20积分时，此项填20）</td>
+        </tr>
+        <tr>
+            <td align="right">签到赠送积分数:</td><td><input type="hidden" name="configKey" value="signdeliveryintegral"/><input type="text" name="signdeliveryintegral" id="signdeliveryintegral" value="${configMap.signdeliveryintegral!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[0,100000000]"/>（如：签到赠送5积分时，此项填5）</td>
+        </tr>
+        <tr>
+            <td align="right">订单赠送积分比例:</td><td><input type="hidden" name="configKey" value="orderdeliveryintegral"/><input type="text" name="orderdeliveryintegral" id="orderdeliveryintegral" value="${configMap.orderdeliveryintegral!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[0,100]"/>（是订单金额赠送积分比例，如：每满100元赠送1积分时，此项填1）</td>
+        </tr>
+        <tr>
+            <td align="right">积分抵扣金额比例:</td><td><input type="hidden" name="configKey" value="integralexchangerate"/><input type="text" name="integralexchangerate" id="integralexchangerate" value="${configMap.integralexchangerate!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,100000000]"/>（积分抵扣一元金额的比例，如：10个积分抵扣一元钱时，此项填10）</td>
+        </tr>
         </table>
     </div>
     <div title="短信接口设置" style="overflow:auto;padding:20px;">
