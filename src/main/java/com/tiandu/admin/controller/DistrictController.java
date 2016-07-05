@@ -244,7 +244,7 @@ public class DistrictController {
 	}
 	
 	@RequestMapping("/getDistrictSelections")
-	public String getDistrictSelections(Integer level, Integer selectedDistrictId,HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	public String getDistrictSelections(Integer level, Integer selectedDistrictId, String prefix, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdDistrictSearchCriteria sc = new TdDistrictSearchCriteria();
 		sc.setFlag(false);
 		sc.setUpid(selectedDistrictId);
@@ -261,6 +261,7 @@ public class DistrictController {
 		}
 		modelMap.addAttribute("selectedInputName", selectedInputName);
 		modelMap.addAttribute("level", level+1);  // 用于设置加载区域中select框的的级别
+		modelMap.addAttribute("prefix", prefix);
 		return "/admin/district/districtSelections";
 	}
 

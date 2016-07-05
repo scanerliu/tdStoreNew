@@ -1,4 +1,4 @@
-<select style="width: 100px;" id="district_id_${level!''}" name="${selectInputName!''}"  onchange="getDistrictSelections(${level!''},this.value)">
+<select style="width: 100px;" id="${prefix}_district_id_${level!''}" name=""  onchange="getDistrictSelections(${level!''},this.value, '${prefix}', null)">
 	<option value="-1">-地区-</option>
 	<#if districtList??>
 		<#list districtList as district>

@@ -19,9 +19,9 @@
 							<span id="thirdProductType"></span>
 							<#--产品类别  end-->
 							<#--地区  begin-->
-							<span id="firstDistrictLevel"></span>
-							<span id="secondDistrictLevel"></span>
-							<span id="thirdDistrictLevel"></span>
+							<span id="agent_firstDistrictLevel"></span>
+							<span id="agent_secondDistrictLevel"></span>
+							<span id="agent_thirdDistrictLevel"></span>
 							<#--地区  end-->
 							<#--非联动条件 begin-->
 							<select style="width: 100px;" name="level">
@@ -37,7 +37,7 @@
 							<input type="button" value="搜索" onclick="searchAgent(true)">
 						</div>
 						<#--根据三级联动设置隐藏值-->
-						<input type="hidden" id="region_id" name="regionId" value="-1">
+						<input type="hidden" id="agent_region_id" name="regionId" value="-1">
 						<input type="hidden" id="product_type_id" name="productTypeId" value="-1">
 					</td>
 				</tr>
@@ -53,7 +53,7 @@
 <script type="text/javascript">
 	$(function(){
 	    getProductTypeSelections(0, 0);
-	    getDistrictSelections(0, 0);
+	    getDistrictSelections(0, 0, "agent", null);
 	    searchAgent(true);
 	});
 </script>
