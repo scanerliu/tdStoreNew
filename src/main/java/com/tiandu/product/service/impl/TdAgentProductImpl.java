@@ -43,8 +43,10 @@ public class TdAgentProductImpl implements TdAgentProductService{
 
 	@Override
 	public List<TdAgentProduct> findBySearchCriteria(TdAgentProductSearchCriteria sc) {
-		Integer count = tdAgentProductMapper.countByCriteria(sc);
-		sc.setTotalCount(count);
+		if(sc.isFlag()){
+			Integer count = tdAgentProductMapper.countByCriteria(sc);
+			sc.setTotalCount(count);
+		}
 		return tdAgentProductMapper.findBySearchCriteria(sc);
 	}
 	

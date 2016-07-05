@@ -46,4 +46,51 @@ public class ConstantsUtils {
 	 * 分润类型7-申请成为省级分公司
 	 */
 	public static final Byte BENEFIT_TYPE_PROVINCE_BRANCH = 7;
+	
+	
+	/**---------------------------订单状态---------------------------**/
+	/**
+	 * 订单状态：-1 已取消
+	 */
+	public static final Byte ORDER_STATUS_CANCEL = -1;
+	/**
+	 * 订单状态：1 新订单
+	 */
+	public static final Byte ORDER_STATUS_NEW = 1;
+	/**
+	 * 订单状态：2 已完成
+	 */
+	public static final Byte ORDER_STATUS_COMPLETE = 2;
+	/**
+	 * 订单支付状态： 1 已支付
+	 */
+	public static final Byte ORDER_PAY_STATUS_PAYED = 1;
+	/**
+	 * 订单支付状态： 2 未支付
+	 */
+	public static final Byte ORDER_PAY_STATUS_UNPAY = 2;
+	/**
+	 * 订单支付状态： 3 部分退款
+	 */
+	public static final Byte ORDER_PAY_STATUS_PART_REFUND = 3;
+	/**
+	 * 订单支付状态： 4 全部退款
+	 */
+	public static final Byte ORDER_PAY_STATUS_ALL_REFUND = 4;
+	/**
+	 * 订单发货状态： 1 已发货
+	 */
+	public static final Byte ORDER_SHIPMENT_STATUS_SHIPPED = 1;
+	/**
+	 * 订单发货状态： 2 未发货
+	 */
+	public static final Byte ORDER_SHIPMENT_STATUS_UNSHIPPED = 2;
+	/**
+	 * 订单发货状态： 3 部分退货
+	 */
+	public static final Byte ORDER_SHIPMENT_STATUS_PART_RETURN = 3;
+	/**
+	 * 订单发货状态： 4 全部退货
+	 */
+	public static final Byte ORDER_SHIPMENT_STATUS_All_RETURN = 4;
 }
