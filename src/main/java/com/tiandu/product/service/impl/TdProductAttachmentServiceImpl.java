@@ -25,9 +25,9 @@ public class TdProductAttachmentServiceImpl implements TdProductAttachmentServic
 		if(null != e)
 		{
 			if(null != e.getId()){
-				tdProductAttachmentMapper.updateByPrimaryKey(e);
+				return tdProductAttachmentMapper.updateByPrimaryKey(e);
 			}else{
-				tdProductAttachmentMapper.insert(e);
+				return tdProductAttachmentMapper.insert(e);
 			}
 		}
 		return null;
@@ -41,6 +41,11 @@ public class TdProductAttachmentServiceImpl implements TdProductAttachmentServic
 	@Override
 	public Integer deleteByProductId(Integer proId) {
 		return tdProductAttachmentMapper.deleteByProductId(proId);
+	}
+
+	@Override
+	public Integer deleteByPrimaryKey(Integer id) {
+		return tdProductAttachmentMapper.deleteByPrimaryKey(id);
 	}
 
 }

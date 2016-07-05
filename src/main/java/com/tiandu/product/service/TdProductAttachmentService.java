@@ -13,4 +13,6 @@ public interface TdProductAttachmentService {
 	TdProductAttachment findOne(Integer id);
 	
 	Integer deleteByProductId(Integer proId);
+	
+	Integer deleteByPrimaryKey(Integer id);
 }

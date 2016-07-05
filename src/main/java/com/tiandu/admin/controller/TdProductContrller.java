@@ -1,5 +1,6 @@
 package com.tiandu.admin.controller;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,11 +22,13 @@ import com.tiandu.custom.entity.TdUser;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductAttachment;
 import com.tiandu.product.entity.TdProductDescription;
+import com.tiandu.product.entity.TdProductStat;
 import com.tiandu.product.search.TdProductCriteria;
 import com.tiandu.product.search.TdProductDescriptionCriteria;
 import com.tiandu.product.service.TdProductAttachmentService;
 import com.tiandu.product.service.TdProductDescriptionService;
 import com.tiandu.product.service.TdProductService;
+import com.tiandu.product.service.TdProductStatService;
 import com.tiandu.product.service.TdProductTypeService;
 
 @Controller
@@ -43,6 +46,9 @@ public class TdProductContrller extends BaseController{
 	
 	@Autowired
 	private TdProductDescriptionService tdProductDescriptionService; 
+	
+	@Autowired
+	private TdProductStatService tdProductStatService;
 	
 	@RequestMapping("/list")
 	public String list(HttpServletRequest req,ModelMap map){
@@ -85,6 +91,8 @@ public class TdProductContrller extends BaseController{
 			sc.setType(3);
 			map.addAttribute("afterSale", tdProductDescriptionService.findByProductId(sc));
 			
+			map.addAttribute("productStat", tdProductStatService.findOne(id));
+			
 		}
 		
 		return "/admin/product/productform";
@@ -109,13 +117,13 @@ public class TdProductContrller extends BaseController{
 			TdUser user = getCurrentUser();
 			if(null != user)
 			{
-				tdProduct.setKind((byte) 1);
 				tdProduct.setBrandId(0);
 				tdProduct.setDefaultSkuId(0);
 				tdProduct.setSpecification(true);
 				tdProduct.setUpdateBy(user.getUid());
 				tdProduct.setUid(user.getUid());
 			}
+			tdProduct.setUpdateTime(new Date());
 			tdProductService.save(tdProduct);
 			
 			// 修改展示图片
@@ -132,6 +140,7 @@ public class TdProductContrller extends BaseController{
 			sc.setProductId(tdProduct.getId());
 			sc.setFlag(false);
 			
+			// 图文详情
 			sc.setType(1);
 			TdProductDescription imgDetail = tdProductDescriptionService.findByProductId(sc);
 			if(null == imgDetail)
@@ -144,6 +153,7 @@ public class TdProductContrller extends BaseController{
 			imgDetail.setUpdateBy(user.getUid());
 			imgDetail.setUpdateTime(new Date());
 			
+			// 包装配送
 			sc.setType(2);
 			TdProductDescription packdetail = tdProductDescriptionService.findByProductId(sc);
 			if(null == packdetail)
@@ -156,6 +166,7 @@ public class TdProductContrller extends BaseController{
 			packdetail.setUpdateBy(user.getUid());
 			packdetail.setUpdateTime(new Date());
 			
+			// 售后说明
 			sc.setType(3);
 			TdProductDescription afterSaleDetail = tdProductDescriptionService.findByProductId(sc);
 			
@@ -173,6 +184,24 @@ public class TdProductContrller extends BaseController{
 			tdProductDescriptionService.save(packdetail);
 			tdProductDescriptionService.save(afterSaleDetail);
 			
+			// 新增商品时添加统计表
+			TdProductStat stat = tdProductStatService.findOne(tdProduct.getId());
+			if(null == stat)
+			{
+				stat = new TdProductStat();
+				stat.setBuyCount(0);
+				stat.setBuyTimes(0);
+				stat.setNegativeRate(0);
+				stat.setNeutralRate(0);
+				stat.setPositiveRate(0);
+				stat.setProductId(tdProduct.getId());
+				stat.setReviewCount(0);
+				stat.setReviewScore(new BigDecimal(0));
+				stat.setShowreviewCount(0);
+				stat.setViewCount(0);
+			}
+			tdProductStatService.Insert(stat);
+			
 			res.put("code", 1);
 		}
 		
@@ -180,7 +209,10 @@ public class TdProductContrller extends BaseController{
 		return res;
 	}
 	
-	
+	/**
+	 * 商品删除
+	 * @author Max
+	 */
 	@RequestMapping("/delete")
 	@ResponseBody
 	public Map<String,Object> delete(Integer id,HttpServletRequest req,ModelMap map)
@@ -196,6 +228,9 @@ public class TdProductContrller extends BaseController{
 			// 删除图文、包装、售后信息
 			tdProductDescriptionService.deleteByProductId(id);
 			
+			// 删除统计表
+			tdProductStatService.deleteByPrimaryKey(id);
+			
 			// 删除商品
 			tdProductService.deleteByPrimaryKey(id);
 			res.put("code", 1);
@@ -203,6 +238,27 @@ public class TdProductContrller extends BaseController{
 		
 		return res;
 	}
+	
+	/**
+	 * @author Max
+	 * 图片移除
+	 * 
+	 */
+	@RequestMapping(value="/deleteImg",method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> imgDelete(Integer attId,HttpServletRequest req)
+	{
+		Map<String,Object> res = new HashMap<>();
+		res.put("code", 0);
+		
+		if(null != attId)
+		{
+			tdProductAttachmentService.deleteByPrimaryKey(attId);
+			res.put("code", 1);
+		}
+		return res;
+	}
+	
 	
 	
 	@ModelAttribute

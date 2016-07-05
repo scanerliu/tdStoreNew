@@ -14,4 +14,5 @@ public interface TdProductStatMapper {
     int updateByPrimaryKeySelective(TdProductStat record);
 
     int updateByPrimaryKey(TdProductStat record);
+    
 }

@@ -19,9 +19,9 @@ public class TdProductDescriptionServiceImpl implements TdProductDescriptionServ
 		if(null != e )
 		{
 			if(null != e.getId()){
-				tdProductDescriptionMapper.updateByPrimaryKey(e);
+				return tdProductDescriptionMapper.updateByPrimaryKey(e);
 			}else{
-				tdProductDescriptionMapper.insert(e);
+				return tdProductDescriptionMapper.insert(e);
 			}
 		}
 		return null;

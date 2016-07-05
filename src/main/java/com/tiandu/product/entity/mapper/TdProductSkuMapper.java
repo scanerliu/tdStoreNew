@@ -1,5 +1,7 @@
 package com.tiandu.product.entity.mapper;
 
+import java.util.List;
+
 import com.tiandu.product.entity.TdProductSku;
 
 public interface TdProductSkuMapper {
@@ -14,4 +16,7 @@ public interface TdProductSkuMapper {
     int updateByPrimaryKeySelective(TdProductSku record);
 
     int updateByPrimaryKey(TdProductSku record);
+    
+    List<TdProductSku> findByProductId(Integer proId);
+    Integer deleteByProductId(Integer proId);
 }

@@ -34,6 +34,17 @@
 		        </td>
 		    </tr>
 		    <tr>
+		        <th>商品类型：</th>
+		        <td>
+		            <input type="radio" name="kind" value="1" <#if !tdProduct?? || (tdProduct.kind?? && tdProduct.kind==1)>checked</#if>>普通商品&emsp;
+		            <input type="radio" name="kind" value="2" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==2>checked</#if>>商品包&emsp;
+		            <input type="radio" name="kind" value="3" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==3>checked</#if>>0元购&emsp;
+		            <input type="radio" name="kind" value="4" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==4>checked</#if>>10元购&emsp;
+		            <input type="radio" name="kind" value="5" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==5>checked</#if>>预售&emsp;
+		            <input type="radio" name="kind" value="6" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==6>checked</#if>>秒杀&emsp;
+		        </td>
+		    </tr>
+		    <tr>
 		        <th width="150">名称：</th>
 		        <td><input type="text" name="name" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.name!''}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="length[2,64]"></td>
 		    </tr>
@@ -133,17 +144,24 @@
 			        	<div id="imgs">
 			        		<#if imgList??>
 			        		<#list imgList as img>
-			        			<input type='hidden' name='attId' value='${img.id?c}'/>
+			        			<input type='hidden' name='attId' id="attId${img.id?c}"  value='${img.id?c}'/>
 			        		</#list>
 			        		</#if>
 			        	</div>
 			        	<input type="file" id="file_uploads"/>
-			        	<div id="showImgs">
-			        		<#if imgList??>
-			        		<#list imgList as img>
-			        			<img width='100' height='100' src='${app.basePath}${img.attachment!''}'/>
-			        		</#list>
-			        		</#if>
+			        	<div >
+			        		<table>
+								<tr id="showImgs">
+					        		<#if imgList??>
+					        		<#list imgList as img>
+					        			<td style="text-align: center;" id="img${img.id?c}">
+					        			<img width='100' height='100'  src='${app.basePath}${img.attachment!''}'/><br/>
+					        			<a href="javascript:removeImg(${img.id?c});">删除</a>
+					        			</td>
+					        		</#list>
+					        		</#if>
+				        		</tr>
+							</table>
 			        	</div>
 			        </td>
 			    </tr>
@@ -175,6 +193,38 @@
 				    <script id="afterSale" name="afterSale" type="text/plain"><#if afterSale??>${afterSale.description!''}</#if></script>
 		        </td> 
 	    	</tr>
+		</table>
+		</div>
+		<div title="销售状况" style="padding:10px">
+		<table class="table_form" width="100%;hright:700px;">
+			<tr>
+				<th width="150">浏览次数：</th>
+				<td><#if productStat??>${productStat.viewCount!'0'}<#else>0</#if></td>
+			</tr>
+			<tr>
+				<th width="150">总销售数量：</th>
+				<td><#if productStat??>${productStat.buyCount!'0'}<#else>0</#if></td>
+			</tr>
+			<tr>
+				<th width="150">总销售次数：</th>
+				<td><#if productStat??>${productStat.buyTimes!'0'}<#else>0</#if></td>
+			</tr>
+			<tr>
+				<th width="150">总评论数：</th>
+				<td><#if productStat??>${productStat.reviewCount!'0'}<#else>0</#if></td>
+			</tr>
+			<tr>
+				<th width="150">好评数：</th>
+				<td><#if productStat??>${productStat.positiveRate!'0'}<#else>0</#if></td>
+			</tr>
+			<tr>
+				<th width="150">中评数：</th>
+				<td><#if productStat??>${productStat.neutralRate!'0'}<#else>0</#if></td>
+			</tr>
+			<tr>
+				<th width="150">差评数：</th>
+				<td><#if productStat??>${productStat.negativeRate!'0'}<#else>0</#if></td>
+			</tr>
 		</table>
 		</div>
 </div>
@@ -224,8 +274,8 @@
 				'onUploadSuccess' : function(file, data, response) {
 					var result = eval("("+data+")");
 					$("#showImg").empty();
-					$("#showImgs").append("<img width='100' height='100' src='"+basePath+result.savedFile+"'/>");
-					$("#imgs").append("<input type='hidden' name='attId' value='"+result.atts+"'/>");
+					$("#showImgs").append("<td style='text-align: center;' id='img"+result.atts+"'><img width='100' height='100'  src='"+basePath+result.savedFile+"'/><br/><a href='javascript:removeImg("+result.atts+");'>删除</a></td>");
+					$("#imgs").append("<input type='hidden' name='attId' id='attId"+result.atts+"' value='"+result.atts+"'/>");
 				//	$.messager.alert('消息提醒','图片' + file.name + ' 上传成功。 ');
 		        },
 		        'onUploadError' : function(file, errorCode, errorMsg, errorString) {
@@ -234,4 +284,19 @@
 		        }
 		});
 	});
+
+function removeImg(id)
+{
+	
+	$.ajax({
+		type : "post",
+		data : {"attId":id},
+		url : basePath+"/admin/product/deleteImg",
+		success:function(data){
+		} 
+	})
+	
+	$("#attId"+id).remove();
+	$("#img"+id).remove();
+}
 </script>
