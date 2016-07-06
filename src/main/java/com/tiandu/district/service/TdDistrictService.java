@@ -20,5 +20,11 @@ public interface TdDistrictService {
 	public Integer save(TdDistrict district);
 	public Integer delete(Integer id);
 	public List<TdDistrict> getDistrictByUpid(Integer upid);
+	/**
+	 * 根据地区id查找地区和地区的上级(默认支持三级)
+	 * @param id
+	 * @return
+	 */
+	public TdDistrict findOneFull(Integer id);
 	
 }

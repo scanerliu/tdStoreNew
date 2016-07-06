@@ -6,7 +6,7 @@ function searchRoles(f){
 	}else{
 		loadData = $("#rolelistform").serializeArray();
 	}
-	$("#results").load(url,loadData);
+	$("#results").loading().load(url,loadData);
 }
 
 function fnGotoPageRoles(num){
@@ -16,7 +16,7 @@ function fnGotoPageRoles(num){
 function editRole(num){
 	var url = basePath+"/admin/role/edit";
 	var loadData={"roleId":num};
-	$("#rightform").load(url,loadData);
+	$("#rightform").loading().load(url,loadData);
 	showForm();
 }
 
@@ -72,7 +72,7 @@ function delRoleCallback(data){
 function editPermissions(id){
 	var url = basePath+"/admin/role/permissions";
 	var loadData={"roleId":id};
-	$("#rightform").load(url,loadData);
+	$("#rightform").loading().load(url,loadData);
 	showForm();
 }
 

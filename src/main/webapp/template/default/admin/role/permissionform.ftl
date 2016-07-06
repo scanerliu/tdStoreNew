@@ -17,7 +17,7 @@
     <tr>
         <td width="8"><input type="hidden" id="roleId" name="id" value="${role.id!''}"></td>
         <td>
-            <button type="button" class="d-button" onclick="savePermissions()">保存</button>
+            <button type="button" class="smt mr10" onclick="savePermissions()">保存</button>
         </td>
     </tr>
 </tbody>

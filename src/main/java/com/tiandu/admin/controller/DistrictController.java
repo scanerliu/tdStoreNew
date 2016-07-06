@@ -1,5 +1,6 @@
 package com.tiandu.admin.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tiandu.common.utils.MessageSender;
 import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.service.TdRoleService;
 import com.tiandu.custom.service.TdUserService;
@@ -219,6 +221,48 @@ public class DistrictController {
 		res.put("idStr", idStr);
 		res.put("code", "1");
 		return res;
+	}
+	
+	@RequestMapping("/regionselect")
+	public String regionselect(TdDistrictSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		sc.setFlag(false);
+		TdDistrict parent = new TdDistrict();	//上级
+		TdDistrict province = new TdDistrict();	//省份
+		if(null!=sc.getUpid()&&sc.getUpid()>0){
+			parent = tdDistrictService.findOne(sc.getUpid());
+			if(parent!=null && parent.getLevel()==1){
+				province = parent;
+			}else if(null!=sc.getProvinceId()&&sc.getProvinceId()>0){
+				province = tdDistrictService.findOne(sc.getProvinceId());
+			}
+		}
+		List<TdDistrict> regionList = tdDistrictService.findBySearchCriteria(sc);
+		modelMap.addAttribute("regionList", regionList);
+		modelMap.addAttribute("parent", parent);
+		modelMap.addAttribute("province", province);
+		return "/admin/district/regionselect";
+	}
+	
+	@RequestMapping("/getDistrictSelections")
+	public String getDistrictSelections(Integer level, Integer selectedDistrictId, String prefix, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdDistrictSearchCriteria sc = new TdDistrictSearchCriteria();
+		sc.setFlag(false);
+		sc.setUpid(selectedDistrictId);
+		List<TdDistrict> districtList = tdDistrictService.findBySearchCriteria(sc);
+		modelMap.addAttribute("districtList", districtList);
+		
+		String selectedInputName = ""; // 根据level，即根据要加载的区域来确定加载区域中select框的inputName
+		if(level == 0){
+			selectedInputName = "firstDistrictId";
+		}else if(level == 1){
+			selectedInputName = "secondDistrictId";
+		}else if(level == 2){
+			selectedInputName = "thirdDistrictId";
+		}
+		modelMap.addAttribute("selectedInputName", selectedInputName);
+		modelMap.addAttribute("level", level+1);  // 用于设置加载区域中select框的的级别
+		modelMap.addAttribute("prefix", prefix);
+		return "/admin/district/districtSelections";
 	}
 
 	// 是否是直辖市

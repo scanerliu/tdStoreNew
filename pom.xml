@@ -152,16 +152,6 @@
 		<version>2.5</version>
 	</dependency>
 	<!-- jackson包， springmvc 用他来为@ ResponseBody 注解的方法 ， 返回 json -->
-	<dependency>
-	    <groupId>org.codehaus.jackson</groupId>
-	    <artifactId>jackson-core-asl</artifactId>
-	    <version>1.9.13</version>
-	</dependency>
-	<dependency>
-	    <groupId>org.codehaus.jackson</groupId>
-	    <artifactId>jackson-mapper-asl</artifactId>
-	    <version>1.9.13</version>
-	</dependency>
 	<dependency>  
         <groupId>com.fasterxml.jackson.core</groupId>  
         <artifactId>jackson-core</artifactId>  
@@ -172,16 +162,6 @@
         <artifactId>jackson-databind</artifactId>  
         <version>2.7.4</version>  
     </dependency>  
-    <dependency>  
-        <groupId>com.fasterxml.jackson.core</groupId>  
-        <artifactId>jackson-annotations</artifactId>  
-        <version>2.7.4</version>  
-    </dependency>
-    <dependency>  
-        <groupId>javax.inject</groupId>  
-        <artifactId>javax.inject</artifactId>  
-        <version>1</version>  
-    </dependency>
 	<!-- Logging -->
     <dependency>
       <groupId>org.slf4j</groupId>
