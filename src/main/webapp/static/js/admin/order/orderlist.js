@@ -68,3 +68,53 @@ function delOrderCallback(data){
 	  $.messager.alert('消息提醒','订单删除失败!');
 	}
 }
+/**
+ * 发货按钮弹出发货面板
+ * @param num 订单id
+ */
+function shipOrder(num){
+	if(num>0){
+		var url = basePath+"/admin/order/shippment?id="+num;
+		$('#shipmentwindow').window({
+		    title: '订单发货',
+		    closed: false,
+		    cache: false,
+		    minimizable: false,
+		    maximizable: false,
+		    collapsible: false,
+		    href: url,
+		    modal: true,
+		    onClose : function() {
+                $(this).window({closed:true});
+            }
+		});
+		
+	}
+}
+/**
+ * 发货操作
+ */
+function shippmentOrder(){
+	var f = $('#shipmentForm').form('enableValidation').form('validate');
+	if(f){
+		$('#shipmentForm').form('submit',{
+			  success : function(data){
+				  var result = eval("("+data+")");
+				  if(result.code==1){
+					  $.messager.alert('消息提醒','订单发货成功。');
+					  closeShipmentwin();
+					  refreshList();
+				  }else{
+					  $.messager.alert('消息提醒','订单发货失败,请检查订单状态!');
+				  }
+				  
+			  }
+		});
+	}
+}
+/**
+ * 关闭发货面板
+ */
+function closeShipmentwin(){
+	$(shipmentwindow).window({closed:true});
+}

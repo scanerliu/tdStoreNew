@@ -2,6 +2,7 @@ package com.tiandu.order.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import com.tiandu.common.entity.TdBaseEntity;
 import com.tiandu.common.utils.ConstantsUtils;
@@ -60,6 +61,15 @@ public class TdOrder extends TdBaseEntity{
      * 供应商信息
      */
     private TdUser supplierUser;
+    
+    /**
+     * 订单货品集合
+     */
+    private List<TdOrderSku> skuList;
+    /**
+     * 送货地址
+     */
+    private TdOrderAddress orderAddress;
 
     public Integer getOrderId() {
         return orderId;
@@ -251,6 +261,22 @@ public class TdOrder extends TdBaseEntity{
 
 	public void setSupplierUser(TdUser supplierUser) {
 		this.supplierUser = supplierUser;
+	}
+
+	public List<TdOrderSku> getSkuList() {
+		return skuList;
+	}
+
+	public void setSkuList(List<TdOrderSku> skuList) {
+		this.skuList = skuList;
+	}
+
+	public TdOrderAddress getOrderAddress() {
+		return orderAddress;
+	}
+
+	public void setOrderAddress(TdOrderAddress orderAddress) {
+		this.orderAddress = orderAddress;
 	}
 
 	/**

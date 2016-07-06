@@ -24,6 +24,12 @@
     from td_order_sku
     where order_sku_id = #{orderSkuId,jdbcType=INTEGER}
   </select>
+  <select id="findByOrderId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_order_sku
+    where order_id = #{orderSkuId,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from td_order_sku
     where order_sku_id = #{orderSkuId,jdbcType=INTEGER}

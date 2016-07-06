@@ -93,4 +93,14 @@ public class ConstantsUtils {
 	 * 订单发货状态： 4 全部退货
 	 */
 	public static final Byte ORDER_SHIPMENT_STATUS_All_RETURN = 4;
+	
+	/**发货单类型**/
+	/**
+	 * 发货单类型： 1 发货单
+	 */
+	public static final Byte ORDERSHIPMENT_TYPE_SHIP = 1;
+	/**
+	 * 发货单类型：2 退货单
+	 */
+	public static final Byte ORDERSHIPMENT_TYPE_RETURN = 1;
 }

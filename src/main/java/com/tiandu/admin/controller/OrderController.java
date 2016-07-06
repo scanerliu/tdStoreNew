@@ -32,9 +32,15 @@ import com.tiandu.custom.service.TdUserAccountLogService;
 import com.tiandu.custom.service.TdUserAccountService;
 import com.tiandu.custom.service.TdUserIntegralLogService;
 import com.tiandu.custom.service.TdUserIntegralService;
+import com.tiandu.express.entity.TdExpress;
+import com.tiandu.express.search.TdExpressSearchCriteria;
+import com.tiandu.express.service.TdExpressService;
 import com.tiandu.order.entity.TdOrder;
+import com.tiandu.order.entity.TdOrderShipment;
 import com.tiandu.order.search.TdOrderSearchCriteria;
+import com.tiandu.order.search.TdOrderShipmentSearchCriteria;
 import com.tiandu.order.service.TdOrderService;
+import com.tiandu.order.service.TdOrderShipmentService;
 
 /**
  * 
@@ -49,6 +55,12 @@ public class OrderController extends BaseController {
 	
 	@Autowired
 	private TdOrderService tdOrderService;
+	
+	@Autowired
+	private TdExpressService tdExpressService;
+	
+	@Autowired
+	private TdOrderShipmentService tdOrderShipmentService;
 	
 	@RequestMapping("/list")
 	public String list(TdOrderSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
@@ -65,46 +77,7 @@ public class OrderController extends BaseController {
 	    modelMap.addAttribute("sc", sc) ;
 		return "/admin/order/listbody";
 	}
-	
-	@RequestMapping("/edit")
-	public String edit(Integer id, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		TdOrder order = null;
-		if(null!=id){
-			order = tdOrderService.findOne(id);		    
-		}
-		if(null==order){
-			order = new TdOrder();
-		}
-		modelMap.addAttribute("order", order);
-		return "/admin/order/orderform";
-	}
-	
-
-	@RequestMapping(value="/save", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String,String> save(TdOrder order, HttpServletRequest request, HttpServletResponse response) {
-		Map<String,String> res = new HashMap<String,String>(); 
-		if(null!=order){
-			Date now = new Date();
-			try {
-				TdUser currManager = this.getCurrentUser();
-				order.setUpdateBy(currManager.getUid());
-				order.setUpdateTime(now);
-				order.setCreateTime(now);
-				tdOrderService.save(order);
-				res.put("code", "1");
-				return res;
-			}catch (Exception e) {
-				logger.error("订单保存失败错误信息:"+e);
-				res.put("code", "0");
-				return res;
-			}
-		}else{
-			res.put("code", "0");
-			return res;
-		}
-	}
-	
+		
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String,String> delete(Integer id, HttpServletRequest request, HttpServletResponse response) {
@@ -125,30 +98,7 @@ public class OrderController extends BaseController {
 		}
 	}
 	
-	@RequestMapping(value="/updatestatus", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String,String> updatestatus(TdUser manager, HttpServletRequest request, HttpServletResponse response) {
-		Map<String,String> res = new HashMap<String,String>(); 
-		if(null!=manager){
-		    try {
-		    	Date now = new Date();
-		    	TdUser currManager = this.getCurrentUser();
-				manager.setUpdateBy(currManager.getUid());
-				manager.setUpdateTime(now);
-				manager.setCreateTime(now);
-		    	tdUserService.saveUserStatus(manager);
-				res.put("code", "1");
-				return res;
-		    }catch (Exception e) {
-		    	logger.error("角色保存失败错误信息:"+e);
-		    	res.put("code", "0");
-		    	return res;
-		    }
-		}else{
-			res.put("code", "0");
-			return res;
-		}
-	}
+
 	/**
 	 * 获取订单详细信息
 	 * @param id 订单id
@@ -169,6 +119,88 @@ public class OrderController extends BaseController {
 		}
 		modelMap.addAttribute("order", order);
 		return "/admin/order/detail";
+	}
+	
+	/**
+	 * 订单发货面板
+	 * @param id 订单id
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
+	@RequestMapping("/shippment")
+	public String shippment(Integer id, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdOrder order = null;
+		if(null!=id){
+			order = tdOrderService.findOne(id);		    
+		}
+		if(null==order){
+			modelMap.addAttribute("errmsg", "未找到相关订单，请重新操作！");
+			return "/admin/error";
+		}
+		//查询物流公司
+		TdExpressSearchCriteria sc = new TdExpressSearchCriteria();
+		sc.setFlag(false);
+		List<TdExpress> expressList = tdExpressService.findBySearchCriteria(sc);
+		modelMap.addAttribute("order", order);
+		modelMap.addAttribute("expressList", expressList);
+		return "/admin/order/shippment";
+	}
+	/**
+	 * 订单发货操作
+	 * @param id 订单id
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
+	@RequestMapping(value="/shiporder", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> shiporder(TdOrderShipment ship, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>(); 
+		if(null!=ship && null!=ship.getOrderId()){
+			try {
+				Date now = new Date();
+				TdUser currUser = this.getCurrentUser();
+				ship.setCreateTime(now);
+				ship.setCreateBy(currUser.getUid());
+				ship.setUpdateBy(currUser.getUid());
+				ship.setUpdateTime(now);
+				//发货操作
+				boolean result = tdOrderService.shiporder(ship);
+				if(result){
+					res.put("code", "1");
+				}else{
+					res.put("code", "0");
+				}
+				return res;
+			}catch (Exception e) {
+				logger.error("订单删除失败错误信息:"+e);
+				res.put("code", "0");
+				return res;
+			}
+		}else{
+			res.put("code", "0");
+			return res;
+		}
+	}
+	
+	
+	/**
+	 * 获取订单发货信息
+	 * @param id 订单id
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
+	@RequestMapping("/shippments")
+	public String shippments(TdOrderShipmentSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		sc.setFlag(false);
+		List<TdOrderShipment> shipList = tdOrderShipmentService.findBySearchCriteria(sc);
+		modelMap.addAttribute("shipList", shipList);
+		return "/admin/order/shiplist";
 	}
 
 }

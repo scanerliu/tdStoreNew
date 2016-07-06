@@ -1,5 +1,7 @@
 package com.tiandu.order.entity.mapper;
 
+import java.util.List;
+
 import com.tiandu.order.entity.TdOrderSku;
 
 public interface TdOrderSkuMapper {
@@ -14,4 +16,6 @@ public interface TdOrderSkuMapper {
     int updateByPrimaryKeySelective(TdOrderSku record);
 
     int updateByPrimaryKey(TdOrderSku record);
+    
+    public List<TdOrderSku> findByOrderId(Integer orderId);
 }
