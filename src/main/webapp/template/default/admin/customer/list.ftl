@@ -5,7 +5,8 @@
 <script src="${app.basePath}/static/js/admin/core.js" type="text/javascript"></script>
 <script src="${app.basePath}/static/js/admin/customer/customerlist.js" type="text/javascript"></script>
 <div id="rightlist">
-<div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="editCustomer(0)"><em>添加会员</em></a>&#12288;</div></div>
+<div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="editCustomer(0)"><em>添加会员</em></a>&#12288;<a href="javascript:;" class="add fb J_showdialog" onclick="sendUserMessage()"><em>发送系统消息</em></a></div></div>
+
 <form id="searchform">
 <table width="100%" cellspacing="0" class="search_form">
 	<tbody>

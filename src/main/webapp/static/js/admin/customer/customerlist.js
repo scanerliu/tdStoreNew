@@ -310,3 +310,39 @@ function changeUserAccountCallback(data){
 		$.messager.alert('消息提醒','更新失败!');
 	}
 }
+
+function sendUserMessage(){
+	var ids = $("input[name='subbox']:checked");
+	if(ids.length == 0){
+		$.messager.alert('消息提醒','请选择要发送的会员。');
+		return;
+	}else{
+		var idStr = "";
+		for(var i = 0; i < ids.length; i ++){
+			idStr += $(ids[i]).val() + ",";
+		}
+		var url = basePath+"/admin/message/sendUserMessage";
+		var loadData={"idStr":idStr};
+		$("#rightform").load(url,loadData);
+		showForm();
+	}
+}
+
+function saveUserMessage(){
+	// 设置百度编辑器的内容到#cc中
+	var content = UE.getEditor('userMessageContent').getContent();
+	$("#cc").html(content);
+	var f = $('#userMessage').form('enableValidation').form('validate');
+	if(f){
+		$('#userMessage').form('submit',{
+			  success : function(data){
+				  var result = eval("("+data+")");
+				  $.messager.alert('消息提醒',result.msg);
+				  if(result.code==1){
+					  returnList();
+					  refreshList();
+				  }
+			  }
+		});
+	};
+}
