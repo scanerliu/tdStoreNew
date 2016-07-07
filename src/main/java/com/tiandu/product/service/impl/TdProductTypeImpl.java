@@ -118,12 +118,13 @@ public class TdProductTypeImpl implements TdProductTypeService{
 		List<TdProductAttribute> productAttrList = new ArrayList<>();
 		if(null != typeId)
 		{
-			// 查出分类已有的属性集合
+			// 查出所有属性
 			List<TdProductTypeAttribute> typeAttrList = tdProductTypeAttributeService.findByTypeId(typeId);
 			
-			// 查出所有属性
+			// 查出分类已有的属性集合
 			TdProductAttributeCriteria sc = new TdProductAttributeCriteria();
 			sc.setFlag(false);
+			sc.setStatus((byte)1);
 			List<TdProductAttribute> attrList = tdProductAttributeService.findBySearchCriteria(sc);
 			
 			if(null != attrList && attrList.size() > 0 )
@@ -161,6 +162,7 @@ public class TdProductTypeImpl implements TdProductTypeService{
 		// 查出所有属性
 		TdProductAttributeCriteria sc = new TdProductAttributeCriteria();
 		sc.setFlag(false);
+		sc.setStatus((byte)1);
 		List<TdProductAttribute> attrList = tdProductAttributeService.findBySearchCriteria(sc);
 		
 		// 查出分类已有的属性集合

@@ -1,9 +1,9 @@
-package com.tiandu.product.search;
+package com.tiandu.complaint.search;
 
 import com.tiandu.common.search.SearchCriteria;
 
-public class TdProductAttributeCriteria extends SearchCriteria{
-	
+public class TdComplaintCriteria extends SearchCriteria{
+
 	private Byte status;
 
 	public Byte getStatus() {
