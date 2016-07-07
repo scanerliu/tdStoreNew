@@ -79,7 +79,9 @@
         </tr>
         </table>
     </div>
-    <div title="发货信息" style="overflow:auto;padding:20px;" href="${app.basePath}/admin/order/shippments?id=${order.orderId!''}">
+    <div title="发货信息" style="overflow:auto;padding:20px;" href="${app.basePath}/admin/order/shippments?orderId=${order.orderId!''}&type=1">
+    </div>
+    <div title="退货信息" style="overflow:auto;padding:20px;" href="${app.basePath}/admin/order/shippments?orderId=${order.orderId!''}&type=2">
     </div>
 </div>
 </div>

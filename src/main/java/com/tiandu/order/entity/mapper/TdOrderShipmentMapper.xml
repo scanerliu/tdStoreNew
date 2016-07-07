@@ -14,7 +14,8 @@
     <result column="create_by" property="createBy" jdbcType="INTEGER" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="INTEGER" />
-    
+    <!-- 物流公司信息 -->
+    <association property="trackExpress" resultMap="trackExpressResult"/>
     <!-- 进行 多表关联插叙，先关联shipment和shipmentitem -->
 	<collection property="itemList" column="shipment_id" ofType="com.tiandu.order.entity.TdOrderShipmentItem">
 		<id property="id" column="ITEM_ID"/>
@@ -23,43 +24,40 @@
 	</collection>
   </resultMap>
   
+  <resultMap id="ResultMapWithBLOBs" type="com.tiandu.order.entity.TdOrderShipment" extends="BaseResultMap" >
+    <result column="tracking_trace" property="trackingTrace" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
   <resultMap id="itemOrderSkuResult" type="com.tiandu.order.entity.TdOrderSku" >
   	<result column="item_productName" property="productName" jdbcType="VARCHAR" />
   	<result column="item_specification" property="displaySpecifications" jdbcType="VARCHAR" />
   </resultMap>
   
+  <resultMap id="trackExpressResult" type="com.tiandu.express.entity.TdExpress" >
+  	<result column="express_name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  
   <sql id="Base_Column_List" >
-    id, order_id, type, tracking_no, tracking_id, return_reason, cargo_status, status, 
-    create_time, create_by, update_time, update_by
+    s.id, s.order_id, s.type, s.tracking_no, s.tracking_id, s.return_reason, s.cargo_status, s.status, 
+    s.create_time, s.create_by, s.update_time, s.update_by
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from td_order_shipment
-    where id = #{id,jdbcType=INTEGER}
+    from td_order_shipment s
+    where s.id = #{id,jdbcType=INTEGER}
   </select>
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.order.search.TdOrderShipmentSearchCriteria" >
     select 
     <include refid="Base_Column_List" />
-    from td_order_shipment
-    <if test="getUpdateUser" >
-        left join td_user u on u.uid= o.update_by
-    </if>
+    , e.name as express_name, i.id as ITEM_ID, i.quantity as ITEM_QUANTITY, o.product_name as item_productName, o.display_specifications as item_specification
+    from td_order_shipment s left join td_express e on s.tracking_id = e.id left join td_order_shipment_item i on i.shipment_id = s.id left join td_order_sku o on i.order_sku_id = o.order_sku_id
     where 1=1 
-    <if test="orderNo != null and orderNo!=''" >
-        and o.order_no=#{orderNo,jdbcType=VARCHAR}
+    <if test="type != null" >
+        and s.type=#{type,jdbcType=TINYINT}
     </if>
-    <if test="orderType != null" >
-        and o.order_type=#{orderType,jdbcType=TINYINT}
-    </if>
-    <if test="orderStatus != null" >
-        and o.order_status=#{orderStatus,jdbcType=TINYINT}
-    </if>
-    <if test="payStatus != null" >
-        and o.pay_status=#{payStatus,jdbcType=TINYINT}
-    </if>
-    <if test="shipmentStatus != null" >
-        and o.shipment_status=#{shipmentStatus,jdbcType=TINYINT}
+    <if test="orderId != null" >
+        and s.order_id=#{orderId,jdbcType=INTEGER}
     </if>
   </select>
   
@@ -191,6 +189,9 @@
       </if>
       <if test="updateBy != null" >
         update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="trackingTrace != null" >
+        tracking_trace = #{trackingTrace,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
