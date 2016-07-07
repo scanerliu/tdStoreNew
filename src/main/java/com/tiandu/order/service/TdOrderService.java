@@ -5,6 +5,8 @@ import java.util.List;
 import com.tiandu.order.entity.TdOrder;
 import com.tiandu.order.entity.TdOrderShipment;
 import com.tiandu.order.search.TdOrderSearchCriteria;
+import com.tiandu.order.vo.OperResult;
+import com.tiandu.order.vo.OrderRefund;
 
 public interface TdOrderService {
 
@@ -22,5 +24,20 @@ public interface TdOrderService {
 	 * @param shipment
 	 * @return
 	 */
-	public boolean shiporder(TdOrderShipment shipment);
+	public OperResult shiporder(TdOrderShipment shipment);
+	/**
+	 * 订单退款操作
+	 * @param order
+	 * @param refund
+	 * @return
+	 */
+	public OperResult refundorder(OrderRefund refund);
+	
+	/**
+	 * 订单完成操作,根据订单类型进行分润处理
+	 * @param order
+	 * @param refund
+	 * @return
+	 */
+	public OperResult completeorder(Integer id);
 }

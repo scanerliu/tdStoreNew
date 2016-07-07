@@ -1,7 +1,7 @@
 <#import "/common/app.ftl" as app>
 <td colspan="10">
 <div class="J_tablelist table_list">
-<div class="content_menu ib_a blue line_x"><a href="javascript:;" onclick="shipOrder(${order.orderId!''})" ><em>发货</em></a><span>|</span><a href="javascript:;" onclick="" ><em>退货</em></a><span>|</span><a href="javascript:;" onclick="" ><em>退款</em></a></div>
+<div class="content_menu ib_a blue line_x"><a href="javascript:;" onclick="shipOrder(${order.orderId!''})" ><em>发货</em></a><span>|</span><a href="javascript:;" onclick="refundOrder(${order.orderId!''})" ><em>退款</em></a></div>
 <div id="dg" style="width:800px;height:350px;">
     <div title="基本信息" style="padding:20px;">
     	<table width="100%" cellspacing="0">
@@ -47,6 +47,10 @@
             			<td>${order.payAmount!'0'}</td>
             	    </tr>
             	    <tr>
+            			<th>退款金额：</th>
+            			<td>-${order.refundAmount!'0'}</td>
+            	    </tr>
+            	    <tr>
             			<th>订单获得积分：</th>
             			<td>${order.gainPoints!'0'}</td>
             	    </tr>
@@ -83,9 +87,12 @@
     </div>
     <div title="退货信息" style="overflow:auto;padding:20px;" href="${app.basePath}/admin/order/shippments?orderId=${order.orderId!''}&type=2">
     </div>
+    <div title="操作日志" style="overflow:auto;padding:20px;" href="${app.basePath}/admin/order/logs">
+    </div>
 </div>
 </div>
 <div id="shipmentwindow" class="easyui-window" closed="true" style="width:600px;height:300px;padding:10px"></div>
+<div id="refundwindow" class="easyui-window" closed="true" style="width:600px;height:300px;padding:10px"></div>
 <script>
 $(function(){
      $('#dg').tabs({

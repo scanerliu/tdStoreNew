@@ -33,6 +33,8 @@ public class TdOrder extends TdBaseEntity{
     private BigDecimal postage;
 
     private BigDecimal productAmount;
+    
+    private BigDecimal refundAmount;
 
     private Byte paymentId;
 
@@ -167,7 +169,15 @@ public class TdOrder extends TdBaseEntity{
         this.productAmount = productAmount;
     }
 
-    public Byte getPaymentId() {
+    public BigDecimal getRefundAmount() {
+		return refundAmount;
+	}
+
+	public void setRefundAmount(BigDecimal refundAmount) {
+		this.refundAmount = refundAmount;
+	}
+
+	public Byte getPaymentId() {
         return paymentId;
     }
 

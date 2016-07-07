@@ -103,4 +103,17 @@ public class ConstantsUtils {
 	 * 发货单类型：2 退货单
 	 */
 	public static final Byte ORDERSHIPMENT_TYPE_RETURN = 1;
+	/**订单操作日志类型**/
+	/**
+	 * 订单操作日志类型： 1 发货
+	 */
+	public static final Byte ORDER_LOG_TYPE_SHIP = 1;
+	/**
+	 * 订单操作日志类型： 2 退款
+	 */
+	public static final Byte ORDER_LOG_TYPE_REFUND = 2;
+	/**
+	 * 订单操作日志类型： 3订单完成
+	 */
+	public static final Byte ORDER_LOG_TYPE_COMPLETE = 3;
 }

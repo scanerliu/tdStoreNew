@@ -105,7 +105,7 @@ function shippmentOrder(){
 					  closeShipmentwin();
 					  refreshList();
 				  }else{
-					  $.messager.alert('消息提醒','订单发货失败,请检查订单状态!');
+					  $.messager.alert('消息提醒',result.msg);
 				  }
 				  
 			  }
@@ -116,5 +116,56 @@ function shippmentOrder(){
  * 关闭发货面板
  */
 function closeShipmentwin(){
-	$(shipmentwindow).window({closed:true});
+	$('#shipmentwindow').window({closed:true});
+}
+
+/**
+ * 退款按钮弹出退款面板
+ * @param num 订单id
+ */
+function refundOrder(num){
+	if(num>0){
+		var url = basePath+"/admin/order/refund?id="+num;
+		$('#refundwindow').window({
+		    title: '订单退款',
+		    closed: false,
+		    cache: false,
+		    minimizable: false,
+		    maximizable: false,
+		    collapsible: false,
+		    href: url,
+		    modal: true,
+		    onClose : function() {
+                $(this).window({closed:true});
+            }
+		});
+		
+	}
+}
+/**
+ * 退款操作
+ */
+function refundop(){
+	var f = $('#refundForm').form('enableValidation').form('validate');
+	if(f){
+		$('#refundForm').form('submit',{
+			  success : function(data){
+				  var result = eval("("+data+")");
+				  if(result.code==1){
+					  $.messager.alert('消息提醒','订单退款成功。');
+					  closerefundwin();
+					  refreshList();
+				  }else{
+					  $.messager.alert('消息提醒',result.msg);
+				  }
+				  
+			  }
+		});
+	}
+}
+/**
+ * 关闭发货面板
+ */
+function closerefundwin(){
+	$('#refundwindow').window({closed:true});
 }
