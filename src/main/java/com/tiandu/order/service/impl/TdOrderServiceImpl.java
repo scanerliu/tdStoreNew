@@ -9,16 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tiandu.common.utils.ConstantsUtils;
-import com.tiandu.custom.entity.mapper.TdUserMapper;
 import com.tiandu.order.entity.TdOrder;
 import com.tiandu.order.entity.TdOrderAddress;
 import com.tiandu.order.entity.TdOrderLog;
+import com.tiandu.order.entity.TdOrderProduct;
 import com.tiandu.order.entity.TdOrderShipment;
 import com.tiandu.order.entity.TdOrderShipmentItem;
 import com.tiandu.order.entity.TdOrderSku;
 import com.tiandu.order.entity.mapper.TdOrderAddressMapper;
 import com.tiandu.order.entity.mapper.TdOrderLogMapper;
 import com.tiandu.order.entity.mapper.TdOrderMapper;
+import com.tiandu.order.entity.mapper.TdOrderProductMapper;
 import com.tiandu.order.entity.mapper.TdOrderShipmentItemMapper;
 import com.tiandu.order.entity.mapper.TdOrderShipmentMapper;
 import com.tiandu.order.entity.mapper.TdOrderSkuMapper;
@@ -48,7 +49,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 	@Autowired
 	private TdOrderLogMapper tdOrderLogMapper;
 	@Autowired
-	private TdUserMapper tdUserMapper;
+	private TdOrderProductMapper tdOrderProductMapper;
 
 	@Override
 	public Integer deleteByPrimaryKey(Integer orderId) {
@@ -79,6 +80,11 @@ public class TdOrderServiceImpl implements TdOrderService{
 			//查询订单收货地址
 			TdOrderAddress address = tdOrderAddressMapper.selectByPrimaryKey(id);
 			order.setOrderAddress(address);
+			//代理商产品订单、图片订单查询商品详情
+			if(ConstantsUtils.ORDER_KIND_AGENTPRODUCT.equals(order.getOrderType())||ConstantsUtils.ORDER_KIND_IMAGEPRODUCT.equals(order.getOrderType())){
+				List<TdOrderProduct> productList = tdOrderProductMapper.findByOrderId(order.getOrderId());
+				order.setProductList(productList);
+			}
 		}
 		return order;
 	}

@@ -5,6 +5,34 @@ public class ConstantsUtils {
 	public final static String PRIMARY_MEMBER_KEY = "td_key_2016_05_20****15##%%@&50";
 	public final static Byte CONF_DATA_TYPE_BOOLEAN = 3;
 	
+	/*******************************订单类型****************************/
+	/**
+	 * 订单类型1-普通商品订单
+	 */
+	public static final Byte ORDER_KIND_COMMON = 1;
+	/**
+	 * 订单类型2-代理产品订单
+	 */
+	public static final Byte ORDER_KIND_AGENTPRODUCT = 2;
+	/**
+	 * 订单类型2-图片处理订单
+	 */
+	public static final Byte ORDER_KIND_IMAGEPRODUCT = 3;
+	/*******************************订单商品类型****************************/
+	/**
+	 * 订单商品类型1-代理产品
+	 */
+	public static final Byte ORDER_PRODUCT_TYPE_AGENT = 1;
+	/**
+	 * 订单商品类型2-商品包
+	 */
+	public static final Byte ORDER_PRODUCT_TYPE_PAKAGE = 2;
+	/**
+	 * 订单商品类型3-图片
+	 */
+	public static final Byte ORDER_PRODUCT_TYPE_IMAGE = 3;
+	
+	/**********************代理类型*********************************/
 	/**
 	 * 代理类型-1 单类代理  2 分公司 3-三级分销
 	 */
@@ -116,4 +144,18 @@ public class ConstantsUtils {
 	 * 订单操作日志类型： 3订单完成
 	 */
 	public static final Byte ORDER_LOG_TYPE_COMPLETE = 3;
+	
+	/***************************订单支付方式**************************/
+	/**
+	 * 订单支付方式： 1 支付宝
+	 */
+	public static final Byte ORDER_PAYMENT_ALIPAY = 1;
+	/**
+	 * 订单支付方式： 2 微信
+	 */
+	public static final Byte ORDER_PAYMENT_WEIXIN = 2;
+	/**
+	 * 订单支付方式： 3银联
+	 */
+	public static final Byte ORDER_PAYMENT_UNIONPAY = 3;
 }

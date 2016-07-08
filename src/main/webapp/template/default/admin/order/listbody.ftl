@@ -17,13 +17,13 @@
 <th align="left">下单时间</th>
 <th align="left">更新时间</th>
 <th align="left">更新人</th>
-<th width="200">管理操作</th>
 </tr>
 </thead>
 <tbody>
-<#assign _treeId=1/>
+<#assign _treeId=0/>
 <#if orderList??>
 <#list orderList as order>
+	<#assign _treeId++/>
     <tr data-tt-id="${_treeId}" orderId="${order.orderId}">
         <td>${order.orderNo}</td>
         <td>${order.totalAmount}</td>
@@ -34,9 +34,6 @@
         <td><#if order.createTime??>${order.createTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
         <td><#if order.updateTime??>${order.updateTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
         <td><#if order.updateUser??>${order.updateUser.unick!''}</#if></td>
-        <td align="center">
-            <a class="J_showdialog" href="javascript:;" onclick="orderDetail(${order.orderId})">查看详情</a> 
-        </td>
     </tr>
     <#assign _ptreeId=_treeId/>
     <#assign _treeId++/>

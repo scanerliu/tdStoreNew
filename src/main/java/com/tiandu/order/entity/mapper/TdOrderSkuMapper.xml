@@ -28,7 +28,7 @@
     select 
     <include refid="Base_Column_List" />
     from td_order_sku
-    where order_id = #{orderSkuId,jdbcType=INTEGER}
+    where order_id = #{orderId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from td_order_sku

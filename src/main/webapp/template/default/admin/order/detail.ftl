@@ -1,19 +1,52 @@
 <#import "/common/app.ftl" as app>
 <td colspan="10">
-<div class="J_tablelist table_list">
-<div class="content_menu ib_a blue line_x"><a href="javascript:;" onclick="shipOrder(${order.orderId!''})" ><em>发货</em></a><span>|</span><a href="javascript:;" onclick="refundOrder(${order.orderId!''})" ><em>退款</em></a></div>
-<div id="dg" style="width:800px;height:350px;">
-    <div title="基本信息" style="padding:20px;">
+<div class="J_tablelist table_list table_list2">
+<div class="content_menu ib_a blue line_x">
+	<#if order.orderStatus!=2>
+	<#if order.shipmentStatus==2><span>|</span><a href="javascript:;" onclick="shipOrder(${order.orderId!''})" ><em>发货</em></a></#if>
+	<#if order.orderType!=2 && (order.payStatus==1||order.payStatus==3)><span>|</span><a href="javascript:;" onclick="refundOrder(${order.orderId!''})" ><em>退款</em></a></#if>
+	</#if>
+</div>
+<div id="dg_${order.orderId}" style="width:800px;height:350px;">
+    <div title="基本信息" style="width:800px;height:350px;padding:0px;">
     	<table width="100%" cellspacing="0">
         <tr>
             <td width="50%" valign="top">
+            	<#if order?? && order.productList?? && (order.productList?size > 0)>
             	<table width="100%">
+            		<tr>
+            			<th>商品名称</th>
+            			<th>商品类型</th>
+            			<th>商品价格</th>
+            			<th>商品数量</th>
+            		</tr>
+            		<#list order.productList as product>
+            		<tr>
+            			<td>${product.title!''}</td>
+            			<td>${product.getItemTypeStr()!''}</td>
+            			<td>${product.itemPrice!''}</td>
+            			<td>${product.quantity!''}</td>
+            		</tr>
+            		<#if product.attachments??>
+            		<tr>
+            			<td colspan="4">
+        				<#list product.attachments as atta>
+	            			<a href="${app.basePath}${atta}" target="_blank"><img src="${app.basePath}${atta}" alt="图片" width="60"/></a>
+	            		</#list>            				
+        				</td>
+        			</tr>
+        			</#if>
+            		</#list>
+            	</table>
+            	<br/>
+            	</#if>
+            	<table width="100%">
+            		<#if order?? && order.skuList?? &&(order.skuList?size>0)>
             		<tr>
             			<th>商品名称</th>
             			<th>商品价格</th>
             			<th>商品数量</th>
             		</tr>
-            		<#if order?? && order.skuList??>
             		<#list order.skuList as sku>
             		<tr>
             			<td>${sku.productName!''} ${sku.displaySpecifications!''}</td>
@@ -67,6 +100,10 @@
             			<td><#if order.orderUser??>${order.orderUser.unick!''}</#if></td>
             	    </tr>
             		<tr>
+            			<th>支付方式：</th>
+            			<td>${order.getPaymentStr()!''}</td>
+            	    </tr>
+            		<tr>
             			<th>联系人：</th>
             			<td><#if order.orderAddress??>${order.orderAddress.customerName!''}</#if></td>
             	    </tr>
@@ -83,19 +120,17 @@
         </tr>
         </table>
     </div>
-    <div title="发货信息" style="overflow:auto;padding:20px;" href="${app.basePath}/admin/order/shippments?orderId=${order.orderId!''}&type=1">
+    <div title="发货信息" style="width:800px;height:350px;padding:0px;" href="${app.basePath}/admin/order/shippments?orderId=${order.orderId!''}&type=1">
     </div>
-    <div title="退货信息" style="overflow:auto;padding:20px;" href="${app.basePath}/admin/order/shippments?orderId=${order.orderId!''}&type=2">
+    <div title="退货信息" style="width:800px;height:350px;padding:0px;" href="${app.basePath}/admin/order/shippments?orderId=${order.orderId!''}&type=2">
     </div>
-    <div title="操作日志" style="overflow:auto;padding:20px;" href="${app.basePath}/admin/order/logs">
+    <div title="操作日志" style="width:800px;height:350px;padding:0px;" href="${app.basePath}/admin/order/logs?orderId=${order.orderId!''}">
     </div>
 </div>
 </div>
-<div id="shipmentwindow" class="easyui-window" closed="true" style="width:600px;height:300px;padding:10px"></div>
-<div id="refundwindow" class="easyui-window" closed="true" style="width:600px;height:300px;padding:10px"></div>
 <script>
 $(function(){
-     $('#dg').tabs({
+     $('#dg_${order.orderId}').tabs({
 	    border:false,
 	    fit:true,
 	    tabPosition:"left"
