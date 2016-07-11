@@ -26,6 +26,22 @@
         </tr>
         </table>
     </div>
+    <div title="网站属性设置" style="overflow:auto;padding:20px;">
+    	<table class="tabcontent"  width="100%" cellspacing="0">
+        <tr>
+            <td width="120" align="right">网站备案号:</td><td><input type="hidden" name="configKey" value="webrecordnumber"/><input type="text" name="webrecordnumber" id="webrecordnumber" value="${configMap.webrecordnumber!''}" class="easyui-textbox" style="width:300px;height:30px;"/></td>
+        </tr>
+        <tr>
+            <td width="120" align="right">页面关键词(SEO):</td><td><input type="hidden" name="configKey" value="webkeywords"/><input type="text" name="webkeywords" id="webkeywords" value="${configMap.webkeywords!''}" class="easyui-textbox" style="width:300px;height:30px;"/></td>
+        </tr>
+        <tr>
+            <td align="right">页面描述(SEO):</td><td><input type="hidden" name="configKey" value="webdescription"/><input type="text" name="webdescription" id="webdescription" value="${configMap.webdescription!''}" class="easyui-textbox" style="width:300px;height:30px;"/></td>
+        </tr>
+        <tr>
+            <td align="right">网站版权信息:</td><td><input type="hidden" name="configKey" value="webcopyright"/><input type="text" name="webcopyright" id="webcopyright" value="${configMap.webcopyright!''}" class="easyui-textbox" style="width:300px;height:30px;"/></td>
+        </tr>
+        </table>
+    </div>
     <div title="短信接口设置" style="overflow:auto;padding:20px;">
     	<table class="tabcontent"  width="100%" cellspacing="0">
         <tr>
