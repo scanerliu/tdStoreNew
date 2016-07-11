@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SpriteFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" CssFileName="../x-img/bg_icon" ImageName="bg_icon_pc_footer" IsPhone="false" SpriteImgFileType="Png" xmlns="CssSprite">
+  <SpriteList>
+    <Sprite Path="bg_icon_16_1.png" LocationX="0" LocationY="0" />
+    <Sprite Path="bg_icon_16.png" LocationX="42" LocationY="0" />
+    <Sprite Path="bg_icon_17_1.png" LocationX="84" LocationY="0" />
+    <Sprite Path="bg_icon_17.png" LocationX="126" LocationY="0" />
+    <Sprite Path="bg_icon_14_1.png" LocationX="168" LocationY="0" />
+    <Sprite Path="bg_icon_14.png" LocationX="210" LocationY="0" />
+    <Sprite Path="bg_icon_15_1.png" LocationX="252" LocationY="0" />
+    <Sprite Path="bg_icon_15.png" LocationX="294" LocationY="0" />
+  </SpriteList>
+</SpriteFile>

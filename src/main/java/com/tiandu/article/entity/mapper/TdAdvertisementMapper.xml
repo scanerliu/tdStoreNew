@@ -207,6 +207,14 @@
       <if test="adsId != null" >
        	and  a.ads_id = #{adsId,jdbcType=TINYINT}
       </if>
+      <if test="orderBy != null" >
+      	<if test="orderBy ==1">
+      		order by  a.sort desc
+      	</if>
+      	<if  test="orderBy ==2">
+	      	order by a.sort asc
+      	</if>
+      </if>
   </select>
   
 </mapper>

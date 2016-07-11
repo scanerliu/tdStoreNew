@@ -25,6 +25,7 @@ import com.tiandu.product.entity.TdProductDescription;
 import com.tiandu.product.entity.TdProductStat;
 import com.tiandu.product.search.TdProductCriteria;
 import com.tiandu.product.search.TdProductDescriptionCriteria;
+import com.tiandu.product.search.TdProductTypeCriteria;
 import com.tiandu.product.service.TdProductAttachmentService;
 import com.tiandu.product.service.TdProductDescriptionService;
 import com.tiandu.product.service.TdProductService;
@@ -69,7 +70,9 @@ public class TdProductContrller extends BaseController{
 	@RequestMapping("/edit")
 	public String edit(Integer id,HttpServletRequest req,ModelMap map)
 	{
-		map.addAttribute("productTypeList", tdProductTypeService.findAll());
+		TdProductTypeCriteria tsc = new TdProductTypeCriteria();
+		tsc.setStatus((byte) 1);
+		map.addAttribute("productTypeList", tdProductTypeService.findAll(tsc));
 		
 		if(null != id)
 		{

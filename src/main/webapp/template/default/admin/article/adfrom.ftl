@@ -39,7 +39,7 @@
     <tr>
         <th>链接地址：</th>
         <td>
-            <input type="text" name="linkUrl" class="easyui-textbox" value="<#if ad??>${ad.linkUrl!''}</#if>" style="width:200px;height:30px" data-options="required:true" validType="url">
+            <input type="text" name="linkUrl" class="easyui-textbox" value="<#if ad??>${ad.linkUrl!''}</#if>" style="width:200px;height:30px" data-options="required:true" >
         </td>
     </tr>
     <tr>

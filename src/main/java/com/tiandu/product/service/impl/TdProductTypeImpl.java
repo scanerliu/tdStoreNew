@@ -74,22 +74,27 @@ public class TdProductTypeImpl implements TdProductTypeService{
 	 * @author Max
 	 */
 	@Override
-	public List<TdProductType> findAll() {
+	public List<TdProductType> findAll(TdProductTypeCriteria sc) {
 		// 查找第一级分类
-		List<TdProductType> productList = this.findByParentId(0);
+//		TdProductTypeCriteria sc = new TdProductTypeCriteria();
+		sc.setFlag(false);
+		sc.setParentId(0);
+		List<TdProductType> productList = this.findBySearchCriteria(sc);
 		
 		if(null != productList && productList.size() > 0)
 		{
 			for (TdProductType tdProductType : productList) 
 			{
 				// 查找二级分类
-				List<TdProductType> secondList = this.findByParentId(tdProductType.getId());
+				sc.setParentId(tdProductType.getId());
+				List<TdProductType> secondList = this.findBySearchCriteria(sc);
 				if(null != secondList && secondList.size() > 0)
 				{
 					for (TdProductType productType : secondList) 
 					{
 						// 查找三级分类
-						List<TdProductType> thirdList = this.findByParentId(productType.getId());
+						sc.setParentId(productType.getId());
+						List<TdProductType> thirdList = this.findBySearchCriteria(sc);
 						if(null != thirdList && thirdList.size() > 0)
 						{
 							productType.setSubList(thirdList);

@@ -352,13 +352,23 @@
   <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.product.search.TdProductCriteria">
   	select count(id)
     from td_product
-    where 1=1 
+    where 1=1
+    <if test="name != null">
+    	name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if> 
   </select>
   
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.product.search.TdProductCriteria">
   	select 
   	<include refid="Base_Column_List" />
     from td_product
+    where 1=1
+    <if test="name != null">
+    	name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="orderBy != null">
+    	order by #{orderBy,jdbcType=VARCHAR}
+    </if>
   </select>
   
   

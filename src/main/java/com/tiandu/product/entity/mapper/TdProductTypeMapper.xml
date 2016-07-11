@@ -146,6 +146,17 @@
     <if test="parentId != null">
         and parent_id=#{parentId,jdbcType=INTEGER}
     </if>
+    <if test="status != null">
+        and status=#{status,jdbcType=INTEGER}
+    </if>
+    <if test="orderBy != null" >
+      	<if test="orderBy ==1">
+      		order by  a.sort desc
+      	</if>
+      	<if  test="orderBy ==2">
+	      	order by a.sort asc
+      	</if>
+      </if>
   </select>
   
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.product.search.TdProductTypeCriteria">
@@ -155,6 +166,9 @@
     where 1=1
     <if test="parentId != null">
         and parent_id=#{parentId,jdbcType=INTEGER}
+    </if>
+    <if test="status != null">
+        and status=#{status,jdbcType=INTEGER}
     </if>
   </select>
   

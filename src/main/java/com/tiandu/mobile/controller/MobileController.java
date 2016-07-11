@@ -13,16 +13,27 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tiandu.article.entity.TdAdsense;
+import com.tiandu.article.search.TdAdvertisementSearchCriteria;
+import com.tiandu.article.service.TdAdsenseService;
+import com.tiandu.article.service.TdAdvertisementService;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.WebUtils;
+import com.tiandu.complaint.search.TdComplaintCriteria;
+import com.tiandu.complaint.service.TdComplaintService;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.vo.LoginForm;
+import com.tiandu.product.search.TdProductCriteria;
+import com.tiandu.product.search.TdProductTypeCriteria;
+import com.tiandu.product.service.TdProductService;
+import com.tiandu.product.service.TdProductTypeService;
 
 /** 
  * @author liuxinbing
@@ -33,12 +44,93 @@ public class MobileController extends BaseController {
 	
 	private final Logger logger = Logger.getLogger(getClass());
 	
+	@Autowired
+	private TdAdsenseService tdAdsenseService;
+	
+	@Autowired
+	private TdAdvertisementService tdAdvertisementService;
+	
+	@Autowired
+	private TdComplaintService tdComplaintService;
+	
+	@Autowired
+	private TdProductTypeService tdProductTypeService;
+	
+	@Autowired
+	private TdProductService tdProductService;
+	
+	/**
+	 * @author Max
+	 */
 	@RequestMapping("")
-	public String index(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	public String index(HttpServletRequest request, HttpServletResponse response, ModelMap map) {
+		
+		// 轮播广告
+		TdAdsense adsense = tdAdsenseService.findByName("触屏首页轮播大图广告");
+		if(null != adsense)
+		{
+			TdAdvertisementSearchCriteria sc = new TdAdvertisementSearchCriteria();
+			sc.setAdsId(adsense.getId());
+			sc.setOrderBy("1");
+			map.addAttribute("adList", tdAdvertisementService.findBySearchCriteria(sc));
+		}
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		
+		// 股东竞选
+		TdComplaintCriteria sc = new TdComplaintCriteria();
+		sc.setStatus((byte)1);
+		map.addAttribute("complaintList", tdComplaintService.findBySearchCriteria(sc));
+		
+		// 精品专区（分类）
+		TdProductTypeCriteria criteria = new TdProductTypeCriteria();
+		criteria.setStatus((byte) 1);
+		criteria.setOrderBy("1");
+		map.addAttribute("productTypeList", tdProductTypeService.findByParentId(0));
+		
+		
+		// 热销推荐
+		TdProductCriteria psc = new TdProductCriteria();
+		psc.setOrderBy("hot_recommend asc");
+		map.addAttribute("productList", tdProductService.findBySearchCriteria(psc));
+		
 	    return "/mobile/index";
 	}
+	
+	/**
+	 * @author Max
+	 */
 	@RequestMapping("/index")
-	public String index1(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	public String index1(HttpServletRequest request, HttpServletResponse response, ModelMap map) {
+		// 轮播广告
+		TdAdsense adsense = tdAdsenseService.findByName("触屏首页轮播大图广告");
+		if(null != adsense)
+		{
+			TdAdvertisementSearchCriteria sc = new TdAdvertisementSearchCriteria();
+			sc.setAdsId(adsense.getId());
+			sc.setOrderBy("1");
+			map.addAttribute("adList", tdAdvertisementService.findBySearchCriteria(sc));
+		}
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		
+		// 股东竞选
+		TdComplaintCriteria sc = new TdComplaintCriteria();
+		sc.setStatus((byte)1);
+		map.addAttribute("complaintList", tdComplaintService.findBySearchCriteria(sc));
+		
+		// 精品专区（分类）
+		TdProductTypeCriteria criteria = new TdProductTypeCriteria();
+		criteria.setStatus((byte) 1);
+		criteria.setOrderBy("1");
+		map.addAttribute("productTypeList", tdProductTypeService.findByParentId(0));
+		
+		
+		// 热销推荐
+		TdProductCriteria psc = new TdProductCriteria();
+		psc.setOrderBy("hot_recommend asc");
+		map.addAttribute("productList", tdProductService.findBySearchCriteria(psc));
+		
 		return "/mobile/index";
 	}
 	@RequestMapping("/unauthorized")

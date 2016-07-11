@@ -209,7 +209,6 @@
     <if test="status != null" >
        and  c.status = #{status,jdbcType=TINYINT}
     </if> 
-    
   </select>
   
 </mapper>
