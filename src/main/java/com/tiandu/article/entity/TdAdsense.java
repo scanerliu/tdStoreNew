@@ -2,7 +2,10 @@ package com.tiandu.article.entity;
 
 import java.util.Date;
 
-public class TdAdsense {
+import com.tiandu.common.entity.TdBaseEntity;
+import com.tiandu.custom.entity.TdUser;
+
+public class TdAdsense extends TdBaseEntity{
     private Integer id;
 
     private String name;
@@ -16,6 +19,9 @@ public class TdAdsense {
     private Date updateTime;
 
     private Integer updateBy;
+    
+    private TdUser updateUser;
+    
 
     public Integer getId() {
         return id;
@@ -72,4 +78,16 @@ public class TdAdsense {
     public void setUpdateBy(Integer updateBy) {
         this.updateBy = updateBy;
     }
+
+	public TdUser getUpdateUser() {
+		return updateUser;
+	}
+
+	public void setUpdateUser(TdUser updateUser) {
+		this.updateUser = updateUser;
+	}
+    
+    
+    
+    
 }

@@ -9,14 +9,26 @@
     <result column="height" property="height" jdbcType="INTEGER" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    
+    <!-- 更新人信息 -->
+	<association property="updateUser" resultMap="updateUserResult"/>
+	
   </resultMap>
+  
+  
+  <resultMap id="updateUserResult" type="com.tiandu.custom.entity.TdUser" >
+  	<result column="up_uname" property="uname" jdbcType="VARCHAR" />
+  	<result column="up_unick" property="unick" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
   <sql id="Base_Column_List" >
-    id, name, adkey, width, height, update_time, update_by
+    ads.id, ads.name, ads.adkey, ads.width, ads.height, ads.update_time, ads.update_by
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from td_adsense
+    from td_adsense ads
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
@@ -124,13 +136,18 @@
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.article.search.TdAdsenseSearchCriteria">
   	select 
   	<include refid="Base_Column_List" />
-    from td_adsense  where 1=1 
+  	, u.uname as up_uname, u.unick as up_unick
+  	
+    from td_adsense ads 
+     left join td_user u on u.uid= ads.update_by
+     
+     where 1=1 
   </select>
   
   <select id="findByName" resultType="com.tiandu.article.entity.TdAdsense" parameterType="java.lang.String">
   	select 
   	<include refid="Base_Column_List" />
-  	from td_adsense where name = #{name,jdbcType=VARCHAR}
+  	from td_adsense ads where name = #{name,jdbcType=VARCHAR}
   </select>
   
 </mapper>

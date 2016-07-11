@@ -134,6 +134,11 @@ public class AdSenseController extends BaseController{
 	{
 		map.addAttribute("adlist", tdAdvertService.findBySearchCriteria(sc));
 		map.addAttribute("sc", sc);
+		
+		TdAdsenseSearchCriteria criteria = new TdAdsenseSearchCriteria();
+		criteria.setFlag(false);
+		map.addAttribute("adsenseList", tdAdsenseService.findBySearchCriteria(criteria));
+		
 		return "/admin/article/adlistbody";
 	}
 	

@@ -12,6 +12,8 @@ public class TdProductAttributeOption {
     private Integer sort;
 
     private Integer uid;
+    
+    private TdProductAttribute productAttribute;
 
     public Integer getId() {
         return id;
@@ -60,4 +62,17 @@ public class TdProductAttributeOption {
     public void setUid(Integer uid) {
         this.uid = uid;
     }
+
+	public TdProductAttribute getProductAttribute() {
+		return productAttribute;
+	}
+
+	public void setProductAttribute(TdProductAttribute productAttribute) {
+		this.productAttribute = productAttribute;
+	}
+    
+    
+    
+    
+    
 }

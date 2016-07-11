@@ -10,10 +10,12 @@
 <div class="pad_lr_10">
 <div class="J_tablelist table_list">
 	<div id="district">
-		<!--
-		<input type="button" value="批量删除" onclick="batchDelete()">&nbsp;&nbsp;&nbsp;
-		<input type="button" value="添加" onclick="addDistrict()">
-		-->
+		<select style="width: 100px;" name="status" onchange="searchcomplaint(false)">
+		    <option value="">-处理状态-</option>
+		    <option value="1" <#if sc.status?? && sc.status==1>selected="selected"</#if>>未审核</option>
+		    <option value="2" <#if sc.status?? && sc.status==2>selected="selected"</#if>>已通过</option>
+		    <option value="3" <#if sc.status?? && sc.status==3>selected="selected"</#if>>未通过</option>
+		</select>
     </div>
 
 <table width="100%" cellspacing="0">

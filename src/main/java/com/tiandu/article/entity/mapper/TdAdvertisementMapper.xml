@@ -14,15 +14,23 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="INTEGER" />
     <result column="region_id" property="regionId" jdbcType="INTEGER" />
+    
+    <!-- 广告位 -->
+    <association property="adsense" resultMap="adsenseResult"/>
   </resultMap>
+  
+  <resultMap id="adsenseResult" type="com.tiandu.article.entity.TdAdsense" >
+  	<result column="t_name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  
   <sql id="Base_Column_List" >
-    id, ads_id, title, image_url, link_url, sort, status, create_time, create_by, update_time, 
-    update_by, region_id
+    a.id, a.ads_id, a.title, a.image_url, a.link_url, a.sort, a.status, a.create_time, a.create_by, a.update_time, 
+    a.update_by, a.region_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from td_advertisement
+    from td_advertisement a
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
@@ -175,15 +183,30 @@
   
   
   <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.article.search.TdAdvertisementSearchCriteria">
-  	select count(id)
-    from td_advertisement
-    where 1=1 
+  	select count(a.id)
+    from td_advertisement a
+    where 1=1
+     <if test="status != null" >
+       	and  a.status = #{status,jdbcType=TINYINT},
+      </if> 
+    <if test="adsId != null" >
+       	and  a.ads_id = #{adsId,jdbcType=TINYINT}
+      </if>
   </select>
   
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.article.search.TdAdvertisementSearchCriteria">
   	select 
   	<include refid="Base_Column_List" />
-    from td_advertisement  where 1=1 
+  	 , t.name as t_name
+    from td_advertisement a
+    	left join td_adsense t on t.id= a.ads_id 
+     where 1=1 
+     <if test="status != null" >
+       	and  a.status = #{status,jdbcType=TINYINT},
+      </if> 
+      <if test="adsId != null" >
+       	and  a.ads_id = #{adsId,jdbcType=TINYINT}
+      </if>
   </select>
   
 </mapper>
