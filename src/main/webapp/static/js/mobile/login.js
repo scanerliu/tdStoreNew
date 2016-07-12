@@ -10,10 +10,12 @@ function login(){
 		$("#username").focus();
 		return;
 	}
-	var fpass = nameReg.test(password);
+	var fpass = passReg.test(password);
 	if(fpass){}else{
 		alert("请正确输入密码:6位至20位数字或字母！");
 		$("#password").focus();
 		return;
 	}
+	
+	$("#loginForm").submit();
 }

@@ -21,6 +21,8 @@ public class TdProductSku {
     private BigDecimal lowPrice;
 
     private String specifications;
+    
+    private Integer stock;
 
     private Byte status;
 
@@ -100,7 +102,15 @@ public class TdProductSku {
         this.specifications = specifications == null ? null : specifications.trim();
     }
 
-    public Byte getStatus() {
+    public Integer getStock() {
+		return stock;
+	}
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
+	}
+
+	public Byte getStatus() {
         return status;
     }
 
