@@ -1,8 +1,6 @@
 package com.tiandu.mobile.controller;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.article.entity.TdAdsense;
 import com.tiandu.article.search.TdAdvertisementSearchCriteria;
@@ -66,27 +63,46 @@ public class MobileController extends BaseController {
 	public String index(HttpServletRequest request, HttpServletResponse response, ModelMap map) {
 		
 		// 轮播广告
+		TdAdvertisementSearchCriteria sc = new TdAdvertisementSearchCriteria();
+		sc.setCreateTime(new Date());
+		sc.setEndTime(new Date());
 		TdAdsense adsense = tdAdsenseService.findByName("触屏首页轮播大图广告");
 		if(null != adsense)
 		{
-			TdAdvertisementSearchCriteria sc = new TdAdvertisementSearchCriteria();
 			sc.setAdsId(adsense.getId());
-			sc.setOrderBy("1");
+			sc.setOrderBy("2");
 			map.addAttribute("adList", tdAdvertisementService.findBySearchCriteria(sc));
 		}
+		
+		adsense = tdAdsenseService.findByName("触屏竞选内容广告");
+		if(null != adsense)
+		{
+			sc.setAdsId(adsense.getId());
+			sc.setOrderBy("2");
+			map.addAttribute("compAdList", tdAdvertisementService.findBySearchCriteria(sc));
+		}
+		
+		adsense = tdAdsenseService.findByName("触屏精品专区广告");
+		if(null != adsense)
+		{
+			sc.setAdsId(adsense.getId());
+			sc.setOrderBy("2");
+			map.addAttribute("hotAdList", tdAdvertisementService.findBySearchCriteria(sc));
+		}
+		
 		// 系统配置
 		map.addAttribute("system", getSystem());
 		
 		// 股东竞选
-		TdComplaintCriteria sc = new TdComplaintCriteria();
+		TdComplaintCriteria csc = new TdComplaintCriteria();
 		sc.setStatus((byte)1);
-		map.addAttribute("complaintList", tdComplaintService.findBySearchCriteria(sc));
+		map.addAttribute("complaintList", tdComplaintService.findBySearchCriteria(csc));
 		
-		// 精品专区（分类）
-		TdProductTypeCriteria criteria = new TdProductTypeCriteria();
-		criteria.setStatus((byte) 1);
-		criteria.setOrderBy("1");
-		map.addAttribute("productTypeList", tdProductTypeService.findByParentId(0));
+//		// 精品专区（分类）
+//		TdProductTypeCriteria criteria = new TdProductTypeCriteria();
+//		criteria.setStatus((byte) 1);
+//		criteria.setOrderBy("1");
+//		map.addAttribute("productTypeList", tdProductTypeService.findByParentId(0));
 		
 		
 		// 热销推荐

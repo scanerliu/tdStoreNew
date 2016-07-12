@@ -97,7 +97,7 @@ function editAd(id){
 
 function saveAd(){
 	var f = $('#adForm').form('enableValidation').form('validate');
-	console.debug(f)
+	
 	if(f){
 		$("#adForm").form("submit",{
 			success : function(data){

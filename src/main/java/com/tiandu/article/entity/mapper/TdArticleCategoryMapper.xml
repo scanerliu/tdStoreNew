@@ -144,6 +144,9 @@
     <if test="status != null" >
         and status=#{status,jdbcType=TINYINT}
     </if>
+    <if test="name != null" >
+        and name = #{name,jdbcType=VARCHAR}
+    </if>
     order by sort asc
   </select>
 </mapper>

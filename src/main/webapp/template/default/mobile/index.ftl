@@ -81,30 +81,26 @@
     <label class="lab1">股东竞选</label>
     <section class="lab2" id="news_lab2">
         <ul>
-        	<#if complaintList??>
-        	<#list complaintList as comp>
-            	<li><a href="#" title=""></a></li>
+        	<#if compAdList?? && compAdList?size gt 0>
+        	<#list compAdList as comp>
+            	<li><a href="${comp.linkUrl!''}" title="${comp.title!''}">${comp.title!''}</a></li>
 			</#list>
 			</#if>
-            <li><a href="#" title="">2一路上中国创客联盟欢迎您的加入</a></li>
-            <li><a href="#" title="">3一路上中国创客联盟欢迎您的加入</a></li>
-            <li><a href="#" title="">4一路上中国创客联盟欢迎您的加入</a></li>
-            <li><a href="#" title="">5一路上中国创客联盟欢迎您的加入</a></li>
         </ul>
     </section>
-    <a href="股东竞选-本地.html" title="" class="a_link"></a>
+        <a href="javascript:;" title="更多" class="a_link"></a>
 </div>
 <!-- 股东竞选-结束 -->
 <!-- 分类按钮 -->
 <div class="clickbtn">
-    <a href="成为代理.html" title=""><p>创业中心</p></a>
+    <a href="${app.basePath}/mobile/agent/list" title="创业中心"><p>创业中心</p></a>
     <a href="排行榜-本地.html" title=""><p>排行榜</p></a>
     <a href="#" title=""><p>物流查询</p></a>
     <a href="normalUser/个人中心-首页.html" title=""><p>个人中心</p></a>
     <a href="0元购列表.html" title=""><p>0元专区</p></a>
     <a href="秒杀列表.html" title=""><p>秒杀专区</p></a>
     <a href="产品列表.html" title=""><p>新品专区</p></a>
-    <a href="分类列表.html" title=""><p>分类选择</p></a>
+    <a href="${app.basePath}/mobile/productType/list" title="分类选择"><p>分类选择</p></a>
 </div>
 <!-- 分类按钮-结束 -->
 <!-- 精品专区 -->
@@ -114,22 +110,22 @@
         <a href="产品列表.html" class="a_link"></a>
     </section>
     <section class="sec2">
-    	<#if productTypeList?? && productTypeList?size gt 0>
-    	<#list productTypeList as type>
-        	<a href="产品列表.html" title="${type.name!''}" class=""><img src="${type.imageUrl!''}" alt="${type.name!''}"></a>
+    	<#if hotAdList?? && hotAdList?size gt 0>
+    	<#list hotAdList as ad>
+        	<a href="${ad.linkUrl!''}" title="${ad.title!''}" class=""><img src="${ad.imageUrl!''}" alt="${ad.title!''}"></a>
         </#list>
         </#if>
     </section>
 </div>
 <!-- 精品专区-结束 -->
 <!-- 热销推荐 -->
+<#if productList?? && productList?size gt 0 >
 <div class="hot">
     <section class="index_title">
         <label class="lab1 fl">热销推荐</label>
         <a href="产品列表.html" class="a_link"></a>
     </section>
     <section class="sec2">
-    	<#if productList?? && productList?size gt 0 >
     	<#list productList as pro>
         <a href="商品详情.html" title="${pro.name!''}" class="">
             <img src="${app.basePath}${pro.imageUrl!''}" alt="${pro.name}">
@@ -140,15 +136,15 @@
             </p>
         </a>
         </#list>
-        </#if>
     </section>
 </div>
+</#if>
 <!-- 热销推荐-结束 -->
 <!-- 底部 -->
 <div style="width:100%;height:0.9rem"></div>
 <div class="index_foot">
     <a href="${app.basePath}/mobile" title="首页" class="active"><p>首页</p></a>
-    <a href="产品列表.html" title=""><p>分类</p></a>
+    <a href="${app.basePath}/mobile/productType/list" title=""><p>分类</p></a>
     <a href="购物车.html" title=""><p>购物车</p></a>
     <a href="normalUser/个人中心-首页.html" title=""><p>我的</p></a>
 </div>

@@ -29,6 +29,8 @@ public class TdAdvertisement extends TdBaseEntity{
 
     private Integer regionId;
     
+    private Date endTime;
+    
     /**
      * 广告位
      */
@@ -137,5 +139,14 @@ public class TdAdvertisement extends TdBaseEntity{
 	public void setAdsense(TdAdsense adsense) {
 		this.adsense = adsense;
 	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
     
+	
 }
