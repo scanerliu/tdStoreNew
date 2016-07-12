@@ -41,9 +41,9 @@
                 <entry key="roles">  
                     <bean class="com.tiandu.common.utils.filter.TdRoleAuthorizationFilter" />  
                 </entry>  
-                <entry key="authc">  
+                <!-- <entry key="authc">  
                     <bean class="com.tiandu.common.utils.filter.TdPermissionAuthenticationFilter" />  
-                </entry>  
+                </entry>   -->
                 <entry key="perms">  
                     <bean class="com.tiandu.common.utils.filter.TdPermissionAuthenticationFilter" />  
                 </entry>  
@@ -61,6 +61,7 @@
 				/index/getVerifyCodeImage=anon
 				/main**=authc
 				/user/**=authc
+				/mobile/shoppingcart/**=authc
 				/admin/**=authc,roles[admin]<!-- ,perms[manage] -->
 			</value>
 		</property>

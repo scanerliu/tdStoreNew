@@ -337,26 +337,32 @@ function all_sel(){
 	var all_sel=document.getElementById('all_sel');
 	var arr=[];
 	var ipt=two2_match.getElementsByTagName('input');
+	// alert(ipt[2].type);
 	for(i=0;i<ipt.length;i++){
 		ipt[i].onclick=function(){
-			if(this.checked){
-				this.className='och';
-			}else{
-				this.className='';
+			if(this.type=='checkbox'){
+				if(this.checked){
+					this.className='och';
+				}else{
+					this.className='';
+				}
 			}
-			// alert(this.checked);
 		}
 	}
 	all_sel.onclick=function(){
 			if(this.checked){
 				this.className='och';
 				for(i=0;i<ipt.length;i++){
-					ipt[i].className='och';
+					if(ipt[i].type=='checkbox'){
+						ipt[i].className='och';
+					}
 				}
 			}else{
 				this.className='';
 				for(i=0;i<ipt.length;i++){
-					ipt[i].className='';
+					if(ipt[i].type=='checkbox'){
+						ipt[i].className='';
+					}
 				}
 			}
 		}
