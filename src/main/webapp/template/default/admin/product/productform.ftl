@@ -477,7 +477,6 @@ function flushTable(){
 	if(isAllSpecSelected == 0){
 		return;
 	}
-	
 	var keyArray = keyStr.split("_");
 	console.log("keyArray:" + keyArray);
 	
@@ -522,15 +521,17 @@ function flushTable(){
 	
 	arr = rearaay;
 	var alen = arr.length;
+	var result;
 	if(alen == 1){
-		return arr[0];
-	}
-	// result是所有属性按照规格顺序的全排列
-	var result = twoArrayAssembleToTrIds(arr[0],arr[1]);
-	var i=2;
-	while(i<alen){
-		result = twoArrayAssembleToTrIds(result,arr[i]);
-		i++;
+		result = arr[0];
+	}else{
+		// result是所有属性按照规格顺序的全排列
+		result = twoArrayAssembleToTrIds(arr[0],arr[1]);
+		var i=2;
+		while(i<alen){
+			result = twoArrayAssembleToTrIds(result,arr[i]);
+			i++;
+		}
 	}
 	
 	console.log("result:" + result);
