@@ -17,7 +17,9 @@ public class TdProductStatServiceImpl implements TdProductStatService{
 	public Integer Insert(TdProductStat stat) {
 		if(null != stat)
 		{
-			return tdProductStatMapper.insert(stat);
+			if(this.findOne(stat.getProductId()) == null){
+				return tdProductStatMapper.insert(stat);
+			}
 		}
 		return null;
 	}

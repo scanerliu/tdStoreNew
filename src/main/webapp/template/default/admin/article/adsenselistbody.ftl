@@ -37,7 +37,7 @@
 		        <td align="center">${ads.width!''}px</td>
 		        <td align="center">${ads.height!''}px</td>
 		        <td align="center">${ads.updateTime?string('yyyy-MM-dd')}</td>
-		        <td align="center">${ads.updateBy!''}</td>
+		        <td align="center"><#if ads.updateUser??>${ads.updateUser.uname}</#if></td>
 		        <td align="center">
 		            <a class="J_confirmurl" href="javascript:;" onclick="delAdsense(${ads.id?c})">删除</a>
 		           |<a class="J_confirmurl" href="javascript:;" onclick="editAdsense(${ads.id?c})">编辑</a>

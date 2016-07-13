@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserAccount;
@@ -36,11 +37,16 @@ import com.tiandu.express.entity.TdExpress;
 import com.tiandu.express.search.TdExpressSearchCriteria;
 import com.tiandu.express.service.TdExpressService;
 import com.tiandu.order.entity.TdOrder;
+import com.tiandu.order.entity.TdOrderLog;
 import com.tiandu.order.entity.TdOrderShipment;
+import com.tiandu.order.search.TdOrderLogSearchCriteria;
 import com.tiandu.order.search.TdOrderSearchCriteria;
 import com.tiandu.order.search.TdOrderShipmentSearchCriteria;
+import com.tiandu.order.service.TdOrderLogService;
 import com.tiandu.order.service.TdOrderService;
 import com.tiandu.order.service.TdOrderShipmentService;
+import com.tiandu.order.vo.OperResult;
+import com.tiandu.order.vo.OrderRefund;
 
 /**
  * 
@@ -61,6 +67,9 @@ public class OrderController extends BaseController {
 	
 	@Autowired
 	private TdOrderShipmentService tdOrderShipmentService;
+	
+	@Autowired
+	private TdOrderLogService tdOrderLogService;
 	
 	@RequestMapping("/list")
 	public String list(TdOrderSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
@@ -168,20 +177,23 @@ public class OrderController extends BaseController {
 				ship.setUpdateBy(currUser.getUid());
 				ship.setUpdateTime(now);
 				//发货操作
-				boolean result = tdOrderService.shiporder(ship);
-				if(result){
+				OperResult result = tdOrderService.shiporder(ship);
+				if(result.isFlag()){
 					res.put("code", "1");
 				}else{
 					res.put("code", "0");
+					res.put("msg", result.getFailMsg());
 				}
 				return res;
 			}catch (Exception e) {
 				logger.error("订单删除失败错误信息:"+e);
 				res.put("code", "0");
+				res.put("msg", "系统错误："+e.getMessage());
 				return res;
 			}
 		}else{
 			res.put("code", "0");
+			res.put("msg", "数据有误！");
 			return res;
 		}
 	}
@@ -201,6 +213,84 @@ public class OrderController extends BaseController {
 		List<TdOrderShipment> shipList = tdOrderShipmentService.findBySearchCriteria(sc);
 		modelMap.addAttribute("shipList", shipList);
 		return "/admin/order/shiplist";
+	}
+	
+	/**
+	 * 订单退款面板
+	 * @param id 订单id
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
+	@RequestMapping("/refund")
+	public String refund(Integer id, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdOrder order = null;
+		if(null!=id){
+			order = tdOrderService.findOne(id);		    
+		}
+		if(null==order){
+			modelMap.addAttribute("errmsg", "未找到相关订单，请重新操作！");
+			return "/admin/error";
+		}
+		modelMap.addAttribute("order", order);
+		return "/admin/order/refund";
+	}
+	/**
+	 * 订单退款操作
+	 * @param id 订单id
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
+	@RequestMapping(value="/refundorder", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> refundorder(OrderRefund refund, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>(); 
+		if(null!=refund && null!=refund.getOrderId()){
+			try {
+				Date now = new Date();
+				TdUser currUser = this.getCurrentUser();
+				refund.setCreateTime(now);
+				refund.setCreateBy(currUser.getUid());
+				//发货操作
+				OperResult result = tdOrderService.refundorder(refund);
+				if(result.isFlag()){
+					res.put("code", "1");
+				}else{
+					res.put("code", "0");
+					res.put("msg", result.getFailMsg());
+				}
+				return res;
+			}catch (Exception e) {
+				logger.error("订单删除失败错误信息:"+e);
+				res.put("code", "0");
+				res.put("msg", "系统错误："+e.getMessage());
+				return res;
+			}
+		}else{
+			res.put("code", "0");
+			res.put("msg", "数据有误！");
+			return res;
+		}
+	}
+	
+	/**
+	 * 获取订单操作日志信息
+	 * @param id 订单id
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
+	@RequestMapping("/logs")
+	public String logs(TdOrderLogSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		sc.setFlag(false);
+		sc.setGetUpdateUser(true);
+		List<TdOrderLog> logList = tdOrderLogService.findBySearchCriteria(sc);
+		modelMap.addAttribute("logList", logList);
+		return "/admin/order/orderloglist";
 	}
 
 }

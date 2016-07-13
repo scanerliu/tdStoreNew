@@ -14,7 +14,7 @@
         	<select name="adsId" class="easyui-combobox" style="width:200px;">
         		<#if adsenseList ??>
         		<#list adsenseList as ads>
-        			<option value="${ads.id?c}" <#if ad?? && ad.adsId == ads.id>select</#if>>${ads.name!''}</option>
+        			<option value="${ads.id?c}" <#if ad?? && ad.adsId == ads.id>selected</#if>>${ads.name!''}</option>
         		</#list>
         		</#if>
         	</select>
@@ -22,7 +22,7 @@
     </tr>
     <tr>
         <th width="150">广告标题：</th>
-        <td><input type="text" name="title" class="easyui-textbox" value="<#if ad??>${ad.title!''}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="length[2,20]"></td>
+        <td><input type="text" name="title" class="easyui-textbox" value="<#if ad??>${ad.title!''}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="length[2,32]"></td>
     </tr>
     <tr>
         <th width="150">图片：</th>
@@ -39,9 +39,21 @@
     <tr>
         <th>链接地址：</th>
         <td>
-            <input type="text" name="linkUrl" class="easyui-textbox" value="<#if ad??>${ad.linkUrl!''}</#if>" style="width:200px;height:30px" data-options="required:true" validType="url">
+            <input type="text" name="linkUrl" class="easyui-textbox" value="<#if ad??>${ad.linkUrl!''}</#if>" style="width:200px;height:30px" data-options="required:true" >
         </td>
     </tr>
+    <tr>
+        <th>开始时间：</th>
+        <td>
+    		<input class="easyui-datetimebox" name="createTime" data-options="required:true" value="<#if ad?? && ad.createTime??>${ad.createTime?string('yyyy-MM-dd MM:DD:ss')}</#if>" style="width:150px"/>
+    	</td>
+   	</tr>
+   	<tr>
+        <th>结束时间：</th>
+        <td>
+    		<input class="easyui-datetimebox" name="endTime" value="<#if ad?? && ad.endTime??>${ad.endTime?string('yyyy-MM-dd MM:DD:ss')}</#if>" style="width:150px"/>
+    	</td>
+   	</tr>
     <tr>
         <th>状态：</th>
         <td>

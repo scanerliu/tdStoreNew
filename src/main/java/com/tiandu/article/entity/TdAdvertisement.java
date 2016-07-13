@@ -2,7 +2,9 @@ package com.tiandu.article.entity;
 
 import java.util.Date;
 
-public class TdAdvertisement {
+import com.tiandu.common.entity.TdBaseEntity;
+
+public class TdAdvertisement extends TdBaseEntity{
     private Integer id;
 
     private Integer adsId;
@@ -26,6 +28,13 @@ public class TdAdvertisement {
     private Integer updateBy;
 
     private Integer regionId;
+    
+    private Date endTime;
+    
+    /**
+     * 广告位
+     */
+    private TdAdsense adsense;
 
     public Integer getId() {
         return id;
@@ -122,4 +131,22 @@ public class TdAdvertisement {
     public void setRegionId(Integer regionId) {
         this.regionId = regionId;
     }
+
+	public TdAdsense getAdsense() {
+		return adsense;
+	}
+
+	public void setAdsense(TdAdsense adsense) {
+		this.adsense = adsense;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+    
+	
 }

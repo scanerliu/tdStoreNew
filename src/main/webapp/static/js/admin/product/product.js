@@ -105,6 +105,6 @@ function delProductTypeCallback(data){
 }
 
 //有两位小数的正实数
-var price_partten = /^[0-9]+(.[0-9]{2})?$/;
+var price_partten = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
 // 数字
 var  num_partten =  /^[0-9]*$/;

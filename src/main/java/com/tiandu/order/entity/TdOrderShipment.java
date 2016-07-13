@@ -3,6 +3,8 @@ package com.tiandu.order.entity;
 import java.util.Date;
 import java.util.List;
 
+import com.tiandu.express.entity.TdExpress;
+
 public class TdOrderShipment {
     private Integer id;
 
@@ -27,6 +29,11 @@ public class TdOrderShipment {
     private Date updateTime;
 
     private Integer updateBy;
+    private String  trackingTrace;
+    /**
+     * 物流公司
+     */
+    private TdExpress trackExpress;
     /**
      * 发货，退货清单
      */
@@ -127,6 +134,22 @@ public class TdOrderShipment {
     public void setUpdateBy(Integer updateBy) {
         this.updateBy = updateBy;
     }
+
+	public String getTrackingTrace() {
+		return trackingTrace;
+	}
+
+	public void setTrackingTrace(String trackingTrace) {
+		this.trackingTrace = trackingTrace;
+	}
+
+	public TdExpress getTrackExpress() {
+		return trackExpress;
+	}
+
+	public void setTrackExpress(TdExpress trackExpress) {
+		this.trackExpress = trackExpress;
+	}
 
 	public List<TdOrderShipmentItem> getItemList() {
 		return itemList;

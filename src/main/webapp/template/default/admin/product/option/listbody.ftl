@@ -22,7 +22,7 @@
 		<tr>
 			<th width="4%"><input type="checkbox" class="J_checkall" id="J_checkall" name="checkall"></th>
 			<th width="4%">ID</th>
-			<th align="center">类型ID</th>
+			<th align="center">类型</th>
 			<th align="center">属性值</th>
 			<th align="center">状态</th>
 			<th align="center">排序</th>
@@ -37,7 +37,7 @@
 		        	<input type="checkbox" value="${op.id?c}" name="subbox" class="J_checkitem">
 		        </td>
 		        <td align="center">${op.id?c}</td>
-		        <td align="center">${op.attriId?c}</td>
+		        <td align="center"><#if op.productAttribute??>${op.productAttribute.name!''}</#if></td>
 		        <td align="center">${op.name!''}</td>
 		        <td align="center"><#if op.status==1>正常<#elseif op.status ==2>屏蔽<#else>待审核</#if></td>
 		        <td align="center">${op.sort!'99'}</td>

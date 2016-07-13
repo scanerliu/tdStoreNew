@@ -50,7 +50,8 @@
 </form>
 </div>
 <div id="rightform"></div>
-
+<div id="shipmentwindow" class="easyui-window" closed="true" style="width:600px;height:300px;padding:10px"></div>
+<div id="refundwindow" class="easyui-window" closed="true" style="width:600px;height:300px;padding:10px"></div>
 <script type="text/javascript">
 $(function(){
     searchOrders(true);

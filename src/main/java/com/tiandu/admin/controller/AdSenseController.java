@@ -134,6 +134,11 @@ public class AdSenseController extends BaseController{
 	{
 		map.addAttribute("adlist", tdAdvertService.findBySearchCriteria(sc));
 		map.addAttribute("sc", sc);
+		
+		TdAdsenseSearchCriteria criteria = new TdAdsenseSearchCriteria();
+		criteria.setFlag(false);
+		map.addAttribute("adsenseList", tdAdsenseService.findBySearchCriteria(criteria));
+		
 		return "/admin/article/adlistbody";
 	}
 	
@@ -153,16 +158,14 @@ public class AdSenseController extends BaseController{
 	
 	@RequestMapping(value = "/advert/save",method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,String> adSave(TdAdvertisement tdAdvertisement,HttpServletRequest req,HttpServletResponse resp)
+	public Map<String,String> adSave(TdAdvertisement tdAdvertisement,
+//			String createTime,String endTime,
+			HttpServletRequest req,HttpServletResponse resp)
 	{
 		Map<String,String> res = new HashMap<>();
 		res.put("code", "0");
 		if(null != tdAdvertisement)
 		{
-			if(null != tdAdvertisement.getCreateTime()){
-				// 创建时间
-				tdAdvertisement.setCreateTime(new Date());
-			}
 			// 更新时间
 			tdAdvertisement.setUpdateTime(new Date());
 			TdUser user = getCurrentUser();

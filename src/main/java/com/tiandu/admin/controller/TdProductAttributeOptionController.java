@@ -75,7 +75,7 @@ public class TdProductAttributeOptionController extends BaseController{
 					HttpServletRequest req,ModelMap map){
 		
 		Map<String,Object> res = new HashMap<>();
-		map.addAttribute("code", 0);
+		res.put("code", 0);
 		
 		if(null != tdProductAttributeOption)
 		{

@@ -2,7 +2,9 @@ package com.tiandu.order.entity;
 
 import java.util.Date;
 
-public class TdOrderLog {
+import com.tiandu.common.entity.TdBaseEntity;
+
+public class TdOrderLog extends TdBaseEntity{
     private Integer id;
 
     private Integer orderId;

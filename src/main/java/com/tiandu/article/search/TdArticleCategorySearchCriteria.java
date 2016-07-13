@@ -6,6 +6,8 @@ public class TdArticleCategorySearchCriteria extends SearchCriteria {
 	private Integer cid;
 	private Byte status;
 	private Integer parentId;
+	
+	private String name;
 
 	public Integer getCid() {
 		return cid;
@@ -30,5 +32,15 @@ public class TdArticleCategorySearchCriteria extends SearchCriteria {
 	public void setParentId(Integer parentId) {
 		this.parentId = parentId;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	
 
 }

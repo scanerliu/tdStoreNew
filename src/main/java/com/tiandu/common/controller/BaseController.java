@@ -1,6 +1,9 @@
 package com.tiandu.common.controller;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,10 +16,16 @@ import org.springframework.web.bind.annotation.InitBinder;
 import com.tiandu.common.configuration.DateEditor;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.service.TdUserService;
+import com.tiandu.system.entity.TdSystemConfig;
+import com.tiandu.system.search.TdSystemConfigSearchCriteria;
+import com.tiandu.system.service.TdSystemConfigService;
 
 public class BaseController {
 	@Autowired
 	protected TdUserService tdUserService;
+	
+	@Autowired
+	protected TdSystemConfigService tdSystemConfigService;
 	
 	@InitBinder
 	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
@@ -36,4 +45,19 @@ public class BaseController {
 		}
 		return null;
 	}
+	
+	
+	public Map<String,String> getSystem()
+	{
+		TdSystemConfigSearchCriteria sc = new TdSystemConfigSearchCriteria();
+		sc.setFlag(false);
+		List<TdSystemConfig> configList = tdSystemConfigService.findBySearchCriteria(sc);
+		Map<String,String> configMap = new HashMap<String,String>();
+		for(TdSystemConfig cf : configList){
+			configMap.put(cf.getConfigKey(), cf.getConfigValue());
+		}
+		
+		return configMap;
+	}
+	
 }

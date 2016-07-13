@@ -2,9 +2,12 @@ package com.tiandu.custom.entity;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.tiandu.district.entity.TdDistrict;
+import com.tiandu.order.entity.TdShoppingcartItem;
+import com.tiandu.order.vo.ShoppingcartVO;
 
 public class TdUser {
 	
@@ -76,6 +79,10 @@ public class TdUser {
 	 * 注册地区，显示用
 	 */
 	private TdDistrict region;
+	/**
+	 * 购物车，显示用
+	 */
+	private ShoppingcartVO shoppingcart;
 
     public Integer getUid() {
         return uid;
@@ -299,6 +306,14 @@ public class TdUser {
 
 	public void setRegion(TdDistrict region) {
 		this.region = region;
+	}
+
+	public ShoppingcartVO getShoppingcart() {
+		return shoppingcart;
+	}
+
+	public void setShoppingcart(ShoppingcartVO shoppingcart) {
+		this.shoppingcart = shoppingcart;
 	}
 
 	public Boolean isLocked(){

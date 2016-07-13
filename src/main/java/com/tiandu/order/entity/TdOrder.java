@@ -33,6 +33,8 @@ public class TdOrder extends TdBaseEntity{
     private BigDecimal postage;
 
     private BigDecimal productAmount;
+    
+    private BigDecimal refundAmount;
 
     private Byte paymentId;
 
@@ -53,6 +55,8 @@ public class TdOrder extends TdBaseEntity{
     private Integer jointId;
 
     private Integer gainPoints;
+    
+    private Boolean  commented;
     /**
      * 购买人信息
      */
@@ -70,6 +74,12 @@ public class TdOrder extends TdBaseEntity{
      * 送货地址
      */
     private TdOrderAddress orderAddress;
+    
+    /**
+     * 订单商品（供应商产品、产品包使用）
+     */
+    private List<TdOrderProduct> productList;
+    
 
     public Integer getOrderId() {
         return orderId;
@@ -167,7 +177,15 @@ public class TdOrder extends TdBaseEntity{
         this.productAmount = productAmount;
     }
 
-    public Byte getPaymentId() {
+    public BigDecimal getRefundAmount() {
+		return refundAmount;
+	}
+
+	public void setRefundAmount(BigDecimal refundAmount) {
+		this.refundAmount = refundAmount;
+	}
+
+	public Byte getPaymentId() {
         return paymentId;
     }
 
@@ -247,7 +265,15 @@ public class TdOrder extends TdBaseEntity{
         this.gainPoints = gainPoints;
     }
     
-    public TdUser getOrderUser() {
+    public Boolean getCommented() {
+		return commented;
+	}
+
+	public void setCommented(Boolean commented) {
+		this.commented = commented;
+	}
+
+	public TdUser getOrderUser() {
 		return orderUser;
 	}
 
@@ -277,6 +303,14 @@ public class TdOrder extends TdBaseEntity{
 
 	public void setOrderAddress(TdOrderAddress orderAddress) {
 		this.orderAddress = orderAddress;
+	}
+
+	public List<TdOrderProduct> getProductList() {
+		return productList;
+	}
+
+	public void setProductList(List<TdOrderProduct> productList) {
+		this.productList = productList;
 	}
 
 	/**
@@ -330,6 +364,23 @@ public class TdOrder extends TdBaseEntity{
     			sb.append("部分退货");
     		}else if(ConstantsUtils.ORDER_SHIPMENT_STATUS_All_RETURN.equals(this.getShipmentStatus())){
     			sb.append("全部退货");
+    		}
+    	}
+    	return sb.toString();
+    }
+    /**
+     * 获取订单支付方式文字说明
+     * @return
+     */
+    public String getPaymentStr(){
+    	StringBuffer sb = new StringBuffer();
+    	if(null!=this.getPaymentId()){
+    		if(ConstantsUtils.ORDER_PAYMENT_ALIPAY.equals(this.getPaymentId())){
+    			sb.append("支付宝");
+    		}else if(ConstantsUtils.ORDER_PAYMENT_WEIXIN.equals(this.getPaymentId())){
+    			sb.append("微信");
+    		}else if(ConstantsUtils.ORDER_PAYMENT_UNIONPAY.equals(this.getPaymentId())){
+    			sb.append("银联");
     		}
     	}
     	return sb.toString();

@@ -4,13 +4,16 @@ import com.tiandu.common.search.SearchCriteria;
 
 public class TdProductCriteria extends SearchCriteria{
 
-	private Integer parentId;
+	public String name;
 
-	public Integer getParentId() {
-		return parentId;
+	public String getName() {
+		return name;
 	}
 
-	public void setParentId(Integer parentId) {
-		this.parentId = parentId;
+	public void setName(String name) {
+		this.name = name;
 	}
+	
+	
+	
 }

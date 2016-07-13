@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SpriteFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" CssFileName="../x-img/bg_icon" ImageName="bg_icon_pc_index_menu" IsPhone="false" SpriteImgFileType="Png" xmlns="CssSprite">
+  <SpriteList>
+    <Sprite Path="bg_icon_10.png" LocationX="0" LocationY="0" />
+    <Sprite Path="bg_icon_9.png" LocationX="30" LocationY="0" />
+    <Sprite Path="bg_icon_8.png" LocationX="60" LocationY="0" />
+    <Sprite Path="bg_icon_13.png" LocationX="90" LocationY="0" />
+    <Sprite Path="bg_icon_12.png" LocationX="120" LocationY="0" />
+    <Sprite Path="bg_icon_11.png" LocationX="150" LocationY="0" />
+    <Sprite Path="bg_icon_7.png" LocationX="180" LocationY="0" />
+    <Sprite Path="bg_icon_3.png" LocationX="210" LocationY="0" />
+    <Sprite Path="bg_icon_2.png" LocationX="240" LocationY="0" />
+    <Sprite Path="bg_icon_1.png" LocationX="270" LocationY="0" />
+    <Sprite Path="bg_icon_6.png" LocationX="300" LocationY="0" />
+    <Sprite Path="bg_icon_5.png" LocationX="330" LocationY="0" />
+    <Sprite Path="bg_icon_4.png" LocationX="360" LocationY="0" />
+  </SpriteList>
+</SpriteFile>

@@ -6,6 +6,8 @@ public class TdProductTypeCriteria extends SearchCriteria{
 
 	private Integer parentId;
 	
+	private Byte status;
+	
 	public Integer getParentId() {
 		return parentId;
 	}
@@ -13,4 +15,14 @@ public class TdProductTypeCriteria extends SearchCriteria{
 	public void setParentId(Integer parentId) {
 		this.parentId = parentId;
 	}
+
+	public Byte getStatus() {
+		return status;
+	}
+
+	public void setStatus(Byte status) {
+		this.status = status;
+	}
+	
+	
 }

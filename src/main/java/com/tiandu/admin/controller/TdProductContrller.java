@@ -35,6 +35,7 @@ import com.tiandu.product.entity.TdProductTypeAttribute;
 import com.tiandu.product.search.TdProductAttributeOptionCriteria;
 import com.tiandu.product.search.TdProductCriteria;
 import com.tiandu.product.search.TdProductDescriptionCriteria;
+import com.tiandu.product.search.TdProductTypeCriteria;
 import com.tiandu.product.service.TdProductAttachmentService;
 import com.tiandu.product.service.TdProductAttributeOptionService;
 import com.tiandu.product.service.TdProductAttributeService;
@@ -93,9 +94,11 @@ public class TdProductContrller extends BaseController{
 	
 	
 	@RequestMapping("/edit")
-	public String edit(Integer id,HttpServletRequest req,ModelMap map)
+	public String edit(Integer id,HttpServletRequest req,ModelMap map) throws Exception
 	{
-		List<TdProductType> productTypeList = tdProductTypeService.findAll();
+		TdProductTypeCriteria tsc = new TdProductTypeCriteria();
+		tsc.setStatus((byte) 1);
+		List<TdProductType> productTypeList = tdProductTypeService.findAll(tsc);
 		// 初始化对应的规格
 		initTypeWithSpecifiaction(productTypeList);
 		map.addAttribute("productTypeList", productTypeList);
@@ -167,7 +170,7 @@ public class TdProductContrller extends BaseController{
 	public Map<String,Object> save(TdProduct tdProduct, String tableData, Integer[] attId,
 					String detail, String  packDetail,
 					String afterSale,
-					HttpServletRequest req,ModelMap map)
+					HttpServletRequest req,ModelMap map) throws Exception
 	{
 		Map<String, Object> res = new HashMap<String, Object>();
 		res.put("code", 0);
@@ -202,6 +205,8 @@ public class TdProductContrller extends BaseController{
 			if(isUpdate){
 				tdProductSkuService.deleteByProductId(tdProduct.getId());
 			}
+			
+			tdProductService.save(tdProduct);
 			//--------保存货品表------------
 			if(tableData != null && !tableData.equals("") && attributeNum != null){
 				JSONObject trJson = new JSONObject(tableData);
@@ -243,17 +248,18 @@ public class TdProductContrller extends BaseController{
 					sku.setHighPrice(BigDecimal.valueOf(highPrice));
 					Double lowPrice = Double.parseDouble(trDataArray[attributeNum+5]);
 					sku.setLowPrice(BigDecimal.valueOf(lowPrice));
-					sku.setStatus(Byte.parseByte(trDataArray[attributeNum+6]));
+					sku.setStock(Integer.parseInt(trDataArray[attributeNum+6]));
 					sku.setProductId(tdProduct.getId());
 					sku.setUpdateTime(new Date());
 					sku.setUpdateBy(this.getCurrentUser().getUid());
+					sku.setStatus(Byte.valueOf("1"));
 					tdProductSkuService.save(sku);
 				}
 				
 			}
 			//--------------------
 			
-			tdProductService.save(tdProduct);
+			
 			
 			// 修改展示图片
 			if(null != attId)
@@ -398,7 +404,7 @@ public class TdProductContrller extends BaseController{
         }
     }
 	// 产生表头及表体json数据
-	public JSONObject getJsonFromSku(List<TdProductAttribute> attributeList, List<TdProductSku> skuList, ModelMap map){
+	public JSONObject getJsonFromSku(List<TdProductAttribute> attributeList, List<TdProductSku> skuList, ModelMap map)throws Exception{
 		if(skuList == null || attributeList == null){
 			return null;
 		}
@@ -454,7 +460,7 @@ public class TdProductContrller extends BaseController{
 			trList.add(sku.getMarketPrice().toString());
 			trList.add(sku.getHighPrice().toString());
 			trList.add(sku.getLowPrice().toString());
-			trList.add(sku.getStatus().toString());
+			trList.add(sku.getStock().toString());
 			String[] trArray = this.listToArray(trList);
 			trDataJson.put("trData", trArray);
 			
@@ -466,7 +472,7 @@ public class TdProductContrller extends BaseController{
 	}
 	
 	// 产生表头json数据
-	public  TableHeadData getTableHeadJsonFromSku(List<TdProductAttribute> attributeList){
+	public  TableHeadData getTableHeadJsonFromSku(List<TdProductAttribute> attributeList) throws Exception{
 		if(attributeList == null){
 			return null;
 		}
@@ -546,7 +552,7 @@ public class TdProductContrller extends BaseController{
 	
 	@RequestMapping(value="/getTableHead",method=RequestMethod.POST)
 	@ResponseBody
-	public Map<String,String> getTableHead(Integer typeId, HttpServletRequest req)
+	public Map<String,String> getTableHead(Integer typeId, HttpServletRequest req)throws Exception
 	{
 		Map<String, String> res = new HashMap<>();
 		TdProductType productType = tdProductTypeService.findOne(typeId);

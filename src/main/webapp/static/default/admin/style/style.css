@@ -96,6 +96,7 @@ a:hover { text-decoration: underline; }
 .btn_blue:hover { background: #2983E4; text-decoration: none; }
 /*列表表格*/
 .table_list { border: 1px solid #d5dfe8; margin-bottom: 40px; }
+.table_list2 { margin-bottom: 0px; }
 .table_list td, .table_list th { padding: 0 4px; }
 .table_list thead th { height: 30px; background: #eaf0f7; font-weight: normal; font-weight: 700; }
 .table_list tbody td { border-top: 1px solid #d5dfe8; padding: 4px 4px; line-height: 24px; }

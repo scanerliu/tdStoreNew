@@ -643,7 +643,6 @@ function tableHeadCallback(data){
 	if($("#skuAssemble").find("td").size>0){
 		$("#skuAssemble").find("td").die("dblclick");
 	}
-	alert("fuck");
 	editText("skuAssemble", ssize);
 }
  

@@ -357,7 +357,10 @@
   <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.product.search.TdProductCriteria">
   	select count(p.id)
     from td_product as p LEFT OUTER JOIN td_product_type t ON p.type_id=t.id
-    where 1=1 
+    where 1=1
+    <if test="name != null">
+    	name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if> 
   </select>
   
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.product.search.TdProductCriteria">
@@ -366,6 +369,13 @@
   	,t.id as t_id
     ,t.name as t_name
     from td_product as p LEFT OUTER JOIN td_product_type t ON p.type_id=t.id
+    where 1=1
+    <if test="name != null">
+    	name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="orderBy != null">
+    	order by #{orderBy,jdbcType=VARCHAR}
+    </if>
   </select>
   
   

@@ -11,13 +11,14 @@
     <result column="high_price" property="highPrice" jdbcType="DECIMAL" />
     <result column="low_price" property="lowPrice" jdbcType="DECIMAL" />
     <result column="specifications" property="specifications" jdbcType="VARCHAR" />
+    <result column="stock" property="stock" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, product_id, sku_code, supplier_price, sales_price, market_price, high_price, 
-    low_price, specifications, status, update_time, update_by
+    low_price, specifications, stock, status, update_time, update_by
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -35,11 +36,11 @@
     </selectKey>
     insert into td_product_sku (product_id, sku_code, supplier_price, 
       sales_price, market_price, high_price, 
-      low_price, specifications, status, 
+      low_price, specifications, stock, status, 
       update_time, update_by)
     values (#{productId,jdbcType=INTEGER}, #{skuCode,jdbcType=VARCHAR}, #{supplierPrice,jdbcType=DECIMAL}, 
       #{salesPrice,jdbcType=DECIMAL}, #{marketPrice,jdbcType=DECIMAL}, #{highPrice,jdbcType=DECIMAL}, 
-      #{lowPrice,jdbcType=DECIMAL}, #{specifications,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
+      #{lowPrice,jdbcType=DECIMAL}, #{specifications,jdbcType=VARCHAR}, #{stock,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.tiandu.product.entity.TdProductSku" >
@@ -71,6 +72,9 @@
       </if>
       <if test="specifications != null" >
         specifications,
+      </if>
+      <if test="stock != null" >
+        stock,
       </if>
       <if test="status != null" >
         status,
@@ -106,6 +110,9 @@
       </if>
       <if test="specifications != null" >
         #{specifications,jdbcType=VARCHAR},
+      </if>
+      <if test="stock != null" >
+        #{stock,jdbcType=INTEGER},
       </if>
       <if test="status != null" >
         #{status,jdbcType=TINYINT},
@@ -145,6 +152,9 @@
       <if test="specifications != null" >
         specifications = #{specifications,jdbcType=VARCHAR},
       </if>
+      <if test="stock != null" >
+        stock = #{stock,jdbcType=INTEGER},
+      </if>
       <if test="status != null" >
         status = #{status,jdbcType=TINYINT},
       </if>
@@ -167,6 +177,7 @@
       high_price = #{highPrice,jdbcType=DECIMAL},
       low_price = #{lowPrice,jdbcType=DECIMAL},
       specifications = #{specifications,jdbcType=VARCHAR},
+      stock = #{stock,jdbcType=INTEGER},
       status = #{status,jdbcType=TINYINT},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=INTEGER}

@@ -8,14 +8,23 @@
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="sort" property="sort" jdbcType="INTEGER" />
     <result column="uid" property="uid" jdbcType="INTEGER" />
+    
+    <!-- 类型信息 -->
+	<association property="productAttribute" resultMap="productAttributeResult"/>
+    
   </resultMap>
+  
+  <resultMap id="productAttributeResult" type="com.tiandu.product.entity.TdProductAttribute" >
+  	<result column="p_name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  
   <sql id="Base_Column_List" >
-    id, attri_id, name, status, sort, uid
+    o.id, o.attri_id, o.name, o.status, o.sort, o.uid
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from td_product_attribute_option
+    from td_product_attribute_option o
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
@@ -109,17 +118,25 @@
   
   <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.product.search.TdProductAttributeOptionCriteria">
   	select count(attri_id)
-    from td_product_attribute_option
+    from td_product_attribute_option o
     where 1=1 
+    <if test="attriId != null" >
+       and  o.attri_id = #{attriId,jdbcType=INTEGER}
+    </if>
   </select>
   
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.product.search.TdProductAttributeOptionCriteria">
   	select 
   	<include refid="Base_Column_List" />
-    from td_product_attribute_option 
-    where 1=1
-    <if test="attriId != null">
-        and attri_id=#{attriId,jdbcType=INTEGER}
+  	 , p.name as p_name
+  	
+    from td_product_attribute_option o
+    
+    left join td_product_attribute p on p.attri_id= o.attri_id
+    
+    where 1=1 
+    <if test="attriId != null" >
+       and  o.attri_id = #{attriId,jdbcType=INTEGER}
     </if>
   </select>
   

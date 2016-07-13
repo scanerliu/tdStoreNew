@@ -52,7 +52,7 @@ public class ProductTypeController extends BaseController{
 	@RequestMapping(value="/search")
 	public String productTypeSearch(TdProductTypeCriteria sc,HttpServletRequest req,ModelMap map)
 	{
-		map.addAttribute("productTypeList", tdProductTypeService.findAll());
+		map.addAttribute("productTypeList", tdProductTypeService.findAll(sc));
 		map.addAttribute("sc", sc);
 		return "/admin/product/type/ptoductTypebody";
 	}
@@ -60,7 +60,8 @@ public class ProductTypeController extends BaseController{
 	@RequestMapping(value="/edit")
 	public String productTypeEdit(Integer id,HttpServletRequest req,ModelMap map)
 	{
-		map.addAttribute("productTypeList", tdProductTypeService.findAll());
+		TdProductTypeCriteria sc = new TdProductTypeCriteria();
+		map.addAttribute("productTypeList", tdProductTypeService.findAll(sc));
 		if(null != id)
 		{
 			map.addAttribute("productType", tdProductTypeService.findOne(id));

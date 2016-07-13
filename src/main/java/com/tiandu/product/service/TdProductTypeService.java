@@ -22,7 +22,7 @@ public interface TdProductTypeService {
 	 * 获取所有分类
 	 * @return
 	 */
-	public List<TdProductType> findAll();
+	public List<TdProductType> findAll(TdProductTypeCriteria sc);
 	
 	public List<TdProductType> findByParentId(Integer id);
 	
