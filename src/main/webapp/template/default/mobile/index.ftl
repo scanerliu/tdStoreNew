@@ -145,7 +145,7 @@
 <div class="index_foot">
     <a href="${app.basePath}/mobile" title="首页" class="active"><p>首页</p></a>
     <a href="${app.basePath}/mobile/productType/list" title=""><p>分类</p></a>
-    <a href="购物车.html" title=""><p>购物车</p></a>
+    <a href="${app.basePath}/mobile/shoppingcart/list" title=""><p>购物车</p></a>
     <a href="normalUser/个人中心-首页.html" title=""><p>我的</p></a>
 </div>
 <!-- 底部-结束 -->

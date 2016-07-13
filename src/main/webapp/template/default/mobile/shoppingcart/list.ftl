@@ -26,7 +26,7 @@
 <script>
   window.onload=function(){
     two2();
-    all_sel();
+    //all_sel();
   }
 </script>
 <body class="body_bg">
@@ -64,7 +64,7 @@
                 </aside>
                 <aside class="as2 fr">
                   <input type="button" value="-" class="ipt1" onclick="additem(${item.id},2)">
-                  <input type="text" id="quantity_${item.id}" value="${item.quantity}" placeholder="1" class="ipt2" onKeyUp="formatInputInteger(this,1,9999)">
+                  <input type="text" name="quantity" itemid="${item.id}" id="quantity_${item.id}" value="${item.quantity}" placeholder="1" class="ipt2" onChange="changeitem(this)" onKeyUp="formatInputInteger(this,1,9999)">
                   <input type="button" value="+" class="ipt3" onclick="additem(${item.id},1)">
                 </aside>
               </section>
@@ -84,7 +84,7 @@
 <footer>
     <div class="gopay">
         <label class="all_sel"><input type="checkbox" id="all_sel"/>全选</label>
-        <a href="#" class="a-pay" title="">去下单</a>
+        <a href="javascript:;" class="a-pay" title="" onclick="nextOrder()">去下单</a>
         <section class="all_price">
           <p class="p1">总计：<font color="red">￥<span id="totalAmount">${shoppingcart.totalAmount}</span></font></p>
           <p class="p2">（运费：<span id="totalPostage">${shoppingcart.totalPostage}</span>元）</p>
@@ -95,6 +95,20 @@
 <!-- Footer End -->
 <script>
 $(function(){
+	$("#all_sel").click(function() {
+		$(this).toggleClass('och');
+		$('#product_goods input[name="ids"]').toggleClass('och').prop("checked",this.checked); 
+    });
+    var $subBox = $("#product_goods input[name='ids']");
+    $subBox.click(function(){
+    	$(this).toggleClass('och');
+        $("#all_sel").prop("checked",$subBox.length == $("#product_goods input[name='ids']:checked").length ? true : false);
+        if($("#all_sel").prop("checked")){
+        	$("#all_sel").toggleClass('och');
+        }else{
+        	$("#all_sel").removeClass('och');
+        }
+    });
 });
 </script>
 </body>  

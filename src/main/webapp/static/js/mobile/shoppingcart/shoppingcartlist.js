@@ -19,6 +19,7 @@ function additem(id,type){
 			return;
 		}
 	}
+	$("#quantity_"+id).val(numint);
 	var url = basePath+"/mobile/shoppingcart/add";
 	var postData = {"id":id,"optype":type};
 	$.post(url,postData,additemCallback,"text");
@@ -27,8 +28,39 @@ function additem(id,type){
 function additemCallback(data){
 	var result = eval("("+data+")");
 	if(result.code==1){
-		$("#totalAmount").val(result.totalAmount);
-		$("#totalPostage").val(result.totalPostage);
+		$("#totalAmount").html(result.totalAmount);
+		$("#totalPostage").html(result.totalPostage);
+		
+	}else{
+		alert('商品操作失败!');
+	}
+}
+
+/**
+ * 购物车商品数量更改操作
+ * @param id
+ * @param type
+ */
+function changeitem(obj){
+	var num = $(obj).val();
+	var numint = parseInt(num);
+	if(numint>9999){
+		numint = 9999;
+	}else if(numint<1){
+		numint = 1;
+	}
+	$(obj).val(numint);
+	var itemid = $(obj).attr("itemid");
+	var url = basePath+"/mobile/shoppingcart/change";
+	var postData = {"id":itemid,"quantity":numint};
+	$.post(url,postData,changeitemCallback,"text");
+}
+
+function changeitemCallback(data){
+	var result = eval("("+data+")");
+	if(result.code==1){
+		$("#totalAmount").html(result.totalAmount);
+		$("#totalPostage").html(result.totalPostage);
 		
 	}else{
 		alert('商品操作失败!');
@@ -39,19 +71,6 @@ function additemCallback(data){
  * 购物车商品移除操作
  */
 function removeItems(){
-//	var flag = 0;
-//	//获取商品类型
-//	$("#two2 a").each(function(i,o){
-//		var n= i+1;
-//		if($(this).hasClass("active")){
-//			flag = n;
-//			return;
-//		}
-//	});
-//	//移除普通商品
-//	if(flag==1){
-		
-//	}
 	var elements = $("#product_goods input[name='ids']:checked");
 	var ids = "";
 	elements.each(function(i,o){
@@ -85,4 +104,9 @@ function removeItemsCallback(data){
 	}else{
 		alert('商品删除失败!');
 	}
+}
+//去下单
+function nextOrder(){
+	var url = basePath+"/mobile/shoppingcart/confirmorder";
+	alert("稍等一下，功能开发中...");
 }
