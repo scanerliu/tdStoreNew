@@ -67,6 +67,18 @@
 		            <input type="radio" name="kind" value="6" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==6>checked</#if>>秒杀&emsp;
 		        </td>
 		    </tr>
+		     <tr>
+		        <th>品牌：</th>
+		        <td>
+		            <select name="brandId">
+		            	<#if brandList??>
+		    				<#list brandList as brand>
+		    					<option value="${brand.id!''}">${brand.name!''}</option>
+							</#list>
+						</#if>
+		            </select>
+		        </td>
+		    </tr>
 		    <tr>
 		        <th width="150">名称：</th>
 		        <td><input type="text" name="name" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.name!''}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="length[2,64]"></td>
@@ -96,7 +108,7 @@
 		        	<input type="hidden" id="image" name="imageUrl" value="<#if tdProduct??>${tdProduct.imageUrl!''}</#if>">
 		        	<input type="file" id="file_upload"/>
 		        	<div id="showImg">
-		        		<#if tdProduct?? &&  tdProduct.imageUrl != "">
+		        		<#if tdProduct?? &&  tdProduct.imageUrl??>
 		        			<img width='100' height='100' src='${app.basePath}${tdProduct.imageUrl!''}'/>
 						</#if>
 		        	</div>

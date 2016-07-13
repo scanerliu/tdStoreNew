@@ -21,7 +21,7 @@
 	<!-- 这里主要是设置自定义的单Realm应用,若有多个Realm,可使用'realms'属性代替 -->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<property name="realm" ref="tdRealm" />
-		<!-- <property name="rememberMeManager" ref="rememberMeManager" /> -->
+		<property name="rememberMeManager" ref="rememberMeManager" />
 	</bean>
 
 	<!-- Shiro主过滤器本身功能十分强大,其强大之处就在于它支持任何基于URL路径表达式的、自定义的过滤器的执行 -->
@@ -61,7 +61,7 @@
 				/index/getVerifyCodeImage=anon
 				/main**=authc
 				/user/**=authc
-				/mobile/shoppingcart/**=authc
+				/mobile/shoppingcart/**=user
 				/admin/**=authc,roles[admin]<!-- ,perms[manage] -->
 			</value>
 		</property>
@@ -80,20 +80,19 @@
 		<property name="securityManager" ref="securityManager"/> </bean> -->
 
 	<!-- 会话Cookie模板 -->
-	<!-- <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+	<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
 		<constructor-arg value="sid" />
 		<property name="httpOnly" value="true" />
 		<property name="maxAge" value="-1" />
 	</bean>
 	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-		<constructor-arg value="rememberMe" />
+		<constructor-arg value="tdstore_cus" />
 		<property name="httpOnly" value="true" />
-		<property name="maxAge" value="2592000" />30天
+		<property name="maxAge" value="2592000" />
 	</bean>
-	rememberMe管理器
 	<bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
 		<property name="cipherKey"
-			value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}" />
+			value="#{T(org.apache.shiro.codec.Base64).decode('ertVhmFLUs0KTA3Kprsdag==')}" />
 		<property name="cookie" ref="rememberMeCookie" />
-	</bean> -->
+	</bean>
 </beans>

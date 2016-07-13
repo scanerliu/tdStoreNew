@@ -26,6 +26,8 @@
 			<th align="center">创建时间</th>
 			<th align="center">参考价</th>
 			<th align="center">库存</th>
+			<th align="center">状态</th>
+			<th align="center">上架状态</th>
 			<th >操作</th>
 		</tr>
 	</thead>
@@ -52,9 +54,11 @@
 		        	</#if>
 		        </td>
 		        <td align="center"><img src="${app.basePath}${pro.imageUrl!''}" style="width:100px;height:50px;"></td>
-		        <td align="center">${pro.createTime?string('yyyy-MM-dd')}</td>
+		        <td align="center"><#if pro.createTime??>${pro.createTime?string('yyyy-MM-dd')}</#if></td>
 		        <td align="center"><#if pro.price??>${pro.price?string('0.00')}</#if></td>
 		        <td align="center">${pro.quantum!'0'}</td>
+		        <td align="center">${pro.getStatusStr()!''}</td>
+		        <td align="center">${pro.getOnshelfStr()!''}</td>
 		        <td align="center">
 		            <a class="J_confirmurl" href="javascript:;" onclick="deleteProduct(${pro.id?c})">删除</a>
 		           |<a class="J_confirmurl" href="javascript:;" onclick="editProduct(${pro.id?c})">编辑</a>

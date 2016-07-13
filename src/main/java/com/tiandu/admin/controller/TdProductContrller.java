@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.product.entity.TdBrand;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductAttachment;
 import com.tiandu.product.entity.TdProductAttribute;
@@ -32,10 +33,12 @@ import com.tiandu.product.entity.TdProductSku;
 import com.tiandu.product.entity.TdProductStat;
 import com.tiandu.product.entity.TdProductType;
 import com.tiandu.product.entity.TdProductTypeAttribute;
+import com.tiandu.product.search.TdBrandSearchCriteria;
 import com.tiandu.product.search.TdProductAttributeOptionCriteria;
 import com.tiandu.product.search.TdProductCriteria;
 import com.tiandu.product.search.TdProductDescriptionCriteria;
 import com.tiandu.product.search.TdProductTypeCriteria;
+import com.tiandu.product.service.TdBrandService;
 import com.tiandu.product.service.TdProductAttachmentService;
 import com.tiandu.product.service.TdProductAttributeOptionService;
 import com.tiandu.product.service.TdProductAttributeService;
@@ -76,6 +79,9 @@ public class TdProductContrller extends BaseController{
 	
 	@Autowired
 	TdProductSkuService tdProductSkuService;
+	
+	@Autowired
+	private TdBrandService tdBrandService;
 	
 	@RequestMapping("/list")
 	public String list(HttpServletRequest req,ModelMap map){
@@ -161,6 +167,12 @@ public class TdProductContrller extends BaseController{
 			JSONObject tableJsonData = this.getJsonFromSku(attributeList, productSkuList, map);
 			map.addAttribute("tableJsonData", tableJsonData);
 		}
+		
+		//品牌数据
+		TdBrandSearchCriteria bsc = new TdBrandSearchCriteria();
+		bsc.setFlag(false);
+		List<TdBrand> brandList = tdBrandService.findBySearchCriteria(bsc);
+		map.addAttribute("brandList", brandList);
 		
 		return "/admin/product/productform";
 	}

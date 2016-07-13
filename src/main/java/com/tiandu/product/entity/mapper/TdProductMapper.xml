@@ -13,6 +13,7 @@
     <result column="brand_id" property="brandId" jdbcType="INTEGER" />
     <result column="type_id" property="typeId" jdbcType="INTEGER" />
     <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="onshelf" property="onshelf" jdbcType="BIT" />
     <result column="specification" property="specification" jdbcType="BIT" />
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="keyword" property="keyword" jdbcType="VARCHAR" />
@@ -34,7 +35,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     p.id, p.kind, p.name, p.title, p.code, p.price, p.points, p.default_sku_id, p.brand_id, p.type_id, p.uid, 
-    p.specification, p.status, p.keyword, p.image_url, p.create_time, p.update_time, p.update_by, p.new_recommend, 
+    p.specification, p.status, p.onshelf, p.keyword, p.image_url, p.create_time, p.update_time, p.update_by, p.new_recommend, 
     p.hot_recommend, p.fine_recommend, p.type_recommend, p.quantum, p.sort, p.tags, p.start_time, p.end_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -57,7 +58,7 @@
     insert into td_product (kind, name, title, 
       code, price, points, 
       default_sku_id, brand_id, type_id, 
-      uid, specification, status, 
+      uid, specification, status, onshelf, 
       keyword, image_url, create_time, 
       update_time, update_by, new_recommend, 
       hot_recommend, fine_recommend, type_recommend, 
@@ -66,7 +67,7 @@
     values (#{kind,jdbcType=TINYINT}, #{name,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
       #{code,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{points,jdbcType=INTEGER}, 
       #{defaultSkuId,jdbcType=INTEGER}, #{brandId,jdbcType=INTEGER}, #{typeId,jdbcType=INTEGER}, 
-      #{uid,jdbcType=INTEGER}, #{specification,jdbcType=BIT}, #{status,jdbcType=TINYINT}, 
+      #{uid,jdbcType=INTEGER}, #{specification,jdbcType=BIT}, #{status,jdbcType=TINYINT}, #{onshelf,jdbcType=BIT}, 
       #{keyword,jdbcType=VARCHAR}, #{imageUrl,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}, #{newRecommend,jdbcType=INTEGER}, 
       #{hotRecommend,jdbcType=INTEGER}, #{fineRecommend,jdbcType=INTEGER}, #{typeRecommend,jdbcType=INTEGER}, 
@@ -111,6 +112,9 @@
       </if>
       <if test="specification != null" >
         specification,
+      </if>
+      <if test="onshelf != null" >
+        onshelf,
       </if>
       <if test="status != null" >
         status,
@@ -191,6 +195,9 @@
       </if>
       <if test="specification != null" >
         #{specification,jdbcType=BIT},
+      </if>
+      <if test="onshelf != null" >
+        #{onshelf,jdbcType=BIT},
       </if>
       <if test="status != null" >
         #{status,jdbcType=TINYINT},
@@ -275,6 +282,9 @@
       <if test="specification != null" >
         specification = #{specification,jdbcType=BIT},
       </if>
+      <if test="onshelf != null" >
+        onshelf = #{onshelf,jdbcType=BIT},
+      </if>
       <if test="status != null" >
         status = #{status,jdbcType=TINYINT},
       </if>
@@ -336,6 +346,7 @@
       type_id = #{typeId,jdbcType=INTEGER},
       uid = #{uid,jdbcType=INTEGER},
       specification = #{specification,jdbcType=BIT},
+      onshelf = #{onshelf,jdbcType=BIT},
       status = #{status,jdbcType=TINYINT},
       keyword = #{keyword,jdbcType=VARCHAR},
       image_url = #{imageUrl,jdbcType=VARCHAR},
@@ -358,8 +369,17 @@
   	select count(p.id)
     from td_product as p LEFT OUTER JOIN td_product_type t ON p.type_id=t.id
     where 1=1
-    <if test="name != null">
-    	name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    <if test="status != null">
+    	and status = #{status,jdbcType=TINYINT}
+    </if>
+    <if test="onshelf != null">
+    	and onshelf = #{onshelf,jdbcType=BIT}
+    </if>
+    <if test="uid != null">
+    	and uid = #{uid,jdbcType=INTEGER}
+    </if>
+    <if test="name != null and name!=''">
+    	and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
     </if> 
   </select>
   
@@ -370,8 +390,17 @@
     ,t.name as t_name
     from td_product as p LEFT OUTER JOIN td_product_type t ON p.type_id=t.id
     where 1=1
-    <if test="name != null">
-    	name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    <if test="status != null">
+    	and status = #{status,jdbcType=TINYINT}
+    </if>
+    <if test="onshelf != null">
+    	and onshelf = #{onshelf,jdbcType=BIT}
+    </if>
+    <if test="uid != null">
+    	and uid = #{uid,jdbcType=INTEGER}
+    </if>
+    <if test="name != null and name!=''">
+    	and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
     </if>
     <if test="orderBy != null">
     	order by #{orderBy,jdbcType=VARCHAR}

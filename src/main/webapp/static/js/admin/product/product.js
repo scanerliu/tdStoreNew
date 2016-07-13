@@ -3,9 +3,9 @@ function searchProduct(t){
 	var loadData = null;
 	
 	if(t){
-		loadData = null;
+		loadData = $("#searchform").serializeArray();;
 	}else{
-		loadData = $("#productTypeform").serializeArray();
+		loadData = $("#listform").serializeArray();
 	}
 	$("#results").load(url,loadData);
 }

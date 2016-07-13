@@ -58,7 +58,7 @@ public class ManagerController extends BaseController {
 	@RequestMapping("/edit")
 	public String edit(Integer id, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser manager = null;
-		if(null!=id){
+		if(null!=id&&id>0){
 			manager = tdUserService.findOne(id);		    
 		}
 		if(null==manager){

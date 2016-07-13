@@ -84,7 +84,7 @@
 <footer>
     <div class="gopay">
         <label class="all_sel"><input type="checkbox" id="all_sel"/>全选</label>
-        <a href="javascript:;" class="a-pay" title="" onclick="nextOrder()">去下单</a>
+        <a href="javascript:;" class="a-pay" title="" onclick="nextOrder()">结算</a>
         <section class="all_price">
           <p class="p1">总计：<font color="red">￥<span id="totalAmount">${shoppingcart.totalAmount}</span></font></p>
           <p class="p2">（运费：<span id="totalPostage">${shoppingcart.totalPostage}</span>元）</p>
