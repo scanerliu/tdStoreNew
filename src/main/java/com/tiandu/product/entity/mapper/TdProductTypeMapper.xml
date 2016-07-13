@@ -11,15 +11,24 @@
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
     <result column="sort" property="sort" jdbcType="INTEGER" />
+    <collection property="tdProductTypeAttributeList" resultMap="TAResult"/>
+  </resultMap>
+  <resultMap type="com.tiandu.product.entity.TdProductTypeAttribute" id="TAResult">
+	<id column="ta_id" property="id" jdbcType="INTEGER" />
+    <result column="ta_typeid" property="typeId" jdbcType="INTEGER" />
+    <result column="ta_attriid" property="attriId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, parent_id, create_time, update_time, update_by, status, image_url, sort
+    t.id, t.name, t.parent_id, t.create_time, t.update_time, t.update_by, t.status, t.image_url, t.sort
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from td_product_type
-    where id = #{id,jdbcType=INTEGER}
+    ,ta.id as ta_id
+    ,ta.type_id as ta_typeid
+    ,ta.attri_id as ta_attriid
+    from td_product_type as t LEFT OUTER JOIN td_product_type_attribute ta ON t.id=ta.type_id
+    where t.id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from td_product_type
@@ -140,29 +149,35 @@
   </update>
   
   <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.product.search.TdProductTypeCriteria">
-  	select count(id)
-    from td_product_type
+  	select count(t.id)
+    from td_product_type as t LEFT OUTER JOIN td_product_type_attribute ta ON t.id=ta.type_id
     where 1=1 
     <if test="parentId != null">
-        and parent_id=#{parentId,jdbcType=INTEGER}
+        and t.parent_id=#{parentId,jdbcType=INTEGER}
     </if>
   </select>
   
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.product.search.TdProductTypeCriteria">
   	select 
   	<include refid="Base_Column_List" />
-    from td_product_type 
+  	,ta.id as ta_id
+    ,ta.type_id as ta_typeid
+    ,ta.attri_id as ta_attriid
+    from td_product_type as t LEFT OUTER JOIN td_product_type_attribute ta ON t.id=ta.type_id
     where 1=1
     <if test="parentId != null">
-        and parent_id=#{parentId,jdbcType=INTEGER}
+        and t.parent_id=#{parentId,jdbcType=INTEGER}
     </if>
   </select>
   
   <select id="findByParentId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
   	select 
   	<include refid="Base_Column_List" />
-    from td_product_type 
-    where parent_id = #{parentId,jdbcType=INTEGER}
+  	,ta.id as ta_id
+    ,ta.type_id as ta_typeid
+    ,ta.attri_id as ta_attriid
+    from td_product_type as t LEFT OUTER JOIN td_product_type_attribute ta ON t.id=ta.type_id
+    where t.parent_id = #{parentId,jdbcType=INTEGER}
   </select>
   
 </mapper>

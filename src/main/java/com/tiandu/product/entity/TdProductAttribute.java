@@ -1,33 +1,46 @@
 package com.tiandu.product.entity;
 
+import java.util.List;
+
 public class TdProductAttribute {
-    private Integer attriId;
+	private Integer attriId;
 
-    private String name;
+	private String name;
 
-    private Byte status;
+	private Byte status;
 
-    public Integer getAttriId() {
-        return attriId;
-    }
+	private List<TdProductAttributeOption> tdProductAttributeOptionList;
 
-    public void setAttriId(Integer attriId) {
-        this.attriId = attriId;
-    }
+	public Integer getAttriId() {
+		return attriId;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setAttriId(Integer attriId) {
+		this.attriId = attriId;
+	}
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
+	public String getName() {
+		return name;
+	}
 
-    public Byte getStatus() {
-        return status;
-    }
+	public void setName(String name) {
+		this.name = name == null ? null : name.trim();
+	}
 
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
+	public Byte getStatus() {
+		return status;
+	}
+
+	public void setStatus(Byte status) {
+		this.status = status;
+	}
+
+	public List<TdProductAttributeOption> getTdProductAttributeOptionList() {
+		return tdProductAttributeOptionList;
+	}
+
+	public void setTdProductAttributeOptionList(List<TdProductAttributeOption> tdProductAttributeOptionList) {
+		this.tdProductAttributeOptionList = tdProductAttributeOptionList;
+	}
+
 }

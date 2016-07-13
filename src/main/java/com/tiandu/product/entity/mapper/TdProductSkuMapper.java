@@ -19,4 +19,6 @@ public interface TdProductSkuMapper {
     
     List<TdProductSku> findByProductId(Integer proId);
     Integer deleteByProductId(Integer proId);
+    List<TdProductSku> selectByProductId(Integer proId);
+    
 }

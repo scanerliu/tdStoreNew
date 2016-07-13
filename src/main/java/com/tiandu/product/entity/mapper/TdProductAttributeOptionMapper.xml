@@ -117,6 +117,10 @@
   	select 
   	<include refid="Base_Column_List" />
     from td_product_attribute_option 
+    where 1=1
+    <if test="attriId != null">
+        and attri_id=#{attriId,jdbcType=INTEGER}
+    </if>
   </select>
   
 </mapper>

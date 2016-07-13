@@ -29,17 +29,22 @@
     <result column="tags" property="tags" jdbcType="VARCHAR" />
     <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
     <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="t_id" property="tdProductType.id"/>
+    <result column="t_name" property="tdProductType.name"/>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, kind, name, title, code, price, points, default_sku_id, brand_id, type_id, uid, 
-    specification, status, keyword, image_url, create_time, update_time, update_by, new_recommend, 
-    hot_recommend, fine_recommend, type_recommend, quantum, sort, tags, start_time, end_time
+    p.id, p.kind, p.name, p.title, p.code, p.price, p.points, p.default_sku_id, p.brand_id, p.type_id, p.uid, 
+    p.specification, p.status, p.keyword, p.image_url, p.create_time, p.update_time, p.update_by, p.new_recommend, 
+    p.hot_recommend, p.fine_recommend, p.type_recommend, p.quantum, p.sort, p.tags, p.start_time, p.end_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from td_product
-    where id = #{id,jdbcType=INTEGER}
+    ,t.id as t_id
+    ,t.name as t_name
+    from td_product as p LEFT OUTER JOIN td_product_type t ON p.type_id=t.id
+    where 1=1
+    and p.id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from td_product
@@ -350,15 +355,17 @@
   </update>
   
   <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.product.search.TdProductCriteria">
-  	select count(id)
-    from td_product
+  	select count(p.id)
+    from td_product as p LEFT OUTER JOIN td_product_type t ON p.type_id=t.id
     where 1=1 
   </select>
   
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.product.search.TdProductCriteria">
   	select 
   	<include refid="Base_Column_List" />
-    from td_product
+  	,t.id as t_id
+    ,t.name as t_name
+    from td_product as p LEFT OUTER JOIN td_product_type t ON p.type_id=t.id
   </select>
   
   

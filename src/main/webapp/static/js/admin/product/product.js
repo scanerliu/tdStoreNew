@@ -30,8 +30,43 @@ function refreshList(){
 	searchProduct(false);
 }
 
+
+
 // 提交新增、修改内容
 function saveProduct(){
+	var tableData = getTableData("skuAssemble");
+	var tableDataJson = eval('('+tableData+')');
+	console.log(tableDataJson);
+	if(tableDataJson.tableHead=="" || tableDataJson.tableContent.length == 0){
+		$.messager.alert('消息提醒','货品数据不能为空!');
+		return;
+	}
+	var tablecontent = tableDataJson.tableContent;
+	for(var i = 0; i < tablecontent.length; i ++){
+		var trdata =  tablecontent[i].trData;
+		console.log(trdata);
+		var trid = tablecontent[i].trId;
+		var specnum = trid.split('_').length;
+		console.log("specnum:" + specnum);
+		for(var j = specnum; j < trdata.length; j ++){
+			if(trdata[j] == "" || trdata[j] == null){
+				$.messager.alert('消息提醒','货品数据不能留空!');
+				return;
+			}
+		}
+		for(var j = specnum + 1; j < trdata.length-1; j ++){
+			if(!price_partten.test(trdata[j])){
+				$.messager.alert('消息提醒','货品价格格式错误!');
+				return;
+			}
+		}
+		if(!num_partten.test(trdata[trdata.length-1])){
+			$.messager.alert('消息提醒','货品库存格式错误!');
+			return;
+		}
+	}
+	
+	$("#formTableData").val(tableData);
 	var f = $('#productForm').form('enableValidation').form('validate');
 	if(f){
 		$("#productForm").form("submit",{
@@ -46,7 +81,6 @@ function saveProduct(){
 				  }
 			}
 		});
-		
 	}
 }
 
@@ -70,4 +104,7 @@ function delProductTypeCallback(data){
 	}
 }
 
-
+//有两位小数的正实数
+var price_partten = /^[0-9]+(.[0-9]{2})?$/;
+// 数字
+var  num_partten =  /^[0-9]*$/;

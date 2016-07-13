@@ -40,7 +40,7 @@ public class TdProductSkuServiceImpl implements TdProductSkuService{
 
 	@Override
 	public List<TdProductSku> findByProductId(Integer proId) {
-		return tdProductSkuMapper.findByProductId(proId);
+		return tdProductSkuMapper.selectByProductId(proId);
 	}
 
 	@Override

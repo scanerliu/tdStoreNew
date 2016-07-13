@@ -4,97 +4,104 @@ import java.util.Date;
 import java.util.List;
 
 public class TdProductType {
-    private Integer id;
+	private Integer id;
 
-    private String name;
+	private String name;
 
-    private Integer parentId;
+	private Integer parentId;
 
-    private Date createTime;
+	private Date createTime;
 
-    private Date updateTime;
+	private Date updateTime;
 
-    private Integer updateBy;
+	private Integer updateBy;
 
-    private Byte status;
+	private Byte status;
 
-    private String imageUrl;
+	private String imageUrl;
 
-    private Integer sort;
-    
-    private List<TdProductType> subList;
+	private Integer sort;
 
-    public Integer getId() {
-        return id;
-    }
+	private List<TdProductType> subList;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	// 关联类别规格
+	private List<TdProductTypeAttribute> tdProductTypeAttributeList;
 
-    public String getName() {
-        return name;
-    }
+	private List<TdProductAttribute> tdProductAttributeList;
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
+	private Integer specifiactionNum;
 
-    public Integer getParentId() {
-        return parentId;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public void setName(String name) {
+		this.name = name == null ? null : name.trim();
+	}
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
+	public Integer getParentId() {
+		return parentId;
+	}
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
 
-    public Integer getUpdateBy() {
-        return updateBy;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    public void setUpdateBy(Integer updateBy) {
-        this.updateBy = updateBy;
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
-    public Byte getStatus() {
-        return status;
-    }
+	public Date getUpdateTime() {
+		return updateTime;
+	}
 
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
+	public Integer getUpdateBy() {
+		return updateBy;
+	}
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl == null ? null : imageUrl.trim();
-    }
+	public void setUpdateBy(Integer updateBy) {
+		this.updateBy = updateBy;
+	}
 
-    public Integer getSort() {
-        return sort;
-    }
+	public Byte getStatus() {
+		return status;
+	}
 
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
+	public void setStatus(Byte status) {
+		this.status = status;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl == null ? null : imageUrl.trim();
+	}
+
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
 
 	public List<TdProductType> getSubList() {
 		return subList;
@@ -103,7 +110,29 @@ public class TdProductType {
 	public void setSubList(List<TdProductType> subList) {
 		this.subList = subList;
 	}
-    
-    
-    
+
+	public List<TdProductTypeAttribute> getTdProductTypeAttributeList() {
+		return tdProductTypeAttributeList;
+	}
+
+	public void setTdProductTypeAttributeList(List<TdProductTypeAttribute> tdProductTypeAttributeList) {
+		this.tdProductTypeAttributeList = tdProductTypeAttributeList;
+	}
+
+	public Integer getSpecifiactionNum() {
+		return specifiactionNum;
+	}
+
+	public void setSpecifiactionNum(Integer specifiactionNum) {
+		this.specifiactionNum = specifiactionNum;
+	}
+
+	public List<TdProductAttribute> getTdProductAttributeList() {
+		return tdProductAttributeList;
+	}
+
+	public void setTdProductAttributeList(List<TdProductAttribute> tdProductAttributeList) {
+		this.tdProductAttributeList = tdProductAttributeList;
+	}
+
 }

@@ -11,4 +11,5 @@ public interface TdProductStatService {
 	TdProductStat findOne(Integer id);
 	
 	Integer deleteByPrimaryKey(Integer productId);
+	
 }

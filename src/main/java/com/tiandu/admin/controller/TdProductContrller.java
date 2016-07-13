@@ -1,12 +1,16 @@
 package com.tiandu.admin.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,14 +25,24 @@ import com.tiandu.common.controller.BaseController;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductAttachment;
+import com.tiandu.product.entity.TdProductAttribute;
+import com.tiandu.product.entity.TdProductAttributeOption;
 import com.tiandu.product.entity.TdProductDescription;
+import com.tiandu.product.entity.TdProductSku;
 import com.tiandu.product.entity.TdProductStat;
+import com.tiandu.product.entity.TdProductType;
+import com.tiandu.product.entity.TdProductTypeAttribute;
+import com.tiandu.product.search.TdProductAttributeOptionCriteria;
 import com.tiandu.product.search.TdProductCriteria;
 import com.tiandu.product.search.TdProductDescriptionCriteria;
 import com.tiandu.product.service.TdProductAttachmentService;
+import com.tiandu.product.service.TdProductAttributeOptionService;
+import com.tiandu.product.service.TdProductAttributeService;
 import com.tiandu.product.service.TdProductDescriptionService;
 import com.tiandu.product.service.TdProductService;
+import com.tiandu.product.service.TdProductSkuService;
 import com.tiandu.product.service.TdProductStatService;
+import com.tiandu.product.service.TdProductTypeAttributeService;
 import com.tiandu.product.service.TdProductTypeService;
 
 @Controller
@@ -37,6 +51,9 @@ public class TdProductContrller extends BaseController{
 	
 	@Autowired
 	private TdProductService tdProductService;
+	
+	@Autowired
+	TdProductAttributeOptionService tdProductAttributeOptionService; 
 	
 	@Autowired
 	private TdProductTypeService tdProductTypeService;
@@ -48,7 +65,16 @@ public class TdProductContrller extends BaseController{
 	private TdProductDescriptionService tdProductDescriptionService; 
 	
 	@Autowired
+	TdProductAttributeService tdProductAttributeService; 
+	
+	@Autowired
+	TdProductTypeAttributeService tdProductTypeAttributeService; 
+	
+	@Autowired
 	private TdProductStatService tdProductStatService;
+	
+	@Autowired
+	TdProductSkuService tdProductSkuService;
 	
 	@RequestMapping("/list")
 	public String list(HttpServletRequest req,ModelMap map){
@@ -69,12 +95,16 @@ public class TdProductContrller extends BaseController{
 	@RequestMapping("/edit")
 	public String edit(Integer id,HttpServletRequest req,ModelMap map)
 	{
-		map.addAttribute("productTypeList", tdProductTypeService.findAll());
-		
-		if(null != id)
+		List<TdProductType> productTypeList = tdProductTypeService.findAll();
+		// 初始化对应的规格
+		initTypeWithSpecifiaction(productTypeList);
+		map.addAttribute("productTypeList", productTypeList);
+		if(null != id && id != 0)
 		{
 			// 商品主要信息
-			map.addAttribute("tdProduct", tdProductService.findOne(id));
+			TdProduct product = tdProductService.findOne(id);
+			map.addAttribute("tdProduct", product);
+			
 			// 商品图片
 			map.addAttribute("imgList", tdProductAttachmentService.findByProductId(id));
 			
@@ -92,7 +122,41 @@ public class TdProductContrller extends BaseController{
 			map.addAttribute("afterSale", tdProductDescriptionService.findByProductId(sc));
 			
 			map.addAttribute("productStat", tdProductStatService.findOne(id));
-			
+			// 商品规格
+			TdProductType productType =  tdProductTypeService.findOne(product.getTypeId());
+			List<TdProductTypeAttribute> typeAttributeList = tdProductTypeAttributeService.findByTypeId(productType.getId());
+			List<TdProductAttribute> attributeList = new ArrayList<TdProductAttribute>();
+			for(TdProductTypeAttribute ta : typeAttributeList){
+				TdProductAttribute attribute = tdProductAttributeService.findOne(ta.getAttriId());
+				attributeList.add(attribute);
+			}
+			// 规格数量
+			map.addAttribute("specifiactionNum", attributeList.size());
+			// 设置规格值
+			for(TdProductAttribute pa : attributeList){
+				TdProductAttributeOptionCriteria aosc = new TdProductAttributeOptionCriteria();
+				aosc.setFlag(false);
+				aosc.setAttriId(pa.getAttriId());
+				List<TdProductAttributeOption> aoList = tdProductAttributeOptionService.findBySearchCriteria(aosc);
+				pa.setTdProductAttributeOptionList(aoList);
+			}
+			map.addAttribute("attributeList", attributeList);
+			// 商品对应的货品
+			List<TdProductSku> productSkuList = tdProductSkuService.findByProductId(id);
+			// 商品key=value字符串
+			String keyValueStr = "";
+			for(TdProductSku ps : productSkuList){
+				String jsonStr = ps.getSpecifications(); // 数据格式{"颜色":"白色", "尺码":"39"};
+				JSONObject json=new JSONObject(jsonStr);
+				String[] keys = json.getNames(json);
+				for(String key : keys){
+					keyValueStr += key + "=" + json.getString(key) + ",";
+				}
+			}
+			map.addAttribute("keyValueStr", keyValueStr);
+			// 货品表Json数据
+			JSONObject tableJsonData = this.getJsonFromSku(attributeList, productSkuList, map);
+			map.addAttribute("tableJsonData", tableJsonData);
 		}
 		
 		return "/admin/product/productform";
@@ -100,7 +164,7 @@ public class TdProductContrller extends BaseController{
 	
 	@RequestMapping(value="/save", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> save(TdProduct tdProduct,Integer[] attId,
+	public Map<String,Object> save(TdProduct tdProduct, String tableData, Integer[] attId,
 					String detail, String  packDetail,
 					String afterSale,
 					HttpServletRequest req,ModelMap map)
@@ -124,6 +188,71 @@ public class TdProductContrller extends BaseController{
 				tdProduct.setUid(user.getUid());
 			}
 			tdProduct.setUpdateTime(new Date());
+			
+			Integer typeId = tdProduct.getTypeId();
+			Integer attributeNum = null;
+			if(typeId != null){
+				List<TdProductTypeAttribute> taList = tdProductTypeAttributeService.findByTypeId(typeId);
+				attributeNum = taList.size();
+			}
+			boolean isUpdate = false;
+			if(tdProduct.getId() != null){
+				isUpdate = true;
+			}
+			if(isUpdate){
+				tdProductSkuService.deleteByProductId(tdProduct.getId());
+			}
+			//--------保存货品表------------
+			if(tableData != null && !tableData.equals("") && attributeNum != null){
+				JSONObject trJson = new JSONObject(tableData);
+				
+				String[] keys = trJson.getNames(trJson);
+				JSONArray contentJsonArray = trJson.getJSONArray("tableContent");
+				String tableHeadDataStr =  trJson.get("tableHead").toString();
+				tableHeadDataStr = tableHeadDataStr.replace("[", "");
+				tableHeadDataStr = tableHeadDataStr.replace("]", "");
+				String[] tableHeadDataArray = tableHeadDataStr.split(",");
+				for(int i = 0; i < tableHeadDataArray.length; i ++){
+					tableHeadDataArray[i] = tableHeadDataArray[i].replace("\"", "");	
+				}
+				
+				for(int i = 0; i < contentJsonArray.length(); i ++){
+					JSONObject jo = contentJsonArray.getJSONObject(i);
+					String trDataStr = jo.get("trData").toString();
+					trDataStr = trDataStr.replace("[", "");
+					trDataStr = trDataStr.replace("]", "");
+					String[] trDataArray = trDataStr.split(",");
+					for(int ii = 0; ii < trDataArray.length; ii ++){
+						trDataArray[ii] = trDataArray[ii].replace("\"", "");	
+					}
+					String specificationStr = "";
+					JSONObject jsonObject = new JSONObject();
+					for(int j = 0; j < attributeNum; j ++){
+						jsonObject.put(tableHeadDataArray[j], trDataArray[j]);
+					}
+					TdProductSku sku = new TdProductSku();
+					sku.setSpecifications(jsonObject.toString());
+					sku.setSkuCode(trDataArray[attributeNum]);
+					Double supplierPrice = Double.parseDouble(trDataArray[attributeNum+1]);
+					sku.setSupplierPrice(BigDecimal.valueOf(supplierPrice));
+					Double SalesPrice = Double.parseDouble(trDataArray[attributeNum+2]);
+					sku.setSalesPrice(BigDecimal.valueOf(SalesPrice));
+					Double marketPrice = Double.parseDouble(trDataArray[attributeNum+3]);
+					sku.setMarketPrice(BigDecimal.valueOf(marketPrice));
+					Double highPrice = Double.parseDouble(trDataArray[attributeNum+4]);
+					sku.setHighPrice(BigDecimal.valueOf(highPrice));
+					Double lowPrice = Double.parseDouble(trDataArray[attributeNum+5]);
+					sku.setLowPrice(BigDecimal.valueOf(lowPrice));
+					sku.setStatus(Byte.parseByte(trDataArray[attributeNum+6]));
+					sku.setProductId(tdProduct.getId());
+					sku.setUpdateTime(new Date());
+					sku.setUpdateBy(this.getCurrentUser().getUid());
+					tdProductSkuService.save(sku);
+				}
+				
+			}
+			//--------------------
+			
 			tdProductService.save(tdProduct);
 			
 			// 修改展示图片
@@ -268,5 +397,193 @@ public class TdProductContrller extends BaseController{
             model.addAttribute("tdProduct", tdProductService.findOne(productId));
         }
     }
+	// 产生表头及表体json数据
+	public JSONObject getJsonFromSku(List<TdProductAttribute> attributeList, List<TdProductSku> skuList, ModelMap map){
+		if(skuList == null || attributeList == null){
+			return null;
+		}
+		JSONObject tableJson = new JSONObject();
+		// 表头
+		List<String> columnList = new ArrayList<>();
+		for(TdProductAttribute ta : attributeList){
+			columnList.add(ta.getName());
+		}
+		int specSize =  columnList.size();
+		
+		// 设置到前台确定规格顺序
+		String speOrder = "";
+		for(int i = 0; i < columnList.size(); i ++){
+			speOrder += columnList.get(i);
+			if(i < columnList.size() - 1){
+				speOrder +=  "_";
+			}
+		}
+		map.addAttribute("speOrder", speOrder);
+		
+		columnList.add("货品号");
+		columnList.add("供应商价");
+		columnList.add("建议零售价");
+		columnList.add("市场价");
+		columnList.add("最高价");
+		columnList.add("最低价");
+		columnList.add("库存");
+		String[] columnArray = this.listToArray(columnList);
+		tableJson.put("tableHead", columnArray);
+		
+		// 表体数据
+		JSONArray ja = new JSONArray();
+		for(TdProductSku sku : skuList){
+			String trStr = sku.getSpecifications(); // 数据格式{"颜色":"白色", "尺码":"39"};
+			JSONObject trJson = new JSONObject(trStr);
+			List<String> trList = new ArrayList<>();
+			String trId = "";
+			for(int i = 0; i < specSize; i ++){
+				trList.add(trJson.getString(columnArray[i]));
+				trId += trJson.getString(columnArray[i]);
+				if(i < specSize - 1){
+					trId += "_";
+				}
+			}
+			
+			JSONObject trDataJson = new JSONObject();
+			trDataJson.put("trId", trId);
+			
+			trList.add(sku.getSkuCode());
+			trList.add(sku.getSupplierPrice().toString());
+			trList.add(sku.getSalesPrice().toString());
+			trList.add(sku.getMarketPrice().toString());
+			trList.add(sku.getHighPrice().toString());
+			trList.add(sku.getLowPrice().toString());
+			trList.add(sku.getStatus().toString());
+			String[] trArray = this.listToArray(trList);
+			trDataJson.put("trData", trArray);
+			
+			ja.put(trDataJson);
+		}
+		
+		tableJson.put("tableContent", ja);
+		return tableJson;
+	}
+	
+	// 产生表头json数据
+	public  TableHeadData getTableHeadJsonFromSku(List<TdProductAttribute> attributeList){
+		if(attributeList == null){
+			return null;
+		}
+		TableHeadData tableHeadData = new TableHeadData();
+		JSONObject tableJson = new JSONObject();
+		// 表头
+		List<String> columnList = new ArrayList<>();
+		for(TdProductAttribute ta : attributeList){
+			columnList.add(ta.getName());
+		}
+		int specSize =  columnList.size();
+		tableHeadData.setSpecSize(specSize);
+		// 设置到前台确定规格顺序
+		String speOrder = "";
+		for(int i = 0; i < columnList.size(); i ++){
+			speOrder += columnList.get(i);
+			if(i < columnList.size() - 1){
+				speOrder +=  "_";
+			}
+		}
+		tableHeadData.setSpecOrder(speOrder);
+		
+		columnList.add("货品号");
+		columnList.add("供应商价");
+		columnList.add("建议零售价");
+		columnList.add("市场价");
+		columnList.add("最高价");
+		columnList.add("最低价");
+		columnList.add("库存");
+		String[] columnArray = this.listToArray(columnList);
+		tableJson.put("tableHead", columnArray);
+		tableHeadData.setHeadJson(tableJson);
+		return tableHeadData;
+	}
+	
+	public String[] listToArray(List<String> strList){
+		String[] strArray = strList.toArray(new String[strList.size()]);
+		return strArray;
+	}
+	
+	public void initTypeWithSpecifiaction(List<TdProductType> productTypeList){
+		if(productTypeList != null && productTypeList.size() > 0){
+			for(TdProductType pt : productTypeList){
+				List<TdProductTypeAttribute> typeAttributeList = tdProductTypeAttributeService.findByTypeId(pt.getId());
+				List<TdProductAttribute> attributeList = new ArrayList<TdProductAttribute>();
+				for(TdProductTypeAttribute ta : typeAttributeList){
+					TdProductAttribute attribute = tdProductAttributeService.findOne(ta.getAttriId());
+					attributeList.add(attribute);
+				}
+				// 规格数量
+				pt.setSpecifiactionNum(attributeList.size());
+				// 设置规格值
+				for(TdProductAttribute pa : attributeList){
+					TdProductAttributeOptionCriteria aosc = new TdProductAttributeOptionCriteria();
+					aosc.setFlag(false);
+					aosc.setAttriId(pa.getAttriId());
+					List<TdProductAttributeOption> aoList = tdProductAttributeOptionService.findBySearchCriteria(aosc);
+					pa.setTdProductAttributeOptionList(aoList);
+				}
+				pt.setTdProductAttributeList(attributeList);
+				if(pt.getSubList() != null){
+					initTypeWithSpecifiaction(pt.getSubList());
+				}
+			}
+		}
+	}
+	
+	@RequestMapping("/getHpggPage")
+	public String getHpggPage(Integer typeId,HttpServletRequest req,ModelMap map){
+		TdProductType productType = tdProductTypeService.findOne(typeId);
+		List<TdProductType> productTypeList = new ArrayList<TdProductType>();
+		productTypeList.add(productType);
+		initTypeWithSpecifiaction(productTypeList);
+		map.addAttribute("attrList", productTypeList.get(0).getTdProductAttributeList());
+		return "/admin/product/type/hpgg";
+	}
+	
+	@RequestMapping(value="/getTableHead",method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> getTableHead(Integer typeId, HttpServletRequest req)
+	{
+		Map<String, String> res = new HashMap<>();
+		TdProductType productType = tdProductTypeService.findOne(typeId);
+		List<TdProductType> productTypeList = new ArrayList<TdProductType>();
+		productTypeList.add(productType);
+		initTypeWithSpecifiaction(productTypeList);
+		List<TdProductAttribute> attributeList = productTypeList.get(0).getTdProductAttributeList();
+		TableHeadData thd = getTableHeadJsonFromSku(attributeList);
+		res.put("specSize", thd.getSpecSize().toString());
+		res.put("specOrder", thd.getSpecOrder());
+		res.put("headJson", thd.getHeadJson().toString());
+		return res;
+	}
+}
+
+class TableHeadData{
+	JSONObject headJson;
+	String specOrder;
+	Integer specSize;
+	
+	public JSONObject getHeadJson() {
+		return headJson;
+	}
+	public void setHeadJson(JSONObject headJson) {
+		this.headJson = headJson;
+	}
+	public String getSpecOrder() {
+		return specOrder;
+	}
+	public void setSpecOrder(String specOrder) {
+		this.specOrder = specOrder;
+	}
+	public Integer getSpecSize() {
+		return specSize;
+	}
+	public void setSpecSize(Integer specSize) {
+		this.specSize = specSize;
+	}
 	
 }

@@ -5,15 +5,24 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="type_id" property="typeId" jdbcType="INTEGER" />
     <result column="attri_id" property="attriId" jdbcType="INTEGER" />
+    <collection property="tdProductAttributeList" resultMap="PAResult"/>
+  </resultMap>
+  <resultMap id="PAResult" type="com.tiandu.product.entity.TdProductAttribute" >
+    <id column="a_attriid" property="attriId" jdbcType="INTEGER" />
+    <result column="a_name" property="name" jdbcType="VARCHAR" />
+    <result column="a_status" property="status" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, type_id, attri_id
+    ta.id, ta.type_id, ta.attri_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from td_product_type_attribute
-    where id = #{id,jdbcType=INTEGER}
+    ,a.attri_id as a_attriid
+    ,a.name as a_name
+    ,a.status as a_status
+    from td_product_type_attribute as ta LEFT OUTER JOIN td_product_attribute a ON ta.attri_id=a.attri_id
+    where ta.id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from td_product_type_attribute
@@ -70,20 +79,23 @@
   <select id="findByTypeId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from td_product_type_attribute
-    where type_id = #{typeId,jdbcType=INTEGER}
+    from td_product_type_attribute as ta
+    where ta.type_id = #{typeId,jdbcType=INTEGER}
   </select>
   
   <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.product.search.TdProductTypeAttributeCriteria">
-  	select count(id)
-    from td_product_type_attribute
+  	select count(ta.id)
+    from td_product_type_attribute as ta LEFT OUTER JOIN td_product_attribute a ON ta.attri_id=a.attri_id
     where 1=1 
   </select>
   
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.product.search.TdProductTypeAttributeCriteria">
   	select 
   	<include refid="Base_Column_List" />
-    from td_product_type_attribute 
+  	,a.attri_id as a_attriid
+    ,a.name as a_name
+    ,a.status as a_status
+    from td_product_type_attribute as ta LEFT OUTER JOIN td_product_attribute a ON ta.attri_id=a.attri_id
   </select>
   
   <delete id="deleteByTypeId" parameterType="java.lang.Integer" >

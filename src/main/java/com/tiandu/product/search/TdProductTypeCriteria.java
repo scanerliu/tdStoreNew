@@ -5,7 +5,7 @@ import com.tiandu.common.search.SearchCriteria;
 public class TdProductTypeCriteria extends SearchCriteria{
 
 	private Integer parentId;
-
+	
 	public Integer getParentId() {
 		return parentId;
 	}
