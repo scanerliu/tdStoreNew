@@ -135,6 +135,7 @@
 		            值越大越靠前
 		        </td>
 		    </tr>
+		    <!--
 		    <tr>
 		        <th>新品推荐值：</th>
 		        <td>
@@ -163,6 +164,7 @@
 		            值越大越靠前
 		        </td>
 		    </tr>
+		    -->
 		    <tr>
 		        <th>提示：</th>
 		        <td>
@@ -170,6 +172,13 @@
 		        </td>
 		    </tr>
 		</table>
+		<#if !tdProduct.id??>
+			<input type="hidden" name="newRecommend" value="0" >
+			<input type="hidden" name="fineRecommend" value="0" >
+			<input type="hidden" name="typeRecommend" value="0" >
+			<input type="hidden" name="hotRecommend" value="0" >
+			<input type="hidden" name="onshelf" value="false" >
+		</#if>
 		</div>
 		<div title="图文信息" style="padding:10px">
 			<table class="table_form" width="100%;hright:700px;">

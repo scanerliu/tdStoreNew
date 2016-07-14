@@ -158,4 +158,39 @@ public class ConstantsUtils {
 	 * 订单支付方式： 3银联
 	 */
 	public static final Byte ORDER_PAYMENT_UNIONPAY = 3;
+	
+	
+	/***************************商品类型**************************/
+	/**
+	 * 商品类型： 1 普通商品
+	 */
+	public static final Byte PRODUCT_KIND_COMMON = 1;
+	/**
+	 * 商品类型： 2 商品包
+	 */
+	public static final Byte PRODUCT_KIND_PACKAGE = 2;
+	/**
+	 * 商品类型：3 零元购
+	 */
+	public static final Byte PRODUCT_KIND_ZEROBUY = 3;
+	/**
+	 * 商品类型：4  10元购
+	 */
+	public static final Byte PRODUCT_KIND_TENBUY = 4;
+	/**
+	 * 商品类型：5 预售
+	 */
+	public static final Byte PRODUCT_KIND_PRESALE = 5;
+	/**
+	 * 商品类型：6 秒杀
+	 */
+	public static final Byte PRODUCT_KIND_SECKILL = 6;
+	/**
+	 * 商品类型：7 积分兑换
+	 */
+	public static final Byte PRODUCT_KIND_POINT_EXCHANGE = 7;
+	/**
+	 * 商品类型：8 部分积分兑换
+	 */
+	public static final Byte PRODUCT_KIND_PART_POINT_EXCHANGE = 8;
 }
