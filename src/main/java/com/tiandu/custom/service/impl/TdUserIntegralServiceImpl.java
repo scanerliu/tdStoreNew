@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.tiandu.custom.entity.TdUserIntegral;
 import com.tiandu.custom.entity.TdUserIntegralLog;
+import com.tiandu.custom.entity.TdUserSign;
 import com.tiandu.custom.entity.mapper.TdUserIntegralLogMapper;
 import com.tiandu.custom.entity.mapper.TdUserIntegralMapper;
 import com.tiandu.custom.service.TdUserIntegralService;
@@ -43,6 +44,18 @@ public class TdUserIntegralServiceImpl implements TdUserIntegralService {
 		tdUserIntegralMapper.updateByPrimaryKey(record);
 		tdUserIntegralLogMapper.insert(log);
 		return true;
+	}
+
+	@Override
+	public Integer save(TdUserIntegral userIntegral) {
+		if(null != userIntegral){
+			if(null != userIntegral.getUid()){//更新
+				return tdUserIntegralMapper.updateByPrimaryKey(userIntegral);
+			}else{
+				return tdUserIntegralMapper.insert(userIntegral);
+			}
+		}
+		return null;
 	}
 	
 

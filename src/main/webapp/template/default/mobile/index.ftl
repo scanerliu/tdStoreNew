@@ -96,7 +96,7 @@
     <a href="${app.basePath}/mobile/agent/list" title="创业中心"><p>创业中心</p></a>
     <a href="排行榜-本地.html" title=""><p>排行榜</p></a>
     <a href="#" title=""><p>物流查询</p></a>
-    <a href="normalUser/个人中心-首页.html" title=""><p>个人中心</p></a>
+    <a href="${app.basePath}/mobile/user/center" title=""><p>个人中心</p></a>
     <a href="0元购列表.html" title=""><p>0元专区</p></a>
     <a href="秒杀列表.html" title=""><p>秒杀专区</p></a>
     <a href="产品列表.html" title=""><p>新品专区</p></a>
@@ -146,7 +146,7 @@
     <a href="${app.basePath}/mobile" title="首页" class="active"><p>首页</p></a>
     <a href="${app.basePath}/mobile/productType/list" title=""><p>分类</p></a>
     <a href="${app.basePath}/mobile/shoppingcart/list" title=""><p>购物车</p></a>
-    <a href="normalUser/个人中心-首页.html" title=""><p>我的</p></a>
+    <a href="${app.basePath}/mobile/user/center" title="个人中心"><p>我的</p></a>
 </div>
 <!-- 底部-结束 -->
 </body>

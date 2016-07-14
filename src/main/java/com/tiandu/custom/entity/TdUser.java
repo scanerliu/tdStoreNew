@@ -1,12 +1,11 @@
 package com.tiandu.custom.entity;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.tiandu.district.entity.TdDistrict;
-import com.tiandu.order.entity.TdShoppingcartItem;
 import com.tiandu.order.vo.ShoppingcartVO;
 
 public class TdUser {
@@ -322,6 +321,23 @@ public class TdUser {
 		}
 		return false;
 	}
+	
+	public String getUgenderStr(){
+		if(this.getUgenter().equals(Byte.valueOf("1"))){
+			return "男";
+		}else{
+			return "女";
+		}
+	}
+	
+	public String getUbirthdayStr(){
+		if(this.getUbirthday() == null){
+			return "";
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		return sdf.format(this.getUbirthday());
+	}
+	
     /**
      * 获取用户状态文字说明
      * @return
