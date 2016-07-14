@@ -26,8 +26,18 @@ import com.tiandu.order.search.TdShoppingcartSearchCriteria;
 import com.tiandu.order.service.TdShoppingcartItemService;
 import com.tiandu.order.vo.ShoppingcartVO;
 import com.tiandu.product.entity.TdProduct;
+import com.tiandu.product.entity.TdProductSku;
+import com.tiandu.product.entity.TdProductTypeAttribute;
 import com.tiandu.product.search.TdProductCriteria;
+import com.tiandu.product.service.TdProductAttachmentService;
+import com.tiandu.product.service.TdProductAttributeOptionService;
+import com.tiandu.product.service.TdProductAttributeService;
+import com.tiandu.product.service.TdProductDescriptionService;
 import com.tiandu.product.service.TdProductService;
+import com.tiandu.product.service.TdProductSkuService;
+import com.tiandu.product.service.TdProductStatService;
+import com.tiandu.product.service.TdProductTypeAttributeService;
+import com.tiandu.product.service.TdProductTypeService;
 
 /**
  * 
@@ -42,6 +52,30 @@ public class MProductController extends BaseController {
 	
 	@Autowired
 	private TdProductService tdProductService;
+	
+	@Autowired
+	TdProductAttributeOptionService tdProductAttributeOptionService; 
+	
+	@Autowired
+	private TdProductTypeService tdProductTypeService;
+	
+	@Autowired
+	private TdProductAttachmentService tdProductAttachmentService;
+	
+	@Autowired
+	private TdProductDescriptionService tdProductDescriptionService; 
+	
+	@Autowired
+	TdProductAttributeService tdProductAttributeService; 
+	
+	@Autowired
+	TdProductTypeAttributeService tdProductTypeAttributeService; 
+	
+	@Autowired
+	private TdProductStatService tdProductStatService;
+	
+	@Autowired
+	TdProductSkuService tdProductSkuService; 
 	
 	/*
 	 * 商品列表页
@@ -69,6 +103,11 @@ public class MProductController extends BaseController {
 	public String item(@PathVariable("id") Integer id,HttpServletRequest req,ModelMap map)
 	{
 		TdProduct product  = tdProductService.findOne(id);
+		//货品
+		List<TdProductSku> skuList = tdProductSkuService.findByProductId(id);
+		//商品类型规格
+		List<TdProductTypeAttribute> taList = tdProductTypeAttributeService.findByTypeIdWithOptions(product.getTypeId());
+		
 		map.addAttribute("product", product);
 		return "/mobile/product/productdetail";
 	}
