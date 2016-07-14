@@ -19,14 +19,15 @@
 <link href="${app.basePath}/static/touch/css/date.css" rel="stylesheet" type="text/css" />
 <link href="${app.basePath}/static/touch/css/x_pc.css" rel="stylesheet" type="text/css" />
 <link href="${app.basePath}/static/touch/css/f-personalcenter.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" href="${app.basePath}/static/js/uploadify/uploadify.css">
+<link rel="stylesheet" type="text/css" href="${app.basePath}/static/js/huploadify/Huploadify.css">
 <!-- js -->
 <script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="${app.basePath}/static/touch/js/common.js"></script>
 <script type="text/javascript" src="${app.basePath}/static/touch/js/date.js"></script>
 <script type="text/javascript" src="${app.basePath}/static/touch/js/iscroll.js"></script>
 <script type="text/javascript" src="${app.basePath}/static/touch/js/winout.js"></script>
-<script src="${app.basePath}/static/js/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
+<script src="${app.basePath}/static/js/huploadify/jquery.Huploadify.js" type="text/javascript"></script>
+<script src="${app.basePath}/static/js/mobile/user/user.js" type="text/javascript"></script>
 </head>
 <script type="text/javascript">
 	$(function(){
@@ -71,6 +72,7 @@
 </article>
 <script type="text/javascript">
 	$(function(){
+	/*
 		$('#avatar-change').click(function(e){
 			$('.avatarchange').fadeIn();
 			e.stopPropagation();  //阻止冒泡事件
@@ -81,6 +83,7 @@
 		$(".avatarchange .pop-one").click(function(e){
 			e.stopPropagation();
 		});
+		*/
 	});
 </script>
 <!-- pop-ups end -->
@@ -92,7 +95,7 @@
 </div>
 <!-- header_top end -->
 <!-- order_detail_title -->
-<form id="userInfoForm" method="post" action="${app.basePath}/mobile/user/saveInfo">
+<form id="userInfoForm" method="post">
 <section class="container">
 	<div id="datePlugin"></div>
 	<ul class="my_center p">
@@ -100,7 +103,7 @@
 			<font>个人头像</font>
 			<a id="avatar-change" href="javascript:;" title="修改头像">
 				<img alt="暂无头像" id="uavatarShow" src="${currentUser.uavatar!''}"/>
-				<span></span>
+				<div id="file_upload"><div>
 				<input type="hidden" id="uavatar" name="uavatar" value="${currentUser.uavatar!''}">
 			</a>
 		</li>
@@ -148,5 +151,26 @@
 </form>
 </body>
 <script>
+	$(function(){
+		$('#file_upload').Huploadify({
+				'multi': false, // 限制单图上传
+				'auto': true,
+				'formData' : {'type' : 'userAvatar'},
+				'swf'      : basePath+'/static/js/uploadify/uploadify.swf', // swf存放的路径
+				'fileObjName' : 'file',
+				'uploader' : basePath+'/uploadify/upload/singleFile',    // 处理上传的Servlet
+				'buttonText' : '修改',
+				'onUploadSuccess' : function(file, data, response) {
+					var result = eval("("+data+")");
+					$("#uavatarShow").attr("src",basePath+result.savedFile);
+					$("#uavatar").val(basePath+result.savedFile);
+					$.messager.alert('消息提醒','图片' + file.name + ' 上传成功。 ');
+		        },
+		        'onUploadError' : function(file, errorCode, errorMsg, errorString) {
+		        	//alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
+		        	$.messager.alert('消息提醒','上传失败。');
+		        }
+		});
+	});
 </script>
 </html>

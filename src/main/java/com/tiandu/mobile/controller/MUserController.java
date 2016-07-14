@@ -155,6 +155,24 @@ public class MUserController extends BaseController {
 		return "/mobile/user/info";		
 	}
 	
+	@RequestMapping(value="/saveInfo", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> saveInfo(TdUser user, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>();
+		res.put("msg", "个人信息修改失败！");
+		TdUser currentUser = this.getCurrentUser();
+		currentUser.setUavatar(user.getUavatar());
+		currentUser.setUnick(user.getUnick());
+		currentUser.setUgenter(user.getUgenter());
+		currentUser.setUbirthday(user.getUbirthday());
+		currentUser.setUtel(user.getUtel());
+		tdUserService.saveUserInfo(currentUser);
+		res.put("msg", "个人信息修改成功！");
+		return res;
+	}
+	
+	
+	
 	
 	@RequestMapping(value="/add", method = RequestMethod.POST)
 	@ResponseBody

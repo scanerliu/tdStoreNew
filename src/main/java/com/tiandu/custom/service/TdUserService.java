@@ -77,6 +77,9 @@ public interface TdUserService {
 	 */
 	public List<TdUserMessage> getMessageListByMsgType(Integer uid, Byte msgType);
 	
-	
+	/*
+	 *	保存用户个人信息 
+	 */
+	public  int saveUserInfo(TdUser user);
 		
 }

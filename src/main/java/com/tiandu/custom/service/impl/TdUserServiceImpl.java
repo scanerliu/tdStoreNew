@@ -290,4 +290,9 @@ public class TdUserServiceImpl implements TdUserService {
 		sc.setMsgType(msgType);
 		return tdUserMessageService.findBySearchCriteria(sc);
 	}
+
+	@Override
+	public int saveUserInfo(TdUser user) {
+		return userMapper.updateByPrimaryKeySelective(user);
+	}
 }

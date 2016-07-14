@@ -20,6 +20,12 @@ function updateIntegralCallback(data){
 }
 
 function saveUserInfo(){
-	
-	
+	var url = basePath+"/mobile/user/saveInfo";
+	var loadData = $('#userInfoForm').serialize();
+	$.post(url, loadData, saveUserInfoCallback, "text");
+}
+
+function saveUserInfoCallback(data){
+	var result = eval("("+data+")");
+	$.messager.alert('消息提醒',result.msg);
 }

@@ -190,6 +190,9 @@
         width: 0.3rem;
         background: url(../images/right_guide.png) no-repeat center;
         background-size: 0.14rem 0.25rem; }
+#file_upload a {
+      float: right;
+      width: auto; }
   .my_center .li01 font {
     line-height: 1rem; }
   .my_center .li01 span {
