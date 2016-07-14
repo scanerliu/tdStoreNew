@@ -10,6 +10,8 @@ public class TdProductCriteria extends SearchCriteria{
 	public Integer uid; //供应商id
 	public Byte kind;  //商品类型 1-普通商品，2-商品包，3-零元购，4-10元购，5-预售，6-秒杀商品'
 	
+	private Integer typeId; 
+	
 	public String getName() {
 		return name;
 	}
@@ -49,5 +51,14 @@ public class TdProductCriteria extends SearchCriteria{
 	public void setKind(Byte kind) {
 		this.kind = kind;
 	}
+
+	public Integer getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
+	}
+	
 	
 }

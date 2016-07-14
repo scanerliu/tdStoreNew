@@ -18,7 +18,7 @@ import com.tiandu.product.service.TdProductTypeService;
  */
 @Controller
 @RequestMapping("/mobile/productType")
-public class ProductTypeListController extends BaseController{
+public class MobileProductTypeListController extends BaseController{
 	
 	@Autowired
 	private TdProductTypeService tdProductTypeService;

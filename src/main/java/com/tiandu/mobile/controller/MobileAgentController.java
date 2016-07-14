@@ -30,6 +30,12 @@ import com.tiandu.product.search.TdProductTypeCriteria;
 import com.tiandu.product.service.TdAgentProductService;
 import com.tiandu.product.service.TdProductTypeService;
 
+/**
+ * 
+ * @author Max
+ * 
+ * 修改时间：2016年7月14日 上午11:39:21
+ */
 @Controller
 @RequestMapping("/mobile/agent")
 public class MobileAgentController extends BaseController{
@@ -96,6 +102,15 @@ public class MobileAgentController extends BaseController{
 			dsc.setUpid(0);
 			map.addAttribute("districtList", tdDistrictService.findBySearchCriteria(dsc));
 			map.addAttribute("dissc", dsc);
+			
+			// 代理查询条件
+			TdExperienceStoreSearchCriteria esc = new TdExperienceStoreSearchCriteria();
+			// 查找全国所有代理
+			esc.setRegionId(0);
+			esc.setFlag(false);
+			List<TdExperienceStore> ecperList = tdExperienceStoreService.findBySearchCriteria(esc);
+			
+			map.addAttribute("experTypeIds",getExperTypeIds(ecperList));
 		}
 		else if("分公司".equals(agent.getGroupIdStr()))
 		{
@@ -105,6 +120,15 @@ public class MobileAgentController extends BaseController{
 		return "/mobile/agent/typelist";
 	}
 	
+	/**
+	 * @author Max
+	 * 
+	 * 各级代理选择地区，查询下一级地区
+	 * 查询所选地区已代理的分类
+	 * 全国代理无需选择地区提示
+	 * 一级代理无需选择二级地区提示
+	 * 
+	 */
 	@RequestMapping(value = "/search/distric",method = RequestMethod.POST)
 	public String districSearch(Integer agentId,TdDistrictSearchCriteria sc,
 			HttpServletRequest req,ModelMap map)
@@ -122,7 +146,6 @@ public class MobileAgentController extends BaseController{
 		
 		map.addAttribute("agent", agent);
 		
-//		Integer regionId = null ;
 		TdDistrict district = new TdDistrict();
 		
 		// 代理查询条件
@@ -152,10 +175,8 @@ public class MobileAgentController extends BaseController{
 				sc.setUpid(sc.getProvinceId());
 				map.addAttribute("cityList", tdDistrictService.findBySearchCriteria(sc));
 				district = tdDistrictService.findOne(sc.getProvinceId());
-//			map.addAttribute("province", tdDistrictService.findOne(sc.getProvinceId()));
 				
 				map.addAttribute("province", district);
-//			regionId = sc.getProvinceId();
 				esc.setRegionId(sc.getProvinceId());
 			}
 		}
@@ -176,21 +197,17 @@ public class MobileAgentController extends BaseController{
 			{
 				sc.setUpid(sc.getCityId());
 				map.addAttribute("regionList", tdDistrictService.findBySearchCriteria(sc));
-//							map.addAttribute("city", tdDistrictService.findOne(sc.getCityId()));
 				district = tdDistrictService.findOne(sc.getCityId());
 				
 				map.addAttribute("city",district);
-//							regionId = sc.getCityId();
 				esc.setRegionId(sc.getCityId());
 			}
 			
 			// 选择区县级，复制代理查询地区ID参数
 			if(null != sc.getRegionId())
 			{
-//							regionId = sc.getRegionId();
 				district = tdDistrictService.findOne(sc.getRegionId());
 				esc.setRegionId(sc.getRegionId());
-//							map.addAttribute("regin", tdDistrictService.findOne(sc.getRegionId()));
 				map.addAttribute("regin",district);
 			}
 		}
@@ -200,7 +217,6 @@ public class MobileAgentController extends BaseController{
 		List<TdExperienceStore> ecperList = tdExperienceStoreService.findBySearchCriteria(esc);
 		
 		map.addAttribute("experTypeIds",getExperTypeIds(ecperList));
-//		map.addAttribute("regionId", regionId);
 		map.addAttribute("district", district);
 		
 		return "/mobile/agent/typelist";
@@ -219,7 +235,6 @@ public class MobileAgentController extends BaseController{
 		
 		return "/mobile/agent/agent";
 	}
-	
 	
 	
 	@RequestMapping("/article")
@@ -269,6 +284,7 @@ public class MobileAgentController extends BaseController{
 	 * 拼接已代理的分类ID字符串
 	 * 
 	 * @author Max
+	 * 
 	 */
 	public String getExperTypeIds(List<TdExperienceStore> experList)
 	{

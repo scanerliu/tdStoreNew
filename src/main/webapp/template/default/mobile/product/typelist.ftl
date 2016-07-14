@@ -62,7 +62,7 @@
 		                    <aside class="as2">
 		                    	<#if stype.subList??>
 		                    	<#list stype.subList as etype>
-		                        <a href="商品详情.html" title="${etype.name!''}" class="active">
+		                        <a href="${app.basePath}/mobile/product/list/${etype.id?c}" title="${etype.name!''}" class="active">
 		                            <img src="${etype.imageUrl!''}" alt="${etype.name!''}">
 		                            <p>${etype.name!''}</p>
 		                        </a>

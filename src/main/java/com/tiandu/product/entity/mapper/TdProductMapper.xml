@@ -378,6 +378,9 @@
     <if test="uid != null">
     	and uid = #{uid,jdbcType=INTEGER}
     </if>
+    <if test="typeId != null">
+    	and type_id = #{typeId,jdbcType=INTEGER}
+    </if>
     <if test="name != null and name!=''">
     	and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
     </if> 
@@ -391,16 +394,19 @@
     from td_product as p LEFT OUTER JOIN td_product_type t ON p.type_id=t.id
     where 1=1
     <if test="status != null">
-    	and status = #{status,jdbcType=TINYINT}
+    	and p.status = #{status,jdbcType=TINYINT}
     </if>
     <if test="onshelf != null">
-    	and onshelf = #{onshelf,jdbcType=BIT}
+    	and p.onshelf = #{onshelf,jdbcType=BIT}
     </if>
     <if test="uid != null">
-    	and uid = #{uid,jdbcType=INTEGER}
+    	and p.uid = #{uid,jdbcType=INTEGER}
     </if>
     <if test="name != null and name!=''">
-    	and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    	and p.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="typeId != null">
+    	and type_id = #{typeId,jdbcType=INTEGER}
     </if>
     <if test="orderBy != null">
     	order by #{orderBy,jdbcType=VARCHAR}

@@ -30,7 +30,7 @@
 
 <!-- header_top -->
 <div class="top_heater">
-    <a href="javascript:history.go(-1);" title="返回" class="hleft hback"></a>
+    <a href="${app.basePath}/mobile" title="返回" class="hleft hback"></a>
     <span>成为代理</span>
 </div>
 <!-- header_top end -->
