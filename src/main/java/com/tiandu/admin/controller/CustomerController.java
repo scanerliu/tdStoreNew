@@ -73,7 +73,7 @@ public class CustomerController extends BaseController {
 	@RequestMapping("/edit")
 	public String edit(Integer id, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser customer = null;
-		if(null!=id){
+		if(null!=id && id>0){
 			customer = tdUserService.findOne(id);		    
 		}
 		if(null==customer){

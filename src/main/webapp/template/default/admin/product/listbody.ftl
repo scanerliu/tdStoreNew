@@ -1,10 +1,4 @@
 <#import "/common/app.ftl" as app>
-<div class="subnav">
-	<div class="content_menu ib_a blue line_x">
-		<a data-height="190" data-width="450" data-id="add" data-title="添加商品" href="javascript:;" class="add fb J_showdialog" onclick="editProduct(0)">
-		<em>添加商品</em></a>&#12288;
-	</div>
-</div>
 <div class="pad_lr_10">
 <div class="J_tablelist table_list">
 	<div id="district">
@@ -26,6 +20,8 @@
 			<th align="center">创建时间</th>
 			<th align="center">参考价</th>
 			<th align="center">库存</th>
+			<th align="center">状态</th>
+			<th align="center">上架状态</th>
 			<th >操作</th>
 		</tr>
 	</thead>
@@ -37,7 +33,13 @@
 		        	<input type="checkbox" value="${pro.id?c}" name="subbox" class="J_checkitem">
 		        </td>
 		        <td align="center">${pro.id?c}</td>
-		        <td align="center">${pro.name!''}</td>
+		        <td align="center">
+		        ${pro.name!''}<br>
+		        <#if pro.newRecommend==1><label class="red" title="新品推荐">New</label></#if>
+		        <#if pro.hotRecommend==1>&nbsp;&nbsp;<label class="red" title="热门推荐">Hot</label></#if>
+		        <#if pro.fineRecommend==1>&nbsp;&nbsp;<label class="red" title="精品推荐">Fine</label></#if>
+		        <#if pro.typeRecommend==1>&nbsp;&nbsp;<label class="red" title="分类推荐">Type</label></#if>
+		        </td>
 		        <td align="center">${pro.code!''}</td>
 		        <td align="center">
 		        	<#if pro.kind??>
@@ -52,9 +54,11 @@
 		        	</#if>
 		        </td>
 		        <td align="center"><img src="${app.basePath}${pro.imageUrl!''}" style="width:100px;height:50px;"></td>
-		        <td align="center">${pro.createTime?string('yyyy-MM-dd')}</td>
+		        <td align="center"><#if pro.createTime??>${pro.createTime?string('yyyy-MM-dd')}</#if></td>
 		        <td align="center"><#if pro.price??>${pro.price?string('0.00')}</#if></td>
 		        <td align="center">${pro.quantum!'0'}</td>
+		        <td align="center">${pro.getStatusStr()!''}</td>
+		        <td align="center">${pro.getOnshelfStr()!''}</td>
 		        <td align="center">
 		            <a class="J_confirmurl" href="javascript:;" onclick="deleteProduct(${pro.id?c})">删除</a>
 		           |<a class="J_confirmurl" href="javascript:;" onclick="editProduct(${pro.id?c})">编辑</a>
@@ -64,6 +68,15 @@
 	</#if>
 </tbody>
 </table>
+<input type="hidden" value="${sc.kind!''}" name="kind">
+<input type="hidden" value="${sc.status!''}" name="status">
+<input type="hidden" value="${sc.onshelf!''}" name="onshelf">
+<input type="hidden" value="${sc.name!''}" name="name">
+<input type="hidden" value="${sc.uid!''}" name="uid">
+<input type="hidden" value="${sc.newRecommend!''}" name="newRecommend">
+<input type="hidden" value="${sc.hotRecommend!''}" name="hotRecommend">
+<input type="hidden" value="${sc.fineRecommend!''}" name="fineRecommend">
+<input type="hidden" value="${sc.typeRecommend!''}" name="typeRecommend">
 </div>
 <div class="btn_wrap_fixed"></div>
 <div class="btn_wrap_fixed">

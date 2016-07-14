@@ -84,6 +84,7 @@ function three_bing(){
 		oSelect[num].onchange=function(){
 			oSpan[num].innerHTML=oSelect[num].value;
 			oSelect[num].style.display="none";
+			$("#form").submit();
 		}
 	}
 }

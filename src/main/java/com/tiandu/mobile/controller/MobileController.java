@@ -107,7 +107,8 @@ public class MobileController extends BaseController {
 		
 		// 热销推荐
 		TdProductCriteria psc = new TdProductCriteria();
-		psc.setOrderBy("hot_recommend asc");
+		psc.setOrderBy("p.hot_recommend asc");
+		psc.setOnshelf(true);
 		map.addAttribute("productList", tdProductService.findBySearchCriteria(psc));
 		
 	    return "/mobile/index";
@@ -144,7 +145,8 @@ public class MobileController extends BaseController {
 		
 		// 热销推荐
 		TdProductCriteria psc = new TdProductCriteria();
-		psc.setOrderBy("hot_recommend asc");
+		psc.setOrderBy("p.hot_recommend asc");
+		psc.setOnshelf(true);
 		map.addAttribute("productList", tdProductService.findBySearchCriteria(psc));
 		
 		return "/mobile/index";

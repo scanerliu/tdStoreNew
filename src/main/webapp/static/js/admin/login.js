@@ -14,3 +14,10 @@ function login(){
 			 });
 	};
 }
+
+// 键盘事件
+document.onkeydown = function(event){
+   if((event.keyCode || event.which) == 13){
+        login();
+   }
+}

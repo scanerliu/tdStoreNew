@@ -3,9 +3,9 @@ function searchProduct(t){
 	var loadData = null;
 	
 	if(t){
-		loadData = null;
+		loadData = $("#searchform").serializeArray();;
 	}else{
-		loadData = $("#productTypeform").serializeArray();
+		loadData = $("#listform").serializeArray();
 	}
 	$("#results").load(url,loadData);
 }
@@ -108,3 +108,51 @@ function delProductTypeCallback(data){
 var price_partten = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
 // 数字
 var  num_partten =  /^[0-9]*$/;
+/**
+ * 获取选择的商品id字符串，如：1,2,3,5
+ */
+function getCheckedProductIds(){
+	var nodes = $("#listform input[name='subbox']:checked");
+	var s = '';
+	$.each(nodes, function(){
+		var rid = $(this).val();
+		if(rid>0){
+			if (s != '') {s += ',';}
+			s += rid;
+		}
+	});
+	return s;
+}
+/**
+ * 批量操作商品
+ * @param optype 1-上架，2-下架，3-热门推荐，4-取消热门推荐，5-新品推荐，6-取消热门推荐，7-精品推荐，8-取消精品推荐，9-分类推荐，10-取消分类推荐
+ */
+function bacthOperProducts(optype){
+	var oparr = [1,2,3,4,5,6,7,8,9,10];
+	var ids = getCheckedProductIds();
+	if(ids==""){
+		$.messager.alert('消息提醒','请先勾选要操作的商品!');
+		return ;
+	}
+	if($.inArray(optype, oparr)<0){
+		$.messager.alert('消息提醒','操作不合规范!');
+		return ;
+	}
+	var url = basePath+"/admin/product/batchoperproducts";
+	var postData = {"type":optype,"productIds":ids};
+	$.post(url,postData,batchOperCallback,"text");
+}
+
+/**
+ * 批量操作返回
+ * @param data
+ */
+function batchOperCallback(data){
+	var result = eval("("+data+")");
+	if(result.code==1){
+		$.messager.alert('消息提醒','操作成功。');
+		refreshList();
+	}else{
+	  $.messager.alert('消息提醒','操作失败!');
+	}
+}

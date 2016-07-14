@@ -125,12 +125,20 @@ function warn_box(){
 }
 function ul_li(obj){
 	var oLi=obj.getElementsByTagName('li');
+	var that;
+	for(i=0;i<oLi.length;i++){
+		if(oLi[i].className=="active"){
+			that=oLi[i];
+			break;
+		}
+	}
 	for(var i=0;i<oLi.length;i++){
 		oLi[i].onclick=function(){
-			for(i=0;i<oLi.length;i++){
-				oLi[i].className='';
+			if(this.className!="ogray"){
+				that.className="";
+				that=this;
+				this.className='active';
 			}
-			this.className='active';
 		}
 	}
 }

@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.product.entity.TdBrand;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductAttachment;
 import com.tiandu.product.entity.TdProductAttribute;
@@ -32,10 +35,12 @@ import com.tiandu.product.entity.TdProductSku;
 import com.tiandu.product.entity.TdProductStat;
 import com.tiandu.product.entity.TdProductType;
 import com.tiandu.product.entity.TdProductTypeAttribute;
+import com.tiandu.product.search.TdBrandSearchCriteria;
 import com.tiandu.product.search.TdProductAttributeOptionCriteria;
 import com.tiandu.product.search.TdProductCriteria;
 import com.tiandu.product.search.TdProductDescriptionCriteria;
 import com.tiandu.product.search.TdProductTypeCriteria;
+import com.tiandu.product.service.TdBrandService;
 import com.tiandu.product.service.TdProductAttachmentService;
 import com.tiandu.product.service.TdProductAttributeOptionService;
 import com.tiandu.product.service.TdProductAttributeService;
@@ -77,9 +82,12 @@ public class TdProductContrller extends BaseController{
 	@Autowired
 	TdProductSkuService tdProductSkuService;
 	
+	@Autowired
+	private TdBrandService tdBrandService;
+	
 	@RequestMapping("/list")
-	public String list(HttpServletRequest req,ModelMap map){
-		
+	public String list(TdProductCriteria sc, HttpServletRequest req,ModelMap map){
+		map.addAttribute("sc", sc);
 		return "/admin/product/list";
 	}
 
@@ -162,6 +170,12 @@ public class TdProductContrller extends BaseController{
 			map.addAttribute("tableJsonData", tableJsonData);
 		}
 		
+		//品牌数据
+		TdBrandSearchCriteria bsc = new TdBrandSearchCriteria();
+		bsc.setFlag(false);
+		List<TdBrand> brandList = tdBrandService.findBySearchCriteria(bsc);
+		map.addAttribute("brandList", brandList);
+		
 		return "/admin/product/productform";
 	}
 	
@@ -184,7 +198,7 @@ public class TdProductContrller extends BaseController{
 			TdUser user = getCurrentUser();
 			if(null != user)
 			{
-				tdProduct.setBrandId(0);
+//				tdProduct.setBrandId(0);
 				tdProduct.setDefaultSkuId(0);
 				tdProduct.setSpecification(true);
 				tdProduct.setUpdateBy(user.getUid());
@@ -565,6 +579,36 @@ public class TdProductContrller extends BaseController{
 		res.put("specOrder", thd.getSpecOrder());
 		res.put("headJson", thd.getHeadJson().toString());
 		return res;
+	}
+	/**
+	 * 批量操作商品
+	 * @param type 操作类型 1-上架，2-下架，3-热门推荐，4-取消热门推荐，5-新品推荐，6-取消热门推荐，7-精品推荐，8-取消精品推荐，9-分类推荐，10-取消分类推荐
+	 * @param productIds 商品id，多个逗号隔开
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/batchoperproducts",method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> batchOperProducts(Integer type, String productIds, HttpServletRequest request, HttpServletResponse response)
+	{
+		Map<String, String> res = new HashMap<>();
+		if(null!=type && type>0 && type<11 && StringUtils.isNotEmpty(productIds)){
+			int count = tdProductService.batchOperProducts(type,productIds);
+			if(count>0){
+				res.put("code", "1");
+				return res;
+			}else{
+				res.put("code", "0");
+				res.put("msg", "操作失败：更新失败！");
+				return res;
+			}
+			
+		}else{
+			res.put("code", "0");
+			res.put("msg", "操作失败：操作非法！");
+			return res;
+		}
 	}
 }
 

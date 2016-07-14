@@ -27,6 +27,8 @@ public class TdProduct {
 	private Integer uid;
 
 	private Boolean specification;
+	
+	private Boolean onshelf;
 
 	private Byte status;
 
@@ -157,6 +159,14 @@ public class TdProduct {
 		this.specification = specification;
 	}
 
+	public Boolean getOnshelf() {
+		return onshelf;
+	}
+
+	public void setOnshelf(Boolean onshelf) {
+		this.onshelf = onshelf;
+	}
+
 	public Byte getStatus() {
 		return status;
 	}
@@ -284,5 +294,46 @@ public class TdProduct {
 	public void setTdProductType(TdProductType tdProductType) {
 		this.tdProductType = tdProductType;
 	}
+	
+	 /**
+     * 获取状态文字说明
+     * @return
+     */
+    public String getStatusStr(){
+    	StringBuffer sb = new StringBuffer();
+    	if(null!=this.getStatus()){
+    		switch (this.getStatus()) {
+			case 1:
+				sb.append("正常");
+				break;
+			case 2:
+				sb.append("待审核");
+				break;
+			case 3:
+				sb.append("审核未通过");
+				break;
+			default:
+				break;
+			}
+    	}
+    	
+    	return sb.toString();
+    }
+    /**
+     * 获取上架状态文字说明
+     * @return
+     */
+    public String getOnshelfStr(){
+    	StringBuffer sb = new StringBuffer();
+    	if(null!=this.getOnshelf()){
+    		if(this.getOnshelf()) {
+    			sb.append("上架中");
+    		}else{
+    			sb.append("已下架");
+    		}
+    	}
+    	
+    	return sb.toString();
+    }
 
 }

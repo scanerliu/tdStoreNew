@@ -21,6 +21,7 @@ public interface TdProductTypeAttributeMapper {
     int deleteByTypeId(Integer typeId);
     
     List<TdProductTypeAttribute> findByTypeId(Integer typeId);
+    List<TdProductTypeAttribute> findByTypeIdWithOptions(Integer typeId);
     
     Integer countByCriteria(TdProductTypeAttributeCriteria sc);
     List<TdProductTypeAttribute> findBySearchCriteria(TdProductTypeAttributeCriteria sc);

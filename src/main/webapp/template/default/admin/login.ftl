@@ -36,7 +36,7 @@
    <#if loginForm?? && loginForm.errcode?? && loginForm.errcode==1>用户名或密码错误！</#if>
    </div>
    <div class="login_funbox">
-   <button type="button" class="loginbtn" onclick="login()">登陆</button>
+   <button type="button" id="loginbtn" class="loginbtn" onclick="login()">登陆</button>
    </div>
   </form>
  </div>
@@ -45,9 +45,18 @@
     <div class="footer_main">天度版权所有&nbsp;©&nbsp;2011-2016 </div>
   </div>
 </div>
-<script>
-$(function(){
-});
-</script>
+<script type="text/javascript"> 
+document.onkeydown = function(event)
+{
+	  if (window.event)
+	  {
+	      event = window.event;
+	  }
+	  if (event.keyCode == 13)
+	  {
+	      document.getElementById("loginbtn").click();
+	  }
+} 
+</script> 
 </body>  
 </html>
