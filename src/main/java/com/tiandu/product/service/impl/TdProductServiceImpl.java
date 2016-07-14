@@ -1,7 +1,11 @@
 package com.tiandu.product.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +53,27 @@ public class TdProductServiceImpl implements TdProductService{
 		Integer count = tdProductMapper.countByCriteria(sc);
 		sc.setTotalCount(count);
 		return tdProductMapper.findBySearchCriteria(sc);
+	}
+
+	@Override
+	public Integer batchOperProducts(Integer type, String productIds) {
+		if(null!=type && type>0 && type<11 && StringUtils.isNotEmpty(productIds)){
+			String[] pids = productIds.split(",");
+			List<Integer> idlist = new ArrayList<Integer>();
+			if(pids.length>0){
+				for(String id : pids){
+					int iid = Integer.valueOf(id);
+					idlist.add(iid);
+				}
+				Map<String,Object> map = new HashMap<String,Object>();
+				map.put("optype", type);
+				map.put("ids", idlist);
+				return tdProductMapper.updateBatch(map);
+			}
+			
+			return 0;
+		} 
+		return 0;
 	}
 
 	

@@ -14,5 +14,11 @@ public interface TdProductService {
 	TdProduct findOne(Integer id);
 	
 	List<TdProduct> findBySearchCriteria(TdProductCriteria sc);
-	
+	/**
+	 * 批量操作商品 
+	 * @param type 操作类型 1-上架，2-下架，3-热门推荐，4-取消热门推荐，5-新品推荐，6-取消热门推荐，7-精品推荐，8-取消精品推荐，9-分类推荐，10-取消分类推荐
+	 * @param productIds 商品id，多个逗号隔开
+	 * @return
+	 */
+	public Integer batchOperProducts(Integer type, String productIds);
 }

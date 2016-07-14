@@ -367,19 +367,31 @@
   
   <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.product.search.TdProductCriteria">
   	select count(p.id)
-    from td_product as p LEFT OUTER JOIN td_product_type t ON p.type_id=t.id
+    from td_product as p LEFT JOIN td_product_type t ON p.type_id=t.id
     where 1=1
     <if test="status != null">
-    	and status = #{status,jdbcType=TINYINT}
+    	and p.status = #{status,jdbcType=TINYINT}
     </if>
     <if test="onshelf != null">
-    	and onshelf = #{onshelf,jdbcType=BIT}
+    	and p.onshelf = #{onshelf,jdbcType=BIT}
     </if>
     <if test="uid != null">
-    	and uid = #{uid,jdbcType=INTEGER}
+    	and p.uid = #{uid,jdbcType=INTEGER}
+    </if>
+    <if test="newRecommend != null">
+    	and p.new_recommend = #{newRecommend,jdbcType=INTEGER}
+    </if>
+    <if test="hotRecommend != null">
+    	and p.hot_recommend = #{hotRecommend,jdbcType=INTEGER}
+    </if>
+    <if test="fineRecommend != null">
+    	and p.fine_recommend = #{fineRecommend,jdbcType=INTEGER}
+    </if>
+    <if test="typeRecommend != null">
+    	and p.type_recommend = #{typeRecommend,jdbcType=INTEGER}
     </if>
     <if test="name != null and name!=''">
-    	and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    	and p.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
     </if> 
   </select>
   
@@ -388,24 +400,73 @@
   	<include refid="Base_Column_List" />
   	,t.id as t_id
     ,t.name as t_name
-    from td_product as p LEFT OUTER JOIN td_product_type t ON p.type_id=t.id
+    from td_product as p LEFT JOIN td_product_type t ON p.type_id=t.id
     where 1=1
     <if test="status != null">
-    	and status = #{status,jdbcType=TINYINT}
+    	and p.status = #{status,jdbcType=TINYINT}
     </if>
     <if test="onshelf != null">
-    	and onshelf = #{onshelf,jdbcType=BIT}
+    	and p.onshelf = #{onshelf,jdbcType=BIT}
     </if>
     <if test="uid != null">
-    	and uid = #{uid,jdbcType=INTEGER}
+    	and p.uid = #{uid,jdbcType=INTEGER}
+    </if>
+    <if test="newRecommend != null">
+    	and p.new_recommend = #{newRecommend,jdbcType=INTEGER}
+    </if>
+    <if test="hotRecommend != null">
+    	and p.hot_recommend = #{hotRecommend,jdbcType=INTEGER}
+    </if>
+    <if test="fineRecommend != null">
+    	and p.fine_recommend = #{fineRecommend,jdbcType=INTEGER}
+    </if>
+    <if test="typeRecommend != null">
+    	and p.type_recommend = #{typeRecommend,jdbcType=INTEGER}
     </if>
     <if test="name != null and name!=''">
-    	and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    	and p.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
     </if>
     <if test="orderBy != null">
     	order by #{orderBy,jdbcType=VARCHAR}
     </if>
   </select>
-  
+  <update id="updateBatch" parameterType="Map">    
+        update td_product
+        set     
+        <if test="optype != null and optype==1">
+	    	onshelf = 1
+	    </if>
+        <if test="optype != null and optype==2">
+	    	onshelf = 0
+	    </if>
+        <if test="optype != null and optype==3">
+	    	hot_recommend = 1
+	    </if>
+        <if test="optype != null and optype==4">
+	    	hot_recommend = 0
+	    </if>
+        <if test="optype != null and optype==5">
+	    	new_recommend = 1
+	    </if>
+        <if test="optype != null and optype==6">
+	    	new_recommend = 0
+	    </if>
+        <if test="optype != null and optype==7">
+	    	fine_recommend = 1
+	    </if>
+        <if test="optype != null and optype==8">
+	    	fine_recommend = 0
+	    </if>
+        <if test="optype != null and optype==9">
+	    	type_recommend = 1
+	    </if>
+        <if test="optype != null and optype==10">
+	    	type_recommend = 0
+	    </if>
+        where id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+        	#{item,jdbcType=INTEGER}
+        </foreach>  
+  </update>  
   
 </mapper>
