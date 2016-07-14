@@ -198,7 +198,7 @@ public class TdProductContrller extends BaseController{
 			TdUser user = getCurrentUser();
 			if(null != user)
 			{
-				tdProduct.setBrandId(0);
+//				tdProduct.setBrandId(0);
 				tdProduct.setDefaultSkuId(0);
 				tdProduct.setSpecification(true);
 				tdProduct.setUpdateBy(user.getUid());

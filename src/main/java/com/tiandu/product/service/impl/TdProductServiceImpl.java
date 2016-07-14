@@ -30,7 +30,8 @@ public class TdProductServiceImpl implements TdProductService{
 		if(null != e)
 		{
 			if(null != e.getId()){
-				tdProductMapper.updateByPrimaryKey(e);
+//				tdProductMapper.updateByPrimaryKey(e);
+				tdProductMapper.updateByPrimaryKeySelective(e);
 			}else{
 				tdProductMapper.insert(e);
 			}
