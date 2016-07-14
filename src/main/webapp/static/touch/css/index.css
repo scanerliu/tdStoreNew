@@ -1725,9 +1725,12 @@
 }
 .three3 select{
 	position:absolute;
-	left:2000px;
-	top:2000px;
-	display:none;
+	top:0.2rem;
+	left:0;
+	z-inddex:100;
+	width:100%;
+	heightr:0.8rem;
+	opacity:0;
 }
 /* 三级联动-结束 */
 

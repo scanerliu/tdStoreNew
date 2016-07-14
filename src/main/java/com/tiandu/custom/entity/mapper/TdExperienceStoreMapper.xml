@@ -270,6 +270,9 @@
     <if test="searchName != null">
         and u.uname like CONCAT('%','${searchName}','%' )
     </if>
+    <if test="regionId != null">
+        and s.region_id =  #{regionId,jdbcType=INTEGER}
+    </if>
     order by sort asc
   </select>
   

@@ -9,7 +9,6 @@ public class TdDistrictSearchCriteria extends SearchCriteria {
 	private Integer cityId;	//市id
 	private Integer regionId; //区id
 
-	private Byte level;
 
 	public Integer getUpid() {
 		return upid;
@@ -19,13 +18,6 @@ public class TdDistrictSearchCriteria extends SearchCriteria {
 		this.upid = upid;
 	}
 
-	public Byte getLevel() {
-		return level;
-	}
-
-	public void setLevel(Byte level) {
-		this.level = level;
-	}
 
 	public Integer getProvinceId() {
 		return provinceId;

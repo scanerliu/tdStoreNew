@@ -2,6 +2,10 @@ package com.tiandu.custom.search;
 
 import com.tiandu.common.search.SearchCriteria;
 
+/**
+ * @author Administrator
+ *
+ */
 public class TdExperienceStoreSearchCriteria extends SearchCriteria {
 	private Integer id;
 
@@ -12,6 +16,8 @@ public class TdExperienceStoreSearchCriteria extends SearchCriteria {
 	private boolean isAssociationUpdatePerson;
 
 	private String searchName;
+	
+	private Integer regionId;
 
 	public Integer getId() {
 		return id;
@@ -52,5 +58,16 @@ public class TdExperienceStoreSearchCriteria extends SearchCriteria {
 	public void setSearchName(String searchName) {
 		this.searchName = searchName;
 	}
+
+	public Integer getRegionId() {
+		return regionId;
+	}
+
+	public void setRegionId(Integer regionId) {
+		this.regionId = regionId;
+	}
+
+	
+	
 
 }
