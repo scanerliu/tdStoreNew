@@ -27,9 +27,11 @@ import com.tiandu.order.service.TdShoppingcartItemService;
 import com.tiandu.order.vo.ShoppingcartVO;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductAttachment;
+import com.tiandu.product.entity.TdProductDescription;
 import com.tiandu.product.entity.TdProductSku;
 import com.tiandu.product.entity.TdProductTypeAttribute;
 import com.tiandu.product.search.TdProductCriteria;
+import com.tiandu.product.search.TdProductDescriptionCriteria;
 import com.tiandu.product.service.TdProductAttachmentService;
 import com.tiandu.product.service.TdProductAttributeOptionService;
 import com.tiandu.product.service.TdProductAttributeService;
@@ -99,7 +101,7 @@ public class MProductController extends BaseController {
 	}
 	
 	/*
-	 * 商品列表数据页
+	 * 商品详情数据页
 	 */
 	@RequestMapping("/item{id}")
 	public String item(@PathVariable("id") Integer id,HttpServletRequest req,ModelMap map)
@@ -121,11 +123,50 @@ public class MProductController extends BaseController {
 		//商品图片
 		List<TdProductAttachment> attachmentList = tdProductAttachmentService.findByProductId(id);
 		
+		//推荐商品
+		TdProductCriteria sc = new TdProductCriteria();
+		sc.setKind(ConstantsUtils.PRODUCT_KIND_COMMON);
+		sc.setPageSize(3);
+		sc.setStatus(Byte.valueOf("1"));
+		sc.setOnshelf(true);
+		sc.setOrderBy("type_recommend desc, sort desc");
+		map.addAttribute("recommendList", tdProductService.findBySearchCriteria(sc));		
 		
 		map.addAttribute("product", product);
 		map.addAttribute("productjson", productjson);
 		map.addAttribute("attachmentList", attachmentList);
 		return "/mobile/product/productdetail";
+	}
+	/*
+	 * 商品图文详情页
+	 */
+	@RequestMapping("/describe/{type}/{id}")
+	public String describe(@PathVariable("id") Integer id,@PathVariable("type") Integer type,HttpServletRequest req,ModelMap map)
+	{
+		TdProductDescriptionCriteria sc = new TdProductDescriptionCriteria();
+		sc.setProductId(id);
+		sc.setType(type);
+		List<TdProductDescription>  descList  = tdProductDescriptionService.findBySearchCriteria(sc);
+		//图文说明
+		TdProductDescription productdesc = new TdProductDescription();
+		//配送说明
+		TdProductDescription delivedesc = new TdProductDescription();
+		//售后说明
+		TdProductDescription servicedesc = new TdProductDescription();
+		for(TdProductDescription desc : descList){
+			if(Byte.valueOf("1").equals(desc.getType())){
+				productdesc = desc;
+			}else if(Byte.valueOf("2").equals(desc.getType())){
+				delivedesc = desc;
+			}else if(Byte.valueOf("3").equals(desc.getType())){
+				servicedesc = desc;
+			}
+		}
+		map.addAttribute("productdesc", productdesc);
+		map.addAttribute("delivedesc", delivedesc);
+		map.addAttribute("servicedesc", servicedesc);
+		map.addAttribute("sc", sc);
+		return "/mobile/product/productdescribe";
 	}
 	
 	

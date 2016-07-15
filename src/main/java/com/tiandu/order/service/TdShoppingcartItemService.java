@@ -63,4 +63,11 @@ public interface TdShoppingcartItemService {
 	 * @return
 	 */
 	public List<TdShoppingcartItem> findBySearchCriteria(TdShoppingcartSearchCriteria sc);
+	
+	/**
+	 * 加入购物车
+	 * @param item
+	 * @return
+	 */
+	public boolean addItemToShoppingcart(TdShoppingcartItem item);
 }
