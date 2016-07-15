@@ -27,5 +27,5 @@ function saveUserInfo(){
 
 function saveUserInfoCallback(data){
 	var result = eval("("+data+")");
-	$.messager.alert('消息提醒',result.msg);
+	alert('消息提醒'+result.msg);
 }
