@@ -11,6 +11,10 @@ public class TdProductTypeAttribute {
 	
 	// 关联规格值
 	List<TdProductAttribute> tdProductAttributeList;
+	
+	//规格
+	private TdProductAttribute attribute;
+	
 
 	public Integer getId() {
 		return id;
@@ -44,4 +48,12 @@ public class TdProductTypeAttribute {
 		this.tdProductAttributeList = tdProductAttributeList;
 	}
 
+	public TdProductAttribute getAttribute() {
+		return attribute;
+	}
+
+	public void setAttribute(TdProductAttribute attribute) {
+		this.attribute = attribute;
+	}
+	
 }

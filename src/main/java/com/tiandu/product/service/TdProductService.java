@@ -3,7 +3,10 @@ package com.tiandu.product.service;
 import java.util.List;
 
 import com.tiandu.product.entity.TdProduct;
+import com.tiandu.product.entity.TdProductSku;
+import com.tiandu.product.entity.TdProductTypeAttribute;
 import com.tiandu.product.search.TdProductCriteria;
+import com.tiandu.product.vo.TdProductSkuVO;
 
 public interface TdProductService {
 
@@ -21,4 +24,11 @@ public interface TdProductService {
 	 * @return
 	 */
 	public Integer batchOperProducts(Integer type, String productIds);
+
+	/**
+	 * 匹配货品库存状态
+	 * @param skuList
+	 * @param taList
+	 */
+	public void matchSkuStockWithAttributeOption(List<TdProductSku> skuList, List<TdProductTypeAttribute> taList);
 }

@@ -105,9 +105,15 @@ public class MProductController extends BaseController {
 		TdProduct product  = tdProductService.findOne(id);
 		//货品
 		List<TdProductSku> skuList = tdProductSkuService.findByProductId(id);
-		//商品类型规格
-		List<TdProductTypeAttribute> taList = tdProductTypeAttributeService.findByTypeIdWithOptions(product.getTypeId());
-		
+		if(skuList.size()>0){
+			//商品类型规格
+			List<TdProductTypeAttribute> taList = tdProductTypeAttributeService.findByTypeIdWithOptions(product.getTypeId());
+			if(taList.size()>0){
+				//匹配货品库存状态
+				tdProductService.matchSkuStockWithAttributeOption(skuList,taList);
+			}
+			map.addAttribute("taList", taList);
+		}
 		map.addAttribute("product", product);
 		return "/mobile/product/productdetail";
 	}

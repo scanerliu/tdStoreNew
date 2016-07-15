@@ -26,10 +26,10 @@
 </head>
 <script>
     window.onload=function(){
-        var color_ul=document.getElementById('color_ul');
-        var size_ul=document.getElementById('size_ul');
-        ul_li(color_ul);
-        ul_li(size_ul);
+        //var color_ul=document.getElementById('color_ul');
+        //var size_ul=document.getElementById('size_ul');
+        //ul_li(color_ul);
+        //ul_li(size_ul);
         acare();
     }
 </script>
@@ -61,19 +61,29 @@
                 <span>1件</span>
             </aside>
         </section>
+        <#if taList??>
+        <#list taList as typeatt>
         <section>
-            <label class="fl">颜色</label>
-            <ul class="fl" id="color_ul">
-                <li class="active">墨绿色</li>
-                <li>粉红色</li>
-                <li class="ogray">黑色</li>
-                <li>白色</li>
-                <li>卡其色</li>
+            <label class="fl">${typeatt.attribute.name}</label>
+            <ul class="fl slect" id="attul_${typeatt.attribute.attriId}">
+            	<#if typeatt.attribute.tdProductAttributeOptionList??>
+            	<#list typeatt.attribute.tdProductAttributeOptionList as option>
+                <li attri="${option.id}" <#if option.status==0>class="ogray"</#if>>${option.name}</li>
+                </#list>
+        		</#if>
             </ul>
+            <script>
+				$(function(){
+					var attul_${typeatt.attribute.attriId} = document.getElementById('attul_'+${typeatt.attribute.attriId});
+				    ul_li(attul_${typeatt.attribute.attriId});
+				});
+			</script>
         </section>
+        </#list>
+        </#if>
         <section>
             <label class="fl">尺寸</label>
-            <ul class="fl" id="size_ul">
+            <ul class="fl slect" id="size_ul">
                 <li>S</li>
                 <li class="active">M</li>
                 <li class="ogray">L</li>
@@ -89,6 +99,7 @@
                 <span>+</span>
             </aside>
         </section>
+        <input type="hidden" id="skustock" value="0">
     </div>
     <div class="detail4">
         <section>
@@ -170,5 +181,9 @@
     <span class="footclear"></span>
 </footer>
 <!-- Footer End -->
+<script>
+$(function(){
+});
+</script>
 </body>  
 </html>

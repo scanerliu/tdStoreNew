@@ -19,22 +19,22 @@
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://localhost:3306/tdstore_com" userId="root"
                         password="root"/>
-        <javaModelGenerator targetPackage="com.tiandu.comment.entity"
+        <javaModelGenerator targetPackage="com.tiandu.product.entity"
                             targetProject="tdStore\src\main\java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="com.tiandu.comment.entity.mapper"
+        <sqlMapGenerator targetPackage="com.tiandu.product.entity.mapper"
                          targetProject="tdStore\src\main\java">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
-        <javaClientGenerator targetPackage="com.tiandu.comment.entity.mapper"
+        <javaClientGenerator targetPackage="com.tiandu.product.entity.mapper"
                              targetProject="tdStore\src\main\java" type="XMLMAPPER">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
-        <table tableName="td_product_comment" domainObjectName="TdProductComment"
+        <table tableName="td_brand" domainObjectName="TdBrand"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
