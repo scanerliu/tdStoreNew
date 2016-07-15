@@ -5,12 +5,26 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="type_id" property="typeId" jdbcType="INTEGER" />
     <result column="attri_id" property="attriId" jdbcType="INTEGER" />
+    
+    <!-- 先关联规格表 -->
+	<association property="attribute" resultMap="PAttrResult"/>  
+	 
     <collection property="tdProductAttributeList" resultMap="PAResult"/>
   </resultMap>
   <resultMap id="PAResult" type="com.tiandu.product.entity.TdProductAttribute" >
     <id column="a_attriid" property="attriId" jdbcType="INTEGER" />
     <result column="a_name" property="name" jdbcType="VARCHAR" />
     <result column="a_status" property="status" jdbcType="TINYINT" />
+  </resultMap>
+  
+  <resultMap id="PAttrResult" type="com.tiandu.product.entity.TdProductAttribute" >
+    <id column="pa_attriid" property="attriId" jdbcType="INTEGER" />
+    <result column="pa_name" property="name" jdbcType="VARCHAR" />
+    <result column="pa_status" property="status" jdbcType="TINYINT" />
+    <collection property="tdProductAttributeOptionList" column="attriId" ofType="com.tiandu.product.entity.TdProductAttributeOption">
+		<id property="id" column="option_id"/>
+		<result property="name" column="option_name"/>
+	</collection>
   </resultMap>
   <sql id="Base_Column_List" >
     ta.id, ta.type_id, ta.attri_id
@@ -27,10 +41,12 @@
   <select id="findByTypeIdWithOptions" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    ,a.attri_id as a_attriid
-    ,a.name as a_name
-    ,a.status as a_status
-    from td_product_type_attribute as ta LEFT OUTER JOIN td_product_attribute a ON ta.attri_id=a.attri_id
+    ,a.attri_id as pa_attriid
+    ,a.name as pa_name
+    ,a.status as pa_status
+    ,op.id as option_id
+    ,op.name as option_name
+    from td_product_type_attribute as ta LEFT JOIN td_product_attribute a ON ta.attri_id=a.attri_id left join td_product_attribute_option op on op.attri_id = a.attri_id
     where ta.type_id = #{typeId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
