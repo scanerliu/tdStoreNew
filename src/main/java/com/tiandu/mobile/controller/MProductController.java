@@ -1,34 +1,27 @@
 package com.tiandu.mobile.controller;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.custom.entity.TdUser;
-import com.tiandu.order.entity.TdShoppingcartItem;
-import com.tiandu.order.search.TdShoppingcartSearchCriteria;
-import com.tiandu.order.service.TdShoppingcartItemService;
-import com.tiandu.order.vo.ShoppingcartVO;
+import com.tiandu.district.entity.TdDistrict;
+import com.tiandu.district.service.TdDistrictService;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductAttachment;
 import com.tiandu.product.entity.TdProductDescription;
 import com.tiandu.product.entity.TdProductSku;
+import com.tiandu.product.entity.TdProductType;
 import com.tiandu.product.entity.TdProductTypeAttribute;
 import com.tiandu.product.search.TdProductCriteria;
 import com.tiandu.product.search.TdProductDescriptionCriteria;
@@ -41,7 +34,6 @@ import com.tiandu.product.service.TdProductSkuService;
 import com.tiandu.product.service.TdProductStatService;
 import com.tiandu.product.service.TdProductTypeAttributeService;
 import com.tiandu.product.service.TdProductTypeService;
-import com.tiandu.product.vo.ProductJsonVO;
 
 /**
  * 
@@ -70,16 +62,19 @@ public class MProductController extends BaseController {
 	private TdProductDescriptionService tdProductDescriptionService; 
 	
 	@Autowired
-	TdProductAttributeService tdProductAttributeService; 
+	private TdProductAttributeService tdProductAttributeService; 
 	
 	@Autowired
-	TdProductTypeAttributeService tdProductTypeAttributeService; 
+	private TdProductTypeAttributeService tdProductTypeAttributeService; 
 	
 	@Autowired
 	private TdProductStatService tdProductStatService;
 	
 	@Autowired
-	TdProductSkuService tdProductSkuService; 
+	private TdProductSkuService tdProductSkuService;
+	
+	@Autowired
+	private TdDistrictService tdDistrictService; 
 	
 	/*
 	 * 商品列表页
@@ -107,6 +102,9 @@ public class MProductController extends BaseController {
 	public String item(@PathVariable("id") Integer id,HttpServletRequest req,ModelMap map)
 	{
 		TdProduct product  = tdProductService.findOne(id);
+		if(product.getOnshelf()==false||!product.getStatus().equals(Byte.valueOf("1"))){
+			return "redirect:404";
+		}
 		//货品
 		List<TdProductSku> skuList = tdProductSkuService.findByProductId(id);
 		if(skuList.size()>0){
@@ -122,6 +120,20 @@ public class MProductController extends BaseController {
 		String productjson = tdProductService.fromProductSkutoProductJsonString(skuList);
 		//商品图片
 		List<TdProductAttachment> attachmentList = tdProductAttachmentService.findByProductId(id);
+		//获取服务地区
+		TdUser currUser = this.getCurrentUser();
+		TdDistrict region = null;
+		if(null!=currUser && null!=currUser.getUregionId()){
+			region = tdDistrictService.findOne(currUser.getUregionId());
+		}
+		if(null==region){
+			//默认重庆江北区
+			region = tdDistrictService.findOne(349);
+		}
+		map.addAttribute("region", region);
+		//获取商品类型
+		TdProductType productType = tdProductTypeService.findOne(product.getTypeId());
+		map.addAttribute("productType", productType);
 		
 		//推荐商品
 		TdProductCriteria sc = new TdProductCriteria();

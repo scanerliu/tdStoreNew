@@ -36,6 +36,7 @@
 </script>
 <style>
 .ogray{background:#ddd;}
+.swip2 img{height:auto;}
 </style>
 <body class="body_bg">
   <!-- header_top -->
@@ -48,7 +49,7 @@
 	    <div class="my_banner1" style="height:4.5rem">
 			<!-- ****广告轮播**** -->
 			<div class="addWrap">
-			    <div class="swipe" id="mySwipe">
+			    <div class="swipe swip2" id="mySwipe">
 			        <div class="swipe-wrap">
 			        	<#if attachmentList?? && (attachmentList?size > 0)>
 			        	<#list attachmentList as attachment>
@@ -136,25 +137,18 @@
         <input type="hidden" id="skustock" value="0">
         <input type="hidden" id="skuId" value="0">
         <input type="hidden" id="skuPrice" value="0">
+        <input type="hidden" id="propostage" value="${product.postage!'0'}">
         <input type="hidden" id="productId" value="${product.id!''}">
+        <input type="hidden" id="productKind" value="${product.kind!'0'}">
     </div>
     <div class="detail4">
-        <section>
-            <label class="fl">送至</label>
-            <aside class="fl">
-                <span>重庆市</span>
-                <span>渝北区</span>
-                <span>城区</span>
-                <a href="#" title=""></a>
-            </aside>
-        </section>
         <section>
             <label class="fl">运费</label>
             <aside class="fl">${product.postage!'0'}元</aside>
         </section>
         <section>
             <label class="fl">服务</label>
-            <aside class="fl">由<span>江北区单鞋代理</span>发货并负责售后服务。</aside>
+            <aside class="fl">由<span>${region.name!''}${productType.name!''}代理</span>负责售后服务。</aside>
         </section>
         <section>
             <label class="fl">提示</label>
@@ -191,8 +185,8 @@
 <footer>
     <div class="gopay">
         <a href="javascript:;" class="acare" id="acare">关注</a>
-        <a href="javascript:;" class="ajoin" onclick="addtoshoppingcart();">加入购物车</a>
-        <a href="javascript:;" class="apayfor" title="" onclick="buynow();">立即购买</a>
+        <a href="javascript:;" class="ajoin" onclick="addToShoppingcart();">加入购物车</a>
+        <a href="javascript:;" class="apayfor" title="" onclick="buyNow();">立即购买</a>
     </div>
     <span class="footclear"></span>
 </footer>

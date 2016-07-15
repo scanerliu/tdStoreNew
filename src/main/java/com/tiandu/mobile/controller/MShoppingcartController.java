@@ -159,7 +159,7 @@ public class MShoppingcartController extends BaseController {
 			try {
 				TdUser currUser = this.getCurrentUser();
 				item.setUid(currUser.getUid());
-				tdShoppingcartItemService.addItemToShoppingcart(item);
+				tdShoppingcartItemService.addToShoppingcart(item);
 				res.put("code", "1");
 				return res;
 			}catch (Exception e) {
