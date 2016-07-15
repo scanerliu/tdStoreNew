@@ -49,7 +49,13 @@ public class MShoppingcartController extends BaseController {
 		modelMap.addAttribute("shoppingcart", shoppingcart) ;
 	    return "/mobile/shoppingcart/list";
 	}
-	
+	/**
+	 * 加减购物车商品数量
+	 * @param item
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value="/add", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String,String> add(TdShoppingcartItem item, HttpServletRequest request, HttpServletResponse response) {
@@ -76,6 +82,13 @@ public class MShoppingcartController extends BaseController {
 			return res;
 		}
 	}
+	/**
+	 * 更改购物车商品数量
+	 * @param item
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value="/change", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String,String> change(TdShoppingcartItem item, HttpServletRequest request, HttpServletResponse response) {
@@ -103,6 +116,13 @@ public class MShoppingcartController extends BaseController {
 			return res;
 		}
 	}
+	/**
+	 * 购物车移除商品
+	 * @param ids
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value="/remove", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String,String> remove(String ids, HttpServletRequest request, HttpServletResponse response) {
@@ -115,6 +135,35 @@ public class MShoppingcartController extends BaseController {
 				return res;
 			}catch (Exception e) {
 				logger.error("购物车删除失败错误信息:"+e);
+				res.put("code", "0");
+				return res;
+			}
+		}else{
+			res.put("code", "0");
+			return res;
+		}
+	}
+	
+	/**
+	 * 购物车添加商品
+	 * @param ids
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/addsku", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> addsku(TdShoppingcartItem item, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>(); 
+		if(null!=item){
+			try {
+				TdUser currUser = this.getCurrentUser();
+				item.setUid(currUser.getUid());
+				tdShoppingcartItemService.addItemToShoppingcart(item);
+				res.put("code", "1");
+				return res;
+			}catch (Exception e) {
+				logger.error("购物车添加商品失败错误信息:"+e);
 				res.put("code", "0");
 				return res;
 			}

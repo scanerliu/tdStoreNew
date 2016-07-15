@@ -102,6 +102,12 @@ public class TdShoppingcartItemServiceImpl implements TdShoppingcartItemService{
 		return tdShoppingcartItemMapper.updateNumByPrimaryKey(item);
 	}
 
+	@Override
+	public boolean addItemToShoppingcart(TdShoppingcartItem item) {
+		
+		return false;
+	}
+
 	
 	
 	

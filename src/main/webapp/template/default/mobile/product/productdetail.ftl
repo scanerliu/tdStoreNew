@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/common.css"/>
     <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/main.css"/>
     <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/index.css"/>
+    <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/swipe.css"/>
     <script src="${app.basePath}/static/js/jquery-1.12.3.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="${app.basePath}/static/js/mobile/common.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/js/mobile/core.js"></script>
@@ -44,29 +45,28 @@
 </div>
 <!-- header_top end -->
 
-<!-- Center Start -->
-<section class="container">
-    <div class="detail1">
-    	<img src="${app.basePath}${product.imageUrl!''}" alt="">
-	    <div class="my_banner1">
+	    <div class="my_banner1" style="height:4.5rem">
 			<!-- ****广告轮播**** -->
 			<div class="addWrap">
 			    <div class="swipe" id="mySwipe">
 			        <div class="swipe-wrap">
-			        	<#if attachmentList?? && attachmentList?size>0>
-			        	<#list typeatt.attribute.tdProductAttributeOptionList as option>
-		                <div><a href="#"><img class="img-responsive" src="images/1.png"/></a></div>
+			        	<#if attachmentList?? && (attachmentList?size > 0)>
+			        	<#list attachmentList as attachment>
+		                <div><a href="javascript:;"><img class="img-responsive" src="${app.basePath}${attachment.attachment!''}" alt="商品图片"/></a></div>
 		                </#list>
+		                <#else>
+		                <div><a href="javascript:;"><img class="img-responsive" src="${app.basePath}${product.imageUrl!''}" alt="商品图片"/></a></div>
 		        		</#if>
-			            <div><a href="#"><img class="img-responsive" src="images/1.png"/></a></div>
-			            <div><a href="#"><img class="img-responsive" src="images/2.png"/></a></div>
-			            <div><a href="#"><img class="img-responsive" src="images/3.png"/></a></div>
 			        </div>
 			    </div>
 			    <ul id="position">
-			          <li class="cur"></li>
-			          <li class=""></li>
-			          <li class=""></li>
+			    	<#if attachmentList?? && (attachmentList?size > 0)>
+			        	<#list attachmentList as attachment>
+			          	<li class="curr"></li>
+			            </#list>
+		            <#else>
+		                <li class="curr"></li>
+		        	</#if>
 			    </ul>
 			</div> 
 			<script type="text/javascript">
@@ -86,18 +86,17 @@
 			</script>
 			<!-- ****广告轮播-结束**** -->
 		</div>
-    </div>
+<!-- Center Start -->
+<section class="container">
     <div class="detail2">
         <p>${product.name!''}</p>
         <p>${product.title!''}</p>
         <p><label for="" class="fl">￥<span id="prodprice">${product.price!''}</span></label></p>
     </div>
-    <div class="detail3">
+    <div class="detail3" id="slect">
         <section>
             <label class="fl">已选</label>
             <aside class="fl" id="prodchecked">
-                <span>粉红色</span>
-                <span>XL</span>
                 <span>1件</span>
             </aside>
         </section>
@@ -117,7 +116,8 @@
 				    $("#attul_"+${typeatt.attribute.attriId}).on("click","li",function(){
 				    	if(this.className!="ogray"){
 							$(this).siblings().removeClass("active");
-							$(this).attr("class","active");
+							$(this).addClass("active");
+							changeProductSku(__skuJsons);
 						}
 				    });
 				});
@@ -128,12 +128,15 @@
         <section>
             <label class="fl">数量</label>
             <aside class="fl">
-                <span>-</span>
-                <input type="text" placeholder="1" value="1" id="prodquantity">
-                <span>+</span>
+                <span  onclick="additem(2)">-</span>
+                <input type="text" placeholder="1" value="1" id="prodquantity" onKeyUp="formatInputSkuNum(this)">
+                <span onclick="additem(1)">+</span>
             </aside>
         </section>
         <input type="hidden" id="skustock" value="0">
+        <input type="hidden" id="skuId" value="0">
+        <input type="hidden" id="skuPrice" value="0">
+        <input type="hidden" id="productId" value="${product.id!''}">
     </div>
     <div class="detail4">
         <section>
@@ -159,48 +162,27 @@
         </section>
     </div>
     <div class="detail5">
-        <a href="商品详情-图文详情.html" title="">图文详情</a>
-        <a href="商品详情-评价晒单.html" title="">评价晒单</a>
-        <a href="商品详情-包装配送.html" title="">包装与配送</a>
-        <a href="商品详情-售后服务.html" title="">售后服务</a>
+        <a href="${app.basePath}/mobile/product/describe/1/${product.id}" title="">图文详情</a>
+        <a href="${app.basePath}/mobile/product/comment${product.id}" title="">评价晒单</a>
+        <a href="${app.basePath}/mobile/product/describe/2/${product.id}" title="">包装与配送</a>
+        <a href="${app.basePath}/mobile/product/describe/3/${product.id}" title="">售后服务</a>
     </div>
+    <#if recommendList??>
     <div class="detail6">
         <section class="title">商品推荐</section>
         <section class="sec2">
             <aside>
-                <a href="#" title="">
-                    <img src="images/goods1.png" alt="">
-                    <p>井记和田玉平安扣吊坠男女款</p>
-                    <p>￥799.00</p>
-                </a>
-                <a href="#" title="">
-                    <img src="images/goods1.png" alt="">
-                    <p>井记和田玉平安扣吊坠男女款</p>
-                    <p>￥799.00</p>
-                </a>
-                <a href="#" title="">
-                    <img src="images/goods1.png" alt="">
-                    <p>井记和田玉平安扣吊坠男女款</p>
-                    <p>￥799.00</p>
-                </a>
-                <a href="#" title="">
-                    <img src="images/goods1.png" alt="">
-                    <p>井记和田玉平安扣吊坠男女款</p>
-                    <p>￥799.00</p>
-                </a>
-                <a href="#" title="">
-                    <img src="images/goods1.png" alt="">
-                    <p>井记和田玉平安扣吊坠男女款</p>
-                    <p>￥799.00</p>
-                </a>
-                <a href="#" title="">
-                    <img src="images/goods1.png" alt="">
-                    <p>井记和田玉平安扣吊坠男女款</p>
-                    <p>￥799.00</p>
-                </a>
+            	<#list recommendList as recommend>
+		            <a href="${app.basePath}/mobile/product/item${recommend.id}" title="${recommend.title!''}">
+	                    <img src="${app.basePath}${recommend.imageUrl!''}" alt="图片">
+	                    <p>${recommend.name!''}</p>
+	                    <p>￥${recommend.price!'0'}</p>
+                	</a>
+		        </#list>
             </aside>
         </section>
     </div>
+    </#if>
 </section>
 <!-- Center end -->
 
@@ -209,13 +191,14 @@
 <footer>
     <div class="gopay">
         <a href="javascript:;" class="acare" id="acare">关注</a>
-        <a href="javascript:;" class="ajoin">加入购物车</a>
-        <a href="javascript:;" class="apayfor" title="">立即购买</a>
+        <a href="javascript:;" class="ajoin" onclick="addtoshoppingcart();">加入购物车</a>
+        <a href="javascript:;" class="apayfor" title="" onclick="buynow();">立即购买</a>
     </div>
     <span class="footclear"></span>
 </footer>
 <!-- Footer End -->
 <script>
+	var __skuJsons = ${productjson};
 $(function(){
 });
 </script>

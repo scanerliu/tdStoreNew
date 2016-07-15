@@ -1,5 +1,7 @@
 package com.tiandu.product.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,4 +44,10 @@ public class TdProductDescriptionServiceImpl implements TdProductDescriptionServ
 		return tdProductDescriptionMapper.deleteByProductId(proId);
 	}
 
+	@Override
+	public List<TdProductDescription> findBySearchCriteria(TdProductDescriptionCriteria sc) {
+		return tdProductDescriptionMapper.findBySearchCriteria(sc);
+	}
+
+	
 }
