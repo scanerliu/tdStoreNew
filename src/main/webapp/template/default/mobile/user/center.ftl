@@ -88,7 +88,7 @@
         <label>个人信息</label>
         <i class="icon-next"></i>
       </a>
-      <a href="修改密码.html" title="">
+      <a href="${app.basePath}/mobile/user/changePassword" title="修改密码">
         <i class="icon bg_icon_2"></i>
         <label>修改密码</label>
         <i class="icon-next"></i>

@@ -155,6 +155,15 @@ public class MUserController extends BaseController {
 		return "/mobile/user/info";		
 	}
 	
+	/*
+	 * 修改密码
+	 */
+	@RequestMapping("/changePassword")
+	public String changePassword(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		return "/mobile/user/changePassword";		
+	}
+	
+	
 	@RequestMapping(value="/saveInfo", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, String> saveInfo(TdUser user, HttpServletRequest request, HttpServletResponse response) {
@@ -166,8 +175,9 @@ public class MUserController extends BaseController {
 		currentUser.setUgenter(user.getUgenter());
 		currentUser.setUbirthday(user.getUbirthday());
 		currentUser.setUtel(user.getUtel());
-		tdUserService.saveUserInfo(currentUser);
-		res.put("msg", "个人信息修改成功！");
+		if(tdUserService.saveUserInfo(currentUser) == 1){
+			res.put("msg", "个人信息修改成功！");			
+		}
 		return res;
 	}
 	

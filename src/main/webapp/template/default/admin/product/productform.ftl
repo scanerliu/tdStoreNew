@@ -487,7 +487,7 @@ function flushTable(){
 	}
 	keyStr = keyStr.substr(0, keyStr.length-1);
 	console.log("keyStr:" + keyStr);
-	// 利用keyStr判断没类规格均处于至少选中一个的状态
+	// 利用keyStr判断每类规格均处于至少选中一个的状态
 	var isAllSpecSelected = 0;
 	var theSpeOrder = $("#speOrder").val();
 	console.log("theSpeOrder:" + theSpeOrder);
