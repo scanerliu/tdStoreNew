@@ -37,5 +37,17 @@ public class TdUserIntegralLogServiceImpl implements TdUserIntegralLogService {
 		sc.setTotalCount(count);
 		return tdUserIntegralLogMapper.findBySearchCriteria(sc);
 	}
+
+	@Override
+	public Integer save(TdUserIntegralLog userIntegralLog) {
+		if(null!=userIntegralLog){
+			if(null!=userIntegralLog.getId()){//更新
+				return tdUserIntegralLogMapper.updateByPrimaryKey(userIntegralLog);
+			}else{
+				return tdUserIntegralLogMapper.insert(userIntegralLog);
+			}
+		}
+		return null;
+	}
 	
 }

@@ -26,8 +26,20 @@ import com.tiandu.order.search.TdShoppingcartSearchCriteria;
 import com.tiandu.order.service.TdShoppingcartItemService;
 import com.tiandu.order.vo.ShoppingcartVO;
 import com.tiandu.product.entity.TdProduct;
+import com.tiandu.product.entity.TdProductAttachment;
+import com.tiandu.product.entity.TdProductSku;
+import com.tiandu.product.entity.TdProductTypeAttribute;
 import com.tiandu.product.search.TdProductCriteria;
+import com.tiandu.product.service.TdProductAttachmentService;
+import com.tiandu.product.service.TdProductAttributeOptionService;
+import com.tiandu.product.service.TdProductAttributeService;
+import com.tiandu.product.service.TdProductDescriptionService;
 import com.tiandu.product.service.TdProductService;
+import com.tiandu.product.service.TdProductSkuService;
+import com.tiandu.product.service.TdProductStatService;
+import com.tiandu.product.service.TdProductTypeAttributeService;
+import com.tiandu.product.service.TdProductTypeService;
+import com.tiandu.product.vo.ProductJsonVO;
 
 /**
  * 
@@ -42,6 +54,30 @@ public class MProductController extends BaseController {
 	
 	@Autowired
 	private TdProductService tdProductService;
+	
+	@Autowired
+	TdProductAttributeOptionService tdProductAttributeOptionService; 
+	
+	@Autowired
+	private TdProductTypeService tdProductTypeService;
+	
+	@Autowired
+	private TdProductAttachmentService tdProductAttachmentService;
+	
+	@Autowired
+	private TdProductDescriptionService tdProductDescriptionService; 
+	
+	@Autowired
+	TdProductAttributeService tdProductAttributeService; 
+	
+	@Autowired
+	TdProductTypeAttributeService tdProductTypeAttributeService; 
+	
+	@Autowired
+	private TdProductStatService tdProductStatService;
+	
+	@Autowired
+	TdProductSkuService tdProductSkuService; 
 	
 	/*
 	 * 商品列表页
@@ -69,7 +105,26 @@ public class MProductController extends BaseController {
 	public String item(@PathVariable("id") Integer id,HttpServletRequest req,ModelMap map)
 	{
 		TdProduct product  = tdProductService.findOne(id);
+		//货品
+		List<TdProductSku> skuList = tdProductSkuService.findByProductId(id);
+		if(skuList.size()>0){
+			//商品类型规格
+			List<TdProductTypeAttribute> taList = tdProductTypeAttributeService.findByTypeIdWithOptions(product.getTypeId());
+			if(taList.size()>0){
+				//匹配货品库存状态
+				tdProductService.matchSkuStockWithAttributeOption(skuList,taList);
+			}
+			map.addAttribute("taList", taList);
+		}
+		//货品规格库存json
+		String productjson = tdProductService.fromProductSkutoProductJsonString(skuList);
+		//商品图片
+		List<TdProductAttachment> attachmentList = tdProductAttachmentService.findByProductId(id);
+		
+		
 		map.addAttribute("product", product);
+		map.addAttribute("productjson", productjson);
+		map.addAttribute("attachmentList", attachmentList);
 		return "/mobile/product/productdetail";
 	}
 	

@@ -25,6 +25,20 @@ public class TdProductTypeAttributeImpl implements TdProductTypeAttributeService
 		}
 		return null;
 	}
+	
+	
+
+	@Override
+	public List<TdProductTypeAttribute> findByTypeIdWithOptions(Integer typeId) {
+		if(null != typeId)
+		{
+			// 找出当前类别关联的属性表
+			return typeAttributeMapper.findByTypeIdWithOptions(typeId);
+		}
+		return null;
+	}
+
+
 
 	@Override
 	public List<TdProductTypeAttribute> findBySearchCriteria(TdProductTypeAttributeCriteria sc) {

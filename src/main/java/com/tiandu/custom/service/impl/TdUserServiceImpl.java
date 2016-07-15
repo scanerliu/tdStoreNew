@@ -1,8 +1,13 @@
 package com.tiandu.custom.service.impl;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -14,14 +19,23 @@ import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserAccount;
 import com.tiandu.custom.entity.TdUserIntegral;
+import com.tiandu.custom.entity.TdUserIntegralLog;
+import com.tiandu.custom.entity.TdUserMessage;
+import com.tiandu.custom.entity.TdUserSign;
 import com.tiandu.custom.entity.mapper.TdUserMapper;
 import com.tiandu.custom.entity.mapper.TdUserRoleMapper;
+import com.tiandu.custom.search.TdUserMessageSearchCriteria;
 import com.tiandu.custom.search.TdUserSearchCriteria;
+import com.tiandu.custom.search.TdUserSignSearchCriteria;
 import com.tiandu.custom.service.TdUserAccountService;
+import com.tiandu.custom.service.TdUserIntegralLogService;
 import com.tiandu.custom.service.TdUserIntegralService;
+import com.tiandu.custom.service.TdUserMessageService;
 import com.tiandu.custom.service.TdUserService;
+import com.tiandu.custom.service.TdUserSignService;
 import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.service.TdDistrictService;
+import com.tiandu.system.service.TdSystemConfigService;
 
 @Service("tdUserService")
 public class TdUserServiceImpl implements TdUserService {
@@ -40,6 +54,18 @@ public class TdUserServiceImpl implements TdUserService {
 	
 	@Autowired
 	private TdUserAccountService tdUserAccountService;
+	
+	@Autowired
+	private TdUserSignService tdUserSignService;
+	
+	@Autowired
+	TdSystemConfigService tdSystemConfigService;
+	
+	@Autowired
+	TdUserIntegralLogService  tdUserIntegralLogService;
+	
+	@Autowired
+	TdUserMessageService tdUserMessageService;
 	
 	public int insert(TdUser u) {
 		return userMapper.insert(u);
@@ -195,6 +221,78 @@ public class TdUserServiceImpl implements TdUserService {
 	public Integer saveUserStatus(TdUser user) {
 		return userMapper.saveUserStatus(user);
 	}
+
+	@Override
+	public Map<String, String> saveSign(Integer uid) throws ParseException {
+		Map<String, String> res = new HashMap<String, String>();
+		res.put("code", "0");
+		res.put("msg", "签到失败");
+		TdUserSignSearchCriteria sc = new TdUserSignSearchCriteria();
+		sc.setFlag(false);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date nowDate = sdf.parse(sdf.format(new Date()));
+		sc.setCreateDate(nowDate);
+		sc.setUid(uid);
+		List<TdUserSign> userSignList = tdUserSignService.findBySearchCriteria(sc);
+		if(userSignList != null && userSignList.size() > 0){
+			res.put("code", "0");
+			res.put("msg", "已签到");
+			return res;
+		}
+		// 去签名
+		TdUserSign userSign = new TdUserSign();
+		userSign.setUid(uid);
+		userSign.setCreateDate(nowDate);
+		tdUserSignService.save(userSign);
+		// 查询签到积分
+		Integer signIntegral = Integer.parseInt(tdSystemConfigService.getConfigMap().get("signdeliveryintegral"));
+		// 修改积分	
+		TdUserIntegral userIntegral = tdUserIntegralService.findOne(uid);
+		int integralBeforeUpdate = userIntegral.getTotalIntegral();
+		userIntegral.setTotalIntegral(userIntegral.getTotalIntegral() + signIntegral);
+		userIntegral.setIntegral(userIntegral.getIntegral() + signIntegral);
+		userIntegral.setUpdateTime(new Date());
+		userIntegral.setUpdateBy(0); // 系统修改积分设为0
+		tdUserIntegralService.save(userIntegral);
+		// 添加积分日志
+		TdUserIntegralLog userIntegralLog = new TdUserIntegralLog();
+		userIntegralLog.setUid(uid);
+		userIntegralLog.setPreintegral(integralBeforeUpdate);
+		userIntegralLog.setType(Byte.valueOf("1"));
+		userIntegralLog.setIntegral(signIntegral);
+		userIntegralLog.setCreateTime(new Date());
+		userIntegralLog.setNote("系统修改签到积分");
+		userIntegralLog.setRelation(null);
+		tdUserIntegralLogService.save(userIntegralLog);
+		res.put("code", "1");
+		res.put("signIntegral", signIntegral.toString());
+		return res;
+	}
 	
-	
+	@Override
+	public Map<String, List<TdUserMessage>> getMessageList(Integer uid){
+		Map<String, List<TdUserMessage>> res =  new HashMap<>();
+		TdUserMessageSearchCriteria sc = new TdUserMessageSearchCriteria();
+		sc.setUid(uid);
+		sc.setMsgType(Byte.valueOf("1"));
+		res.put("systemMessageList", tdUserMessageService.findBySearchCriteria(sc));
+		sc.setMsgType(Byte.valueOf("2"));
+		res.put("orderMessageList", tdUserMessageService.findBySearchCriteria(sc));
+		sc.setMsgType(Byte.valueOf("3"));
+		res.put("experienceStoreMessageList", tdUserMessageService.findBySearchCriteria(sc));
+		return res;
+	}
+
+	@Override
+	public List<TdUserMessage> getMessageListByMsgType(Integer uid, Byte msgType) {
+		TdUserMessageSearchCriteria sc = new TdUserMessageSearchCriteria();
+		sc.setUid(uid);
+		sc.setMsgType(msgType);
+		return tdUserMessageService.findBySearchCriteria(sc);
+	}
+
+	@Override
+	public int saveUserInfo(TdUser user) {
+		return userMapper.updateByPrimaryKeySelective(user);
+	}
 }

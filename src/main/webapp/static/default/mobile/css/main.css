@@ -179,6 +179,8 @@
     .my_center li a {
       float: right;
       width: 1.8rem; }
+.my_center li #file_upload a {
+      width: 0rem; }
       .my_center li a img {
         float: left;
         width: 1rem;

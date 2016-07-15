@@ -26,10 +26,10 @@
 </head>
 <script>
     window.onload=function(){
-        var color_ul=document.getElementById('color_ul');
-        var size_ul=document.getElementById('size_ul');
-        ul_li(color_ul);
-        ul_li(size_ul);
+        //var color_ul=document.getElementById('color_ul');
+        //var size_ul=document.getElementById('size_ul');
+        //ul_li(color_ul);
+        //ul_li(size_ul);
         acare();
     }
 </script>
@@ -46,7 +46,47 @@
 
 <!-- Center Start -->
 <section class="container">
-    <div class="detail1"><img src="${app.basePath}${product.imageUrl!''}" alt=""></div>
+    <div class="detail1">
+    	<img src="${app.basePath}${product.imageUrl!''}" alt="">
+	    <div class="my_banner1">
+			<!-- ****广告轮播**** -->
+			<div class="addWrap">
+			    <div class="swipe" id="mySwipe">
+			        <div class="swipe-wrap">
+			        	<#if attachmentList?? && attachmentList?size>0>
+			        	<#list typeatt.attribute.tdProductAttributeOptionList as option>
+		                <div><a href="#"><img class="img-responsive" src="images/1.png"/></a></div>
+		                </#list>
+		        		</#if>
+			            <div><a href="#"><img class="img-responsive" src="images/1.png"/></a></div>
+			            <div><a href="#"><img class="img-responsive" src="images/2.png"/></a></div>
+			            <div><a href="#"><img class="img-responsive" src="images/3.png"/></a></div>
+			        </div>
+			    </div>
+			    <ul id="position">
+			          <li class="cur"></li>
+			          <li class=""></li>
+			          <li class=""></li>
+			    </ul>
+			</div> 
+			<script type="text/javascript">
+			    var bullets = document.getElementById('position').getElementsByTagName('li');
+			    var banner = Swipe(document.getElementById('mySwipe'), {
+			        auto: 3000,
+			        continuous: true,
+			        disableScroll:false,
+			        callback: function(pos) {
+			            var i = bullets.length;
+			            while (i--) {
+			              bullets[i].className = ' ';
+			            }
+			            bullets[pos].className = 'cur';
+			        }
+			    });
+			</script>
+			<!-- ****广告轮播-结束**** -->
+		</div>
+    </div>
     <div class="detail2">
         <p>${product.name!''}</p>
         <p>${product.title!''}</p>
@@ -61,26 +101,30 @@
                 <span>1件</span>
             </aside>
         </section>
+        <#if taList??>
+        <#list taList as typeatt>
         <section>
-            <label class="fl">颜色</label>
-            <ul class="fl" id="color_ul">
-                <li class="active">墨绿色</li>
-                <li>粉红色</li>
-                <li class="ogray">黑色</li>
-                <li>白色</li>
-                <li>卡其色</li>
+            <label class="fl">${typeatt.attribute.name}</label>
+            <ul class="fl slect" id="attul_${typeatt.attribute.attriId}">
+            	<#if typeatt.attribute.tdProductAttributeOptionList??>
+            	<#list typeatt.attribute.tdProductAttributeOptionList as option>
+                <li attri="${option.id}" <#if option.status==0>class="ogray"</#if>>${option.name}</li>
+                </#list>
+        		</#if>
             </ul>
+            <script>
+				$(function(){
+				    $("#attul_"+${typeatt.attribute.attriId}).on("click","li",function(){
+				    	if(this.className!="ogray"){
+							$(this).siblings().removeClass("active");
+							$(this).attr("class","active");
+						}
+				    });
+				});
+			</script>
         </section>
-        <section>
-            <label class="fl">尺寸</label>
-            <ul class="fl" id="size_ul">
-                <li>S</li>
-                <li class="active">M</li>
-                <li class="ogray">L</li>
-                <li>XL</li>
-                <li>XXL</li>
-            </ul>
-        </section>
+        </#list>
+        </#if>
         <section>
             <label class="fl">数量</label>
             <aside class="fl">
@@ -89,6 +133,7 @@
                 <span>+</span>
             </aside>
         </section>
+        <input type="hidden" id="skustock" value="0">
     </div>
     <div class="detail4">
         <section>
@@ -170,5 +215,9 @@
     <span class="footclear"></span>
 </footer>
 <!-- Footer End -->
+<script>
+$(function(){
+});
+</script>
 </body>  
 </html>

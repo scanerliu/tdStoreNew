@@ -11,5 +11,6 @@ public interface TdProductTypeAttributeService {
 	
 	int deleteByTypeId(Integer typeId);
 	List<TdProductTypeAttribute> findByTypeId(Integer typeId);
+	List<TdProductTypeAttribute> findByTypeIdWithOptions(Integer typeId);
 	List<TdProductTypeAttribute> findBySearchCriteria(TdProductTypeAttributeCriteria sc);
 }

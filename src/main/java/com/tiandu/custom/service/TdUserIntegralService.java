@@ -2,6 +2,7 @@ package com.tiandu.custom.service;
 
 import com.tiandu.custom.entity.TdUserIntegral;
 import com.tiandu.custom.entity.TdUserIntegralLog;
+import com.tiandu.custom.entity.TdUserSign;
 
 public interface TdUserIntegralService {
 
@@ -15,5 +16,7 @@ public interface TdUserIntegralService {
 	 * @return
 	 */
 	public boolean addIntegral(TdUserIntegral record, TdUserIntegralLog log);
+	
+	public Integer save(TdUserIntegral u);
 	
 }

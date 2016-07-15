@@ -1,8 +1,11 @@
 package com.tiandu.custom.service;
 
+import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.custom.entity.TdUserMessage;
 import com.tiandu.custom.search.TdUserSearchCriteria;
 
 public interface TdUserService {
@@ -55,4 +58,28 @@ public interface TdUserService {
 	 * @return
 	 */
 	public Integer saveUserStatus(TdUser user);
+	
+	
+	/**
+	 * 用户签到
+	 * @param uid
+	 * @return
+	 */
+	public Map<String, String> saveSign(Integer uid) throws ParseException;
+	
+	/*
+	 * 获取会员消息列表
+	 */
+	public Map<String, List<TdUserMessage>> getMessageList(Integer uid);
+	
+	/*
+	 * 获取指定类型会员消息列表
+	 */
+	public List<TdUserMessage> getMessageListByMsgType(Integer uid, Byte msgType);
+	
+	/*
+	 *	保存用户个人信息 
+	 */
+	public  int saveUserInfo(TdUser user);
+		
 }
