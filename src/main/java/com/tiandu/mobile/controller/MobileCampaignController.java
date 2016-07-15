@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.custom.search.TdUserCampaignCriteria;
 import com.tiandu.custom.service.TdUserCampaignService;
-import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.search.TdDistrictSearchCriteria;
 import com.tiandu.district.service.TdDistrictService;
 
