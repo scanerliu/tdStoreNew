@@ -15,7 +15,7 @@ import com.tiandu.product.service.TdProductAttributeService;
 public class TdProductAttributeImpl implements TdProductAttributeService{
 
 	@Autowired
-	private TdProductAttributeMapper tdProductAttributorMapper;
+	private TdProductAttributeMapper tdProductAttributeMapper;
 	
 	@Autowired
 	private TdProductAttributeOptionService tdProductAttributeOptionService;
@@ -27,7 +27,7 @@ public class TdProductAttributeImpl implements TdProductAttributeService{
 			// 删除类型前先删除该类型
 			tdProductAttributeOptionService.deleteByAttriId(id);
 		}
-		return tdProductAttributorMapper.deleteByPrimaryKey(id);
+		return tdProductAttributeMapper.deleteByPrimaryKey(id);
 	}
 
 	@Override
@@ -35,9 +35,9 @@ public class TdProductAttributeImpl implements TdProductAttributeService{
 		if(null != e)
 		{
 			if(null == e.getAttriId()){
-				tdProductAttributorMapper.insert(e);
+				tdProductAttributeMapper.insert(e);
 			}else{
-				tdProductAttributorMapper.updateByPrimaryKey(e);
+				tdProductAttributeMapper.updateByPrimaryKey(e);
 			}
 		}
 		return null;
@@ -45,14 +45,14 @@ public class TdProductAttributeImpl implements TdProductAttributeService{
 
 	@Override
 	public TdProductAttribute findOne(Integer id) {
-		return tdProductAttributorMapper.selectByPrimaryKey(id);
+		return tdProductAttributeMapper.selectByPrimaryKey(id);
 	}
 
 	@Override
 	public List<TdProductAttribute> findBySearchCriteria(TdProductAttributeCriteria sc) {
-		Integer count = tdProductAttributorMapper.countByCriteria(sc);
+		Integer count = tdProductAttributeMapper.countByCriteria(sc);
 		sc.setTotalCount(count);
-		return tdProductAttributorMapper.findBySearchCriteria(sc);
+		return tdProductAttributeMapper.findBySearchCriteria(sc);
 	}
 
 }

@@ -172,7 +172,7 @@
 		        </td>
 		    </tr>
 		</table>
-		<#if !tdProduct.id??>
+		<#if !tdProduct??>
 			<input type="hidden" name="newRecommend" value="0" >
 			<input type="hidden" name="fineRecommend" value="0" >
 			<input type="hidden" name="typeRecommend" value="0" >

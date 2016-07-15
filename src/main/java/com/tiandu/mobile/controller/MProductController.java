@@ -26,6 +26,7 @@ import com.tiandu.order.search.TdShoppingcartSearchCriteria;
 import com.tiandu.order.service.TdShoppingcartItemService;
 import com.tiandu.order.vo.ShoppingcartVO;
 import com.tiandu.product.entity.TdProduct;
+import com.tiandu.product.entity.TdProductAttachment;
 import com.tiandu.product.entity.TdProductSku;
 import com.tiandu.product.entity.TdProductTypeAttribute;
 import com.tiandu.product.search.TdProductCriteria;
@@ -38,6 +39,7 @@ import com.tiandu.product.service.TdProductSkuService;
 import com.tiandu.product.service.TdProductStatService;
 import com.tiandu.product.service.TdProductTypeAttributeService;
 import com.tiandu.product.service.TdProductTypeService;
+import com.tiandu.product.vo.ProductJsonVO;
 
 /**
  * 
@@ -114,7 +116,15 @@ public class MProductController extends BaseController {
 			}
 			map.addAttribute("taList", taList);
 		}
+		//货品规格库存json
+		String productjson = tdProductService.fromProductSkutoProductJsonString(skuList);
+		//商品图片
+		List<TdProductAttachment> attachmentList = tdProductAttachmentService.findByProductId(id);
+		
+		
 		map.addAttribute("product", product);
+		map.addAttribute("productjson", productjson);
+		map.addAttribute("attachmentList", attachmentList);
 		return "/mobile/product/productdetail";
 	}
 	

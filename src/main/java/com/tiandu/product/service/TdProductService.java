@@ -6,6 +6,7 @@ import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductSku;
 import com.tiandu.product.entity.TdProductTypeAttribute;
 import com.tiandu.product.search.TdProductCriteria;
+import com.tiandu.product.vo.ProductJsonVO;
 import com.tiandu.product.vo.TdProductSkuVO;
 
 public interface TdProductService {
@@ -31,4 +32,17 @@ public interface TdProductService {
 	 * @param taList
 	 */
 	public void matchSkuStockWithAttributeOption(List<TdProductSku> skuList, List<TdProductTypeAttribute> taList);
+	
+	/**
+	 * 转换货品到json格式对象
+	 * @param skuList
+	 * @return
+	 */
+	public ProductJsonVO fromProductSkutoProductJson(List<TdProductSku> skuList);
+	/**
+	 * 转换货品到json格式String
+	 * @param skuList
+	 * @return
+	 */
+	public String fromProductSkutoProductJsonString(List<TdProductSku> skuList);
 }

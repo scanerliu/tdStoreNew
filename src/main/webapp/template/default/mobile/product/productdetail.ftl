@@ -46,7 +46,47 @@
 
 <!-- Center Start -->
 <section class="container">
-    <div class="detail1"><img src="${app.basePath}${product.imageUrl!''}" alt=""></div>
+    <div class="detail1">
+    	<img src="${app.basePath}${product.imageUrl!''}" alt="">
+	    <div class="my_banner1">
+			<!-- ****广告轮播**** -->
+			<div class="addWrap">
+			    <div class="swipe" id="mySwipe">
+			        <div class="swipe-wrap">
+			        	<#if attachmentList?? && attachmentList?size>0>
+			        	<#list typeatt.attribute.tdProductAttributeOptionList as option>
+		                <div><a href="#"><img class="img-responsive" src="images/1.png"/></a></div>
+		                </#list>
+		        		</#if>
+			            <div><a href="#"><img class="img-responsive" src="images/1.png"/></a></div>
+			            <div><a href="#"><img class="img-responsive" src="images/2.png"/></a></div>
+			            <div><a href="#"><img class="img-responsive" src="images/3.png"/></a></div>
+			        </div>
+			    </div>
+			    <ul id="position">
+			          <li class="cur"></li>
+			          <li class=""></li>
+			          <li class=""></li>
+			    </ul>
+			</div> 
+			<script type="text/javascript">
+			    var bullets = document.getElementById('position').getElementsByTagName('li');
+			    var banner = Swipe(document.getElementById('mySwipe'), {
+			        auto: 3000,
+			        continuous: true,
+			        disableScroll:false,
+			        callback: function(pos) {
+			            var i = bullets.length;
+			            while (i--) {
+			              bullets[i].className = ' ';
+			            }
+			            bullets[pos].className = 'cur';
+			        }
+			    });
+			</script>
+			<!-- ****广告轮播-结束**** -->
+		</div>
+    </div>
     <div class="detail2">
         <p>${product.name!''}</p>
         <p>${product.title!''}</p>
@@ -74,23 +114,17 @@
             </ul>
             <script>
 				$(function(){
-					var attul_${typeatt.attribute.attriId} = document.getElementById('attul_'+${typeatt.attribute.attriId});
-				    ul_li(attul_${typeatt.attribute.attriId});
+				    $("#attul_"+${typeatt.attribute.attriId}).on("click","li",function(){
+				    	if(this.className!="ogray"){
+							$(this).siblings().removeClass("active");
+							$(this).attr("class","active");
+						}
+				    });
 				});
 			</script>
         </section>
         </#list>
         </#if>
-        <section>
-            <label class="fl">尺寸</label>
-            <ul class="fl slect" id="size_ul">
-                <li>S</li>
-                <li class="active">M</li>
-                <li class="ogray">L</li>
-                <li>XL</li>
-                <li>XXL</li>
-            </ul>
-        </section>
         <section>
             <label class="fl">数量</label>
             <aside class="fl">

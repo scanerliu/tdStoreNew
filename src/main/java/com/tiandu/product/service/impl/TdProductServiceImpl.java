@@ -20,6 +20,7 @@ import com.tiandu.product.entity.TdProductTypeAttribute;
 import com.tiandu.product.entity.mapper.TdProductMapper;
 import com.tiandu.product.search.TdProductCriteria;
 import com.tiandu.product.service.TdProductService;
+import com.tiandu.product.vo.ProductJsonVO;
 import com.tiandu.product.vo.TdProductSkuVO;
 
 /**
@@ -129,5 +130,49 @@ public class TdProductServiceImpl implements TdProductService{
 		}
 		return false;
 	}
+
+	@Override
+	public ProductJsonVO fromProductSkutoProductJson(List<TdProductSku> skuList) {
+		ProductJsonVO product = new ProductJsonVO();
+		List<TdProductSkuVO> skList = new ArrayList<TdProductSkuVO>();
+		if(null!=skuList && skuList.size()>0){
+			for(TdProductSku sku : skuList){
+				TdProductSkuVO skuvo = new TdProductSkuVO();
+				skuvo.setId(sku.getId());
+				skuvo.setProductId(sku.getProductId());
+				skuvo.setSalesPrice(sku.getSalesPrice());
+				skuvo.setSkuCode(sku.getSkuCode());
+				skuvo.setStock(sku.getStock());
+				String opt = sku.getSpecifications();
+				JSONObject json;
+				try {
+					json = new JSONObject(opt);
+					String[] keys = json.getNames(json);
+					StringBuffer sk = new StringBuffer();
+					for(String key : keys){
+						String val = (String) json.get(key);
+						sk.append(val);
+						sk.append("_");						
+					}
+					skuvo.setSpecificationids(sk.substring(0,sk.length()-1));
+					skList.add(skuvo);					
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+			product.setSkuList(skList);
+		}
+		return product;
+	}
+
+	@Override
+	public String fromProductSkutoProductJsonString(List<TdProductSku> skuList) {
+		ProductJsonVO product = this.fromProductSkutoProductJson(skuList);
+		Gson gson = new Gson();
+		String json = gson.toJson(product);
+		return json;
+	}
+	
+	
 	
 }
