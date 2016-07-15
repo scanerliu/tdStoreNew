@@ -74,6 +74,8 @@ public class MobileCampaignController extends BaseController{
 		usc.setOrderBy("2");
 		map.addAttribute("campaignList", tdUserCampaignService.findBySearchCriteria(usc));
 		
+		
+		
 		return "/mobile/campaign/list";
 	}
 

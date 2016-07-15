@@ -53,7 +53,7 @@
 			<div class="addWrap">
 			    <div class="swipe" id="mySwipe">
 			        <div class="swipe-wrap">
-			        	<#if attachmentList?? && attachmentList?size>0>
+			        	<#if attachmentList?? && attachmentList?size gt 0>
 			        	<#list typeatt.attribute.tdProductAttributeOptionList as option>
 		                <div><a href="#"><img class="img-responsive" src="images/1.png"/></a></div>
 		                </#list>

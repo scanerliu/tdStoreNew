@@ -28,9 +28,7 @@ import com.tiandu.complaint.service.TdComplaintService;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.vo.LoginForm;
 import com.tiandu.product.search.TdProductCriteria;
-import com.tiandu.product.search.TdProductTypeCriteria;
 import com.tiandu.product.service.TdProductService;
-import com.tiandu.product.service.TdProductTypeService;
 
 /** 
  * @author liuxinbing
@@ -49,9 +47,6 @@ public class MobileController extends BaseController {
 	
 	@Autowired
 	private TdComplaintService tdComplaintService;
-	
-	@Autowired
-	private TdProductTypeService tdProductTypeService;
 	
 	@Autowired
 	private TdProductService tdProductService;
@@ -98,16 +93,9 @@ public class MobileController extends BaseController {
 		sc.setStatus((byte)1);
 		map.addAttribute("complaintList", tdComplaintService.findBySearchCriteria(csc));
 		
-//		// 精品专区（分类）
-//		TdProductTypeCriteria criteria = new TdProductTypeCriteria();
-//		criteria.setStatus((byte) 1);
-//		criteria.setOrderBy("1");
-//		map.addAttribute("productTypeList", tdProductTypeService.findByParentId(0));
-		
-		
 		// 热销推荐
 		TdProductCriteria psc = new TdProductCriteria();
-		psc.setOrderBy("p.hot_recommend asc");
+		psc.setHotRecommend(1);
 		psc.setOnshelf(true);
 		map.addAttribute("productList", tdProductService.findBySearchCriteria(psc));
 		
@@ -119,33 +107,46 @@ public class MobileController extends BaseController {
 	 */
 	@RequestMapping("/index")
 	public String index1(HttpServletRequest request, HttpServletResponse response, ModelMap map) {
+
 		// 轮播广告
+		TdAdvertisementSearchCriteria sc = new TdAdvertisementSearchCriteria();
+		sc.setCreateTime(new Date());
+		sc.setEndTime(new Date());
 		TdAdsense adsense = tdAdsenseService.findByName("触屏首页轮播大图广告");
 		if(null != adsense)
 		{
-			TdAdvertisementSearchCriteria sc = new TdAdvertisementSearchCriteria();
 			sc.setAdsId(adsense.getId());
-			sc.setOrderBy("1");
+			sc.setOrderBy("2");
 			map.addAttribute("adList", tdAdvertisementService.findBySearchCriteria(sc));
 		}
+		
+		adsense = tdAdsenseService.findByName("触屏竞选内容广告");
+		if(null != adsense)
+		{
+			sc.setAdsId(adsense.getId());
+			sc.setOrderBy("2");
+			map.addAttribute("compAdList", tdAdvertisementService.findBySearchCriteria(sc));
+		}
+		
+		adsense = tdAdsenseService.findByName("触屏精品专区广告");
+		if(null != adsense)
+		{
+			sc.setAdsId(adsense.getId());
+			sc.setOrderBy("2");
+			map.addAttribute("hotAdList", tdAdvertisementService.findBySearchCriteria(sc));
+		}
+		
 		// 系统配置
 		map.addAttribute("system", getSystem());
 		
 		// 股东竞选
-		TdComplaintCriteria sc = new TdComplaintCriteria();
+		TdComplaintCriteria csc = new TdComplaintCriteria();
 		sc.setStatus((byte)1);
-		map.addAttribute("complaintList", tdComplaintService.findBySearchCriteria(sc));
-		
-		// 精品专区（分类）
-		TdProductTypeCriteria criteria = new TdProductTypeCriteria();
-		criteria.setStatus((byte) 1);
-		criteria.setOrderBy("1");
-		map.addAttribute("productTypeList", tdProductTypeService.findByParentId(0));
-		
+		map.addAttribute("complaintList", tdComplaintService.findBySearchCriteria(csc));
 		
 		// 热销推荐
 		TdProductCriteria psc = new TdProductCriteria();
-		psc.setOrderBy("p.hot_recommend asc");
+		psc.setHotRecommend(1);
 		psc.setOnshelf(true);
 		map.addAttribute("productList", tdProductService.findBySearchCriteria(psc));
 		

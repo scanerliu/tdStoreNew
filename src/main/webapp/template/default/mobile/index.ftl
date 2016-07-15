@@ -127,7 +127,7 @@
     </section>
     <section class="sec2">
     	<#list productList as pro>
-        <a href="${app.basePath}/mobile/product/item${pro.id!'0'}"" title="${pro.name!''}" class="">
+        <a href="${app.basePath}/mobile/product/item${pro.id!'0'}" title="${pro.name!''}" class="">
             <img src="${app.basePath}${pro.imageUrl!''}" alt="${pro.name}">
             <p class="p1">${pro.name}</p>
             <p class="p2">
