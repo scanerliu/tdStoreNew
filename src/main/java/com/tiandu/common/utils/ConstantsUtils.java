@@ -3,6 +3,24 @@ package com.tiandu.common.utils;
 public class ConstantsUtils {
 
 	public final static String PRIMARY_MEMBER_KEY = "td_key_2016_05_20****15##%%@&50";
+	/**
+	 * 系统后台过滤地址
+	 */
+	public final static String TDSTORE_ADMIN_FILTER = "/admin/";
+	/**
+	 * 系统后台登录地址
+	 */
+	public final static String TDSTORE_ADMIN_LOGIN_URL = "/admin/login";
+	/**
+	 * 系统移动端登录地址
+	 */
+	public final static String TDSTORE_MOBILE_LOGIN_URL = "/mobile/login";
+	/**
+	 * 系统移动端过滤地址
+	 */
+	public final static String TDSTORE_MOBILE_FILTER = "/mobile/";
+	
+	
 	public final static Byte CONF_DATA_TYPE_BOOLEAN = 3;
 	
 	/*******************************订单类型****************************/
