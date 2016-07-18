@@ -46,7 +46,7 @@
             <aside>
             	<#if typeList?? && typeList?size gt 0>
             	<#list typeList as type>
-                <a href="#" title="${type.name!''}" <#if type_index==0>class="active"</#if>>${type.name!''}</a>
+                <a href="javascript:;" title="${type.name!''}" <#if type_index==0>class="active"</#if>>${type.name!''}</a>
                 </#list>
                 </#if>
             </aside>

@@ -16,6 +16,9 @@ public class TdProductCriteria extends SearchCriteria{
 	
 	private Integer typeId; 
 	
+	// 列表页排序 1-综合升序，2-综合降序，3-销量升序，4-销量降序，5-价格升序，6,-价格降序。
+	private Integer orderby; 
+	
 	public String getName() {
 		return name;
 	}
@@ -96,6 +99,43 @@ public class TdProductCriteria extends SearchCriteria{
 		this.typeId = typeId;
 	}
 
+	public Integer getOrderby() {
+		return orderby;
+	}
 
+	public void setOrderby(Integer orderby) {
+		this.orderby = orderby;
+	}
+
+	// 列表页排序 1-综合升序，2-综合降序，3-销量升序，4-销量降序，5-价格升序，6,-价格降序。
+	public String getOrderBySql()
+	{
+		String orderBySql = null;
+		
+		Integer orderType = this.orderby;
+		switch (orderType) {
+		case 1:
+			orderBySql = "s.positive_rate asc , s.buy_count asc";
+			break;
+//		case 2:
+//			orderBySql = "s.positive_rate desc and s.buy_count desc";
+//			break;
+		case 2:
+			orderBySql = "s.buy_count desc";
+			break;
+//		case 4:
+//			orderBySql = "s.buy_count desc";
+//			break;
+		case 3:
+			orderBySql = "p.price desc";
+			break;
+		case 4:
+			orderBySql = "p.price asc";
+			break;
+		default:
+			break;
+		}
+		return orderBySql;
+	}
 	
 }
