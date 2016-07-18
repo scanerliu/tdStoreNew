@@ -200,5 +200,26 @@ public class ConfigUtil {
 	public Integer getUserMaxNoLoginMonth(){
 		return getConfig("usermaxnologinmonth",1);
 	}
+	/**
+	 * 普通商品积分可抵扣金额比例
+	 * @return
+	 */
+	public Integer getCommonProductPointPercent(){
+		return getConfig("commonproductpointpercent",0);
+	}
+	/**
+	 * 部分积分兑换商品可抵扣金额比例
+	 * @return
+	 */
+	public Integer getPartProductPointPercent(){
+		return getConfig("partproductpointpercent",0);
+	}
+	/**
+	 * 积分抵扣金额比例
+	 * @return
+	 */
+	public Integer getIntegralExchangerate(){
+		return getConfig("integralexchangerate",0);
+	}
 
 }

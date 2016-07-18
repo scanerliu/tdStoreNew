@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tiandu.common.utils.ConstantsUtils;
+import com.tiandu.common.utils.WebUtils;
+import com.tiandu.custom.entity.TdUser;
 import com.tiandu.order.entity.TdOrder;
 import com.tiandu.order.entity.TdOrderAddress;
 import com.tiandu.order.entity.TdOrderLog;
@@ -23,10 +25,13 @@ import com.tiandu.order.entity.mapper.TdOrderProductMapper;
 import com.tiandu.order.entity.mapper.TdOrderShipmentItemMapper;
 import com.tiandu.order.entity.mapper.TdOrderShipmentMapper;
 import com.tiandu.order.entity.mapper.TdOrderSkuMapper;
+import com.tiandu.order.entity.mapper.TdShoppingcartItemMapper;
 import com.tiandu.order.search.TdOrderSearchCriteria;
 import com.tiandu.order.service.TdOrderService;
 import com.tiandu.order.vo.OperResult;
+import com.tiandu.order.vo.OrderForm;
 import com.tiandu.order.vo.OrderRefund;
+import com.tiandu.order.vo.ShoppingcartVO;
 
 /**
  * 
@@ -50,6 +55,8 @@ public class TdOrderServiceImpl implements TdOrderService{
 	private TdOrderLogMapper tdOrderLogMapper;
 	@Autowired
 	private TdOrderProductMapper tdOrderProductMapper;
+	@Autowired
+	private TdShoppingcartItemMapper tdShoppingcartItemMapper;
 
 	@Override
 	public Integer deleteByPrimaryKey(Integer orderId) {
@@ -241,6 +248,28 @@ public class TdOrderServiceImpl implements TdOrderService{
 		
 		result.setFlag(true);
 		return result;
+	}
+
+	@Override
+	public TdOrder genernateOrder(TdUser currUser, OrderForm orderForm, ShoppingcartVO shoppingcart) {
+		Date now = new Date();
+		TdOrder order = new TdOrder();
+		order.setCreateTime(now);
+		order.setGainPoints(0);
+		order.setCommented(false);
+		order.setItemNum(shoppingcart.getTotalcount());
+		order.setJointId(0);
+		order.setOrderNo(WebUtils.generateOrderNo());
+		order.setOrderStatus(ConstantsUtils.ORDER_STATUS_NEW);
+		order.setOrderType(ConstantsUtils.ORDER_KIND_COMMON);
+		order.setPaymentId(orderForm.getPaymentId());
+		if(orderForm.getUsePoints()){
+			
+		}else{
+			order.setPointAmount(BigDecimal.ZERO);
+		}
+		order.setPostage(shoppingcart.getTotalPostage());
+		return order;
 	}
 	
 	

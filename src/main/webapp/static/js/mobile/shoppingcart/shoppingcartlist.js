@@ -108,5 +108,10 @@ function removeItemsCallback(data){
 //去下单
 function nextOrder(){
 	var url = basePath+"/mobile/shoppingcart/confirmorder";
-	alert("稍等一下，功能开发中...");
+	window.location.href=url;
+}
+//下订单
+function genernateOrder(){
+	var url = basePath+"/mobile/shoppingcart/order";
+	
 }

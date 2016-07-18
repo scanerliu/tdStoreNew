@@ -2,11 +2,14 @@ package com.tiandu.order.service;
 
 import java.util.List;
 
+import com.tiandu.custom.entity.TdUser;
 import com.tiandu.order.entity.TdOrder;
 import com.tiandu.order.entity.TdOrderShipment;
 import com.tiandu.order.search.TdOrderSearchCriteria;
 import com.tiandu.order.vo.OperResult;
+import com.tiandu.order.vo.OrderForm;
 import com.tiandu.order.vo.OrderRefund;
+import com.tiandu.order.vo.ShoppingcartVO;
 
 public interface TdOrderService {
 
@@ -40,4 +43,13 @@ public interface TdOrderService {
 	 * @return
 	 */
 	public OperResult completeorder(Integer id);
+
+	/**
+	 * 生成订单
+	 * @param currUser
+	 * @param orderForm
+	 * @param shoppingcart
+	 * @return
+	 */
+	public TdOrder genernateOrder(TdUser currUser, OrderForm orderForm, ShoppingcartVO shoppingcart);
 }

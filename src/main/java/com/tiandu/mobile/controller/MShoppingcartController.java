@@ -18,11 +18,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.order.entity.TdOrder;
 import com.tiandu.order.entity.TdShoppingcartItem;
 import com.tiandu.order.search.TdShoppingcartSearchCriteria;
+import com.tiandu.order.service.TdOrderService;
 import com.tiandu.order.service.TdShoppingcartItemService;
+import com.tiandu.order.vo.OrderForm;
 import com.tiandu.order.vo.ShoppingcartVO;
+import com.tiandu.system.utils.ConfigUtil;
 
 /**
  * 
@@ -37,6 +42,12 @@ public class MShoppingcartController extends BaseController {
 	
 	@Autowired
 	private TdShoppingcartItemService tdShoppingcartItemService;
+	
+	@Autowired
+	private TdOrderService tdOrderService;
+	
+	@Autowired
+	private ConfigUtil configUtil;
 	
 	/*
 	 * 我的购物车
@@ -173,7 +184,39 @@ public class MShoppingcartController extends BaseController {
 		}
 	}
 	
+	/*
+	 * 确认订单
+	 */
+	@RequestMapping("/confirmorder")
+	public String confirmorder(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currUser = this.getCurrentUser();
+		//获取购物车
+		ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid());
+		//收货地址
+//		List<>
+		modelMap.addAttribute("shoppingcart", shoppingcart) ;
+	    return "/mobile/shoppingcart/confirmorder";
+	}
+	
+	/*
+	 * 确认订单
+	 */
+	@RequestMapping("/order")
+	public String order(OrderForm orderForm, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currUser = this.getCurrentUser();
+		//获取购物车
+		ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid());
+		
+		TdOrder order = tdOrderService.genernateOrder(currUser, orderForm, shoppingcart);
+		
+		modelMap.addAttribute("shoppingcart", shoppingcart) ;
+	    return "/mobile/shoppingcart/confirmorder";
+	}
+	
 	private ShoppingcartVO getShoppingcart(Integer uid){
+		Integer integralexchangerate = configUtil.getIntegralExchangerate(); //积分抵扣金额比例
+		Integer commonproductpointpercent = configUtil.getCommonProductPointPercent(); //普通商品可积分抵扣的比例
+		Integer partproductpointpercent = configUtil.getPartProductPointPercent(); //部分积分兑换商品可积分抵扣的比例
 		ShoppingcartVO cart = new ShoppingcartVO();
 		//重新计算
 		TdShoppingcartSearchCriteria sc = new TdShoppingcartSearchCriteria();
@@ -184,14 +227,30 @@ public class MShoppingcartController extends BaseController {
 		if(null!=itemList && itemList.size()>0){
 			for(TdShoppingcartItem item : itemList){
 				//累加每个商品的运费
-				BigDecimal postage = (null!=item.getPostage())?item.getPostage():BigDecimal.ZERO;
+				BigDecimal postage = (null!=item.getProduct() && null!=item.getProduct().getPostage())?item.getProduct().getPostage():BigDecimal.ZERO;
 				cart.setTotalPostage(postage.add(cart.getTotalPostage()));
 				//累加单个商品总金额（价格*数量）
 				BigDecimal quantity = new BigDecimal(item.getQuantity());
-				BigDecimal amount = item.getPrice().multiply(quantity);
+				BigDecimal amount = item.getProductSku().getSalesPrice().multiply(quantity);
 				cart.setTotalAmount(amount.add(cart.getTotalAmount()).add(postage));
+				//计算可以积分抵扣金额
+				BigDecimal pointAmount =BigDecimal.ZERO;
+				if(ConstantsUtils.PRODUCT_KIND_PART_POINT_EXCHANGE.equals(item.getProduct().getKind()) && partproductpointpercent>0 && integralexchangerate>0){
+					pointAmount =  amount.multiply(new BigDecimal(partproductpointpercent));
+					cart.setTotalPartPointAmount(pointAmount.add(cart.getTotalPartPointAmount()));
+				}else if(commonproductpointpercent>0 && integralexchangerate>0){
+					pointAmount =  amount.multiply(new BigDecimal(commonproductpointpercent));
+					cart.setTotalCommonPointAmount(pointAmount.add(cart.getTotalCommonPointAmount()));
+				}				
 			}
+			//计算总积分抵扣金额和
+			cart.setTotalPointAmount(cart.getTotalCommonPointAmount().add(cart.getTotalPartPointAmount()));
+			Integer commonproductpoint = cart.getTotalCommonPointAmount().multiply(new BigDecimal(integralexchangerate)).setScale(0, BigDecimal.ROUND_FLOOR).intValue();
+			Integer partproductpoint = cart.getTotalPartPointAmount().multiply(new BigDecimal(integralexchangerate)).setScale(0, BigDecimal.ROUND_FLOOR).intValue();
+			cart.setTotalPointsUsed(commonproductpoint+partproductpoint);
+			
 		}
+		cart.setTotalcount(itemList.size());
 		return cart;
 	}
 }

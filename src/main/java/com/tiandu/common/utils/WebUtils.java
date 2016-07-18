@@ -25,6 +25,14 @@ public class WebUtils {
 		temp += ConstantsUtils.PRIMARY_MEMBER_KEY;
 		return MD5.md5(temp);
 	}
+	/**
+	 * 生成订单编号
+	 * @return
+	 */
+	public static synchronized String generateOrderNo(){
+		Long time = System.currentTimeMillis();
+		return time.toString();
+	}
 	
 	public static Boolean isAjaxRequest(HttpServletRequest request){
 		String requestType = request.getHeader("X-Requested-With");
