@@ -41,9 +41,12 @@
                 <entry key="roles">  
                     <bean class="com.tiandu.common.utils.filter.TdRoleAuthorizationFilter" />  
                 </entry>  
-                <!-- <entry key="authc">  
-                    <bean class="com.tiandu.common.utils.filter.TdPermissionAuthenticationFilter" />  
-                </entry>   -->
+                <entry key="authc">  
+                    <bean class="com.tiandu.common.utils.filter.TdFormAuthenticationFilter" />  
+                </entry>  
+                <entry key="user">  
+                    <bean class="com.tiandu.common.utils.filter.TdUserFilter" />  
+                </entry>  
                 <entry key="perms">  
                     <bean class="com.tiandu.common.utils.filter.TdPermissionAuthenticationFilter" />  
                 </entry>  

@@ -141,26 +141,30 @@ function addToShoppingcart(){
 	var skuId = $("#skuId").val();
 	var skuPrice = $("#skuPrice").val();
 	var productId = $("#productId").val();
+	var postage = $("#propostage").val();
+	var quantity = $("#prodquantity").val();
+	var itemType = $("#productKind").val();
 	
-	if(confirm("确定要移除商品？")){
-		var url = basePath+"/mobile/shoppingcart/addsku?ids="+ids;
-		var postData = {"ids":ids};
-		$.post(url,postData,removeItemsCallback,"text");
+	if(skuId>0){
+		var url = basePath+"/mobile/shoppingcart/addsku";
+		var postData = {"productId":productId,"productSkuId":skuId,"price":skuPrice,"postage":postage,"quantity":quantity,"itemType":itemType};
+		$.post(url,postData,addToShoppingcartCallback,"text");
+	}else{
+		alert("请先选择商品规格！");
 	}
 	
 }
 
-function removeItemsCallback(data){
+function addToShoppingcartCallback(data){
 	var result = eval("("+data+")");
 	if(result.code==1){
-		alert('商品删除成功。');
-		refreshList();
+		alert('加入购物车成功。');
 	}else{
-		alert('商品删除失败!');
+		alert('加入购物车失败!');
 	}
 }
-//去下单
-function nextOrder(){
+//立即购买
+function buyNow(){
 	var url = basePath+"/mobile/shoppingcart/confirmorder";
 	alert("稍等一下，功能开发中...");
 }

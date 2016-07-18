@@ -2,11 +2,8 @@ package com.tiandu.order.service;
 
 import java.util.List;
 
-import com.tiandu.order.entity.TdOrderShipment;
 import com.tiandu.order.entity.TdShoppingcartItem;
-import com.tiandu.order.search.TdOrderShipmentSearchCriteria;
 import com.tiandu.order.search.TdShoppingcartSearchCriteria;
-import com.tiandu.product.entity.TdProductSku;
 
 /**
  * 
@@ -63,11 +60,4 @@ public interface TdShoppingcartItemService {
 	 * @return
 	 */
 	public List<TdShoppingcartItem> findBySearchCriteria(TdShoppingcartSearchCriteria sc);
-	
-	/**
-	 * 加入购物车
-	 * @param item
-	 * @return
-	 */
-	public boolean addItemToShoppingcart(TdShoppingcartItem item);
 }

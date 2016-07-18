@@ -39,6 +39,14 @@
     from td_shoppingcart_item s
     where s.uid = #{uid,jdbcType=INTEGER}
   </select>
+  
+  <select id="selectByUidAndSkuId" resultMap="BaseResultMap" parameterType="com.tiandu.order.entity.TdShoppingcartItem" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_shoppingcart_item s
+    where s.uid = #{uid,jdbcType=INTEGER} and s.product_sku_id = #{productSkuId,jdbcType=INTEGER}
+  </select>
+  
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.order.search.TdShoppingcartSearchCriteria" >
     select 
     <include refid="Base_Column_List" />
