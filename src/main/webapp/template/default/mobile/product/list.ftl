@@ -25,7 +25,16 @@
     <script type="text/javascript" src="${app.basePath}/static/touch/js/swiper.min.js"></script> 
     <script type="text/javascript" src="${app.basePath}/static/touch/js/common.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/touch/js/index.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/mobile/product/search.js"></script>
 </head>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	var url = '${app.basePath}/mobile/product/list/more/${typeId?c}?orderby=${sc.orderby!'1'}'
+	$('#product_more').refresh(url,"#product_more",0);
+})
+
+</script>
 <body class="body_bg">
 
 <!-- header_top -->
@@ -38,13 +47,13 @@
 <!-- Center Start -->
 <!-- <section class="container"> -->
     <div class="three">
-        <a href="#" title="" class="active">综合</a>
-        <a href="#" title="" class="">销量</a>
-        <a href="#" title="" class="">价格</a>
+        <a href="${app.basePath}/mobile/product/list/${typeId?c}?orderby=1" title="综合" <#if sc?? && sc.orderby==1>class="active"</#if>>综合</a>
+        <a href="${app.basePath}/mobile/product/list/${typeId?c}?orderby=2" title="销量" <#if sc?? && sc.orderby==2>class="active"</#if>>销量</a>
+        <a href="${app.basePath}/mobile/product/list/${typeId?c}?orderby=<#if sc??><#if sc.orderby==3 || sc.orderby==4><#if sc.orderby==3>4<#else>3</#if><#else>3</#if><#else>3</#if>" title="价格"  <#if sc?? && sc.orderby==3 || sc.orderby==4>class="active"</#if>>价格</a>
     </div>
  
+ 	<#--
     <div class="strenth">
-        <!-- Swiper -->
         <div class="swiper-container">
             <div class="swiper-wrapper" id="swiper-wrapper">
                 <div class="swiper-slide"><a href="产品列表.html" title="">翡翠玉石</a></div>
@@ -55,10 +64,7 @@
                 <div class="swiper-slide"><a href="#" title="">6</a></div>
                 <div class="swiper-slide"><a href="#" title="">7</a></div> 
             </div>
-            <!-- Add Pagination -->
-            <!-- <div class="swiper-pagination"></div> -->
         </div>
-        <!-- Initialize Swiper -->
         <script>
         var swiper = new Swiper('.swiper-container', {
             pagination: '.swiper-pagination',
@@ -67,12 +73,12 @@
             // spaceBetween: 30
         });
         </script>
-        <!-- Swiper-end -->
     </div>
+    -->
 
     <!-- 热销推荐 -->
     <div class="hot">
-        <section class="sec2">
+        <section class="sec2" id="product_more">
         	<#if productList??>
         	<#list productList as item>
             <a href="${app.basePath}/mobile/product/item${item.id!'0'}" title="${item.name!''}" class="">

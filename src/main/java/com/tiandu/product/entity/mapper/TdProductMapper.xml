@@ -414,7 +414,9 @@
   	<include refid="Base_Column_List" />
   	,t.id as t_id
     ,t.name as t_name
-    from td_product as p LEFT JOIN td_product_type t ON p.type_id=t.id
+    from td_product as p 
+    	LEFT JOIN td_product_type t ON p.type_id=t.id
+    	left join td_product_stat s on p.id = s.product_id
     where 1=1
     <if test="status != null">
     	and p.status = #{status,jdbcType=TINYINT}
@@ -444,7 +446,7 @@
     	and p.type_id = #{typeId,jdbcType=INTEGER}
     </if>
     <if test="orderBy != null">
-    	order by #{orderBy,jdbcType=VARCHAR}
+    	order by ${orderBy}
     </if>
   </select>
   <update id="updateBatch" parameterType="Map">    
