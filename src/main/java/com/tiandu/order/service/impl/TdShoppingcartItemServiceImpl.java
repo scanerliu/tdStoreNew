@@ -23,7 +23,7 @@ public class TdShoppingcartItemServiceImpl implements TdShoppingcartItemService{
 
 	@Override
 	public boolean addToShoppingcart(TdShoppingcartItem item) {
-		TdShoppingcartItem pitem = tdShoppingcartItemMapper.selectByUidAndSkuId(item.getUid(), item.getProductSkuId());
+		TdShoppingcartItem pitem = tdShoppingcartItemMapper.selectByUidAndSkuId(item);
 		if(null!=pitem){//已经存在购物车时，累加数量
 			TdShoppingcartItem uitem = new TdShoppingcartItem();
 			uitem.setId(pitem.getId());

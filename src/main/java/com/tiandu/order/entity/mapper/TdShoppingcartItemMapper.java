@@ -24,7 +24,7 @@ public interface TdShoppingcartItemMapper {
      */
     int updateNumByPrimaryKey(TdShoppingcartItem record);
     
-    public TdShoppingcartItem selectByUidAndSkuId(Integer uid, Integer skuId);
+    public TdShoppingcartItem selectByUidAndSkuId(TdShoppingcartItem record);
     
     public List<TdShoppingcartItem> findByUid(Integer uid);
     

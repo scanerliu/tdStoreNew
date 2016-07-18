@@ -54,8 +54,11 @@
             <section class="div3">
               <section class="sec1">${item.product.name!''}</section>
               <section class="sec2">
-                <label class="lab1">颜色：<span>卡其色</span></label>
-                <label class="lab2">尺码：<span>均码</span></label>
+              	<#if item.productSku?? && item.productSku.specialList??>
+              	<#list item.productSku.specialList as special>
+                <label class="lab1">${special.sname!''}：<span>${special.soption!''}</span>&nbsp;&nbsp;</label>
+                </#list>
+                </#if>
               </section>
               <section class="sec3">
                 <aside class="as1 fl">
