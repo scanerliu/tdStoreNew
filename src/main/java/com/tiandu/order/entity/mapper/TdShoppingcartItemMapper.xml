@@ -19,12 +19,14 @@
   <resultMap id="productResult" type="com.tiandu.product.entity.TdProduct" >
   	<result column="p_name" property="name" jdbcType="VARCHAR" />
   	<result column="p_kind" property="kind" jdbcType="VARCHAR" />
+  	<result column="p_uid" property="uid" jdbcType="VARCHAR" />
   	<result column="p_postage" property="postage" jdbcType="DECIMAL" />
   	<result column="p_image" property="imageUrl" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="productSkuResult" type="com.tiandu.product.entity.TdProductSku" >
   	<result column="p_specifications" property="specifications" jdbcType="VARCHAR" />
   	<result column="p_salesPrice" property="salesPrice" jdbcType="DECIMAL" />
+  	<result column="p_stock" property="stock" jdbcType="INTEGER" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -53,8 +55,8 @@
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.order.search.TdShoppingcartSearchCriteria" >
     select 
     <include refid="Base_Column_List" />
-    ,p.kind as p_kind, p.name as p_name, p.postage as p_postage, p.image_url as p_image
-    , k.specifications as p_specifications, k.sales_price as p_salesPrice
+    ,p.kind as p_kind, p.uid as p_uid, p.name as p_name, p.postage as p_postage, p.image_url as p_image
+    , k.specifications as p_specifications, k.sales_price as p_salesPrice, k.stock as p_stock
     from td_shoppingcart_item s left join td_product p on s.product_id = p.id left join td_product_sku k on s.product_sku_id = k.id
     where 1=1 
     <if test="uid != null" >

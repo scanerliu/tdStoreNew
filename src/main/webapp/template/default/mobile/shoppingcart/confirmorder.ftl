@@ -32,6 +32,7 @@
     <span>结算</span>
   </div>
   <!-- header_top end -->
+  <form id="confirmorder" method="post" action ="">
 	<section class="container">
 	
 	    <!-- order_detail_title -->
@@ -59,6 +60,7 @@
 		                </#list>
 		                </#if>
 		                <span><label for="">数量：</label><font>${item.quantity!'0'}</font></span>
+		                <span><label for="">邮费：</label><font>￥${item.postage!'0'}</font></span>
 	                </div>
 	                <p>￥${item.productSku.salesPrice!'0'}</p>
 	            </section>
@@ -72,44 +74,58 @@
 	    <ul class="payinfo">
 	        <li>
 	            <span>支付方式</span>
-	            <a href="成为代理-选择付款方式.html"  class="fr wechatpay" title="">微信支付<i></i></a>
+	            <select name="paymentId" class="fr">
+	                <#if shoppingcart.canUserAccount==true>
+	            	<option value="4">钱包余额支付</option>
+	            	</#if>
+	            	<option value="1">支付宝支付</option>
+	            	<option value="2">微信支付</option>
+	            	<option value="3">银联支付</option>
+	            </select>
+	            <!--<a href="javascript:;"  class="fr wechatpay" title="">微信支付<i></i></a>-->
 	        </li>
+	        <#if shoppingcart.totalPointsUsed gt 0>
 	        <li>
 	            <span>使用积分</span>
 	
-	            <label class="lblcheckbox fr">可使用积分${shoppingcart.totalPointsUsed!'0'}抵扣￥${shoppingcart.totalPointAmount!'0'}<input id="checkbox" type="checkbox" checked /><i class="checked"></i></label>
+	            <label class="lblcheckbox fr">可使用积分${shoppingcart.totalPointsUsed!'0'}抵扣￥${shoppingcart.totalPointAmount!'0'}<input id="userpoints" type="checkbox" name="usePoints" value="true"/><i class=""></i></label>
 	            <script>
 	                $(function(){
-	                    $("#checkbox").click(function(){
+	                    $("#userpoints").click(function(){
 	                        var checkval = $("input[type='checkbox']").is(':checked');
 	                        if(checkval==true){
 	                            $(this).siblings('i').addClass('checked');
+	                            var totalAmount = ${shoppingcart.totalAmount!'0'};
+	                            var totalPointAmount = ${shoppingcart.totalPointAmount!'0'};
+	                            var amount = totalAmount - totalPointAmount;
+	                            $("#totalAmountdv").html("￥"+amount);
 	                        }else{
 	                            $(this).siblings('i').removeClass('checked');
+	                            $("#totalAmountdv").html("￥${shoppingcart.totalAmount!'0'}");
 	                        }
 	                    });
 	                });
 	            </script>
 	        </li>
-	
+			</#if>
 	        <li>
 	            <span>买家留言</span>
-	
-	            <span class="message"><input type="text" value="" placeholder="可填写您与卖家达成一致的要求"/></span>
-	
+	            <span class="message"><input type="text" name="userMsg" value="" placeholder="可填写您与卖家达成一致的要求"/></span>
 	        </li>
 	
 	        <li class="total">
 	           <label style="float:right">共${shoppingcart.totalcount}件商品，合计：<font color="red">￥${shoppingcart.totalAmount}</font></label>
 	        </li>
 	    </ul>
+	    <input type="hidden" id="totalAmount" value="${shoppingcart.totalAmount!''}"/>
+	    <input type="hidden" id="totalPointAmount" value="${shoppingcart.totalPointAmount!'0'}"/>
 	    <!-- order-detail-pay-end -->
 	</section>
-
+</form>
 	<!-- Footer Start -->
 	<footer>
 	    <div class="gopay">
-	        <span class="totalprice">总计：<font color="red">￥${shoppingcart.totalAmount}</font></span>
+	        <span class="totalprice">总计：<font color="red" id="totalAmountdv">￥${shoppingcart.totalAmount!''}</font></span>
 	        <a href="javascript:;" onclick="genernateOrder()" class="a-pay" title="">提交订单</a>
 	    </div>
 	    <span class="footclear"></span>

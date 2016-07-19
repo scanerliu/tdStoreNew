@@ -3,6 +3,7 @@ package com.tiandu.order.service;
 import java.util.List;
 
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.order.entity.TdJointOrder;
 import com.tiandu.order.entity.TdOrder;
 import com.tiandu.order.entity.TdOrderShipment;
 import com.tiandu.order.search.TdOrderSearchCriteria;
@@ -50,6 +51,7 @@ public interface TdOrderService {
 	 * @param orderForm
 	 * @param shoppingcart
 	 * @return
+	 * @throws RuntimeException 
 	 */
-	public TdOrder genernateOrder(TdUser currUser, OrderForm orderForm, ShoppingcartVO shoppingcart);
+	public TdJointOrder saveOrderFull(TdUser currUser, OrderForm orderForm, ShoppingcartVO shoppingcart) throws RuntimeException;
 }

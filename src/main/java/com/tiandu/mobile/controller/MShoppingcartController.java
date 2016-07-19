@@ -2,8 +2,10 @@ package com.tiandu.mobile.controller;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +22,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.custom.entity.TdUser;
-import com.tiandu.order.entity.TdOrder;
+import com.tiandu.custom.entity.TdUserAccount;
+import com.tiandu.custom.entity.TdUserIntegral;
+import com.tiandu.custom.service.TdUserAccountService;
+import com.tiandu.custom.service.TdUserIntegralService;
+import com.tiandu.order.entity.TdJointOrder;
 import com.tiandu.order.entity.TdShoppingcartItem;
 import com.tiandu.order.search.TdShoppingcartSearchCriteria;
 import com.tiandu.order.service.TdOrderService;
@@ -42,6 +48,12 @@ public class MShoppingcartController extends BaseController {
 	
 	@Autowired
 	private TdShoppingcartItemService tdShoppingcartItemService;
+	
+	@Autowired
+	private TdUserIntegralService tdUserIntegralService;
+	
+	@Autowired
+	private TdUserAccountService tdUserAccountService;
 	
 	@Autowired
 	private TdOrderService tdOrderService;
@@ -203,14 +215,31 @@ public class MShoppingcartController extends BaseController {
 	 */
 	@RequestMapping("/order")
 	public String order(OrderForm orderForm, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		if(null==orderForm.getUsePoints()){
+			orderForm.setUsePoints(false);
+		}
 		TdUser currUser = this.getCurrentUser();
 		//获取购物车
 		ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid());
 		
-		TdOrder order = tdOrderService.genernateOrder(currUser, orderForm, shoppingcart);
-		
-		modelMap.addAttribute("shoppingcart", shoppingcart) ;
-	    return "/mobile/shoppingcart/confirmorder";
+		TdJointOrder order = new TdJointOrder();
+		try {
+			order = tdOrderService.saveOrderFull(currUser, orderForm, shoppingcart);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			order.setErrMsg(e.getMessage());
+		}
+		if(order!=null && StringUtils.isNotEmpty(order.getJno())){
+			//下单成功调整支付页面
+			modelMap.addAttribute("order", order) ;
+		    return "/mobile/shoppingcart/orderpay";
+			
+		}else{
+			//下单失败
+			modelMap.addAttribute("order", order) ;
+		    return "/mobile/shoppingcart/ordererror";
+		}
 	}
 	
 	private ShoppingcartVO getShoppingcart(Integer uid){
@@ -225,6 +254,7 @@ public class MShoppingcartController extends BaseController {
 		List<TdShoppingcartItem> itemList = tdShoppingcartItemService.findBySearchCriteria(sc);
 		cart.setItemList(itemList);
 		if(null!=itemList && itemList.size()>0){
+			Set<Integer> suppliers = new HashSet<Integer>(); 
 			for(TdShoppingcartItem item : itemList){
 				//累加每个商品的运费
 				BigDecimal postage = (null!=item.getProduct() && null!=item.getProduct().getPostage())?item.getProduct().getPostage():BigDecimal.ZERO;
@@ -232,23 +262,46 @@ public class MShoppingcartController extends BaseController {
 				//累加单个商品总金额（价格*数量）
 				BigDecimal quantity = new BigDecimal(item.getQuantity());
 				BigDecimal amount = item.getProductSku().getSalesPrice().multiply(quantity);
+				cart.setTotalProductAmount(amount.add(cart.getTotalProductAmount()));
 				cart.setTotalAmount(amount.add(cart.getTotalAmount()).add(postage));
 				//计算可以积分抵扣金额
 				BigDecimal pointAmount =BigDecimal.ZERO;
 				if(ConstantsUtils.PRODUCT_KIND_PART_POINT_EXCHANGE.equals(item.getProduct().getKind()) && partproductpointpercent>0 && integralexchangerate>0){
-					pointAmount =  amount.multiply(new BigDecimal(partproductpointpercent));
+					pointAmount =  amount.multiply(new BigDecimal(partproductpointpercent)).divide(new BigDecimal(100));
 					cart.setTotalPartPointAmount(pointAmount.add(cart.getTotalPartPointAmount()));
 				}else if(commonproductpointpercent>0 && integralexchangerate>0){
-					pointAmount =  amount.multiply(new BigDecimal(commonproductpointpercent));
+					pointAmount =  amount.multiply(new BigDecimal(commonproductpointpercent)).divide(new BigDecimal(100));
 					cart.setTotalCommonPointAmount(pointAmount.add(cart.getTotalCommonPointAmount()));
-				}				
+				}
+				//统计供应商id
+				suppliers.add(item.getProduct().getUid());
+				cart.setSupplierId(item.getProduct().getUid());
 			}
+			//设定供应商集合
+			cart.setSupplierIds(suppliers);
 			//计算总积分抵扣金额和
 			cart.setTotalPointAmount(cart.getTotalCommonPointAmount().add(cart.getTotalPartPointAmount()));
 			Integer commonproductpoint = cart.getTotalCommonPointAmount().multiply(new BigDecimal(integralexchangerate)).setScale(0, BigDecimal.ROUND_FLOOR).intValue();
 			Integer partproductpoint = cart.getTotalPartPointAmount().multiply(new BigDecimal(integralexchangerate)).setScale(0, BigDecimal.ROUND_FLOOR).intValue();
 			cart.setTotalPointsUsed(commonproductpoint+partproductpoint);
-			
+			//获取用户积分
+			TdUserIntegral userIntegral = tdUserIntegralService.findOne(uid);
+			if(null!=userIntegral && userIntegral.getIntegral()>=cart.getTotalPointsUsed()){
+				
+			}else{
+				cart.setTotalPointsUsed(0);
+			}
+			//获取用户钱包余额
+			TdUserAccount userAccount = tdUserAccountService.findOne(uid);
+			if(null!=userAccount && TdUserAccount.ACCOUNT_STATUS_ACTIVE.equals(userAccount.getStatus()) && userAccount.getAmount().compareTo(cart.getTotalAmount())>=0){
+				cart.setCanUserAccount(true);
+			}else{
+				cart.setCanUserAccount(false);
+			}
+			//判断是否需要拆分订单
+			if(suppliers.size()>1){
+				cart.setCombiningOrder(true);
+			}
 		}
 		cart.setTotalcount(itemList.size());
 		return cart;

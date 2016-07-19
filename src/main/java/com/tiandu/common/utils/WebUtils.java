@@ -26,6 +26,14 @@ public class WebUtils {
 		return MD5.md5(temp);
 	}
 	/**
+	 * 生成联合订单编号
+	 * @return
+	 */
+	public static synchronized String generateJointOrderNo(){
+		Long time = System.currentTimeMillis();
+		return "J"+time.toString();
+	}
+	/**
 	 * 生成订单编号
 	 * @return
 	 */
