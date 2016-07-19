@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tiandu.common.utils.WebUtils;
+import com.tiandu.custom.entity.TdExperienceStore;
 import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserAccount;
@@ -27,6 +28,7 @@ import com.tiandu.custom.entity.mapper.TdUserRoleMapper;
 import com.tiandu.custom.search.TdUserMessageSearchCriteria;
 import com.tiandu.custom.search.TdUserSearchCriteria;
 import com.tiandu.custom.search.TdUserSignSearchCriteria;
+import com.tiandu.custom.service.TdExperienceStoreService;
 import com.tiandu.custom.service.TdUserAccountService;
 import com.tiandu.custom.service.TdUserIntegralLogService;
 import com.tiandu.custom.service.TdUserIntegralService;
@@ -66,6 +68,9 @@ public class TdUserServiceImpl implements TdUserService {
 	
 	@Autowired
 	TdUserMessageService tdUserMessageService;
+	
+	@Autowired
+	TdExperienceStoreService tdExperienceStoreService;
 	
 	public int insert(TdUser u) {
 		return userMapper.insert(u);
@@ -295,4 +300,13 @@ public class TdUserServiceImpl implements TdUserService {
 	public int saveUserInfo(TdUser user) {
 		return userMapper.updateByPrimaryKeySelective(user);
 	}
+
+	@Override
+	public int saveVerifyExperienceStoreApply(TdExperienceStore experienceStore, Byte status) {
+		TdExperienceStore estore =  tdExperienceStoreService.findOne(experienceStore.getId());
+		estore.setStatus(status);
+		return tdExperienceStoreService.save(estore);
+	}
+	
+	
 }

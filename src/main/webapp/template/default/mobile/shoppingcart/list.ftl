@@ -62,7 +62,7 @@
               </section>
               <section class="sec3">
                 <aside class="as1 fl">
-                  <p class="p1">￥${item.price}</p>
+                  <p class="p1">￥${item.productSku.salesPrice!'0'}</p>
                   <p class="p2">（运费：<span>${item.postage}</span>元）</p>
                 </aside>
                 <aside class="as2 fr">

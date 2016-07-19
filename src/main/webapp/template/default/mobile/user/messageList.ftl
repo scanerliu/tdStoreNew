@@ -81,7 +81,7 @@
 				</#if>
             </ul>
             <ul class="infor_match">
-                <#if systemMessageList??>
+                <#if experienceStoreMessageList??>
 					<#list experienceStoreMessageList as experienceStoreMessage>
                 		<li>
                     		<a href="${app.basePath}/mobile/user/messageDetail?active=activeExperienceStoreMessage&messageId=${experienceStoreMessage.id?c}" title="${experienceStoreMessage.title!''}">

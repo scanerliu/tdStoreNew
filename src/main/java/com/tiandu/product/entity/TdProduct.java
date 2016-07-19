@@ -15,6 +15,8 @@ public class TdProduct {
 	private String code;
 
 	private BigDecimal price;
+	
+	private BigDecimal postage;
 
 	private Integer points;
 
@@ -109,6 +111,14 @@ public class TdProduct {
 
 	public void setPrice(BigDecimal price) {
 		this.price = price;
+	}
+
+	public BigDecimal getPostage() {
+		return postage;
+	}
+
+	public void setPostage(BigDecimal postage) {
+		this.postage = postage;
 	}
 
 	public Integer getPoints() {

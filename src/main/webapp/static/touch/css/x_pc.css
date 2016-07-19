@@ -1008,6 +1008,14 @@ strong {font-weight: normal;}
 	background: none;
 	border: none;
 }
+.change-password .inpt input[type="password"] {
+	float: right;
+	width: 4.6rem;
+	height: .8rem;
+	font-size: .28rem;
+	background: none;
+	border: none;
+}
 .change-password .get-code {
 	height: .8rem;
 	line-height: .8rem;
