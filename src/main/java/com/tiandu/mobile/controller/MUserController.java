@@ -458,6 +458,8 @@ public class MUserController extends BaseController {
 			if(sc.getPageNo()!=pageNo){
 				jsonData.put("hasData", "no");
 				return jsonData.toString();
+			}else{
+				jsonData.put("totalCount", sc.getTotalCount());
 			}
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
