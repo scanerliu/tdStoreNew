@@ -2,6 +2,9 @@ package com.tiandu.custom.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
+import com.tiandu.product.entity.TdProductType;
 
 public class TdExperienceStore {
 	private Integer id;
@@ -28,7 +31,7 @@ public class TdExperienceStore {
 
 	private String storeTypeNames;
 
-	private Byte status = 1;  // 默认状态为：未审核
+	private Byte status = 1; // 默认状态为：未审核
 
 	private Date createTime;
 
@@ -183,13 +186,13 @@ public class TdExperienceStore {
 	public void setUpdatePerson(TdUser updatePerson) {
 		this.updatePerson = updatePerson;
 	}
-	
-	public String getStatusStr(){
-		if(this.getStatus().equals(Byte.valueOf("1"))){
+
+	public String getStatusStr() {
+		if (this.getStatus().equals(Byte.valueOf("1"))) {
 			return "未审核";
-		}else if(this.getStatus().equals(Byte.valueOf("2"))){
+		} else if (this.getStatus().equals(Byte.valueOf("2"))) {
 			return "已通过";
-		}else{
+		} else {
 			return "未通过";
 		}
 	}

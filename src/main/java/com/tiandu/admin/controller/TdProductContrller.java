@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -458,7 +459,13 @@ public class TdProductContrller extends BaseController{
 			List<String> trList = new ArrayList<>();
 			String trId = "";
 			for(int i = 0; i < specSize; i ++){
-				trList.add(trJson.getString(columnArray[i]));
+				String spes = "";
+				try{
+					spes = trJson.getString(columnArray[i]);
+				}catch(JSONException e){
+					System.err.println("编辑商品前添加了新的规格");
+				}
+				trList.add(spes);
 				trId += trJson.getString(columnArray[i]);
 				if(i < specSize - 1){
 					trId += "_";

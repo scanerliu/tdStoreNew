@@ -362,9 +362,12 @@ public class TdUser {
 		if(null!=this.getUgenter()){
 			if(this.getUgenter().equals(Byte.valueOf("2"))){
 				sb.append("女");
-			}else{
+			}else if(this.getUgenter().equals(Byte.valueOf("1"))){
 				sb.append("男");
 			}
+		}
+		if(null == this.getUgenter()){
+			sb.append("保密");
 		}
 		return sb.toString();
 	}

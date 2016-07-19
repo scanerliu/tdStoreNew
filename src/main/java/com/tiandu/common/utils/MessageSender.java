@@ -80,11 +80,11 @@ public class MessageSender {
 		ms.init();
 		List<String> phones = new ArrayList<>();
 		phones.add("18323127224");
-		phones.add("15818137316");
+		//phones.add("15818137316");
 		List<String> datas = new ArrayList<>();
 		datas.add("9999");
 		datas.add("1");
-		//ms.send(phones, "1", datas);
+		ms.send(phones, "1", datas);
 	}
 
 }

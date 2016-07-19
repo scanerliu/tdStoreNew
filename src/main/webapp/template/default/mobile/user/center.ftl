@@ -93,12 +93,12 @@
         <label>修改密码</label>
         <i class="icon-next"></i>
       </a>
-      <a href="推荐人.html" title="">
+      <a href="${app.basePath}/mobile/user/recommendPeople" title="推荐人">
         <i class="icon bg_icon_3"></i>
         <label>推荐人</label>
         <i class="icon-next"></i>
       </a>
-      <a href="联盟创客.html" title="">
+      <a href="${app.basePath}/mobile/user/downUserList" title="联盟创客">
         <i class="icon bg_icon_4"></i>
         <label>联盟创客</label>
         <i class="icon-next"></i>
