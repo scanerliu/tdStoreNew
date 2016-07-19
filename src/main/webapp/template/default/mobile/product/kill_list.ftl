@@ -37,7 +37,7 @@
     }
     
  $(document).ready(function(){   
-	var url = '${app.basePath}/mobile/product/seckill/more';
+	var url = '${app.basePath}/mobile/product/search/more';
 	var cc=document.getElementById('two2');
 	var aA=cc.getElementsByTagName('a');
 	if(aA[0].className=='active'){

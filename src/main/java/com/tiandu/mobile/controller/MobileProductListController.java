@@ -22,6 +22,9 @@ import com.tiandu.product.service.TdProductTypeService;
  * @author Max
  * 
  * 创建时间：2016年7月14日 下午2:13:55
+ * 
+ * 商品列表页，预购秒杀列表页，0元、10元购列表页
+ * 
  */
 
 @Controller
@@ -119,9 +122,10 @@ public class MobileProductListController extends BaseController{
 	/**
 	 * 
 	 * @author Max
-	 * 更多秒杀、预售
+	 * 加载跟多。。。
+	 *  6 = 秒杀、5 = 预售、3 = 0元购、4 = 10元购
 	 */
-	@RequestMapping("/seckill/more")
+	@RequestMapping("/search/more")
 	public String seckillMore(TdProductCriteria sc,
 			Integer page,
 			HttpServletRequest req,ModelMap map)
@@ -129,24 +133,60 @@ public class MobileProductListController extends BaseController{
 		// 系统配置
 		map.addAttribute("system", getSystem());
 		
-		sc.setStartTime(new Date());
-		sc.setEndTime(new Date());
 		sc.setOnshelf(true);
 		
+		// 0元购
+		if(sc.getKind() == 3)
+		{
+			if(sc.getPageNo()-1==page){
+				map.addAttribute("zeroList", tdProductService.findBySearchCriteria(sc));
+			}
+			return "/mobile/product/zero_list_more";
+		}
+		// 10元购
+		else if(sc.getKind() == 4)
+		{
+			if(sc.getPageNo()-1==page){
+				map.addAttribute("tenList", tdProductService.findBySearchCriteria(sc));
+			}
+			return "/mobile/product/ten_list_more";
+		}
+		// 预售
+		else if(sc.getKind() == 5)
+		{
+			sc.setStartTime(new Date());
+			sc.setEndTime(new Date());
+			if(sc.getPageNo()-1==page){
+				map.addAttribute("presellList", tdProductService.findBySearchCriteria(sc));
+			}
+			return "/mobile/product/persell_list_more";
+		}
 		// 秒杀
+		sc.setStartTime(new Date());
+		sc.setEndTime(new Date());
 		if(sc.getPageNo()-1==page){
 			map.addAttribute("killList", tdProductService.findBySearchCriteria(sc));
 		}
-		// 预售
-		if(sc.getPageNo()-1==page){
-			map.addAttribute("presellList", tdProductService.findBySearchCriteria(sc));
-		}
-		
-		if(sc.getKind() == 5)
-		{
-			return "/mobile/product/persell_list_more";
-		}
 		return "/mobile/product/kill_list_more";
 	}
+	
+	@RequestMapping("/zero")
+	public String zero(TdProductCriteria sc,HttpServletRequest req,ModelMap map)
+	{
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		sc.setOnshelf(true);
+		
+		// 秒杀
+		sc.setKind((byte)3);
+		map.addAttribute("zeroList", tdProductService.findBySearchCriteria(sc));
+		
+		// 预售
+		sc.setKind((byte)4);
+		map.addAttribute("tenList", tdProductService.findBySearchCriteria(sc));
+		
+		return "/mobile/product/zero_list";
+	}
+	
 	
 }

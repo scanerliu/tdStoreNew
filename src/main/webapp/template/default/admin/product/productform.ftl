@@ -98,6 +98,11 @@
 		        <td><input type="text" name="price" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.price?string('0.00')}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="currency"></td>
 		    </tr>
 		    <tr>
+		        <th width="150">运费：</th>
+		        
+		        <td><input type="text" name="postage" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.postage?string('0.00')}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="currency"></td>
+		    </tr>
+		    <tr>
 		        <th width="150">库存：</th>
 		        
 		        <td><input type="text" name="quantum" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.quantum!'0'}</#if>"  style="width:200px;height:30px" data-options="required:true" ></td>
@@ -105,13 +110,13 @@
 		    <tr class="seckill" <#if !tdProduct?? || tdProduct.kind != 5 || tdProduct.kind != 6>style="display:none"</#if>>
 		        <th  width="150">开始时间：</th>
 		        <td>
-	            	<input type="text" name="startTime" class="easyui-datetimebox" value="<#if tdProduct?? && tdProduct.startTime??>${tdProduct.startTime?string('yyyy-MM-dd HH:mm:ss')}</#if>" style="width:200px;height:30px"  data-options="required:true,showSeconds:true">
+	            	<input type="text" name="startTime" class="easyui-datetimebox" value="<#if tdProduct?? && tdProduct.startTime??>${tdProduct.startTime?string('yyyy-MM-dd HH:mm:ss')}</#if>" style="width:200px;height:30px"  data-options="showSeconds:true">
 		        </td>
 		    </tr>
 		     <tr class="seckill" <#if !tdProduct?? || tdProduct.kind != 5 || tdProduct.kind != 6>style="display:none"</#if>>
 		        <th  width="150">结算时间：</th>
 		        <td>
-		            <input type="text" name="endTime" class="easyui-datetimebox" value="<#if tdProduct?? && tdProduct.endTime??>${tdProduct.endTime?string('yyyy-MM-dd HH:mm:ss')}</#if>" style="width:200px;height:30px" data-options="required:true,showSeconds:true" >
+		            <input type="text" name="endTime" class="easyui-datetimebox" value="<#if tdProduct?? && tdProduct.endTime??>${tdProduct.endTime?string('yyyy-MM-dd HH:mm:ss')}</#if>" style="width:200px;height:30px" data-options="showSeconds:true" >
 		        </td>
 		    </tr>
 		    <tr>
