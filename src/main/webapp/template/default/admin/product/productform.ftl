@@ -59,12 +59,12 @@
 		    <tr>
 		        <th>商品类型：</th>
 		        <td>
-		            <input type="radio" name="kind" value="1" <#if !tdProduct?? || (tdProduct.kind?? && tdProduct.kind==1)>checked</#if>>普通商品&emsp;
-		            <input type="radio" name="kind" value="2" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==2>checked</#if>>商品包&emsp;
-		            <input type="radio" name="kind" value="3" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==3>checked</#if>>0元购&emsp;
-		            <input type="radio" name="kind" value="4" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==4>checked</#if>>10元购&emsp;
-		            <input type="radio" name="kind" value="5" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==5>checked</#if>>预售&emsp;
-		            <input type="radio" name="kind" value="6" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==6>checked</#if>>秒杀&emsp;
+		            <input type="radio" name="kind" onclick="changekind(1)" value="1" <#if !tdProduct?? || (tdProduct.kind?? && tdProduct.kind==1)>checked</#if>>普通商品&emsp;
+		            <input type="radio" name="kind" onclick="changekind(this.value)" value="2" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==2>checked</#if>>商品包&emsp;
+		            <input type="radio" name="kind" onclick="changekind(this.value)" value="3" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==3>checked</#if>>0元购&emsp;
+		            <input type="radio" name="kind" onclick="changekind(this.value)" value="4" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==4>checked</#if>>10元购&emsp;
+		            <input type="radio" name="kind" onclick="changekind(this.value)" value="5" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==5>checked</#if>>预售&emsp;
+		            <input type="radio" name="kind" onclick="changekind(this.value)" value="6" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==6>checked</#if>>秒杀&emsp;
 		        </td>
 		    </tr>
 		     <tr>
@@ -101,6 +101,18 @@
 		        <th width="150">库存：</th>
 		        
 		        <td><input type="text" name="quantum" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.quantum!'0'}</#if>"  style="width:200px;height:30px" data-options="required:true" ></td>
+		    </tr>
+		    <tr class="seckill" <#if !tdProduct?? || tdProduct.kind != 5 || tdProduct.kind != 6>style="display:none"</#if>>
+		        <th  width="150">开始时间：</th>
+		        <td>
+	            	<input type="text" name="startTime" class="easyui-datetimebox" value="<#if tdProduct?? && tdProduct.startTime??>${tdProduct.startTime?string('yyyy-MM-dd HH:mm:ss')}</#if>" style="width:200px;height:30px"  data-options="required:true,showSeconds:true">
+		        </td>
+		    </tr>
+		     <tr class="seckill" <#if !tdProduct?? || tdProduct.kind != 5 || tdProduct.kind != 6>style="display:none"</#if>>
+		        <th  width="150">结算时间：</th>
+		        <td>
+		            <input type="text" name="endTime" class="easyui-datetimebox" value="<#if tdProduct?? && tdProduct.endTime??>${tdProduct.endTime?string('yyyy-MM-dd HH:mm:ss')}</#if>" style="width:200px;height:30px" data-options="required:true,showSeconds:true" >
+		        </td>
 		    </tr>
 		    <tr>
 		        <th width="150">封面图片：</th>
@@ -292,6 +304,7 @@
 	});
 </script>
 <script>
+
 	$(function(){
 		<#if tdProduct??>
 			makeTable(${tableJsonData}, "skuAssemble");
@@ -340,6 +353,7 @@
 		        }
 		});
 	});
+
 
 function removeImg(id)
 {

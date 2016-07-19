@@ -221,6 +221,9 @@ public class TdProductContrller extends BaseController{
 			}
 			
 			tdProductService.save(tdProduct);
+			
+			Integer defautsku = null;
+			
 			//--------保存货品表------------
 			if(tableData != null && !tableData.equals("") && attributeNum != null){
 				JSONObject trJson = new JSONObject(tableData);
@@ -268,12 +271,17 @@ public class TdProductContrller extends BaseController{
 					sku.setUpdateBy(this.getCurrentUser().getUid());
 					sku.setStatus(Byte.valueOf("1"));
 					tdProductSkuService.save(sku);
+					
+					if(defautsku == null){defautsku = sku.getId();} 
 				}
 				
 			}
 			//--------------------
 			
+			// 默认货品ID
+			tdProduct.setDefaultSkuId(defautsku);
 			
+			tdProductService.save(tdProduct);
 			
 			// 修改展示图片
 			if(null != attId)

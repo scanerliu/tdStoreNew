@@ -390,6 +390,15 @@
     <if test="typeRecommend != null">
     	and p.type_recommend = #{typeRecommend,jdbcType=INTEGER}
     </if>
+    <if test="startTime != null">
+    	and p.start_time <![CDATA[ <=]]> #{startTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endTime != null">
+    	and p.end_time <![CDATA[ >=]]> #{endTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="kind != null">
+    	and kind = #{kind,jdbcType=TINYINT}
+    </if>
     <if test="typeId != null">
     	and type_id = #{typeId,jdbcType=INTEGER}
     </if>
@@ -431,8 +440,17 @@
     <if test="name != null and name!=''">
     	and p.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
     </if>
+    <if test="startTime != null">
+    	and p.start_time <![CDATA[ <=]]> #{startTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endTime != null">
+    	and p.end_time <![CDATA[ >=]]> #{endTime,jdbcType=TIMESTAMP}
+    </if>
     <if test="typeId != null">
     	and p.type_id = #{typeId,jdbcType=INTEGER}
+    </if>
+    <if test="kind != null">
+    	and kind = #{kind,jdbcType=TINYINT}
     </if>
     <if test="orderBy != null">
     	order by ${orderBy}

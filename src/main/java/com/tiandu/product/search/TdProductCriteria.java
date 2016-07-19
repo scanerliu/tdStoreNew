@@ -1,5 +1,7 @@
 package com.tiandu.product.search;
 
+import java.util.Date;
+
 import com.tiandu.common.search.SearchCriteria;
 
 public class TdProductCriteria extends SearchCriteria{
@@ -18,6 +20,11 @@ public class TdProductCriteria extends SearchCriteria{
 	
 	// 列表页排序 1-综合升序，2-综合降序，3-销量升序，4-销量降序，5-价格升序，6,-价格降序。
 	private Integer orderby; 
+	
+	// 开始时间
+	private Date startTime;
+	// 结束时间
+	private Date endTime;
 	
 	public String getName() {
 		return name;
@@ -105,6 +112,22 @@ public class TdProductCriteria extends SearchCriteria{
 
 	public void setOrderby(Integer orderby) {
 		this.orderby = orderby;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 
 	// 列表页排序 1-综合升序，2-综合降序，3-销量升序，4-销量降序，5-价格升序，6,-价格降序。

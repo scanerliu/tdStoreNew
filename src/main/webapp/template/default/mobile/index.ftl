@@ -98,7 +98,7 @@
     <a href="#" title=""><p>物流查询</p></a>
     <a href="${app.basePath}/mobile/user/center" title=""><p>个人中心</p></a>
     <a href="0元购列表.html" title=""><p>0元专区</p></a>
-    <a href="秒杀列表.html" title=""><p>秒杀专区</p></a>
+    <a href="${app.basePath}/mobile/product/seckill" title=""><p>秒杀专区</p></a>
     <a href="产品列表.html" title=""><p>新品专区</p></a>
     <a href="${app.basePath}/mobile/productType/list" title="分类选择"><p>分类选择</p></a>
 </div>
