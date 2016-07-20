@@ -538,6 +538,13 @@ public class MUserController extends BaseController {
 		return "/mobile/user/downUserList";	
 	}
 	
+	/*
+	 * 上传商品
+	 */
+	@RequestMapping("/addProduct")
+	public String addProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		return "/mobile/user/addProduct";	
+	}
 	
 	@RequestMapping(value="/getDownUsers", method = RequestMethod.POST)
 	@ResponseBody
