@@ -17,6 +17,8 @@ public interface TdProductService {
 	
 	TdProduct findOne(Integer id);
 	
+	// 获取总页数
+	int getTotalPageCount(TdProductCriteria sc);
 	List<TdProduct> findBySearchCriteria(TdProductCriteria sc);
 	/**
 	 * 批量操作商品 

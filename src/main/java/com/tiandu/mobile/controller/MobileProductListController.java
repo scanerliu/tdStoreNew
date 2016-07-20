@@ -39,16 +39,26 @@ public class MobileProductListController extends BaseController{
 	
 	@RequestMapping("/list/{typeId}")
 	public String productList(@PathVariable Integer typeId,
-			TdProductCriteria sc,
 			HttpServletRequest req,ModelMap map)
 	{
 		// 系统配置
 		map.addAttribute("system", getSystem());
-		
-		map.addAttribute("productType", tdProductTypeService.findOne(typeId));
 		map.addAttribute("typeId", typeId);
 		
-		sc.setTypeId(typeId);
+		return "/mobile/product/list";
+	}
+	
+	/**
+	 * 
+	 * @author Max
+	 * 
+	 * 查找商品
+	 */
+	@RequestMapping("/list/search")
+	public String listSearch(TdProductCriteria sc ,HttpServletRequest req,ModelMap map)
+	{
+		map.addAttribute("productType", tdProductTypeService.findOne(sc.getTypeId()));
+		
 		sc.setOnshelf(true);
 		if(null == sc.getOrderby())
 		{
@@ -60,7 +70,7 @@ public class MobileProductListController extends BaseController{
 		List<TdProduct> productList = tdProductService.findBySearchCriteria(sc);
 		map.addAttribute("productList", productList);
 		map.addAttribute("sc", sc);
-		return "/mobile/product/list";
+		return "/mobile/product/list_body";
 	}
 	
 	/**
@@ -84,8 +94,8 @@ public class MobileProductListController extends BaseController{
 		sc.setOrderBy(sc.getOrderBySql());
 		sc.setPageNo(page);
 		sc.setKind((byte)1);
-		if(sc.getPageNo()-1==page)
-		{
+		int count = tdProductService.getTotalPageCount(sc);
+		if(count >= page){
 			map.addAttribute("productList", tdProductService.findBySearchCriteria(sc));
 			map.addAttribute("sc", sc);
 		}
@@ -138,7 +148,8 @@ public class MobileProductListController extends BaseController{
 		// 0元购
 		if(sc.getKind() == 3)
 		{
-			if(sc.getPageNo()-1==page){
+			int count = tdProductService.getTotalPageCount(sc);
+			if(count >= page){
 				map.addAttribute("zeroList", tdProductService.findBySearchCriteria(sc));
 			}
 			return "/mobile/product/zero_list_more";
@@ -146,7 +157,8 @@ public class MobileProductListController extends BaseController{
 		// 10元购
 		else if(sc.getKind() == 4)
 		{
-			if(sc.getPageNo()-1==page){
+			int count = tdProductService.getTotalPageCount(sc);
+			if(count >= page){
 				map.addAttribute("tenList", tdProductService.findBySearchCriteria(sc));
 			}
 			return "/mobile/product/ten_list_more";
@@ -156,7 +168,8 @@ public class MobileProductListController extends BaseController{
 		{
 			sc.setStartTime(new Date());
 			sc.setEndTime(new Date());
-			if(sc.getPageNo()-1==page){
+			int count = tdProductService.getTotalPageCount(sc);
+			if(count >= page){
 				map.addAttribute("presellList", tdProductService.findBySearchCriteria(sc));
 			}
 			return "/mobile/product/persell_list_more";
@@ -170,6 +183,7 @@ public class MobileProductListController extends BaseController{
 		return "/mobile/product/kill_list_more";
 	}
 	
+	// 秒杀列表
 	@RequestMapping("/zero")
 	public String zero(TdProductCriteria sc,HttpServletRequest req,ModelMap map)
 	{
@@ -188,5 +202,56 @@ public class MobileProductListController extends BaseController{
 		return "/mobile/product/zero_list";
 	}
 	
+	// 新品推荐
+	@RequestMapping("/new")
+	public String newProductList(HttpServletRequest req,ModelMap map){
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		return "/mobile/product/new_list";
+	}
+	
+	// 新品推荐查找
+	@RequestMapping("/new/search")
+	public String newSearch(TdProductCriteria sc,HttpServletRequest req,ModelMap map)
+	{
+		sc.setOnshelf(true);
+		if(null == sc.getOrderby())
+		{
+			sc.setOrderby(1);
+		}
+		
+		sc.setOrderBy(sc.getOrderBySql());
+		sc.setNewRecommend(1);
+		map.addAttribute("new_list", tdProductService.findBySearchCriteria(sc));
+		map.addAttribute("sc", sc);
+		
+		return "/mobile/product/new_listbody";
+	}
+	
+	// 新品推荐加载更多。。。
+	@RequestMapping("/new/more")
+	public String newListMore(
+			TdProductCriteria sc,Integer page,
+			HttpServletRequest req,ModelMap map)
+	{
+		
+		sc.setOnshelf(true);
+		if(null == sc.getOrderby())
+		{
+			sc.setOrderby(1);
+		}
+		sc.setOrderBy(sc.getOrderBySql());
+		sc.setPageNo(page);
+		sc.setNewRecommend(1);
+		
+		int count = tdProductService.getTotalPageCount(sc);
+		if(count >= page)
+		{
+			map.addAttribute("new_list", tdProductService.findBySearchCriteria(sc));
+			map.addAttribute("sc", sc);
+		}
+		
+		return "/mobile/product/new_list_more";
+	}
 	
 }

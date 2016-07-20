@@ -94,12 +94,12 @@
 <!-- 分类按钮 -->
 <div class="clickbtn">
     <a href="${app.basePath}/mobile/agent/list" title="创业中心"><p>创业中心</p></a>
-    <a href="${app.basePath}/mobile/campaign/list" title=""><p>排行榜</p></a>
+    <a href="${app.basePath}/mobile/campaign/list" title="排行榜"><p>排行榜</p></a>
     <a href="#" title=""><p>物流查询</p></a>
-    <a href="${app.basePath}/mobile/user/center" title=""><p>个人中心</p></a>
+    <a href="${app.basePath}/mobile/user/center" title="个人中心"><p>个人中心</p></a>
     <a href="${app.basePath}/mobile/product/zero" title="0元专区"><p>0元专区</p></a>
     <a href="${app.basePath}/mobile/product/seckill" title="秒杀专区"><p>秒杀专区</p></a>
-    <a href="产品列表.html" title="新品专区"><p>新品专区</p></a>
+    <a href="${app.basePath}/mobile/product/new" title="新品专区"><p>新品专区</p></a>
     <a href="${app.basePath}/mobile/productType/list" title="分类选择"><p>分类选择</p></a>
 </div>
 <!-- 分类按钮-结束 -->
