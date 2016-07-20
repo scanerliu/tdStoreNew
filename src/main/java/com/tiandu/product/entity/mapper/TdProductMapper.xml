@@ -407,6 +407,13 @@
     <if test="name != null and name!=''">
     	and p.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
     </if> 
+    <if test="productTypeIds != null">
+    	and p.type_id in (
+	    <foreach collection="productTypeIds" item="ptid" index="index" separator="," >  
+	        #{ptid, jdbcType=INTEGER}  
+	    </foreach>  
+	    )    	
+    </if>
   </select>
   
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.product.search.TdProductCriteria">
@@ -444,6 +451,13 @@
     </if>
     <if test="typeId != null">
     	and p.type_id = #{typeId,jdbcType=INTEGER}
+    </if>
+    <if test="productTypeIds != null">
+    	and p.type_id in (
+	    <foreach collection="productTypeIds" item="ptid" index="index" separator="," >  
+	        #{ptid, jdbcType=INTEGER}  
+	    </foreach>  
+	    )    	
     </if>
     <if test="orderBy != null">
     	order by ${orderBy}

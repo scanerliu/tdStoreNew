@@ -128,7 +128,7 @@
         <label>我的收藏</label>
         <i class="icon-next"></i>
       </a>
-      <a href="../成为代理-分类列表.html" title="">
+      <a href="${app.basePath}/mobile/user/productManage" title="商品管理">
         <i class="icon bg_icon_8"></i>
         <label>商品管理</label>
         <i class="icon-next"></i>

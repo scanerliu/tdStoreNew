@@ -220,7 +220,6 @@ public class TdProductContrller extends BaseController{
 			if(isUpdate){
 				tdProductSkuService.deleteByProductId(tdProduct.getId());
 			}
-			
 			tdProductService.save(tdProduct);
 			//--------保存货品表------------
 			if(tableData != null && !tableData.equals("") && attributeNum != null){

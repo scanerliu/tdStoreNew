@@ -102,6 +102,11 @@
 		        
 		        <td><input type="text" name="quantum" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.quantum!'0'}</#if>"  style="width:200px;height:30px" data-options="required:true" ></td>
 		    </tr>
+		     <tr>
+		        <th width="150">运费：</th>
+		        
+		        <td><input type="text" name="postage" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.postage!'0'}</#if>"  style="width:200px;height:30px" data-options="required:true" ></td>
+		    </tr>
 		    <tr>
 		        <th width="150">封面图片：</th>
 		        <td>

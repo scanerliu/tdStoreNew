@@ -28,11 +28,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.MessageSender;
 import com.tiandu.common.utils.WebUtils;
+import com.tiandu.custom.entity.TdAgent;
 import com.tiandu.custom.entity.TdExperienceStore;
 import com.tiandu.custom.entity.TdMembership;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserMessage;
+import com.tiandu.custom.search.TdAgentSearchCriteria;
 import com.tiandu.custom.search.TdUserSearchCriteria;
+import com.tiandu.custom.service.TdAgentService;
 import com.tiandu.custom.service.TdExperienceStoreService;
 import com.tiandu.custom.service.TdMembershipService;
 import com.tiandu.custom.service.TdUserMessageService;
@@ -41,6 +44,10 @@ import com.tiandu.order.entity.TdShoppingcartItem;
 import com.tiandu.order.search.TdShoppingcartSearchCriteria;
 import com.tiandu.order.service.TdShoppingcartItemService;
 import com.tiandu.order.vo.ShoppingcartVO;
+import com.tiandu.product.entity.TdProduct;
+import com.tiandu.product.search.TdProductCriteria;
+import com.tiandu.product.service.TdProductService;
+import com.tiandu.product.service.TdProductTypeService;
 
 /**
  * 
@@ -67,6 +74,16 @@ public class MUserController extends BaseController {
 	
 	@Autowired
 	private TdExperienceStoreService tdExperienceStoreService;
+	
+	@Autowired
+	private TdProductService tdProductService;
+	
+	@Autowired
+	TdProductTypeService tdProductTypeService;
+	
+	@Autowired
+	TdAgentService tdAgentService;
+	
 	
 	// 个人中心
 	@RequestMapping("/center")
@@ -360,6 +377,9 @@ public class MUserController extends BaseController {
 		return cart;
 	}
 	
+	/*
+	 * 实体店消息审核
+	 */
 	@RequestMapping(value="/verifyExperienceStoreApply", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String,String> verifyExperienceStoreApply(TdExperienceStore estore, Byte status, HttpServletRequest request, HttpServletResponse response) {
@@ -401,7 +421,115 @@ public class MUserController extends BaseController {
 	}
 	
 	/*
-	 * 推荐人
+	 * 商品管理
+	 */
+	@RequestMapping("/productManage")
+	public String productManage(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		Byte supplierType = this.getCurrentUser().getSupplierType();
+		if(supplierType == null || supplierType.equals(Byte.valueOf("0"))){
+			modelMap.addAttribute("isSupplier", false);
+		}else{
+			modelMap.addAttribute("isSupplier", true);
+		}
+		return "/mobile/user/productManage";	
+	}
+	
+	/*
+	 * 查看我的商品
+	 */
+	@RequestMapping("/lookMyProduct")
+	public String lookMyProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		return "/mobile/user/myProduct";	
+	}
+	
+	/*
+	 * 搜索我的商品
+	 */
+	@RequestMapping("/searchMyProduct")
+	public String searchMyProduct(TdProductCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		int pageNo = sc.getPageNo();
+		TdUser currentUser = this.getCurrentUser();
+		sc.setPageSize(3);
+		TdAgentSearchCriteria asc = new TdAgentSearchCriteria();
+		asc.setFlag(false);
+		asc.setUid(currentUser.getUid());
+		List<TdAgent> agentList = tdAgentService.findBySearchCriteria(asc);
+		List<Integer> productTypeIdList = new ArrayList<Integer>();
+		if(agentList != null && agentList.size() > 0){
+			for(TdAgent agent : agentList){
+				productTypeIdList.add(agent.getProductTypeId());
+			}
+		}
+		if(productTypeIdList.size() > 0){
+			sc.setProductTypeIds(productTypeIdList);
+		}
+		List<TdProduct> productList = tdProductService.findBySearchCriteria(sc);
+		if(sc.getPageNo() == pageNo){
+			modelMap.addAttribute("productList", productList);			
+		}else{
+			modelMap.addAttribute("sc", sc);
+		}
+		return "/mobile/user/myProductTemplate";	
+	}
+	
+	/*
+	 * 查看供应商商品
+	 */
+	@RequestMapping("/lookSupplierProduct")
+	public String lookSupplierProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		return "/mobile/user/SupplierProduct";	
+	}
+	
+	/*
+	 * 搜索供应商商品
+	 */
+	@RequestMapping("/searchSupplierProduct")
+	public String searchSupplierProduct(TdProductCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		int pageNo = sc.getPageNo();
+		TdUser currentUser = this.getCurrentUser();
+		sc.setPageSize(3);
+		sc.setUid(currentUser.getUid());
+		List<TdProduct> productList = tdProductService.findBySearchCriteria(sc);
+		if(sc.getPageNo() == pageNo){
+			modelMap.addAttribute("productList", productList);			
+		}else{
+			modelMap.addAttribute("sc", sc);
+		}
+		return "/mobile/user/myProductTemplate";	
+	}
+	
+	/*
+	 * 商品上下架
+	 */
+	@RequestMapping(value="/goOnshelf", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> goOnshelf(Integer id, Boolean onshelf, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>();
+		try{
+			TdProduct product = tdProductService.findOne(id);
+			product.setOnshelf(onshelf);
+			tdProductService.save(product);
+			res.put("code", "1");
+			if(onshelf){
+				res.put("msg", "上架成功。");
+			}else{
+				res.put("msg", "下架成功。");
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.error("上下架失败");
+			res.put("code", "0");
+			if(onshelf){
+				res.put("msg", "上架失败。");
+			}else{
+				res.put("msg", "下架失败。");
+			}
+		}
+		return res;
+	}
+	
+	/*
+	 * 下级会员
 	 */
 	@RequestMapping("/downUserList")
 	public String downThreeUserList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
@@ -409,6 +537,7 @@ public class MUserController extends BaseController {
 		modelMap.addAttribute("pageNo", "1");
 		return "/mobile/user/downUserList";	
 	}
+	
 	
 	@RequestMapping(value="/getDownUsers", method = RequestMethod.POST)
 	@ResponseBody
