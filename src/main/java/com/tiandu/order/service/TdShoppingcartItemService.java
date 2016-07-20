@@ -60,4 +60,10 @@ public interface TdShoppingcartItemService {
 	 * @return
 	 */
 	public List<TdShoppingcartItem> findBySearchCriteria(TdShoppingcartSearchCriteria sc);
+	/**
+	 * 清空购物车
+	 * @param uid
+	 * @return
+	 */
+	public int deleteByUid(Integer uid);
 }

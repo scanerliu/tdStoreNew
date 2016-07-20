@@ -60,6 +60,12 @@ public class TdShoppingcartItemServiceImpl implements TdShoppingcartItemService{
 	public List<TdShoppingcartItem> findByUid(Integer uid) {
 		return tdShoppingcartItemMapper.findByUid(uid);
 	}
+	
+	@Override
+	public int deleteByUid(Integer uid) {
+		// TODO Auto-generated method stub
+		return tdShoppingcartItemMapper.deleteByUid(uid);
+	}
 
 	@Override
 	public List<TdShoppingcartItem> findBySearchCriteria(TdShoppingcartSearchCriteria sc) {

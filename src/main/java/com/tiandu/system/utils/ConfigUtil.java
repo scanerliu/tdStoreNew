@@ -221,5 +221,12 @@ public class ConfigUtil {
 	public Integer getIntegralExchangerate(){
 		return getConfig("integralexchangerate",0);
 	}
+	/**
+	 * 订单金额赠送积分比例
+	 * @return
+	 */
+	public Integer getOrderDeliveryIntegral(){
+		return getConfig("orderdeliveryintegral",0);
+	}
 
 }

@@ -12,6 +12,8 @@ public interface TdProductSkuMapper {
     int insertSelective(TdProductSku record);
 
     TdProductSku selectByPrimaryKey(Integer id);
+    
+    TdProductSku selectByPrimaryKeyWithProduct(Integer id);
 
     int updateByPrimaryKeySelective(TdProductSku record);
 

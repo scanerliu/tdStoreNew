@@ -19,7 +19,7 @@
             <td align="right">签到赠送积分数:</td><td><input type="hidden" name="configKey" value="signdeliveryintegral"/><input type="text" name="signdeliveryintegral" id="signdeliveryintegral" value="${configMap.signdeliveryintegral!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[0,100000000]"/>（如：签到赠送5积分时，此项填5）</td>
         </tr>
         <tr>
-            <td align="right">订单赠送积分比例:</td><td><input type="hidden" name="configKey" value="orderdeliveryintegral"/><input type="text" name="orderdeliveryintegral" id="orderdeliveryintegral" value="${configMap.orderdeliveryintegral!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[0,100]"/>（是订单金额赠送积分比例，如：每满100元赠送1积分时，此项填1）</td>
+            <td align="right">订单赠送积分比例:</td><td><input type="hidden" name="configKey" value="orderdeliveryintegral"/><input type="text" name="orderdeliveryintegral" id="orderdeliveryintegral" value="${configMap.orderdeliveryintegral!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[0,10000]"/>（是订单金额赠送积分比例，如：每满10元赠送1积分时，此项填10）</td>
         </tr>
         <tr>
             <td align="right">积分抵扣金额比例:</td><td><input type="hidden" name="configKey" value="integralexchangerate"/><input type="text" name="integralexchangerate" id="integralexchangerate" value="${configMap.integralexchangerate!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,100000000]"/>（积分抵扣一元金额的比例，如：10个积分抵扣一元钱时，此项填10）</td>

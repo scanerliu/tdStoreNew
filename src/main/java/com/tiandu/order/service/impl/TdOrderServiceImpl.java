@@ -15,6 +15,8 @@ import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserIntegral;
+import com.tiandu.custom.entity.TdUserIntegralLog;
+import com.tiandu.custom.service.TdUserIntegralService;
 import com.tiandu.order.entity.TdJointOrder;
 import com.tiandu.order.entity.TdOrder;
 import com.tiandu.order.entity.TdOrderAddress;
@@ -65,6 +67,8 @@ public class TdOrderServiceImpl implements TdOrderService{
 	private TdOrderProductMapper tdOrderProductMapper;
 	@Autowired
 	private TdJointOrderMapper tdJointOrderMapper;
+	@Autowired
+	private TdUserIntegralService tdUserIntegralService;
 	
 	@Autowired
 	private ConfigUtil configUtil;
@@ -264,11 +268,19 @@ public class TdOrderServiceImpl implements TdOrderService{
 	/**
 	 * 保存完整订单生态
 	 */
-	@Transactional
 	@Override
 	public TdJointOrder saveOrderFull(TdUser currUser, OrderForm orderForm, ShoppingcartVO shoppingcart) throws RuntimeException{
 		Date now = new Date();
+		Integer orderdeliveryintegral = configUtil.getOrderDeliveryIntegral(); //订单金额获取积分比例
 		TdJointOrder torder = new TdJointOrder();
+		torder.setAmount(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount()));
+		//赠送积分
+		if(orderdeliveryintegral>0){
+			torder.setGainPoints(torder.getAmount().divide(new BigDecimal(orderdeliveryintegral)).setScale(0, BigDecimal.ROUND_FLOOR).intValue());
+		}else{
+			torder.setGainPoints(0);
+		}
+		shoppingcart.setGainPoints(torder.getGainPoints());
 		if(shoppingcart.getCombiningOrder()){//拆单
 			torder.setJno(WebUtils.generateJointOrderNo());
 			torder.setAmount(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount()));
@@ -281,13 +293,13 @@ public class TdOrderServiceImpl implements TdOrderService{
 			List<ShoppingcartVO> cartList = this.splitShoppingcart(shoppingcart);
 			//分别生成订单
 			for(ShoppingcartVO cart : cartList){
-				this.genernateOrder(currUser, orderForm, cart, torder, now);
+				this.insertOrder(currUser, orderForm, cart, torder, now);
 			}
 		}else{
 			torder.setId(0);
-			TdOrder order = this.genernateOrder(currUser, orderForm, shoppingcart, torder, now);
+			TdOrder order = this.insertOrder(currUser, orderForm, shoppingcart, torder, now);
 			torder.setJno(order.getOrderNo());
-			torder.setAmount(order.getTotalAmount().subtract(order.getPointAmount()));
+			
 			torder.setPaymentId(orderForm.getPaymentId());
 		}		
 		return torder;
@@ -301,10 +313,10 @@ public class TdOrderServiceImpl implements TdOrderService{
 	 * @param now
 	 * @return
 	 */
-	private TdOrder genernateOrder(TdUser currUser, OrderForm orderForm, ShoppingcartVO shoppingcart,TdJointOrder torder, Date now) throws RuntimeException {
+	private TdOrder insertOrder(TdUser currUser, OrderForm orderForm, ShoppingcartVO shoppingcart,TdJointOrder torder, Date now) throws RuntimeException {
 		TdOrder order = new TdOrder();
 		order.setCreateTime(now);
-		order.setGainPoints(0);
+		order.setGainPoints(shoppingcart.getGainPoints());
 		order.setCommented(false);
 		order.setItemNum(shoppingcart.getTotalcount());
 		order.setJointId(torder.getId());//联合订单
@@ -338,6 +350,9 @@ public class TdOrderServiceImpl implements TdOrderService{
 			if(item.getQuantity()>item.getProductSku().getStock()){
 				throw new RuntimeException("商品"+item.getProduct().getName()+"库存不足!");
 			}
+			if(!item.getProduct().getOnshelf()||!item.getProduct().getStatus().equals(Byte.valueOf("1"))){
+				throw new RuntimeException("商品"+item.getProduct().getName()+"已经下架!");
+			}
 			TdOrderSku sku = new TdOrderSku();
 			sku.setDisplaySpecifications(item.getProductSku().getSpecifications());
 			sku.setItemType(item.getProduct().getKind());
@@ -349,6 +364,24 @@ public class TdOrderServiceImpl implements TdOrderService{
 			sku.setProductSkuCode(item.getProductSku().getSkuCode());
 			sku.setQuantity(item.getQuantity());
 			tdOrderSkuMapper.insert(sku);			
+		}
+		//扣除抵扣积分
+		if(order.getUsedPoint()>0){
+			TdUserIntegral userIntegral = tdUserIntegralService.findOne(currUser.getUid());
+			if(null==userIntegral||userIntegral.getIntegral()<order.getUsedPoint()){
+				throw new RuntimeException("积分不足，不能抵扣金额！");
+			}
+			userIntegral.setUpdateBy(0);
+			userIntegral.setUpdateTime(now);
+			TdUserIntegralLog integralLog = new TdUserIntegralLog();
+			integralLog.setType(Byte.valueOf("4"));
+			integralLog.setCreateTime(now);
+			integralLog.setPreintegral(userIntegral.getIntegral());
+			integralLog.setIntegral(-order.getUsedPoint());
+			integralLog.setUid(currUser.getUid());
+			integralLog.setNote("积分抵扣订单金额,订单编号："+order.getOrderNo()+" 消耗积分数量："+order.getUsedPoint()+" 抵扣金额：￥"+order.getPointAmount());
+			integralLog.setRelation("");
+			tdUserIntegralService.addIntegral(userIntegral, integralLog);
 		}
 		//保存收货地址
 		
@@ -382,6 +415,13 @@ public class TdOrderServiceImpl implements TdOrderService{
 			scart.setItemList(itemList);
 			//重新计算新购物车
 			computershoppingcart(scart, integralexchangerate, commonproductpointpercent, partproductpointpercent);
+			//计算获得积分
+			if(shoppingcart.getGainPoints()>0){
+				Integer point = scart.getTotalAmount().subtract(scart.getTotalPointAmount()).divide(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount())).multiply(new BigDecimal(shoppingcart.getGainPoints())).setScale(0, BigDecimal.ROUND_FLOOR).intValue();
+				scart.setGainPoints(point);
+			}else{
+				scart.setGainPoints(0);
+			}
 			cartList.add(scart);
 		}
 		

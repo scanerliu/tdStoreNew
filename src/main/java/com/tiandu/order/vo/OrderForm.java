@@ -19,6 +19,22 @@ public class OrderForm {
 	 * 商品id，立即下单使用
 	 */
 	private Integer productId;
+	/**
+	 * 货品id，立即下单使用
+	 */
+	private Integer productSkuId;
+	/**
+	 * 商品数量，立即下单使用
+	 */
+	private Integer quantity;
+	/**
+	 * 商品类型，立即下单使用 1-普通商品，2-代理产品
+	 */
+	private Integer productType = 1;
+	/**
+	 * 商品id，立即下单使用 
+	 */
+	private Integer agentProductId;
 	
 
 	public Integer getAddressId() {
@@ -59,6 +75,38 @@ public class OrderForm {
 
 	public void setProductId(Integer productId) {
 		this.productId = productId;
+	}
+
+	public Integer getProductSkuId() {
+		return productSkuId;
+	}
+
+	public void setProductSkuId(Integer productSkuId) {
+		this.productSkuId = productSkuId;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+	public Integer getProductType() {
+		return productType;
+	}
+
+	public void setProductType(Integer productType) {
+		this.productType = productType;
+	}
+
+	public Integer getAgentProductId() {
+		return agentProductId;
+	}
+
+	public void setAgentProductId(Integer agentProductId) {
+		this.agentProductId = agentProductId;
 	}
 	
 	
