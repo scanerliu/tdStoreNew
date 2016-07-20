@@ -61,11 +61,12 @@ public class MobileController extends BaseController {
 		TdAdvertisementSearchCriteria sc = new TdAdvertisementSearchCriteria();
 		sc.setCreateTime(new Date());
 		sc.setEndTime(new Date());
+		sc.setOrderBy("2");
+		sc.setStatus((byte)1);
 		TdAdsense adsense = tdAdsenseService.findByName("触屏首页轮播大图广告");
 		if(null != adsense)
 		{
 			sc.setAdsId(adsense.getId());
-			sc.setOrderBy("2");
 			map.addAttribute("adList", tdAdvertisementService.findBySearchCriteria(sc));
 		}
 		
@@ -73,7 +74,6 @@ public class MobileController extends BaseController {
 		if(null != adsense)
 		{
 			sc.setAdsId(adsense.getId());
-			sc.setOrderBy("2");
 			map.addAttribute("compAdList", tdAdvertisementService.findBySearchCriteria(sc));
 		}
 		
@@ -81,7 +81,6 @@ public class MobileController extends BaseController {
 		if(null != adsense)
 		{
 			sc.setAdsId(adsense.getId());
-			sc.setOrderBy("2");
 			map.addAttribute("hotAdList", tdAdvertisementService.findBySearchCriteria(sc));
 		}
 		

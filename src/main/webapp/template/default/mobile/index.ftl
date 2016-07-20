@@ -33,9 +33,9 @@
 <body class="body_bg">
 <!-- 头部 -->
 <div class="index_header">
-    <div class="fl"><img src="${app.basePath}/static/touch/images/logo.png" alt=""></div>
+    <div class="fl"><img src="${app.basePath}/static/touch/images/logo.png" alt="LOGO"></div>
     <a href="${app.basePath}/mobile/search" title="搜索" class="fl">搜索我的宝贝</a>
-    <a href="#" title="" class="fr">分享</a>
+    <a href="javascript:;" title="" class="fr">分享</a>
 </div>
 <!-- 头部-结束 -->
 
@@ -107,7 +107,7 @@
 <div class="bestarea">
     <section class="index_title">
         <label class="lab1 fl">精品专区</label>
-        <a href="产品列表.html" class="a_link"></a>
+        <a href="javascript:;" class="a_link"></a>
     </section>
     <section class="sec2">
     	<#if hotAdList?? && hotAdList?size gt 0>
@@ -123,7 +123,7 @@
 <div class="hot">
     <section class="index_title">
         <label class="lab1 fl">热销推荐</label>
-        <a href="产品列表.html" class="a_link"></a>
+        <a href="javascript:;" class="a_link"></a>
     </section>
     <section class="sec2">
     	<#list productList as pro>

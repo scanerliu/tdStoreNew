@@ -23,7 +23,7 @@
 			<th align="center" width="15%">图片</th>
 			<th align="center" width="15%">链接地址</th>
 			<th align="center">开始时间</th>
-			<th align="center">结算时间</th>
+			<th align="center">结束时间</th>
 			<th align="center">状态</th>
 			<th align="center">地区ID</th>
 			<th align="center">排序值</th>
