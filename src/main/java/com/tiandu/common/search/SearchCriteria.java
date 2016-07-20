@@ -45,6 +45,11 @@ public class SearchCriteria<T> implements Serializable {
 	 * 是否启用分页(默认使用)
 	 */
 	private boolean flag = true;
+	
+	/**
+	 * 是否还有下一页（默认有）
+	 */
+	private boolean hasNextPage = true;
 
 	/**
 	 * 查询结果
@@ -85,6 +90,10 @@ public class SearchCriteria<T> implements Serializable {
 		} else {
 			totalPageCount = 1;
 			startIdx = 0;
+		}
+		//计算是否还有下一页
+		if(pageNo == totalPageCount){
+			hasNextPage = false;
 		}
 	}
 
@@ -134,6 +143,10 @@ public class SearchCriteria<T> implements Serializable {
 
 	public List<T> getResultList() {
 		return resultList;
+	}
+
+	public boolean isHasNextPage() {
+		return hasNextPage;
 	}
 
 	public void setResultList(List<T> resultList) {

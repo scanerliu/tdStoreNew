@@ -65,7 +65,7 @@
 	    <article class="tips">提示：PC上登陆请绑定手机号码</article>
   	</#if>
     <article class="pc-nav">
-      <a href="我的订单.html" title="">
+      <a href="${app.basePath}/mobile/order/list" title="">
         <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_1.png" alt="">
         <span>我的订单</span>
       </a>

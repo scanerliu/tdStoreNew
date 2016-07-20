@@ -125,7 +125,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 	@Override
 	public List<TdOrder> findBySearchCriteria(TdOrderSearchCriteria sc) {
 		if(sc.isFlag()){
-			Integer count = tdOrderMapper.countBySearchCriteria(sc);
+			Integer count = tdOrderMapper.countByCriteria(sc);
 			sc.setTotalCount(count);
 		}
 		return tdOrderMapper.findBySearchCriteria(sc);
