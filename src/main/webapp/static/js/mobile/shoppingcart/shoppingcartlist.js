@@ -5,19 +5,22 @@
  */
 function additem(id,type){
 	var num = $("#quantity_"+id).val();
+	var stock = $("#stock_"+id).val();
+	var stockint = parseInt(stock);
 	var numint = parseInt(num);
 	if(type==1){//add
-		numint = numint+1;
-		if(numint>9999){
-			$("#quantity_"+id).val(numint);
-			return ;
+		if(numint==stockint){
+			return;
+		}else if(numint>stockint){
+			numint = stockint;
+		}else{
+			numint = numint+1;
 		}
 	}else if(type==2){//sub
-		numint = numint-1;
-		if(numint<1){
-			$("#quantity_"+id).val(1);
+		if(numint==1){
 			return;
 		}
+		numint = numint-1;
 	}
 	$("#quantity_"+id).val(numint);
 	var url = basePath+"/mobile/shoppingcart/add";
@@ -43,14 +46,16 @@ function additemCallback(data){
  */
 function changeitem(obj){
 	var num = $(obj).val();
+	var itemid = $(obj).attr("itemid");
 	var numint = parseInt(num);
-	if(numint>9999){
-		numint = 9999;
+	var stock = $("#stock_"+itemid).val();
+	var stockint = parseInt(stock);
+	if(numint>stockint){
+		numint = stockint;
 	}else if(numint<1){
 		numint = 1;
 	}
 	$(obj).val(numint);
-	var itemid = $(obj).attr("itemid");
 	var url = basePath+"/mobile/shoppingcart/change";
 	var postData = {"id":itemid,"quantity":numint};
 	$.post(url,postData,changeitemCallback,"text");
@@ -113,5 +118,6 @@ function nextOrder(){
 //下订单
 function genernateOrder(){
 	var url = basePath+"/mobile/shoppingcart/order";
-	
+	$("#confirmorder").attr("action",url);
+	$("#confirmorder").submit();
 }

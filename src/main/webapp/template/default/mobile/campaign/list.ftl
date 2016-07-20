@@ -34,7 +34,7 @@
 
 <!-- header_top -->
 <div class="top_heater">
-    <a href="javascript:history.go(-1);" title="" class="hleft hback"></a>
+    <a href="${app.basePath}/mobile" title="" class="hleft hback"></a>
     <span>排行榜</span>
 </div>
 <!-- header_top end -->
@@ -96,6 +96,21 @@
         </li>
         </#list>
         </#if>
+    </ul>
+    <ul class="rank_match" id="rank_match">
+    	<#if campaignList??>
+        <#list campaignList as comp>
+        <li class="">
+            <div class="opa_bg" id="opa_bg">
+                <section><img src="${app.basePath}${comp.uavatar!''}" alt="${comp.uname!''}"></section>
+                <section>${comp.uname!''}</section>
+                <section><span></span></section>
+                <section>${comp.declaration!''}</section>
+                <menu></menu>
+            </div>
+        </li>
+        </#list>
+     	</#if>
     </ul>
 </section>
 <!-- Center End -->

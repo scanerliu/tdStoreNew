@@ -69,6 +69,7 @@
                   <input type="button" value="-" class="ipt1" onclick="additem(${item.id},2)">
                   <input type="text" name="quantity" itemid="${item.id}" id="quantity_${item.id}" value="${item.quantity}" placeholder="1" class="ipt2" onChange="changeitem(this)" onKeyUp="formatInputInteger(this,1,9999)">
                   <input type="button" value="+" class="ipt3" onclick="additem(${item.id},1)">
+                  <input type="hidden" id="stock_${item.id}" value="${item.productSku.stock!''}"/>
                 </aside>
               </section>
             </section>

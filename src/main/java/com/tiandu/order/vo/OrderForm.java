@@ -14,6 +14,12 @@ public class OrderForm {
 	private Boolean usePoints; //使用积分抵充金额
 	
 	private String  userMsg; //客户留言
+	
+	/**
+	 * 商品id，立即下单使用
+	 */
+	private Integer productId;
+	
 
 	public Integer getAddressId() {
 		return addressId;
@@ -46,7 +52,14 @@ public class OrderForm {
 	public void setUserMsg(String userMsg) {
 		this.userMsg = userMsg;
 	}
-	
+
+	public Integer getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
 	
 	
 }
