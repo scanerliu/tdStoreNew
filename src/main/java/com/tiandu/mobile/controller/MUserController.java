@@ -803,13 +803,17 @@ public class MUserController extends BaseController {
 	 */
 	@RequestMapping(value="/saveProduct", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,String> saveProduct(TdProduct product,  String[] attachment, TdProductDescription productDescription, TdProductSku productSku, String attributeAssembleStr, HttpServletRequest request, HttpServletResponse response) {
+	public Map<String,String> saveProduct(Boolean isFreeProduct, TdProduct product,  String[] attachment, TdProductDescription productDescription, TdProductSku productSku, String attributeAssembleStr, HttpServletRequest request, HttpServletResponse response) {
 		Map<String,String> res = new HashMap<String,String>();
 		TdUser currentUser = this.getCurrentUser();
 		String[] atrributeArray = attributeAssembleStr.split("_");
 		try{
 			// 商品
-			product.setKind(Byte.valueOf("1"));
+			if(isFreeProduct != null && isFreeProduct){
+				product.setKind(Byte.valueOf("3"));
+			}else{
+				product.setKind(Byte.valueOf("1"));
+			}
 			product.setUid(currentUser.getUid());
 			product.setSpecification(true);
 			product.setStatus(Byte.valueOf("2"));
@@ -919,11 +923,12 @@ public class MUserController extends BaseController {
 	 * 上传商品
 	 */
 	@RequestMapping("/addProduct")
-	public String addProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	public String addProduct(Boolean isFreeProduct, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdProductTypeCriteria tsc = new TdProductTypeCriteria();
 		tsc.setStatus((byte) 1);
 		List<TdProductType> productTypeList = tdProductTypeService.findAll(tsc);
 		modelMap.addAttribute("productTypeList", productTypeList);
+		modelMap.addAttribute("isFreeProduct", isFreeProduct);
 		return "/mobile/user/addProduct";	
 	}
 	
