@@ -26,20 +26,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.common.utils.MessageSender;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdAgent;
 import com.tiandu.custom.entity.TdExperienceStore;
 import com.tiandu.custom.entity.TdMembership;
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.custom.entity.TdUserAddress;
 import com.tiandu.custom.entity.TdUserMessage;
 import com.tiandu.custom.search.TdAgentSearchCriteria;
+import com.tiandu.custom.search.TdUserAddressCriteria;
 import com.tiandu.custom.search.TdUserSearchCriteria;
 import com.tiandu.custom.service.TdAgentService;
 import com.tiandu.custom.service.TdExperienceStoreService;
 import com.tiandu.custom.service.TdMembershipService;
+import com.tiandu.custom.service.TdUserAddressService;
 import com.tiandu.custom.service.TdUserMessageService;
 import com.tiandu.custom.service.TdUserSignService;
+import com.tiandu.district.entity.TdDistrict;
+import com.tiandu.district.service.TdDistrictService;
 import com.tiandu.order.entity.TdShoppingcartItem;
 import com.tiandu.order.search.TdShoppingcartSearchCriteria;
 import com.tiandu.order.service.TdShoppingcartItemService;
@@ -73,6 +79,12 @@ public class MUserController extends BaseController {
 	private TdUserMessageService tdUserMessageService;
 	
 	@Autowired
+	private TdUserAddressService tdUserAddressService;
+	
+	@Autowired
+	private TdDistrictService tdDistrictService;
+	
+	@Autowired
 	private TdExperienceStoreService tdExperienceStoreService;
 	
 	@Autowired
@@ -89,6 +101,10 @@ public class MUserController extends BaseController {
 	@RequestMapping("/center")
 	public String center(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser currentUser = this.getCurrentUser();
+		if(null==currentUser)
+		{
+			return "redirect:/mobile/login";
+		}
 		modelMap.addAttribute("currentUser", currentUser);
 		TdMembership membership = tdMembershipService.findOne(currentUser.getMembershipId());
 		modelMap.addAttribute("membership", membership);
@@ -181,8 +197,6 @@ public class MUserController extends BaseController {
 	}
 	
 	
-	
-	
 	/*
 	 * 我的购物车
 	 */
@@ -258,6 +272,215 @@ public class MUserController extends BaseController {
 	@RequestMapping("/changePassword")
 	public String changePassword(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		return "/mobile/user/changePassword";		
+	}
+	
+	/**
+	 * 收货地址
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping(value = "/shippingAddress")
+	public String shippingAddress(ModelMap map,Integer addressId)
+	{
+		TdUser tdUser = this.getCurrentUser();
+		if(tdUser == null)
+		{
+			return "redirect:/mobile/login";
+		}
+		// 系统配置
+		if(addressId != null)
+		{
+			tdUserAddressService.setIsDefaultFalse(tdUser.getUid());
+			TdUserAddress userAddress = tdUserAddressService.findOne(addressId);
+			userAddress.setIsDefault(true);
+			tdUserAddressService.save(userAddress);
+		}
+		map.addAttribute("system", getSystem());
+		TdUserAddressCriteria sc = new TdUserAddressCriteria();
+		sc.setUid(tdUser.getUid());
+		List<TdUserAddress> userAddresses = tdUserAddressService.findBySearchCriteria(sc);
+		map.addAttribute("address_list", userAddresses);
+		return "/mobile/user/shippingAddress";
+	}
+	
+	/**
+	 * 新增收货地址
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping(value = "/shippingAddressAdd")
+	public String shippingAddressAdd(Integer addressId,ModelMap map)
+	{
+		TdUser tdUser = this.getCurrentUser();
+		if(tdUser == null)
+		{
+			return "redirect:/modile/login";
+		}
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		if(addressId != null)
+		{
+			TdUserAddress userAddress = tdUserAddressService.findOne(addressId);
+			if(userAddress != null)
+			{
+				map.addAttribute("address",userAddress);
+				Integer regionId = userAddress.getRegionId();
+				Map<String, Object> regionMap = getUserDistrictIdByUserAddress(new HashMap<String,Object>(),regionId);
+				map.addAllAttributes(regionMap);
+			}
+		}
+		
+		return "/mobile/user/shippingAddressAdd";
+	}
+	
+	/**
+	 * 地址保存并设置默认地址 
+	 * @param tdUserAddress
+	 * @return
+	 */
+	@RequestMapping(value = "/shippingAddressSave" ,method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> shippingAddressSave(TdUserAddress tdUserAddress)
+	{
+		Map<String,Object> result = new HashMap<String,Object>();
+		result.put("code", ConstantsUtils.RETURN_CODE_SUCCESS);
+		TdUser tdUser = this.getCurrentUser();
+		if(tdUser == null)
+		{
+			result.put("msg", "未登录");
+			return result;
+		}
+		tdUserAddress.setUid(tdUser.getUid());
+		if(tdUserAddress != null && tdUserAddress.getIsDefault() != null && tdUserAddress.getIsDefault() == true)
+		{
+			tdUserAddressService.setIsDefaultFalse(tdUser.getUid());
+		}
+		tdUserAddressService.save(tdUserAddress);
+		
+		result.put("msg", "成功");
+		return result;
+	}
+	
+	/**
+	 * 地区选择
+	 * @param provinceId 省
+	 * @param cityId 市
+	 * @return
+	 */
+	@RequestMapping(value = "/shippingAddressDistrict",method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> shippingAddressDistrict(Integer provinceId,Integer cityId)
+	{
+		Map<String,Object> resMap = new HashMap<String,Object>();
+		resMap.put("code",ConstantsUtils.RETURN_CODE_FAILURE);
+		TdUser tdUser = this.getCurrentUser();
+		if(tdUser == null)
+		{
+			resMap.put("msg","请先登录");
+			return resMap;
+		}
+		if(provinceId == null && cityId == null)
+		{
+			List<TdDistrict> provinceList = tdDistrictService.getDistrictByUpid(0);
+			resMap.put("code",ConstantsUtils.RETURN_CODE_SUCCESS);
+			resMap.put("provinceList", provinceList);
+			return resMap;
+		}
+		if (provinceId != null && provinceId != -1 && cityId == null)
+		{
+			List<TdDistrict> cityList = tdDistrictService.getDistrictByUpid(provinceId);
+			// 是否是直辖市
+			if (tdDistrictService.findOne(provinceId) != null && tdDistrictService.isCentralCity(tdDistrictService.findOne(provinceId).getName()))
+			{
+				resMap.put("isCentralCity", true);
+			}
+			else
+			{
+				resMap.put("isCentralCity", false);
+			}
+			resMap.put("cityList", cityList);
+			resMap.put("code",ConstantsUtils.RETURN_CODE_SUCCESS);
+			return resMap;
+		}
+		if (cityId != null && cityId != -1) {
+			List<TdDistrict> areaList = tdDistrictService.getDistrictByUpid(cityId);
+			// 若用户在选择了与市不匹配的省时，可视为只选择了省
+			if (tdDistrictService.findOne(cityId) != null && provinceId != null && provinceId != -1
+					&& tdDistrictService.findOne(cityId).getUpid().equals(provinceId)) {
+				resMap.put("districtList", areaList);
+				resMap.put("code",ConstantsUtils.RETURN_CODE_SUCCESS);
+				return resMap;
+			} else {
+				cityId = -1;
+			}
+		}
+		
+		resMap.put("provinceId", provinceId);
+		resMap.put("cityId", cityId);
+		resMap.put("code",ConstantsUtils.RETURN_CODE_SUCCESS);
+		return resMap;
+	}
+	
+	private Map<String,Object> getUserDistrictIdByUserAddress(Map<String,Object> resMap,Integer districtId)
+	{
+		TdDistrict district = tdDistrictService.findOne(districtId);
+		if(district != null && district.getUpid() != 0)
+		{
+			resMap.put(district.getUpid().toString() , districtId);
+			this.getUserDistrictIdByUserAddress(resMap, district.getUpid());
+		}
+		else
+		{
+			Integer frist = (Integer)resMap.get(districtId.toString());
+			Integer second = (Integer)resMap.get(frist.toString());
+			resMap.clear();
+			if(second != null)
+			{
+				resMap.put("district",second);
+				resMap.put("city", frist);
+				resMap.put("province", districtId);
+			}
+			else
+			{
+				resMap.put("city", frist);
+				resMap.put("province", districtId);
+			}
+		}
+		
+		return resMap;
+	}
+	
+	/**
+	 * 地址删除
+	 * @param addressId
+	 * @return
+	 */
+	@RequestMapping(value="/shippingAddressDelete",method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> shippingAddressDelete(Integer addressId)
+	{
+		Map<String,Object> resMap = new HashMap<String,Object>();
+		resMap.put("status",ConstantsUtils.RETURN_CODE_FAILURE);
+		TdUser tdUser = this.getCurrentUser();
+		if(tdUser == null)
+		{
+			resMap.put("msg","请先登录");
+			return resMap;
+		}
+		TdUserAddress userAddress = tdUserAddressService.findOne(addressId);
+		if(addressId == null || userAddress == null)
+		{
+			resMap.put("msg","参数错误");
+			return resMap;
+		}
+		tdUserAddressService.delete(addressId);
+		resMap.put("status",ConstantsUtils.RETURN_CODE_SUCCESS);
+		resMap.put("msg","成功");
+		return resMap;
 	}
 	
 	
