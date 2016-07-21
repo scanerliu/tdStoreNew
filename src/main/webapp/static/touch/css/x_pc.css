@@ -1197,8 +1197,10 @@ select {
 	padding-right: .2rem;
 	background: url(../images/right_guide.png) right center no-repeat;
 	-webkit-background-size: .14rem .25rem;
-					background-size: .14rem .25rem;
+	background-size: .14rem .25rem;
+	width: 25%;
 }
+
 .add-new-address textarea {
 	display: block;
 	padding: .2rem;

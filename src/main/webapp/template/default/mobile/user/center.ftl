@@ -54,7 +54,7 @@
     <div class="right-icon">
       <a class="icon-news" href="${app.basePath}/mobile/user/messageList" title=""></a>
       <div class="clear"></div>
-      <div class="vip-level">${membership.name!''}</div>
+      <div class="vip-level"><#if membership??>${membership.name!''}</#if></div>
     </div>
     <a class="btn-sign-in" href="javascript:sign('${currentUser.uid?c}');" title="">签到</a>
   </header>

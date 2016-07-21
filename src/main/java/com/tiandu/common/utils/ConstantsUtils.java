@@ -211,4 +211,13 @@ public class ConstantsUtils {
 	 * 商品类型：8 部分积分兑换
 	 */
 	public static final Byte PRODUCT_KIND_PART_POINT_EXCHANGE = 8;
+	
+	/**********************返回状态*********************************/
+	
+	public static final Integer RETURN_CODE_SUCCESS = 1;		//成功
+	
+	public static final Integer RETURN_CODE_FAILURE = 0;		//失败
+	
+	/**********************错误描述*********************************/
+	
 }
