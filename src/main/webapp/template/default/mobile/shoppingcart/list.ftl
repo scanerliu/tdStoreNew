@@ -62,13 +62,14 @@
               </section>
               <section class="sec3">
                 <aside class="as1 fl">
-                  <p class="p1">￥${item.price}</p>
+                  <p class="p1">￥${item.productSku.salesPrice!'0'}</p>
                   <p class="p2">（运费：<span>${item.postage}</span>元）</p>
                 </aside>
                 <aside class="as2 fr">
                   <input type="button" value="-" class="ipt1" onclick="additem(${item.id},2)">
                   <input type="text" name="quantity" itemid="${item.id}" id="quantity_${item.id}" value="${item.quantity}" placeholder="1" class="ipt2" onChange="changeitem(this)" onKeyUp="formatInputInteger(this,1,9999)">
                   <input type="button" value="+" class="ipt3" onclick="additem(${item.id},1)">
+                  <input type="hidden" id="stock_${item.id}" value="${item.productSku.stock!''}"/>
                 </aside>
               </section>
             </section>

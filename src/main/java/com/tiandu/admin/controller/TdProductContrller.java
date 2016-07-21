@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -219,8 +220,10 @@ public class TdProductContrller extends BaseController{
 			if(isUpdate){
 				tdProductSkuService.deleteByProductId(tdProduct.getId());
 			}
-			
 			tdProductService.save(tdProduct);
+			
+			Integer defautsku = null;
+			
 			//--------保存货品表------------
 			if(tableData != null && !tableData.equals("") && attributeNum != null){
 				JSONObject trJson = new JSONObject(tableData);
@@ -268,12 +271,17 @@ public class TdProductContrller extends BaseController{
 					sku.setUpdateBy(this.getCurrentUser().getUid());
 					sku.setStatus(Byte.valueOf("1"));
 					tdProductSkuService.save(sku);
+					
+					if(defautsku == null){defautsku = sku.getId();} 
 				}
 				
 			}
 			//--------------------
 			
+			// 默认货品ID
+			tdProduct.setDefaultSkuId(defautsku);
 			
+			tdProductService.save(tdProduct);
 			
 			// 修改展示图片
 			if(null != attId)
@@ -458,7 +466,13 @@ public class TdProductContrller extends BaseController{
 			List<String> trList = new ArrayList<>();
 			String trId = "";
 			for(int i = 0; i < specSize; i ++){
-				trList.add(trJson.getString(columnArray[i]));
+				String spes = "";
+				try{
+					spes = trJson.getString(columnArray[i]);
+				}catch(JSONException e){
+					System.err.println("编辑商品前添加了新的规格");
+				}
+				trList.add(spes);
 				trId += trJson.getString(columnArray[i]);
 				if(i < specSize - 1){
 					trId += "_";

@@ -15,6 +15,8 @@ public class TdProduct {
 	private String code;
 
 	private BigDecimal price;
+	
+	private BigDecimal postage;
 
 	private Integer points;
 
@@ -109,6 +111,14 @@ public class TdProduct {
 
 	public void setPrice(BigDecimal price) {
 		this.price = price;
+	}
+
+	public BigDecimal getPostage() {
+		return postage;
+	}
+
+	public void setPostage(BigDecimal postage) {
+		this.postage = postage;
 	}
 
 	public Integer getPoints() {
@@ -327,7 +337,7 @@ public class TdProduct {
     	StringBuffer sb = new StringBuffer();
     	if(null!=this.getOnshelf()){
     		if(this.getOnshelf()) {
-    			sb.append("上架中");
+    			sb.append("已架中");
     		}else{
     			sb.append("已下架");
     		}

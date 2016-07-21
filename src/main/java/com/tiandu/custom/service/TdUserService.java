@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
+import com.tiandu.custom.entity.TdExperienceStore;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserMessage;
 import com.tiandu.custom.search.TdUserSearchCriteria;
@@ -80,6 +81,11 @@ public interface TdUserService {
 	/*
 	 *	保存用户个人信息 
 	 */
-	public  int saveUserInfo(TdUser user);
+	public int saveUserInfo(TdUser user);
+	
+	/*
+	 *	体验店申请审核 
+	 */
+	public int saveVerifyExperienceStoreApply(TdExperienceStore experienceStore, Byte status);
 		
 }

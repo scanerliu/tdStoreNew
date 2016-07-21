@@ -172,6 +172,13 @@ public class TdProductServiceImpl implements TdProductService{
 		String json = gson.toJson(product);
 		return json;
 	}
+
+	@Override
+	public int getTotalPageCount(TdProductCriteria sc) {
+		Integer count = tdProductMapper.countByCriteria(sc);
+		sc.setTotalCount(count);
+		return sc.getTotalPageCount();
+	}
 	
 	
 	

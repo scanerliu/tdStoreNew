@@ -8,6 +8,7 @@
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="code" property="code" jdbcType="VARCHAR" />
     <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="postage" property="postage" jdbcType="DECIMAL" />
     <result column="points" property="points" jdbcType="INTEGER" />
     <result column="default_sku_id" property="defaultSkuId" jdbcType="INTEGER" />
     <result column="brand_id" property="brandId" jdbcType="INTEGER" />
@@ -34,7 +35,7 @@
     <result column="t_name" property="tdProductType.name"/>
   </resultMap>
   <sql id="Base_Column_List" >
-    p.id, p.kind, p.name, p.title, p.code, p.price, p.points, p.default_sku_id, p.brand_id, p.type_id, p.uid, 
+    p.id, p.kind, p.name, p.title, p.code, p.price, p.postage, p.points, p.default_sku_id, p.brand_id, p.type_id, p.uid, 
     p.specification, p.status, p.onshelf, p.keyword, p.image_url, p.create_time, p.update_time, p.update_by, p.new_recommend, 
     p.hot_recommend, p.fine_recommend, p.type_recommend, p.quantum, p.sort, p.tags, p.start_time, p.end_time
   </sql>
@@ -56,7 +57,7 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into td_product (kind, name, title, 
-      code, price, points, 
+      code, price, postage, points, 
       default_sku_id, brand_id, type_id, 
       uid, specification, status, onshelf, 
       keyword, image_url, create_time, 
@@ -65,7 +66,7 @@
       quantum, sort, tags, 
       start_time, end_time)
     values (#{kind,jdbcType=TINYINT}, #{name,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
-      #{code,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{points,jdbcType=INTEGER}, 
+      #{code,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{postage,jdbcType=DECIMAL}, #{points,jdbcType=INTEGER}, 
       #{defaultSkuId,jdbcType=INTEGER}, #{brandId,jdbcType=INTEGER}, #{typeId,jdbcType=INTEGER}, 
       #{uid,jdbcType=INTEGER}, #{specification,jdbcType=BIT}, #{status,jdbcType=TINYINT}, #{onshelf,jdbcType=BIT}, 
       #{keyword,jdbcType=VARCHAR}, #{imageUrl,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
@@ -94,6 +95,9 @@
       </if>
       <if test="price != null" >
         price,
+      </if>
+      <if test="postage != null" >
+        postage,
       </if>
       <if test="points != null" >
         points,
@@ -177,6 +181,9 @@
       </if>
       <if test="price != null" >
         #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="postage != null" >
+        #{postage,jdbcType=DECIMAL},
       </if>
       <if test="points != null" >
         #{points,jdbcType=INTEGER},
@@ -264,6 +271,9 @@
       <if test="price != null" >
         price = #{price,jdbcType=DECIMAL},
       </if>
+      <if test="postage != null" >
+        postage = #{postage,jdbcType=DECIMAL},
+      </if>
       <if test="points != null" >
         points = #{points,jdbcType=INTEGER},
       </if>
@@ -340,6 +350,7 @@
       title = #{title,jdbcType=VARCHAR},
       code = #{code,jdbcType=VARCHAR},
       price = #{price,jdbcType=DECIMAL},
+      postage = #{postage,jdbcType=DECIMAL},
       points = #{points,jdbcType=INTEGER},
       default_sku_id = #{defaultSkuId,jdbcType=INTEGER},
       brand_id = #{brandId,jdbcType=INTEGER},
@@ -390,12 +401,32 @@
     <if test="typeRecommend != null">
     	and p.type_recommend = #{typeRecommend,jdbcType=INTEGER}
     </if>
+    <if test="startTime != null">
+    	and p.start_time <![CDATA[ <=]]> #{startTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endTime != null">
+    	and p.end_time <![CDATA[ >=]]> #{endTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="kind != null">
+    	and kind = #{kind,jdbcType=TINYINT}
+    </if>
     <if test="typeId != null">
     	and type_id = #{typeId,jdbcType=INTEGER}
     </if>
     <if test="name != null and name!=''">
     	and p.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
     </if> 
+    <if test="keyword != null and name!=''">
+    	and p.name like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%') 
+    	or p.keyword like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%')
+    </if> 
+    <if test="productTypeIds != null">
+    	and p.type_id in (
+	    <foreach collection="productTypeIds" item="ptid" index="index" separator="," >  
+	        #{ptid, jdbcType=INTEGER}  
+	    </foreach>  
+	    )    	
+    </if>
   </select>
   
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.product.search.TdProductCriteria">
@@ -403,7 +434,9 @@
   	<include refid="Base_Column_List" />
   	,t.id as t_id
     ,t.name as t_name
-    from td_product as p LEFT JOIN td_product_type t ON p.type_id=t.id
+    from td_product as p 
+    	LEFT JOIN td_product_type t ON p.type_id=t.id
+    	left join td_product_stat s on p.id = s.product_id
     where 1=1
     <if test="status != null">
     	and p.status = #{status,jdbcType=TINYINT}
@@ -429,11 +462,31 @@
     <if test="name != null and name!=''">
     	and p.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
     </if>
+    <if test="keyword != null and name!=''">
+    	and p.name like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%') 
+    	or p.keyword like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%')
+    </if> 
+    <if test="startTime != null">
+    	and p.start_time <![CDATA[ <=]]> #{startTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endTime != null">
+    	and p.end_time <![CDATA[ >=]]> #{endTime,jdbcType=TIMESTAMP}
+    </if>
     <if test="typeId != null">
     	and p.type_id = #{typeId,jdbcType=INTEGER}
     </if>
+    <if test="productTypeIds != null">
+    	and p.type_id in (
+	    <foreach collection="productTypeIds" item="ptid" index="index" separator="," >  
+	        #{ptid, jdbcType=INTEGER}  
+	    </foreach>  
+	    )    	
+    </if>
+    <if test="kind != null">
+    	and kind = #{kind,jdbcType=TINYINT}
+    </if>
     <if test="orderBy != null">
-    	order by #{orderBy,jdbcType=VARCHAR}
+    	order by ${orderBy}
     </if>
   </select>
   <update id="updateBatch" parameterType="Map">    

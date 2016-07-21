@@ -36,6 +36,12 @@ public class MobileCampaignController extends BaseController{
 		// 系统配置
 		map.addAttribute("system", getSystem());
 		
+		return "/mobile/campaign/list";
+	}
+	
+	@RequestMapping("/search")
+	public String search(TdDistrictSearchCriteria sc,HttpServletRequest req,ModelMap map)
+	{
 		TdDistrictSearchCriteria dsc = new TdDistrictSearchCriteria();
 		dsc.setFlag(false);
 		dsc.setUpid(0);
@@ -74,9 +80,7 @@ public class MobileCampaignController extends BaseController{
 		usc.setOrderBy("2");
 		map.addAttribute("campaignList", tdUserCampaignService.findBySearchCriteria(usc));
 		
-		
-		
-		return "/mobile/campaign/list";
+		return "/mobile/campaign/listbody";
 	}
 
 }

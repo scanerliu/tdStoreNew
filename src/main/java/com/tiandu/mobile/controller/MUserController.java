@@ -2,15 +2,22 @@ package com.tiandu.mobile.controller;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,11 +27,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.ConstantsUtils;
+import com.tiandu.common.utils.MessageSender;
+import com.tiandu.common.utils.WebUtils;
+import com.tiandu.custom.entity.TdAgent;
+import com.tiandu.custom.entity.TdExperienceStore;
 import com.tiandu.custom.entity.TdMembership;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserAddress;
 import com.tiandu.custom.entity.TdUserMessage;
+import com.tiandu.custom.search.TdAgentSearchCriteria;
 import com.tiandu.custom.search.TdUserAddressCriteria;
+import com.tiandu.custom.search.TdUserSearchCriteria;
+import com.tiandu.custom.service.TdAgentService;
+import com.tiandu.custom.service.TdExperienceStoreService;
 import com.tiandu.custom.service.TdMembershipService;
 import com.tiandu.custom.service.TdUserAddressService;
 import com.tiandu.custom.service.TdUserMessageService;
@@ -35,6 +50,10 @@ import com.tiandu.order.entity.TdShoppingcartItem;
 import com.tiandu.order.search.TdShoppingcartSearchCriteria;
 import com.tiandu.order.service.TdShoppingcartItemService;
 import com.tiandu.order.vo.ShoppingcartVO;
+import com.tiandu.product.entity.TdProduct;
+import com.tiandu.product.search.TdProductCriteria;
+import com.tiandu.product.service.TdProductService;
+import com.tiandu.product.service.TdProductTypeService;
 
 /**
  * 
@@ -64,6 +83,19 @@ public class MUserController extends BaseController {
 	
 	@Autowired
 	private TdDistrictService tdDistrictService;
+	
+	@Autowired
+	private TdExperienceStoreService tdExperienceStoreService;
+	
+	@Autowired
+	private TdProductService tdProductService;
+	
+	@Autowired
+	TdProductTypeService tdProductTypeService;
+	
+	@Autowired
+	TdAgentService tdAgentService;
+	
 	
 	// 个人中心
 	@RequestMapping("/center")
@@ -104,6 +136,62 @@ public class MUserController extends BaseController {
 			res.put("code", "1");
 			res.put("msg", "签到成功。");
 			res.put("gettedIntegral", signBackData.get("signIntegral"));
+		}
+		return res;
+	}
+	
+	// 保存修改密码
+	@RequestMapping(value="/savePassword", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> sign(String oldPassword, String valideCode, String newPassword, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>();
+		String changePasswordValidCode = (String) request.getSession().getAttribute("changePasswordValidCode");
+		if(!valideCode.equals(changePasswordValidCode)){
+			res.put("info", "验证码错误！");
+			res.put("status", "n");
+//			return res;
+		}
+		
+		TdUser currentUser = this.getCurrentUser();
+		currentUser = tdUserService.findOne(currentUser.getUid());
+		String md5OldPassword = WebUtils.generatePassword(currentUser.getUname(), oldPassword);
+		if(!md5OldPassword.equals(currentUser.getUpassword())){
+			res.put("info", "原始密码错误！");
+			res.put("status", "n");
+			return res;
+		}
+		Date now = new Date();
+		currentUser.setUpdateBy(currentUser.getUid());
+		currentUser.setUpdateTime(now);
+		currentUser.setCreateTime(now);
+		currentUser.setUpassword(newPassword);
+    	tdUserService.saveUserPassword(currentUser);
+    	res.put("info", "密码修改成功！");
+		res.put("status", "y");
+		return res;
+	}
+	
+	@RequestMapping(value="/getChangeUserPasswordValidCode", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> getChangeUserPasswordValidCode(HttpServletRequest request) {
+		Map<String,String> res = new HashMap<String,String>();
+		Random random = new Random();
+		String smscode = String.format("%04d", random.nextInt(9999));
+		request.getSession().setAttribute("changePasswordValidCode", smscode);
+		List<String> phoneNums =new ArrayList<>();
+		phoneNums.add(this.getCurrentUser().getUtel());
+		List<String> datas =new ArrayList<>();
+		datas.add(smscode);
+		datas.add("1");
+		MessageSender ms = new MessageSender();
+		ms.init();
+		boolean isSendSuccess = ms.send(phoneNums, "1", datas);
+		if(isSendSuccess){
+			res.put("code", "1");
+			res.put("msg", "发送验证码成功!");			
+		}else{
+			res.put("code", "0");
+			res.put("msg", "验证码获取失败!");
 		}
 		return res;
 	}
@@ -153,11 +241,18 @@ public class MUserController extends BaseController {
 			modelMap.addAttribute("active", active);
 		}
 		TdUserMessage message = tdUserMessageService.findOne(messageId);
+		if(message.getStatus().equals(Byte.valueOf("1"))){
+			message.setStatus(Byte.valueOf("2"));
+			tdUserMessageService.save(message);			
+		}
 		modelMap.addAttribute("message", tdUserMessageService.findOne(messageId));
 		if(!message.getMsgType().equals(Byte.valueOf("3"))){
 			return "/mobile/user/systemOrOrderMessageDetail";		
 		}else{
-			return "";
+			TdExperienceStore experienceStore = tdExperienceStoreService.findOne(message.getRelateId());
+			
+			modelMap.addAttribute("experienceStore", experienceStore);
+			return "/mobile/user/experienceStoreMessageDetail";
 		}
 	}
 	
@@ -504,4 +599,271 @@ public class MUserController extends BaseController {
 		}
 		return cart;
 	}
+	
+	/*
+	 * 实体店消息审核
+	 */
+	@RequestMapping(value="/verifyExperienceStoreApply", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> verifyExperienceStoreApply(TdExperienceStore estore, Byte status, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>(); 
+		estore.setStatus(status);
+		int affectedNum = tdUserService.saveVerifyExperienceStoreApply(estore, status);
+		if(affectedNum == 1){
+			res.put("code", "1");
+			res.put("msg", "审核成功！");
+		}else{
+			res.put("code", "0");
+			res.put("msg", "审核失败！");
+		}
+		return res;
+	}
+	
+	/*
+	 * 推荐人
+	 */
+	@RequestMapping("/recommendPeople")
+	public String recommendPeople(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currentUser = this.getCurrentUser();
+		TdUser upOneRecommendPerson;
+		TdUser upTwoRecommendPerson;
+		TdUser upThreeRecommendPerson;
+		if(currentUser.getUparentId() != null){
+			upOneRecommendPerson = tdUserService.findOne(currentUser.getUparentId());
+			modelMap.addAttribute("upOneRecommendPerson", upOneRecommendPerson);
+			if(upOneRecommendPerson!= null && upOneRecommendPerson.getUparentId() != null){
+				upTwoRecommendPerson = tdUserService.findOne(upOneRecommendPerson.getUparentId());
+				modelMap.addAttribute("upTwoRecommendPerson", upTwoRecommendPerson);
+				if(upTwoRecommendPerson != null && upTwoRecommendPerson.getUparentId() != null){
+					upThreeRecommendPerson = tdUserService.findOne(upTwoRecommendPerson.getUparentId());
+					modelMap.addAttribute("upThreeRecommendPerson", upThreeRecommendPerson);
+				}
+			}
+		}
+		return "/mobile/user/recommendPeople";		
+	}
+	
+	/*
+	 * 商品管理
+	 */
+	@RequestMapping("/productManage")
+	public String productManage(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		Byte supplierType = this.getCurrentUser().getSupplierType();
+		if(supplierType == null || supplierType.equals(Byte.valueOf("0"))){
+			modelMap.addAttribute("isSupplier", false);
+		}else{
+			modelMap.addAttribute("isSupplier", true);
+		}
+		return "/mobile/user/productManage";	
+	}
+	
+	/*
+	 * 查看我的商品
+	 */
+	@RequestMapping("/lookMyProduct")
+	public String lookMyProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		return "/mobile/user/myProduct";	
+	}
+	
+	/*
+	 * 搜索我的商品
+	 */
+	@RequestMapping("/searchMyProduct")
+	public String searchMyProduct(TdProductCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		int pageNo = sc.getPageNo();
+		TdUser currentUser = this.getCurrentUser();
+		sc.setPageSize(3);
+		TdAgentSearchCriteria asc = new TdAgentSearchCriteria();
+		asc.setFlag(false);
+		asc.setUid(currentUser.getUid());
+		List<TdAgent> agentList = tdAgentService.findBySearchCriteria(asc);
+		List<Integer> productTypeIdList = new ArrayList<Integer>();
+		if(agentList != null && agentList.size() > 0){
+			for(TdAgent agent : agentList){
+				productTypeIdList.add(agent.getProductTypeId());
+			}
+		}
+		if(productTypeIdList.size() > 0){
+			sc.setProductTypeIds(productTypeIdList);
+		}
+		List<TdProduct> productList = tdProductService.findBySearchCriteria(sc);
+		if(sc.getPageNo() == pageNo){
+			modelMap.addAttribute("productList", productList);			
+		}else{
+			modelMap.addAttribute("sc", sc);
+		}
+		return "/mobile/user/myProductTemplate";	
+	}
+	
+	/*
+	 * 查看供应商商品
+	 */
+	@RequestMapping("/lookSupplierProduct")
+	public String lookSupplierProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		return "/mobile/user/SupplierProduct";	
+	}
+	
+	/*
+	 * 搜索供应商商品
+	 */
+	@RequestMapping("/searchSupplierProduct")
+	public String searchSupplierProduct(TdProductCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		int pageNo = sc.getPageNo();
+		TdUser currentUser = this.getCurrentUser();
+		sc.setPageSize(3);
+		sc.setUid(currentUser.getUid());
+		List<TdProduct> productList = tdProductService.findBySearchCriteria(sc);
+		if(sc.getPageNo() == pageNo){
+			modelMap.addAttribute("productList", productList);			
+		}else{
+			modelMap.addAttribute("sc", sc);
+		}
+		return "/mobile/user/myProductTemplate";	
+	}
+	
+	/*
+	 * 商品上下架
+	 */
+	@RequestMapping(value="/goOnshelf", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> goOnshelf(Integer id, Boolean onshelf, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>();
+		try{
+			TdProduct product = tdProductService.findOne(id);
+			product.setOnshelf(onshelf);
+			tdProductService.save(product);
+			res.put("code", "1");
+			if(onshelf){
+				res.put("msg", "上架成功。");
+			}else{
+				res.put("msg", "下架成功。");
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.error("上下架失败");
+			res.put("code", "0");
+			if(onshelf){
+				res.put("msg", "上架失败。");
+			}else{
+				res.put("msg", "下架失败。");
+			}
+		}
+		return res;
+	}
+	
+	/*
+	 * 下级会员
+	 */
+	@RequestMapping("/downUserList")
+	public String downThreeUserList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		modelMap.addAttribute("isTheFirstTime", "yes");
+		modelMap.addAttribute("pageNo", "1");
+		return "/mobile/user/downUserList";	
+	}
+	
+	/*
+	 * 上传商品
+	 */
+	@RequestMapping("/addProduct")
+	public String addProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		return "/mobile/user/addProduct";	
+	}
+	
+	@RequestMapping(value="/getDownUsers", method = RequestMethod.POST)
+	@ResponseBody
+	public String getDownUsers(Integer pageNo, HttpServletRequest request, HttpServletResponse response){
+		TdUser currentUser = this.getCurrentUser();
+		String parentIdsStr = "["+ currentUser.getUid() +"]"; // 下一二三级的id
+		String oneIdsStr = ""; // 下一级的id
+		String twoIdsStr = ""; // 下二级的id
+		String threeIdsStr = "";// 下三级的id
+		TdUserSearchCriteria sc = new TdUserSearchCriteria();
+		sc.setFlag(false);
+		sc.setParentIdsStr(parentIdsStr);
+		List<TdUser> downOneUserList = tdUserService.findBySearchCriteria(sc);
+		if(downOneUserList != null){
+			for(TdUser user : downOneUserList){
+				parentIdsStr += "["+ user.getUid() +"]";
+				oneIdsStr += "["+ user.getUid() +"]";
+			}
+		}
+		sc.setParentIdsStr(oneIdsStr);
+		List<TdUser> downTwoUserList = tdUserService.findBySearchCriteria(sc);
+		if(downTwoUserList != null){
+			for(TdUser user : downTwoUserList){
+				parentIdsStr += "["+ user.getUid() +"]";
+				twoIdsStr += "["+ user.getUid() +"]";
+			}
+		}
+		sc.setParentIdsStr(twoIdsStr);
+		List<TdUser> downThreeUserList = tdUserService.findBySearchCriteria(sc);
+		if(downThreeUserList != null){
+			for(TdUser user : downThreeUserList){
+				threeIdsStr += "["+ user.getUid() +"]";
+			}
+		}
+		
+		sc.setParentIdsStr(parentIdsStr);
+		sc.setPageNo(pageNo);
+		sc.setFlag(true);
+		sc.setPageSize(3);
+		
+		List<TdUser> downUserList = tdUserService.findBySearchCriteria(sc); // 下一二三级分页会员
+		
+		// 生成json数据
+		JSONObject jsonData = new JSONObject();
+		try {
+			jsonData.put("hasData", "yes");
+			if(sc.getPageNo()!=pageNo){
+				jsonData.put("hasData", "no");
+				return jsonData.toString();
+			}else{
+				jsonData.put("totalCount", sc.getTotalCount());
+			}
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		JSONArray contentJsonArray = new JSONArray();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		for(TdUser user : downUserList){
+			JSONObject jsonObject = new JSONObject();
+			try {
+				jsonObject.put("uavatar", user.getUavatar()!=null?user.getUavatar():"");
+				jsonObject.put("unick", user.getUnick()!=null?user.getUnick():"");
+				jsonObject.put("ugenter", user.getUgenter()!=null?user.getUgenter().toString():"");
+				if(user.getUgenter() != null){
+					if(user.getUgenter().equals(Byte.valueOf("1"))){
+						jsonObject.put("gender", "man");
+					}else if(user.getUgenter().equals(Byte.valueOf("2"))){
+						jsonObject.put("gender", "woman");
+					}else{
+						jsonObject.put("gender", "");
+					}
+				}
+				jsonObject.put("ugenterStr", user.getUgenterStr());
+				jsonObject.put("uname", user.getUname());
+				jsonObject.put("ubirthday", user.getUbirthdayStr()!=null?user.getUbirthdayStr():"");
+				if(oneIdsStr.contains(user.getUid().toString())){
+					jsonObject.put("level", "1");
+				}else if(twoIdsStr.contains(user.getUid().toString())){
+					jsonObject.put("level", "2");
+				}else if(threeIdsStr.contains(user.getUid().toString())){
+					jsonObject.put("level", "3");
+				}
+			} catch (JSONException e) {
+				logger.error("下级会员解析失败");
+				e.printStackTrace();
+			}
+			contentJsonArray.put(jsonObject);
+		}
+		try {
+			jsonData.put("addedData", contentJsonArray);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return jsonData.toString();
+	}
+	
 }

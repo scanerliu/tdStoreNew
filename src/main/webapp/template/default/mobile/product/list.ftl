@@ -1,4 +1,5 @@
 <#import "/common/app.ftl" as app>
+<#include "/common/common.ftl" />
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,71 +26,18 @@
     <script type="text/javascript" src="${app.basePath}/static/touch/js/swiper.min.js"></script> 
     <script type="text/javascript" src="${app.basePath}/static/touch/js/common.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/touch/js/index.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/mobile/product/search.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/mobile/product/product.js"></script>
 </head>
 <body class="body_bg">
+<div id="results"></div>
 
-<!-- header_top -->
-<div class="top_heater">
-    <a href="javascript:history.go(-1);" title="返回" class="hleft hback"></a>
-    <span><#if productType??>${productType.name!''}</#if></span>
-</div>
-<!-- header_top end -->
-
-<!-- Center Start -->
-<!-- <section class="container"> -->
-    <div class="three">
-        <a href="#" title="" class="active">综合</a>
-        <a href="#" title="" class="">销量</a>
-        <a href="#" title="" class="">价格</a>
-    </div>
- 
-    <div class="strenth">
-        <!-- Swiper -->
-        <div class="swiper-container">
-            <div class="swiper-wrapper" id="swiper-wrapper">
-                <div class="swiper-slide"><a href="产品列表.html" title="">翡翠玉石</a></div>
-                <div class="swiper-slide"><a href="#" title="">发饰/发卡</a></div>
-                <div class="swiper-slide"><a href="#" title="">3</a></div>
-                <div class="swiper-slide"><a href="#" title="">4</a></div>
-                <div class="swiper-slide"><a href="#" title="">5</a></div>
-                <div class="swiper-slide"><a href="#" title="">6</a></div>
-                <div class="swiper-slide"><a href="#" title="">7</a></div> 
-            </div>
-            <!-- Add Pagination -->
-            <!-- <div class="swiper-pagination"></div> -->
-        </div>
-        <!-- Initialize Swiper -->
-        <script>
-        var swiper = new Swiper('.swiper-container', {
-            pagination: '.swiper-pagination',
-            slidesPerView: 3,
-            paginationClickable: true,
-            // spaceBetween: 30
-        });
-        </script>
-        <!-- Swiper-end -->
-    </div>
-
-    <!-- 热销推荐 -->
-    <div class="hot">
-        <section class="sec2">
-        	<#if productList??>
-        	<#list productList as item>
-            <a href="${app.basePath}/mobile/product/item${item.id!'0'}" title="${item.name!''}" class="">
-                <img src="${app.basePath}${item.imageUrl!''}" alt="${item.name!''}">
-                <p class="p1">${item.name!''}</p>
-                <p class="p2">
-                    <label class="lab1">¥<#if item.price??>${item.price?string('0.00')}</#if></label>
-                    <label class="lab2">￥188.00</label>
-                </p>
-            </a>
-            </#list>
-            </#if>
-        </section>
-    </div>
-    <!-- 热销推荐-结束 -->
-<!-- </section> -->
-<!-- Center end -->
+<script type="text/javascript">
+	$(function(){
+	    searchList(${typeId?c},1);
+	});
+	
+</script>
 
 </body>
 </html>

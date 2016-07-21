@@ -12,6 +12,8 @@ public interface TdProductSkuService {
 	
 	TdProductSku findOne(Integer id);
 	
+	TdProductSku findOneWithProduct(Integer id);
+	
 	List<TdProductSku> findByProductId(Integer proId);
 	
 	Integer deleteByProductId(Integer proId);

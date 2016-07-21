@@ -155,6 +155,9 @@
     <if test="regionId != null">
         and d.id=#{regionId,jdbcType=INTEGER}
     </if>
+    <if test="uid != null">
+        and a.uid=#{uid,jdbcType=INTEGER}
+    </if>
     <if test="productTypeId != null" >
         and a.product_type_id=#{productTypeId,jdbcType=INTEGER}
     </if>
@@ -193,6 +196,9 @@
     </if>
     <if test="regionId != null">
         and d.id=#{regionId,jdbcType=INTEGER}
+    </if>
+    <if test="uid != null">
+        and a.uid=#{uid,jdbcType=INTEGER}
     </if>
     <if test="productTypeId != null" >
         and a.product_type_id=#{productTypeId,jdbcType=INTEGER}

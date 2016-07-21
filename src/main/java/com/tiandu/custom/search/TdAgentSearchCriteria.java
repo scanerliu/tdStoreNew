@@ -20,6 +20,8 @@ public class TdAgentSearchCriteria extends SearchCriteria {
 
 	private boolean isAssociationProductType;
 
+	private Integer uid;
+
 	public Integer getId() {
 		return id;
 	}
@@ -82,6 +84,14 @@ public class TdAgentSearchCriteria extends SearchCriteria {
 
 	public void setAssociationProductType(boolean isAssociationProductType) {
 		this.isAssociationProductType = isAssociationProductType;
+	}
+
+	public Integer getUid() {
+		return uid;
+	}
+
+	public void setUid(Integer uid) {
+		this.uid = uid;
 	}
 
 }

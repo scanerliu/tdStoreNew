@@ -65,7 +65,7 @@
 	    <article class="tips">提示：PC上登陆请绑定手机号码</article>
   	</#if>
     <article class="pc-nav">
-      <a href="我的订单.html" title="">
+      <a href="${app.basePath}/mobile/order/list" title="">
         <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_1.png" alt="">
         <span>我的订单</span>
       </a>
@@ -93,12 +93,12 @@
         <label>修改密码</label>
         <i class="icon-next"></i>
       </a>
-      <a href="推荐人.html" title="">
+      <a href="${app.basePath}/mobile/user/recommendPeople" title="推荐人">
         <i class="icon bg_icon_3"></i>
         <label>推荐人</label>
         <i class="icon-next"></i>
       </a>
-      <a href="联盟创客.html" title="">
+      <a href="${app.basePath}/mobile/user/downUserList" title="联盟创客">
         <i class="icon bg_icon_4"></i>
         <label>联盟创客</label>
         <i class="icon-next"></i>
@@ -128,7 +128,7 @@
         <label>我的收藏</label>
         <i class="icon-next"></i>
       </a>
-      <a href="../成为代理-分类列表.html" title="">
+      <a href="${app.basePath}/mobile/user/productManage" title="商品管理">
         <i class="icon bg_icon_8"></i>
         <label>商品管理</label>
         <i class="icon-next"></i>

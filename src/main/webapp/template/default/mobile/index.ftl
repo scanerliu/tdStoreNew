@@ -33,9 +33,9 @@
 <body class="body_bg">
 <!-- 头部 -->
 <div class="index_header">
-    <div class="fl"><img src="${app.basePath}/static/touch/images/logo.png" alt=""></div>
+    <div class="fl"><img src="${app.basePath}/static/touch/images/logo.png" alt="LOGO"></div>
     <a href="${app.basePath}/mobile/search" title="搜索" class="fl">搜索我的宝贝</a>
-    <a href="#" title="" class="fr">分享</a>
+    <a href="javascript:;" title="" class="fr">分享</a>
 </div>
 <!-- 头部-结束 -->
 
@@ -94,12 +94,12 @@
 <!-- 分类按钮 -->
 <div class="clickbtn">
     <a href="${app.basePath}/mobile/agent/list" title="创业中心"><p>创业中心</p></a>
-    <a href="${app.basePath}/mobile/campaign/list" title=""><p>排行榜</p></a>
+    <a href="${app.basePath}/mobile/campaign/list" title="排行榜"><p>排行榜</p></a>
     <a href="#" title=""><p>物流查询</p></a>
-    <a href="${app.basePath}/mobile/user/center" title=""><p>个人中心</p></a>
-    <a href="0元购列表.html" title=""><p>0元专区</p></a>
-    <a href="秒杀列表.html" title=""><p>秒杀专区</p></a>
-    <a href="产品列表.html" title=""><p>新品专区</p></a>
+    <a href="${app.basePath}/mobile/user/center" title="个人中心"><p>个人中心</p></a>
+    <a href="${app.basePath}/mobile/product/zero" title="0元专区"><p>0元专区</p></a>
+    <a href="${app.basePath}/mobile/product/seckill" title="秒杀专区"><p>秒杀专区</p></a>
+    <a href="${app.basePath}/mobile/product/new" title="新品专区"><p>新品专区</p></a>
     <a href="${app.basePath}/mobile/productType/list" title="分类选择"><p>分类选择</p></a>
 </div>
 <!-- 分类按钮-结束 -->
@@ -107,7 +107,7 @@
 <div class="bestarea">
     <section class="index_title">
         <label class="lab1 fl">精品专区</label>
-        <a href="产品列表.html" class="a_link"></a>
+        <a href="javascript:;" class="a_link"></a>
     </section>
     <section class="sec2">
     	<#if hotAdList?? && hotAdList?size gt 0>
@@ -123,7 +123,7 @@
 <div class="hot">
     <section class="index_title">
         <label class="lab1 fl">热销推荐</label>
-        <a href="产品列表.html" class="a_link"></a>
+        <a href="javascript:;" class="a_link"></a>
     </section>
     <section class="sec2">
     	<#list productList as pro>

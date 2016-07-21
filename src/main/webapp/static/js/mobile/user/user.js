@@ -22,10 +22,41 @@ function updateIntegralCallback(data){
 function saveUserInfo(){
 	var url = basePath+"/mobile/user/saveInfo";
 	var loadData = $('#userInfoForm').serialize();
-	$.post(url, loadData, saveUserInfoCallback, "text");
+	$.post(url, loadData, commonCallback, "text");
 }
 
-function saveUserInfoCallback(data){
+function verifyApply(id, status){
+	var url = basePath+"/mobile/user/verifyExperienceStoreApply";
+	var loadData = {'id':id, 'status': status};
+	$.post(url, loadData, verifyApplyCallback, "text");
+}
+
+function verifyApplyCallback(data){
 	var result = eval("("+data+")");
 	alert('消息提醒'+result.msg);
+	if(result.code == 1){
+		window.location.reload();
+	}
+}
+
+function commonCallback(data){
+	var result = eval("("+data+")");
+	alert('消息提醒'+result.msg);
+}
+
+//验证码
+var wait=60;
+function waitSeconds(o) {
+    if (wait == 0) {
+    	o.removeAttr("disabled");
+    	o.text("获取验证码");
+        wait = 60;
+    } else {
+    	o.attr("disabled", true);
+        o.text("重新发送(" + wait + ")");
+        wait--;
+        setTimeout(function() {
+        	waitSeconds(o)
+        }, 1000);
+    }
 }

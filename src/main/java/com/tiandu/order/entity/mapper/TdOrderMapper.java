@@ -19,6 +19,6 @@ public interface TdOrderMapper {
     int updateByPrimaryKey(TdOrder record);
     
     public List<TdOrder> findBySearchCriteria(TdOrderSearchCriteria sc);
-    public Integer countBySearchCriteria(TdOrderSearchCriteria sc);
+    public Integer countByCriteria(TdOrderSearchCriteria sc);
     public TdOrder findDetail(Integer orderId);
 }

@@ -156,3 +156,43 @@ function batchOperCallback(data){
 	  $.messager.alert('消息提醒','操作失败!');
 	}
 }
+
+
+/**
+ * 选择商品类型
+ * 
+ */
+function changekind(k){
+	
+	switch (k) {
+		case "1":
+			hideSeckill()
+			break;
+		case "2":
+			hideSeckill()
+			break;
+		case "3":
+			hideSeckill()
+			break;
+		case "4":
+			hideSeckill()
+			break;
+		case "5":
+			showSeckill();
+			break;
+		case "6":
+			showSeckill();
+			break;
+	default:
+		break;
+	}
+}
+
+// 显示开始、结束时间
+function showSeckill(){
+	$(".seckill").show();
+}
+// 隐藏开始、结束时间
+function hideSeckill(){
+	$(".seckill").hide();
+}

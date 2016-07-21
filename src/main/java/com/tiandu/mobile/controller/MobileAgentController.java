@@ -92,25 +92,25 @@ public class MobileAgentController extends BaseController{
 		if("单类代理".equals(agent.getGroupIdStr()))
 		{
 			// 查找所有分类
-			TdProductTypeCriteria sc = new TdProductTypeCriteria();
-			sc.setStatus((byte)1);
-			sc.setOrderBy("2");
-			map.addAttribute("typeList", tdProductTypeService.findAll(sc));
-			
-			TdDistrictSearchCriteria dsc = new TdDistrictSearchCriteria();
-			dsc.setFlag(false);
-			dsc.setUpid(0);
-			map.addAttribute("districtList", tdDistrictService.findBySearchCriteria(dsc));
-			map.addAttribute("dissc", dsc);
-			
-			// 代理查询条件
-			TdExperienceStoreSearchCriteria esc = new TdExperienceStoreSearchCriteria();
-			// 查找全国所有代理
-			esc.setRegionId(0);
-			esc.setFlag(false);
-			List<TdExperienceStore> ecperList = tdExperienceStoreService.findBySearchCriteria(esc);
-			
-			map.addAttribute("experTypeIds",getExperTypeIds(ecperList));
+//			TdProductTypeCriteria sc = new TdProductTypeCriteria();
+//			sc.setStatus((byte)1);
+//			sc.setOrderBy("2");
+//			map.addAttribute("typeList", tdProductTypeService.findAll(sc));
+//			
+//			TdDistrictSearchCriteria dsc = new TdDistrictSearchCriteria();
+//			dsc.setFlag(false);
+//			dsc.setUpid(0);
+//			map.addAttribute("districtList", tdDistrictService.findBySearchCriteria(dsc));
+//			map.addAttribute("dissc", dsc);
+//			
+//			// 代理查询条件
+//			TdExperienceStoreSearchCriteria esc = new TdExperienceStoreSearchCriteria();
+//			// 查找全国所有代理
+//			esc.setRegionId(0);
+//			esc.setFlag(false);
+//			List<TdExperienceStore> ecperList = tdExperienceStoreService.findBySearchCriteria(esc);
+//			
+//			map.addAttribute("experTypeIds",getExperTypeIds(ecperList));
 		}
 		else if("分公司".equals(agent.getGroupIdStr()))
 		{
@@ -219,7 +219,7 @@ public class MobileAgentController extends BaseController{
 		map.addAttribute("experTypeIds",getExperTypeIds(ecperList));
 		map.addAttribute("district", district);
 		
-		return "/mobile/agent/typelist";
+		return "/mobile/agent/typelist_body";
 	}
 	
 	@RequestMapping(value="/detail",method=RequestMethod.POST)

@@ -165,6 +165,18 @@ function addToShoppingcartCallback(data){
 }
 //立即购买
 function buyNow(){
-	var url = basePath+"/mobile/shoppingcart/confirmorder";
-	alert("稍等一下，功能开发中...");
+	var skuId = $("#skuId").val();
+	var skuPrice = $("#skuPrice").val();
+	var productId = $("#productId").val();
+	var postage = $("#propostage").val();
+	var quantity = $("#prodquantity").val();
+	var itemType = $("#productKind").val();
+	
+	if(skuId>0){
+		var url = basePath+"/mobile/shoppingcart/buynow";
+		var postData = {"productId":productId,"productSkuId":skuId,"quantity":quantity,"productType":itemType};
+		window.location.href= url+"?productId="+productId+"&productSkuId="+skuId+"&quantity="+quantity;
+	}else{
+		alert("请先选择商品规格！");
+	}
 }

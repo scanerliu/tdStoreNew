@@ -39,6 +39,11 @@ public class TdProductSkuServiceImpl implements TdProductSkuService{
 	}
 
 	@Override
+	public TdProductSku findOneWithProduct(Integer id) {
+		return tdProductSkuMapper.selectByPrimaryKeyWithProduct(id);
+	}
+
+	@Override
 	public List<TdProductSku> findByProductId(Integer proId) {
 		return tdProductSkuMapper.selectByProductId(proId);
 	}

@@ -92,7 +92,86 @@
     <div class="detail2">
         <p>${product.name!''}</p>
         <p>${product.title!''}</p>
-        <p><label for="" class="fl">￥<span id="prodprice">${product.price!''}</span></label></p>
+        <p>
+        	<label for="" class="fl">￥<span id="prodprice">${product.price!''}</span></label>
+        	<#-- 预售、秒杀倒计时  -->
+        	<#if product.kind ==5 || product.kind ==6>
+        	 <label for="" id="timeLeft" class="fr">离结束：<span>00</span>天 <span>00</span>时<span>00</span>分<span>00</span>秒</label>
+<script>
+$(document).ready(function(){
+    setInterval("timer()",1000);
+});
+
+function checkTime(i)  
+{  
+    if (i < 10) {  
+        i = "0" + i;  
+    }  
+    return i;  
+}
+
+function timer()
+{
+	    var ts = (new Date(${product.endTime?string("yyyy")}, 
+                parseInt(${product.endTime?string("MM")}, 10)-1, 
+                ${product.endTime?string("dd")}, 
+                ${product.endTime?string("HH")}, 
+                ${product.endTime?string("mm")}, 
+                ${product.endTime?string("ss")})) - (new Date());//计算剩余的毫秒数
+  
+    var allts = (new Date(${product.endTime?string("yyyy")}, 
+                parseInt(${product.endTime?string("MM")}, 10)-1, 
+                ${product.endTime?string("dd")}, 
+                ${product.endTime?string("HH")}, 
+                ${product.endTime?string("mm")}, 
+                ${product.endTime?string("ss")}))
+               - (new Date(${product.startTime?string("yyyy")}, 
+                parseInt(${product.startTime?string("MM")}, 10)-1, 
+                ${product.startTime?string("dd")}, 
+                ${product.startTime?string("HH")}, 
+                ${product.startTime?string("mm")}, 
+                ${product.startTime?string("ss")}));//总共的毫秒数 
+    
+    if (0 == ts)
+    {
+        window.location.reload();
+    }
+  
+    var date = new Date();
+    var dd = parseInt(ts / 1000 / 60 / 60 / 24, 10);//计算剩余的天数
+    var hh = parseInt(ts / 1000 / 60 / 60 % 24, 10);//计算剩余的小时数
+    var mm = parseInt(ts / 1000 / 60 % 60, 10);//计算剩余的分钟数
+    var ss = parseInt(ts / 1000 % 60, 10);//计算剩余的秒数
+     if(ss < 0){
+    	ss = 0;
+    }
+    if(mm < 0){
+    	mm = 0;
+    }
+    if(hh < 0){
+    	hh = 0;
+    }
+    if(dd < 0){
+    	dd = 0;
+    }
+    dd = checkTime(dd);
+    hh = checkTime(hh);
+    mm = checkTime(mm);
+    ss = checkTime(ss);
+    $("#timeLeft").html("离结束：<span>"+dd+"</span>天<span>"+hh+"</span>时<span>"+mm+"</span>分<span>"+ss+"</span>秒");
+    
+    // 结束
+    if(dd == 0 && hh == 0 && mm == 0 && ss == 0){
+    	$("#addCart").removeAttr("onclick");
+    	$("#buyNow").removeAttr("onclick");
+    	$("#addCart").css("background","#ddd")
+    	$("#buyNow").css("background","#ddd")
+    }
+}
+</script>        	 
+        	</#if>
+        </p>
+        
     </div>
     <div class="detail3" id="slect">
         <section>
@@ -185,8 +264,8 @@
 <footer>
     <div class="gopay">
         <a href="javascript:;" class="acare" id="acare">关注</a>
-        <a href="javascript:;" class="ajoin" onclick="addToShoppingcart();">加入购物车</a>
-        <a href="javascript:;" class="apayfor" title="" onclick="buyNow();">立即购买</a>
+        <a href="javascript:;" class="ajoin" id="addCart" onclick="addToShoppingcart();">加入购物车</a>
+        <a href="javascript:;" class="apayfor" id="buyNow" title="立即购买" onclick="buyNow();">立即购买</a>
     </div>
     <span class="footclear"></span>
 </footer>

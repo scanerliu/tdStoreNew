@@ -13,10 +13,11 @@
     <result column="quantity" property="quantity" jdbcType="INTEGER" />
     <result column="price" property="price" jdbcType="DECIMAL" />
     <result column="back_quantity" property="backQuantity" jdbcType="INTEGER" />
+    <result column="product_image" property="productImage" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     order_sku_id, order_id, product_id, product_sku_id, item_type, product_name, product_sku_code, 
-    display_specifications, quantity, price, back_quantity
+    display_specifications, quantity, price, back_quantity,product_image
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -41,11 +42,11 @@
     insert into td_order_sku (order_id, product_id, product_sku_id, 
       item_type, product_name, product_sku_code, 
       display_specifications, quantity, price, 
-      back_quantity)
+      back_quantity,product_image)
     values (#{orderId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, #{productSkuId,jdbcType=INTEGER}, 
       #{itemType,jdbcType=TINYINT}, #{productName,jdbcType=VARCHAR}, #{productSkuCode,jdbcType=VARCHAR}, 
       #{displaySpecifications,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, 
-      #{backQuantity,jdbcType=INTEGER})
+      #{backQuantity,jdbcType=INTEGER}, #{productImage,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tiandu.order.entity.TdOrderSku" >
     <selectKey resultType="java.lang.Integer" keyProperty="orderSkuId" order="AFTER" >
@@ -83,6 +84,9 @@
       <if test="backQuantity != null" >
         back_quantity,
       </if>
+      <if test="productImage != null" >
+        product_mage,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="orderId != null" >
@@ -114,6 +118,9 @@
       </if>
       <if test="backQuantity != null" >
         #{backQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="productImage != null" >
+        #{productImage,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -150,6 +157,9 @@
       <if test="backQuantity != null" >
         back_quantity = #{backQuantity,jdbcType=INTEGER},
       </if>
+      <if test="productImage != null" >
+          product_image = #{productImage,jdbcType=VARCHAR},
+      </if>
     </set>
     where order_sku_id = #{orderSkuId,jdbcType=INTEGER}
   </update>
@@ -164,7 +174,8 @@
       display_specifications = #{displaySpecifications,jdbcType=VARCHAR},
       quantity = #{quantity,jdbcType=INTEGER},
       price = #{price,jdbcType=DECIMAL},
-      back_quantity = #{backQuantity,jdbcType=INTEGER}
+      back_quantity = #{backQuantity,jdbcType=INTEGER},
+      product_image = #{productImage,jdbcType=VARCHAR}
     where order_sku_id = #{orderSkuId,jdbcType=INTEGER}
   </update>
 </mapper>
