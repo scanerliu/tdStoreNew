@@ -142,7 +142,7 @@
 		</li>
 		<li class="li02">
 			<font>我的收货地址</font>
-			<a href="${app.basePath}/mobile/user/shippingAddress" title="">
+			<a href="${app.basePath}/mobile/user/shoppingAddress" title="">
 				<span></span>
 			</a>
 		</li>

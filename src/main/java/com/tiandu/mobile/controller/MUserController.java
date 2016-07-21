@@ -281,28 +281,45 @@ public class MUserController extends BaseController {
 	 * @param map
 	 * @return
 	 */
-	@RequestMapping(value = "/shippingAddress")
-	public String shippingAddress(ModelMap map,Integer addressId)
+	@RequestMapping(value = "/shoppingAddress")
+	public String shoppingAddress(HttpServletRequest request,ModelMap map,Integer addressId)
 	{
 		TdUser tdUser = this.getCurrentUser();
 		if(tdUser == null)
 		{
 			return "redirect:/mobile/login";
 		}
-		// 系统配置
-		if(addressId != null)
+		if(addressId != null && addressId > 0)
 		{
 			tdUserAddressService.setIsDefaultFalse(tdUser.getUid());
 			TdUserAddress userAddress = tdUserAddressService.findOne(addressId);
 			userAddress.setIsDefault(true);
 			tdUserAddressService.save(userAddress);
 		}
+		if(addressId != null && addressId < 0)
+		{
+			map.addAttribute("shopping",addressId);
+			request.getSession().setAttribute("shopping", addressId);
+			if(addressId > -100)
+			{
+				map.addAttribute("path", "confirmorder");
+			}
+			else
+			{
+				map.addAttribute("returnPath", "buynow");
+			}
+		}
+		else if(request.getSession().getAttribute("shopping") != null)
+		{
+			map.addAttribute("shopping",(Integer)request.getSession().getAttribute("shopping"));
+		}
+		// 系统配置
 		map.addAttribute("system", getSystem());
 		TdUserAddressCriteria sc = new TdUserAddressCriteria();
 		sc.setUid(tdUser.getUid());
 		List<TdUserAddress> userAddresses = tdUserAddressService.findBySearchCriteria(sc);
 		map.addAttribute("address_list", userAddresses);
-		return "/mobile/user/shippingAddress";
+		return "/mobile/user/shoppingAddress";
 	}
 	
 	/**
@@ -312,8 +329,8 @@ public class MUserController extends BaseController {
 	 * @param map
 	 * @return
 	 */
-	@RequestMapping(value = "/shippingAddressAdd")
-	public String shippingAddressAdd(Integer addressId,ModelMap map)
+	@RequestMapping(value = "/shoppingAddressAdd")
+	public String shoppingAddressAdd(Integer addressId,ModelMap map)
 	{
 		TdUser tdUser = this.getCurrentUser();
 		if(tdUser == null)
@@ -325,16 +342,16 @@ public class MUserController extends BaseController {
 		if(addressId != null)
 		{
 			TdUserAddress userAddress = tdUserAddressService.findOne(addressId);
-			if(userAddress != null)
+			if(userAddress != null && userAddress.getUid() == tdUser.getUid())
 			{
 				map.addAttribute("address",userAddress);
 				Integer regionId = userAddress.getRegionId();
-				Map<String, Object> regionMap = getUserDistrictIdByUserAddress(new HashMap<String,Object>(),regionId);
+				Map<String, Object> regionMap = tdUserAddressService.getUserDistrictIdByRegionId(new HashMap<String,Object>(),regionId);
 				map.addAllAttributes(regionMap);
 			}
 		}
 		
-		return "/mobile/user/shippingAddressAdd";
+		return "/mobile/user/shoppingAddressAdd";
 	}
 	
 	/**
@@ -342,9 +359,9 @@ public class MUserController extends BaseController {
 	 * @param tdUserAddress
 	 * @return
 	 */
-	@RequestMapping(value = "/shippingAddressSave" ,method = RequestMethod.POST)
+	@RequestMapping(value = "/shoppingAddressSave" ,method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> shippingAddressSave(TdUserAddress tdUserAddress)
+	public Map<String,Object> shoppingAddressSave(TdUserAddress tdUserAddress)
 	{
 		Map<String,Object> result = new HashMap<String,Object>();
 		result.put("code", ConstantsUtils.RETURN_CODE_SUCCESS);
@@ -376,7 +393,7 @@ public class MUserController extends BaseController {
 	 * @param cityId 市
 	 * @return
 	 */
-	@RequestMapping(value = "/shippingAddressDistrict",method = RequestMethod.POST)
+	@RequestMapping(value = "/shoppingAddressDistrict",method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String,Object> shippingAddressDistrict(Integer provinceId,Integer cityId)
 	{
@@ -430,43 +447,14 @@ public class MUserController extends BaseController {
 		return resMap;
 	}
 	
-	private Map<String,Object> getUserDistrictIdByUserAddress(Map<String,Object> resMap,Integer districtId)
-	{
-		TdDistrict district = tdDistrictService.findOne(districtId);
-		if(district != null && district.getUpid() != 0)
-		{
-			resMap.put(district.getUpid().toString() , districtId);
-			this.getUserDistrictIdByUserAddress(resMap, district.getUpid());
-		}
-		else
-		{
-			Integer frist = (Integer)resMap.get(districtId.toString());
-			Integer second = (Integer)resMap.get(frist.toString());
-			resMap.clear();
-			if(second != null)
-			{
-				resMap.put("district",second);
-				resMap.put("city", frist);
-				resMap.put("province", districtId);
-			}
-			else
-			{
-				resMap.put("city", frist);
-				resMap.put("province", districtId);
-			}
-		}
-		
-		return resMap;
-	}
-	
 	/**
 	 * 地址删除
 	 * @param addressId
 	 * @return
 	 */
-	@RequestMapping(value="/shippingAddressDelete",method = RequestMethod.POST)
+	@RequestMapping(value="/shoppingAddressDelete",method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> shippingAddressDelete(Integer addressId)
+	public Map<String,Object> shoppingAddressDelete(Integer addressId)
 	{
 		Map<String,Object> resMap = new HashMap<String,Object>();
 		resMap.put("status",ConstantsUtils.RETURN_CODE_FAILURE);

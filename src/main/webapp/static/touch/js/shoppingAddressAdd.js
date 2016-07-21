@@ -86,7 +86,7 @@ function save(){
 
 	// 发送异步请求
 	$.ajax({
-		url : basePath + "/mobile/user/shippingAddressSave",
+		url : basePath + "/mobile/user/shoppingAddressSave",
 		type : "post",
 		timeout : 10000,
 		data : {
@@ -105,7 +105,7 @@ function save(){
 		success : function(res) {
 			$('.outerbox').fadeIn(400,function(){
 				$('.outerbox').fadeOut();
-				window.location.href=basePath + "/mobile/user/shippingAddress";
+				window.location.href=basePath + "/mobile/user/shoppingAddress";
 			});
 		}
 	});

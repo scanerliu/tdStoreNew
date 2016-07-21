@@ -64,33 +64,53 @@ public class TdUserAddressServiceImpl implements TdUserAddressService {
 		}
 	}
 	
-	public Map<String,Object> getUserDistrictIdByUserAddress(Map<String,Object> resMap,Integer districtId)
+	public Map<String,Object> getUserDistrictIdByRegionId(Map<String,Object> resMap,Integer regionId)
 	{
-		TdDistrict district = tdDistrictService.findOne(districtId);
+		TdDistrict district = tdDistrictService.findOne(regionId);
 		if(district != null && district.getUpid() != 0)
 		{
-			resMap.put(district.getUpid().toString() , districtId);
-			this.getUserDistrictIdByUserAddress(resMap, district.getUpid());
+			resMap.put(district.getUpid().toString() , regionId);
+			this.getUserDistrictIdByRegionId(resMap, district.getUpid());
 		}
 		else
 		{
-			Integer frist = (Integer)resMap.get(districtId.toString());
+			Integer frist = (Integer)resMap.get(regionId.toString());
 			Integer second = (Integer)resMap.get(frist.toString());
 			resMap.clear();
 			if(second != null)
 			{
 				resMap.put("district",second);
 				resMap.put("city", frist);
-				resMap.put("province", districtId);
+				resMap.put("province", regionId);
 			}
 			else
 			{
 				resMap.put("city", frist);
-				resMap.put("province", districtId);
+				resMap.put("province", regionId);
 			}
 		}
 		
 		return resMap;
+	}
+	
+	public TdUserAddress defaultAddressByUid(Integer uId)
+	{
+		TdUserAddressCriteria sc = new TdUserAddressCriteria(uId,true);
+		List<TdUserAddress> userAddresses = tdUserAddressMapper.findBySearchCriteria(sc);
+		if(userAddresses != null && userAddresses.size() > 0)
+		{
+			return userAddresses.get(0);
+		}
+		else
+		{
+			sc.setIsDefault(false);
+			userAddresses = tdUserAddressMapper.findBySearchCriteria(sc);
+			if(userAddresses != null && userAddresses.size() > 0)
+			{
+				return userAddresses.get(0);
+			}
+			else return null;
+		}
 	}
 	
 }
