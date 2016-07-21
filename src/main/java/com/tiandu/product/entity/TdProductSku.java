@@ -16,7 +16,7 @@ public class TdProductSku {
 
     private Integer productId;
 
-    private String skuCode;
+    private String skuCode = "";
 
     private BigDecimal supplierPrice;
 

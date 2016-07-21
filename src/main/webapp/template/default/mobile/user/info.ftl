@@ -164,11 +164,13 @@
 					var result = eval("("+data+")");
 					$("#uavatarShow").attr("src",basePath+result.savedFile);
 					$("#uavatar").val(basePath+result.savedFile);
-					$.messager.alert('消息提醒','图片' + file.name + ' 上传成功。 ');
+					alert("头像上传成功。");
+					//$.messager.alert('消息提醒','图片' + file.name + ' 上传成功。 ');
 		        },
 		        'onUploadError' : function(file, errorCode, errorMsg, errorString) {
 		        	//alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
-		        	$.messager.alert('消息提醒','上传失败。');
+		        	//$.messager.alert('消息提醒','上传失败。');
+		        	alert("头像上传失败。");
 		        }
 		});
 	});

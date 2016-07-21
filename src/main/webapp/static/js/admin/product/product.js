@@ -10,6 +10,10 @@ function searchProduct(t){
 	$("#results").load(url,loadData);
 }
 
+function fnGotoPageproducts(num){
+	searchProduct(false);
+}
+
 function editProduct(id){
 	var url = basePath + "/admin/product/edit";
 	var loadData = {"id" : id};
