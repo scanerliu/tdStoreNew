@@ -6,8 +6,11 @@
 	      <p class="p1">订单号：<span>${order.orderNo!''}</span></p>
 	      <p class="p2">交易状态：<span>
 	      <#if order.payStatus==1 && order.shipmentStatus==2>
-	      
-	      <#else if >
+	      		待发货
+	      <#elseif order.payStatus==1 && order.shipmentStatus==1>
+	      		待收货
+	      <#elseif order.payStatus==2>
+	      		待支付
 	      </#if>
 	      </span></p>
 	    </div>
@@ -36,8 +39,8 @@
 	      	共 <span>${order.itemNum!'0'}</span> 件商品  合计<strong class="price">￥<span>${order.totalAmount!'0'}</span></strong>（含运费：<strong>￥<span>${order.postage!'0'}</span></strong>）
 	    </div>
 	    <div class="btn-group">
-	      <a href="javascript:;" title="">立即付款</a>
-	      <a href="订单详情.html" title="">查看订单</a>
+	      <#if order.payStatus==2><a href="javascript:;" title="">立即付款</a></#if>
+	      <a href="${app.basePath}/mobile/order/detail" title="">查看订单</a>
 	      <a class="active" href="我的评价.html" title="">去评价</a>
 	    </div>
 	  </section>

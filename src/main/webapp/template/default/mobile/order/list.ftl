@@ -1,5 +1,4 @@
 <#import "/common/app.ftl" as app>
-<#include "/common/common.ftl" />
 <!DOCTYPE html>
 <html lang="en">
 <head>

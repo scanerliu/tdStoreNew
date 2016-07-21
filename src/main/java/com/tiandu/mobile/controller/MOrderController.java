@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.express.service.TdExpressService;
+import com.tiandu.order.entity.TdJointOrder;
 import com.tiandu.order.entity.TdOrder;
 import com.tiandu.order.search.TdOrderSearchCriteria;
 import com.tiandu.order.service.TdOrderLogService;
@@ -60,6 +61,20 @@ public class MOrderController extends BaseController {
 	    modelMap.addAttribute("orderList", orderList) ;
 	    modelMap.addAttribute("sc", sc) ;
 		return "/mobile/order/listbody";
+	}
+	
+	@RequestMapping("/detail")
+	public String detail(Integer orderId, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currUser = this.getCurrentUser();
+		TdOrder order = null;
+		if(null!=orderId && orderId>0){
+			order = tdOrderService.findDetail(orderId);
+		}
+		if(null==order || !order.getUserId().equals(currUser.getUid())){
+		    return "redirect:404";
+		}
+		modelMap.addAttribute("order", order) ;
+		return "/mobile/order/detail";
 	}
 	
 }
