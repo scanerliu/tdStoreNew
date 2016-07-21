@@ -13,14 +13,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.complaint.entity.TdComplaint;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.express.service.TdExpressService;
 import com.tiandu.order.entity.TdJointOrder;
 import com.tiandu.order.entity.TdOrder;
+import com.tiandu.order.entity.TdOrderShipment;
 import com.tiandu.order.search.TdOrderSearchCriteria;
 import com.tiandu.order.service.TdOrderLogService;
 import com.tiandu.order.service.TdOrderService;
 import com.tiandu.order.service.TdOrderShipmentService;
+import com.tiandu.order.vo.OperResult;
 
 /**
  * 
@@ -76,6 +79,64 @@ public class MOrderController extends BaseController {
 		}
 		modelMap.addAttribute("order", order) ;
 		return "/mobile/order/detail";
+	}
+	
+	@RequestMapping("/applyrefund{orderId}")
+	public String applyRefund(@PathVariable("orderId") Integer orderId, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currUser = this.getCurrentUser();
+		TdOrder order = null;
+		if(null!=orderId && orderId>0){
+			order = tdOrderService.findDetail(orderId);
+		}
+		if(null==order || !order.getUserId().equals(currUser.getUid())){
+		    return "redirect:404";
+		}
+		modelMap.addAttribute("order", order) ;
+		return "/mobile/order/applyrefund";
+	}
+	
+	@RequestMapping("/refund")
+	public String refund(TdOrderShipment shipment, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currUser = this.getCurrentUser();
+		TdOrder order = null;
+		if(null!=shipment.getOrderId() && shipment.getOrderId()>0){
+			order = tdOrderService.findDetail(shipment.getOrderId());
+		}
+		if(null==order || !order.getUserId().equals(currUser.getUid())){
+		    return "redirect:404";
+		}
+		OperResult result = tdOrderService.applyRefundOrder(order, shipment);
+		modelMap.addAttribute("result", result) ;
+		return "/mobile/order/refund";
+	}
+	
+	@RequestMapping("/complaint{orderId}")
+	public String complaint(@PathVariable("orderId") Integer orderId, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currUser = this.getCurrentUser();
+		TdOrder order = null;
+		if(null!=orderId && orderId>0){
+			order = tdOrderService.findDetail(orderId);
+		}
+		if(null==order || !order.getUserId().equals(currUser.getUid())){
+			return "redirect:404";
+		}
+		modelMap.addAttribute("order", order) ;
+		return "/mobile/order/applycomplaint";
+	}
+	
+	@RequestMapping("/complaintorder")
+	public String complaintOrder(TdComplaint complaint, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currUser = this.getCurrentUser();
+		TdOrder order = null;
+		if(null!=complaint.getOrderId() && complaint.getOrderId()>0){
+			order = tdOrderService.findDetail(complaint.getOrderId());
+		}
+		if(null==order || !order.getUserId().equals(currUser.getUid())){
+			return "redirect:404";
+		}
+		OperResult result = tdOrderService.complaintOrder(order, complaint);
+		modelMap.addAttribute("result", result) ;
+		return "/mobile/order/complaint";
 	}
 	
 }

@@ -1,5 +1,6 @@
 package com.tiandu.order.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +31,9 @@ public class TdOrderShipment {
 
     private Integer updateBy;
     private String  trackingTrace;
+    private String voucherImages;
+    private BigDecimal returnAmount;
+    private Integer returnCause;
     /**
      * 物流公司
      */
@@ -141,6 +145,30 @@ public class TdOrderShipment {
 
 	public void setTrackingTrace(String trackingTrace) {
 		this.trackingTrace = trackingTrace;
+	}
+
+	public String getVoucherImages() {
+		return voucherImages;
+	}
+
+	public void setVoucherImages(String voucherImages) {
+		this.voucherImages = voucherImages;
+	}
+
+	public BigDecimal getReturnAmount() {
+		return returnAmount;
+	}
+
+	public void setReturnAmount(BigDecimal returnAmount) {
+		this.returnAmount = returnAmount;
+	}
+
+	public Integer getReturnCause() {
+		return returnCause;
+	}
+
+	public void setReturnCause(Integer returnCause) {
+		this.returnCause = returnCause;
 	}
 
 	public TdExpress getTrackExpress() {

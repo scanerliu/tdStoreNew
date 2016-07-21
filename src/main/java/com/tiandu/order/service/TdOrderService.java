@@ -2,6 +2,7 @@ package com.tiandu.order.service;
 
 import java.util.List;
 
+import com.tiandu.complaint.entity.TdComplaint;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.order.entity.TdJointOrder;
 import com.tiandu.order.entity.TdOrder;
@@ -54,4 +55,20 @@ public interface TdOrderService {
 	 * @throws RuntimeException 
 	 */
 	public TdJointOrder saveOrderFull(TdUser currUser, OrderForm orderForm, ShoppingcartVO shoppingcart) throws RuntimeException;
+
+	/**
+	 * 申请退款
+	 * @param order
+	 * @param shipment
+	 * @return
+	 */
+	public OperResult applyRefundOrder(TdOrder order, TdOrderShipment shipment);
+
+	/**
+	 * 投诉
+	 * @param order
+	 * @param complaint
+	 * @return
+	 */
+	public OperResult complaintOrder(TdOrder order, TdComplaint complaint);
 }
