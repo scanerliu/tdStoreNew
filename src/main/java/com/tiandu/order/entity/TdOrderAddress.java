@@ -1,5 +1,7 @@
 package com.tiandu.order.entity;
 
+import com.tiandu.common.utils.WebUtils;
+
 public class TdOrderAddress {
     private Integer orderId;
 
@@ -59,5 +61,9 @@ public class TdOrderAddress {
 
     public void setAddress(String address) {
         this.address = address == null ? null : address.trim();
+    }
+    
+    public String getSecretTel(){
+    	return WebUtils.secretFliterString(this.getTelphone(), 5, 3);
     }
 }

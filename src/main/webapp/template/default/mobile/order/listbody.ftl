@@ -40,7 +40,7 @@
 	    </div>
 	    <div class="btn-group">
 	      <#if order.payStatus==2><a href="javascript:;" title="">立即付款</a></#if>
-	      <a href="${app.basePath}/mobile/order/detail" title="">查看订单</a>
+	      <a href="${app.basePath}/mobile/order/detail${order.orderId!'0'}" title="">查看订单</a>
 	      <a class="active" href="我的评价.html" title="">去评价</a>
 	    </div>
 	  </section>

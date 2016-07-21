@@ -1,5 +1,7 @@
 package com.tiandu.order.vo;
 
+import com.tiandu.custom.entity.TdUserAddress;
+
 /**
  * 订单提交操作实体类(购物车结算使用)
  * @author liuxinbing
@@ -36,6 +38,10 @@ public class OrderForm {
 	 */
 	private Integer agentProductId;
 	
+	/**
+	 *用户收货地址 
+	 */
+	private TdUserAddress userAddress;
 
 	public Integer getAddressId() {
 		return addressId;
@@ -107,6 +113,14 @@ public class OrderForm {
 
 	public void setAgentProductId(Integer agentProductId) {
 		this.agentProductId = agentProductId;
+	}
+
+	public TdUserAddress getUserAddress() {
+		return userAddress;
+	}
+
+	public void setUserAddress(TdUserAddress userAddress) {
+		this.userAddress = userAddress;
 	}
 	
 	
