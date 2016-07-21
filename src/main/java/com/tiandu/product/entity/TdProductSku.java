@@ -38,6 +38,8 @@ public class TdProductSku {
 
     private Integer updateBy;
     
+    private TdProduct product;
+    
     /**
      * 属性键值对，显示时候使用
      */
@@ -146,6 +148,14 @@ public class TdProductSku {
     public void setUpdateBy(Integer updateBy) {
         this.updateBy = updateBy;
     }
+    
+	public TdProduct getProduct() {
+		return product;
+	}
+
+	public void setProduct(TdProduct product) {
+		this.product = product;
+	}
 
 	public List<SkuSpecialVO> getSpecialList() {
 		if(null!=this.specialList){

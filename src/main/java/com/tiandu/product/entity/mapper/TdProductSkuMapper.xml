@@ -15,16 +15,36 @@
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    
+    <!-- 商品信息 -->
+	<association property="product" resultMap="productResult"/>
   </resultMap>
+  
+  <resultMap id="productResult" type="com.tiandu.product.entity.TdProduct" >
+  	<result column="p_name" property="name" jdbcType="VARCHAR" />
+  	<result column="p_kind" property="kind" jdbcType="VARCHAR" />
+  	<result column="p_uid" property="uid" jdbcType="VARCHAR" />
+  	<result column="p_postage" property="postage" jdbcType="DECIMAL" />
+  	<result column="p_status" property="status" jdbcType="TINYINT" />
+  	<result column="p_onshelf" property="onshelf" jdbcType="BIT" />
+  </resultMap>
+  
   <sql id="Base_Column_List" >
-    id, product_id, sku_code, supplier_price, sales_price, market_price, high_price, 
-    low_price, specifications, stock, status, update_time, update_by
+    s.id, s.product_id, s.sku_code, s.supplier_price, s.sales_price, s.market_price, s.high_price, 
+    s.low_price, s.specifications, s.stock, s.status, s.update_time, s.update_by
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from td_product_sku
-    where id = #{id,jdbcType=INTEGER}
+    from td_product_sku s
+    where s.id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKeyWithProduct" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,p.kind as p_kind, p.uid as p_uid, p.name as p_name, p.postage as p_postage, p.status as p_status, p.onshelf as p_onshelf
+    from td_product_sku s left join td_product p on s.product_id = p.id
+    where s.id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from td_product_sku
@@ -187,8 +207,8 @@
   	<select id="selectByProductId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
 	    select 
 	    <include refid="Base_Column_List" />
-	    from td_product_sku
-	    where product_id = #{productId,jdbcType=INTEGER}
+	    from td_product_sku s
+	    where s.product_id = #{productId,jdbcType=INTEGER}
 	  </select>
   	
   	 <delete id="deleteByProductId" parameterType="java.lang.Integer" >

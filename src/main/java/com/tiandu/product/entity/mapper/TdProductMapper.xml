@@ -272,7 +272,7 @@
         price = #{price,jdbcType=DECIMAL},
       </if>
       <if test="postage != null" >
-        price = #{postage,jdbcType=DECIMAL},
+        postage = #{postage,jdbcType=DECIMAL},
       </if>
       <if test="points != null" >
         points = #{points,jdbcType=INTEGER},
@@ -416,6 +416,10 @@
     <if test="name != null and name!=''">
     	and p.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
     </if> 
+    <if test="keyword != null and name!=''">
+    	and p.name like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%') 
+    	or p.keyword like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%')
+    </if> 
     <if test="productTypeIds != null">
     	and p.type_id in (
 	    <foreach collection="productTypeIds" item="ptid" index="index" separator="," >  
@@ -458,6 +462,10 @@
     <if test="name != null and name!=''">
     	and p.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
     </if>
+    <if test="keyword != null and name!=''">
+    	and p.name like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%') 
+    	or p.keyword like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%')
+    </if> 
     <if test="startTime != null">
     	and p.start_time <![CDATA[ <=]]> #{startTime,jdbcType=TIMESTAMP}
     </if>

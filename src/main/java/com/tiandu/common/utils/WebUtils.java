@@ -68,4 +68,26 @@ public class WebUtils {
 		}  
 		 
 	}
+	/**
+	 * 加密替换字符串（字符替换为*）
+	 * @param str
+	 * @param start 开始角标
+	 * @param size 替换长度
+	 * @return
+	 */
+	public static String secretFliterString(String str, int start, int size){
+	   StringBuffer sb = new StringBuffer();
+	   if(org.apache.commons.lang.StringUtils.isNotEmpty(str)){
+		   int length = str.length();
+		   if(length<=start || length <= (start+size)){
+			   return str;
+		   }
+		   sb.append(str.substring(0,start-1));
+		   for(int i=0;i<size;i++){
+			   sb.append("*");
+		   }
+		   sb.append(str.substring(start+size-1));
+	   }
+	   return sb.toString();
+   }
 }

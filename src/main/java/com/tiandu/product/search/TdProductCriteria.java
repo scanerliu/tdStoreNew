@@ -30,6 +30,8 @@ public class TdProductCriteria extends SearchCriteria {
 	// 结束时间
 	private Date endTime;
 	
+	private String keyword;
+	
 	public String getName() {
 		return name;
 	}
@@ -142,6 +144,14 @@ public class TdProductCriteria extends SearchCriteria {
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
+	
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
 
 	// 列表页排序 1-综合升序，2-综合降序，3-销量升序，4-销量降序，5-价格升序，6,-价格降序。
 	public String getOrderBySql() {
@@ -150,7 +160,7 @@ public class TdProductCriteria extends SearchCriteria {
 		Integer orderType = this.orderby;
 		switch (orderType) {
 		case 1:
-			orderBySql = "s.positive_rate asc , s.buy_count asc";
+			orderBySql = "s.positive_rate desc , s.buy_count desc";
 			break;
 		// case 2:
 		// orderBySql = "s.positive_rate desc and s.buy_count desc";

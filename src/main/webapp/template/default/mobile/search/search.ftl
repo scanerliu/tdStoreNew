@@ -20,6 +20,7 @@
     <!-- js -->
     <script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script> 
     <script type="text/javascript" src="${app.basePath}/static/touch/js/common.js"></script>
+    
 </head>
 
 <script>
@@ -27,9 +28,9 @@
         
     }
     
-function search(){
+function searchkey(){
 	var key = $("#keywords").val();
-	window.location.href ="${app.basePath}/mobile/search/list?keywords="+key
+	window.location.href ="${app.basePath}/mobile/search/list?keyword="+key
 }
 </script>
 
@@ -47,7 +48,7 @@ function search(){
     <div class="find_page">
         <section class="sec1">
             <input type="text" placeholder="请输入关键字搜索..." id="keywords" class="fl">
-            <a href="javascript:;" title="搜索" onclick="search();" class="fl"></a>
+            <a href="javascript:;" title="搜索" onclick="searchkey();" class="fl"></a>
         </section>
         <section class="sec2">
             <aside class="as1">

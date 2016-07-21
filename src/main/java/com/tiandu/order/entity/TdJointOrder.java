@@ -8,6 +8,9 @@ public class TdJointOrder {
 
     private String jno;
 
+    /**
+     * 支付金额
+     */
     private BigDecimal amount;
 
     private Byte paymentId;
@@ -22,6 +25,10 @@ public class TdJointOrder {
      * 生成订单错误信息
      */
     private String errMsg;
+    /**
+     * 获得赠送总积分
+     */
+    private Integer gainPoints;
     
     public Integer getId() {
         return id;
@@ -85,6 +92,14 @@ public class TdJointOrder {
 
 	public void setErrMsg(String errMsg) {
 		this.errMsg = errMsg;
+	}
+
+	public Integer getGainPoints() {
+		return gainPoints;
+	}
+
+	public void setGainPoints(Integer gainPoints) {
+		this.gainPoints = gainPoints;
 	}
     
 }

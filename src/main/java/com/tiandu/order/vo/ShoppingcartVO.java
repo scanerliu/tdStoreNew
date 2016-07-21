@@ -59,6 +59,11 @@ public class ShoppingcartVO {
 	 */
 	private Set<Integer> supplierIds;
 	
+    /**
+     * 获得赠送总积分
+     */
+    private Integer gainPoints;
+	
 	public Integer getTotalcount() {
 		return totalcount;
 	}
@@ -161,6 +166,14 @@ public class ShoppingcartVO {
 
 	public void setCanUserAccount(Boolean canUserAccount) {
 		this.canUserAccount = canUserAccount;
+	}
+
+	public Integer getGainPoints() {
+		return gainPoints;
+	}
+
+	public void setGainPoints(Integer gainPoints) {
+		this.gainPoints = gainPoints;
 	}
 	
 	

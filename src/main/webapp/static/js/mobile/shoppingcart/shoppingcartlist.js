@@ -121,3 +121,9 @@ function genernateOrder(){
 	$("#confirmorder").attr("action",url);
 	$("#confirmorder").submit();
 }
+//立即下单->下订单
+function genernateOrder2(){
+	var url = basePath+"/mobile/shoppingcart/singleorder";
+	$("#confirmorder").attr("action",url);
+	$("#confirmorder").submit();
+}

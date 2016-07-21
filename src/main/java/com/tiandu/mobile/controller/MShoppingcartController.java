@@ -1,6 +1,7 @@
 package com.tiandu.mobile.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +34,8 @@ import com.tiandu.order.service.TdOrderService;
 import com.tiandu.order.service.TdShoppingcartItemService;
 import com.tiandu.order.vo.OrderForm;
 import com.tiandu.order.vo.ShoppingcartVO;
+import com.tiandu.product.entity.TdProductSku;
+import com.tiandu.product.service.TdProductSkuService;
 import com.tiandu.system.utils.ConfigUtil;
 
 /**
@@ -57,6 +60,8 @@ public class MShoppingcartController extends BaseController {
 	
 	@Autowired
 	private TdOrderService tdOrderService;
+	@Autowired
+	private TdProductSkuService tdProductSkuService;
 	
 	@Autowired
 	private ConfigUtil configUtil;
@@ -211,7 +216,7 @@ public class MShoppingcartController extends BaseController {
 	}
 	
 	/*
-	 * 确认订单
+	 * 下订单
 	 */
 	@RequestMapping("/order")
 	public String order(OrderForm orderForm, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
@@ -225,6 +230,7 @@ public class MShoppingcartController extends BaseController {
 		TdJointOrder order = new TdJointOrder();
 		try {
 			order = tdOrderService.saveOrderFull(currUser, orderForm, shoppingcart);
+			tdShoppingcartItemService.deleteByUid(currUser.getUid());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -242,6 +248,139 @@ public class MShoppingcartController extends BaseController {
 		}
 	}
 	
+	/*
+	 * 立即下单确认订单
+	 */
+	@RequestMapping("/buynow")
+	public String buynow(OrderForm orderForm, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currUser = this.getCurrentUser();
+		//生成购物车
+		ShoppingcartVO shoppingcart;
+		try {
+			shoppingcart = getShoppingcart(currUser.getUid(), orderForm);
+			modelMap.addAttribute("shoppingcart", shoppingcart) ;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			//下单失败
+			TdJointOrder order = new TdJointOrder();
+			order.setErrMsg(e.getMessage());
+			modelMap.addAttribute("order", order) ;
+		    return "/mobile/shoppingcart/ordererror";
+		}
+		modelMap.addAttribute("orderForm", orderForm) ;
+	    return "/mobile/shoppingcart/buynow";
+	}
+	
+	/*
+	 * 下订单
+	 */
+	@RequestMapping("/singleorder")
+	public String singleorder(OrderForm orderForm, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		if(null==orderForm.getUsePoints()){
+			orderForm.setUsePoints(false);
+		}
+		TdJointOrder order = new TdJointOrder();
+		TdUser currUser = this.getCurrentUser();
+		try {
+			//获取购物车
+			ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid(), orderForm);
+		
+			order = tdOrderService.saveOrderFull(currUser, orderForm, shoppingcart);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			order.setErrMsg(e.getMessage());
+		}
+		if(order!=null && StringUtils.isNotEmpty(order.getJno())){
+			//下单成功调整支付页面
+			modelMap.addAttribute("order", order) ;
+		    return "/mobile/shoppingcart/orderpay";
+			
+		}else{
+			//下单失败
+			modelMap.addAttribute("order", order) ;
+		    return "/mobile/shoppingcart/ordererror";
+		}
+	}
+	/**
+	 * 根据立即购买生成购物车信息
+	 * @param uid
+	 * @param buynow
+	 * @return
+	 * @throws Exception 
+	 */
+	private ShoppingcartVO getShoppingcart(Integer uid, OrderForm orderForm) throws Exception {
+		Integer integralexchangerate = configUtil.getIntegralExchangerate(); //积分抵扣金额比例
+		Integer commonproductpointpercent = configUtil.getCommonProductPointPercent(); //普通商品可积分抵扣的比例
+		Integer partproductpointpercent = configUtil.getPartProductPointPercent(); //部分积分兑换商品可积分抵扣的比例
+		ShoppingcartVO cart = new ShoppingcartVO();
+		TdShoppingcartItem item = new TdShoppingcartItem();
+		TdProductSku sku = tdProductSkuService.findOneWithProduct(orderForm.getProductSkuId());
+		if(null!=sku && sku.getProduct().getStatus().equals(Byte.valueOf("1")) && sku.getProduct().getOnshelf()){
+			item.setItemType(sku.getProduct().getKind().intValue());
+			item.setPostage(sku.getProduct().getPostage());
+			item.setPrice(sku.getSalesPrice());
+			item.setProductId(sku.getProductId());
+			item.setProductSkuId(sku.getId());
+			item.setProduct(sku.getProduct());
+			item.setProductSku(sku);
+			item.setQuantity(orderForm.getQuantity());
+		}else{
+			throw new Exception("下单失败，商品不存在或已经下架！");
+		}
+		
+		//重新计算
+		List<TdShoppingcartItem> itemList = new ArrayList<TdShoppingcartItem>();
+		itemList.add(item);
+		//累加每个商品的运费
+		BigDecimal postage = (null!=item.getPostage())?item.getPostage():BigDecimal.ZERO;
+		cart.setTotalPostage(postage);
+		//累加单个商品总金额（价格*数量）
+		BigDecimal quantity = new BigDecimal(item.getQuantity());
+		BigDecimal amount = item.getPrice().multiply(quantity);
+		cart.setTotalProductAmount(amount);
+		cart.setTotalAmount(amount);
+		//计算可以积分抵扣金额
+		BigDecimal pointAmount =BigDecimal.ZERO;
+		if(ConstantsUtils.PRODUCT_KIND_PART_POINT_EXCHANGE.equals(item.getProduct().getKind()) && partproductpointpercent>0 && integralexchangerate>0){
+			pointAmount =  amount.multiply(new BigDecimal(partproductpointpercent)).divide(new BigDecimal(100));
+			cart.setTotalPartPointAmount(pointAmount);
+		}else if(commonproductpointpercent>0 && integralexchangerate>0){
+			pointAmount =  amount.multiply(new BigDecimal(commonproductpointpercent)).divide(new BigDecimal(100));
+			cart.setTotalCommonPointAmount(pointAmount);
+		}
+		//统计供应商id
+		cart.setSupplierId(item.getProduct().getUid());
+		//计算总积分抵扣金额和
+		cart.setTotalPointAmount(cart.getTotalCommonPointAmount().add(cart.getTotalPartPointAmount()));
+		Integer commonproductpoint = cart.getTotalCommonPointAmount().multiply(new BigDecimal(integralexchangerate)).setScale(0, BigDecimal.ROUND_FLOOR).intValue();
+		Integer partproductpoint = cart.getTotalPartPointAmount().multiply(new BigDecimal(integralexchangerate)).setScale(0, BigDecimal.ROUND_FLOOR).intValue();
+		cart.setTotalPointsUsed(commonproductpoint+partproductpoint);
+		//获取用户积分
+		TdUserIntegral userIntegral = tdUserIntegralService.findOne(uid);
+		if(null!=userIntegral && userIntegral.getIntegral()>=cart.getTotalPointsUsed()){
+			
+		}else{
+			cart.setTotalPointsUsed(0);
+		}
+		//获取用户钱包余额
+		TdUserAccount userAccount = tdUserAccountService.findOne(uid);
+		if(null!=userAccount && TdUserAccount.ACCOUNT_STATUS_ACTIVE.equals(userAccount.getStatus()) && userAccount.getAmount().compareTo(cart.getTotalAmount())>=0){
+			cart.setCanUserAccount(true);
+		}else{
+			cart.setCanUserAccount(false);
+		}
+		cart.setCombiningOrder(false);
+		cart.setItemList(itemList);
+		cart.setTotalcount(itemList.size());
+		return cart;
+	}
+	/**
+	 * 查询用户购物车信息
+	 * @param uid
+	 * @return
+	 */
 	private ShoppingcartVO getShoppingcart(Integer uid){
 		Integer integralexchangerate = configUtil.getIntegralExchangerate(); //积分抵扣金额比例
 		Integer commonproductpointpercent = configUtil.getCommonProductPointPercent(); //普通商品可积分抵扣的比例
