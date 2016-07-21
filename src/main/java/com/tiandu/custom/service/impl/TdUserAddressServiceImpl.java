@@ -1,6 +1,7 @@
 package com.tiandu.custom.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,12 +10,17 @@ import com.tiandu.custom.entity.TdUserAddress;
 import com.tiandu.custom.entity.mapper.TdUserAddressMapper;
 import com.tiandu.custom.search.TdUserAddressCriteria;
 import com.tiandu.custom.service.TdUserAddressService;
+import com.tiandu.district.entity.TdDistrict;
+import com.tiandu.district.service.TdDistrictService;
 
 @Service
 public class TdUserAddressServiceImpl implements TdUserAddressService {
 	
 	@Autowired
 	private TdUserAddressMapper tdUserAddressMapper;
+	
+	@Autowired
+	private TdDistrictService tdDistrictService;
 	
 	public TdUserAddress findOne(Integer id)
 	{
@@ -56,6 +62,35 @@ public class TdUserAddressServiceImpl implements TdUserAddressService {
 				this.save(userAddress);
 			}
 		}
+	}
+	
+	public Map<String,Object> getUserDistrictIdByUserAddress(Map<String,Object> resMap,Integer districtId)
+	{
+		TdDistrict district = tdDistrictService.findOne(districtId);
+		if(district != null && district.getUpid() != 0)
+		{
+			resMap.put(district.getUpid().toString() , districtId);
+			this.getUserDistrictIdByUserAddress(resMap, district.getUpid());
+		}
+		else
+		{
+			Integer frist = (Integer)resMap.get(districtId.toString());
+			Integer second = (Integer)resMap.get(frist.toString());
+			resMap.clear();
+			if(second != null)
+			{
+				resMap.put("district",second);
+				resMap.put("city", frist);
+				resMap.put("province", districtId);
+			}
+			else
+			{
+				resMap.put("city", frist);
+				resMap.put("province", districtId);
+			}
+		}
+		
+		return resMap;
 	}
 	
 }

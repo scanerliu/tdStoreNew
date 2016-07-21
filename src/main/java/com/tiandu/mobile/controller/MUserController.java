@@ -354,6 +354,11 @@ public class MUserController extends BaseController {
 			result.put("msg", "未登录");
 			return result;
 		}
+		if(tdUserAddress.getUid() != null && tdUserAddress.getUid() != tdUser.getUid())
+		{
+			result.put("msg", "参数错误");
+			return result;
+		}
 		tdUserAddress.setUid(tdUser.getUid());
 		if(tdUserAddress != null && tdUserAddress.getIsDefault() != null && tdUserAddress.getIsDefault() == true)
 		{
@@ -474,7 +479,12 @@ public class MUserController extends BaseController {
 		TdUserAddress userAddress = tdUserAddressService.findOne(addressId);
 		if(addressId == null || userAddress == null)
 		{
-			resMap.put("msg","参数错误");
+			resMap.put("msg","参数错误 -1");
+			return resMap;
+		}
+		if(userAddress.getUid() != tdUser.getUid())
+		{
+			resMap.put("msg","参数错误 -2");
 			return resMap;
 		}
 		tdUserAddressService.delete(addressId);
