@@ -51,8 +51,24 @@ import com.tiandu.order.search.TdShoppingcartSearchCriteria;
 import com.tiandu.order.service.TdShoppingcartItemService;
 import com.tiandu.order.vo.ShoppingcartVO;
 import com.tiandu.product.entity.TdProduct;
+import com.tiandu.product.entity.TdProductAttachment;
+import com.tiandu.product.entity.TdProductAttribute;
+import com.tiandu.product.entity.TdProductAttributeOption;
+import com.tiandu.product.entity.TdProductDescription;
+import com.tiandu.product.entity.TdProductSku;
+import com.tiandu.product.entity.TdProductType;
+import com.tiandu.product.entity.TdProductTypeAttribute;
+import com.tiandu.product.search.TdProductAttributeOptionCriteria;
 import com.tiandu.product.search.TdProductCriteria;
+import com.tiandu.product.search.TdProductTypeCriteria;
+import com.tiandu.product.service.TdProductAttachmentService;
+import com.tiandu.product.service.TdProductAttributeOptionService;
+import com.tiandu.product.service.TdProductAttributeService;
+import com.tiandu.product.service.TdProductDescriptionService;
 import com.tiandu.product.service.TdProductService;
+import com.tiandu.product.service.TdProductSkuService;
+import com.tiandu.product.service.TdProductStatService;
+import com.tiandu.product.service.TdProductTypeAttributeService;
 import com.tiandu.product.service.TdProductTypeService;
 
 /**
@@ -88,13 +104,34 @@ public class MUserController extends BaseController {
 	private TdExperienceStoreService tdExperienceStoreService;
 	
 	@Autowired
+	TdAgentService tdAgentService;
+	
+	@Autowired
 	private TdProductService tdProductService;
 	
 	@Autowired
-	TdProductTypeService tdProductTypeService;
+	TdProductAttributeOptionService tdProductAttributeOptionService; 
 	
 	@Autowired
-	TdAgentService tdAgentService;
+	private TdProductTypeService tdProductTypeService;
+	
+	@Autowired
+	private TdProductAttachmentService tdProductAttachmentService;
+	
+	@Autowired
+	private TdProductDescriptionService tdProductDescriptionService; 
+	
+	@Autowired
+	TdProductAttributeService tdProductAttributeService; 
+	
+	@Autowired
+	TdProductTypeAttributeService tdProductTypeAttributeService; 
+	
+	@Autowired
+	private TdProductStatService tdProductStatService;
+	
+	@Autowired
+	TdProductSkuService tdProductSkuService;
 	
 	
 	// 个人中心
@@ -750,6 +787,91 @@ public class MUserController extends BaseController {
 	}
 	
 	/*
+	 * 商品保存
+	 */
+	@RequestMapping(value="/saveProduct", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> saveProduct(Boolean isFreeProduct, TdProduct product,  String[] attachment, TdProductDescription productDescription, TdProductSku productSku, String attributeAssembleStr, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>();
+		TdUser currentUser = this.getCurrentUser();
+		String[] atrributeArray = attributeAssembleStr.split("_");
+		try{
+			// 商品
+			if(isFreeProduct != null && isFreeProduct){
+				product.setKind(Byte.valueOf("3"));
+			}else{
+				product.setKind(Byte.valueOf("1"));
+			}
+			product.setUid(currentUser.getUid());
+			product.setSpecification(true);
+			product.setStatus(Byte.valueOf("2"));
+			if(attachment != null && attachment.length > 0){
+				product.setImageUrl(attachment[0]);
+			}
+			product.setCreateTime(new Date());
+			product.setUpdateTime(new Date());
+			product.setUpdateBy(currentUser.getUid());
+			product.setQuantum(productSku.getStock() * atrributeArray.length);
+			tdProductService.save(product);
+			// 商品图片
+			if(attachment != null && attachment.length > 0){
+				for(String a : attachment){
+					TdProductAttachment pa = new TdProductAttachment();
+					pa.setAttachment(a);
+					// 格式：/tdStore/static/imgs/product/2016/7/21/78c60dcc-0938-4128-85fb-1291d75be098.jpg
+					String fileName = a.substring(a.lastIndexOf("/") + 1);
+					pa.setFilename(fileName);
+					pa.setProductId(product.getId());
+					tdProductAttachmentService.save(pa);
+				}
+			}
+			// 商品描述
+			productDescription.setType(Byte.valueOf("1"));
+			productDescription.setProductId(product.getId());
+			productDescription.setUpdateBy(currentUser.getUid());
+			productDescription.setUpdateTime(new Date());
+			tdProductDescriptionService.save(productDescription);
+			// 货品	atrributeArray格式：规格1=gv1,规格2=gv21	 保存规格格式：{"颜色":"红色","尺码":"38"}
+			for(String at : atrributeArray){
+				TdProductSku ps = new TdProductSku();
+				ps.setHighPrice(productSku.getHighPrice());
+				ps.setLowPrice(productSku.getLowPrice());
+				ps.setMarketPrice(productSku.getMarketPrice());
+				ps.setProductId(product.getId());
+				ps.setSalesPrice(productSku.getSalesPrice());
+				ps.setStatus(Byte.valueOf("2"));
+				ps.setStock(productSku.getStock());
+				ps.setSupplierPrice(productSku.getSupplierPrice());
+				ps.setUpdateBy(currentUser.getUid());
+				ps.setUpdateTime(new Date());
+				// 设置规格
+				JSONObject jo = new JSONObject();
+				String[] gga = at.split(",");
+				for(String ggas : gga){
+					try {
+						jo.put(ggas.split("=")[0], ggas.split("=")[1]);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				ps.setSpecifications(jo.toString());
+				tdProductSkuService.save(ps);
+				
+			}
+		}catch(Exception e){
+			logger.error("商品保存失败。");
+			e.printStackTrace();
+			res.put("status", "n");
+			res.put("info", "商品保存失败。");
+		}
+		res.put("status", "y");
+		res.put("info", "商品保存成功。");
+		
+		return res;
+	}
+	
+	/*
 	 * 下级会员
 	 */
 	@RequestMapping("/downUserList")
@@ -760,10 +882,41 @@ public class MUserController extends BaseController {
 	}
 	
 	/*
+	 * 加载对应商品类别的规格
+	 */
+	@RequestMapping("/flushAttribute")
+	public String flushAttribute(Integer typeId, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		
+		List<TdProductTypeAttribute> typeAttributeList = tdProductTypeAttributeService.findByTypeId(typeId);
+		List<TdProductAttribute> attributeList = new ArrayList<>();
+		if(typeAttributeList != null){
+			for(TdProductTypeAttribute ta : typeAttributeList){
+				TdProductAttribute attribute = tdProductAttributeService.findOne(ta.getAttriId());
+				// 设置attribute的option
+				if(attribute != null){
+					TdProductAttributeOptionCriteria sc = new TdProductAttributeOptionCriteria();
+					sc.setFlag(false);
+					sc.setAttriId(attribute.getAttriId());
+					List<TdProductAttributeOption> aoList = tdProductAttributeOptionService.findBySearchCriteria(sc);
+					attribute.setTdProductAttributeOptionList(aoList);
+				}
+				attributeList.add(attribute);
+			}
+		}
+		modelMap.addAttribute("attributeList", attributeList);
+		return "/mobile/user/productAttributeTemplate";	
+	}
+	
+	/*
 	 * 上传商品
 	 */
 	@RequestMapping("/addProduct")
-	public String addProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	public String addProduct(Boolean isFreeProduct, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdProductTypeCriteria tsc = new TdProductTypeCriteria();
+		tsc.setStatus((byte) 1);
+		List<TdProductType> productTypeList = tdProductTypeService.findAll(tsc);
+		modelMap.addAttribute("productTypeList", productTypeList);
+		modelMap.addAttribute("isFreeProduct", isFreeProduct);
 		return "/mobile/user/addProduct";	
 	}
 	

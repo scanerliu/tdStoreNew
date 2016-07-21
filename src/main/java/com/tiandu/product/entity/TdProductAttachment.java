@@ -9,7 +9,7 @@ public class TdProductAttachment {
 
     private Integer productId;
 
-    private Integer sort;
+    private Integer sort = 0;
 
     public Integer getId() {
         return id;

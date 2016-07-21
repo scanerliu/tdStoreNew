@@ -20,7 +20,7 @@ public class TdProduct {
 
 	private Integer points;
 
-	private Integer defaultSkuId;
+	private Integer defaultSkuId = 1; // 默认搞成1
 
 	private Integer brandId;
 
@@ -44,17 +44,17 @@ public class TdProduct {
 
 	private Integer updateBy;
 
-	private Integer newRecommend;
+	private Integer newRecommend = 0;
 
-	private Integer hotRecommend;
+	private Integer hotRecommend = 0;
 
-	private Integer fineRecommend;
+	private Integer fineRecommend = 0;
 
-	private Integer typeRecommend;
+	private Integer typeRecommend = 0;
 
 	private Integer quantum;
 
-	private Integer sort;
+	private Integer sort = 0;
 
 	private String tags;
 
