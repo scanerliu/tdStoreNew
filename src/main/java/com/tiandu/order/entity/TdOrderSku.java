@@ -1,6 +1,14 @@
 package com.tiandu.order.entity;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.tiandu.order.vo.SkuSpecialVO;
 
 public class TdOrderSku {
     private Integer orderSkuId;
@@ -24,6 +32,13 @@ public class TdOrderSku {
     private BigDecimal price;
 
     private Integer backQuantity;
+    
+    private String produtImage;
+    
+    /**
+     * 属性键值对，显示时候使用
+     */
+    private List<SkuSpecialVO> specialList;
 
     public Integer getOrderSkuId() {
         return orderSkuId;
@@ -112,4 +127,44 @@ public class TdOrderSku {
     public void setBackQuantity(Integer backQuantity) {
         this.backQuantity = backQuantity;
     }
+
+	public String getProdutImage() {
+		return produtImage;
+	}
+
+	public void setProdutImage(String produtImage) {
+		this.produtImage = produtImage;
+	}
+
+	public List<SkuSpecialVO> getSpecialList() {
+		if(null!=this.specialList){
+			return specialList;
+		}
+		List<SkuSpecialVO> slist = new ArrayList<SkuSpecialVO>();
+		if(StringUtils.isNotEmpty(this.getDisplaySpecifications())){
+			String opt = this.getDisplaySpecifications();
+			JSONObject json;
+			try {
+				json = new JSONObject(opt);
+				String[] keys = json.getNames(json);
+				for(String key : keys){
+					SkuSpecialVO special = new SkuSpecialVO();
+					String val = (String) json.get(key);
+					special.setSname(key);
+					special.setSoption(val);
+					slist.add(special);						
+				}
+				this.setSpecialList(slist);
+			} catch (JSONException e) {
+				
+				e.printStackTrace();
+			}
+		}
+		return specialList;
+	}
+
+	public void setSpecialList(List<SkuSpecialVO> specialList) {
+		this.specialList = specialList;
+	}
+    
 }

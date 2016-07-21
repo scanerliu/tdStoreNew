@@ -81,5 +81,17 @@ public class TdDistrictServiceImpl implements TdDistrictService {
 	public Integer delete(Integer id) {
 		return districtMapper.deleteByPrimaryKey(id);
 	}
+	
+	// 是否是直辖市
+	public boolean isCentralCity(String cityName) {
+		switch (cityName) {
+		case "北京市":
+		case "天津市":
+		case "上海市":
+		case "重庆市":
+			return true;
+		}
+		return false;
+	}
 
 }
