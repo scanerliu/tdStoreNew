@@ -14,8 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.custom.entity.TdUserAddress;
 import com.tiandu.custom.entity.TdUserIntegral;
 import com.tiandu.custom.entity.TdUserIntegralLog;
+import com.tiandu.custom.service.TdUserAddressService;
 import com.tiandu.custom.service.TdUserIntegralService;
 import com.tiandu.order.entity.TdJointOrder;
 import com.tiandu.order.entity.TdOrder;
@@ -69,6 +71,8 @@ public class TdOrderServiceImpl implements TdOrderService{
 	private TdJointOrderMapper tdJointOrderMapper;
 	@Autowired
 	private TdUserIntegralService tdUserIntegralService;
+	@Autowired
+	private TdUserAddressService tdUserAddressService;
 	
 	@Autowired
 	private ConfigUtil configUtil;
@@ -281,6 +285,11 @@ public class TdOrderServiceImpl implements TdOrderService{
 			torder.setGainPoints(0);
 		}
 		shoppingcart.setGainPoints(torder.getGainPoints());
+		//收货地址
+		if(null!=orderForm.getAddressId() && orderForm.getAddressId()>0){
+			TdUserAddress address = tdUserAddressService.findOne(orderForm.getAddressId());
+			orderForm.setUserAddress(address);
+		}
 		if(shoppingcart.getCombiningOrder()){//拆单
 			torder.setJno(WebUtils.generateJointOrderNo());
 			torder.setAmount(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount()));
@@ -363,7 +372,9 @@ public class TdOrderServiceImpl implements TdOrderService{
 			sku.setProductName(item.getProduct().getName());
 			sku.setProductSkuCode(item.getProductSku().getSkuCode());
 			sku.setQuantity(item.getQuantity());
-			tdOrderSkuMapper.insert(sku);			
+			tdOrderSkuMapper.insert(sku);
+			//更新货品库存
+			//TODO:
 		}
 		//扣除抵扣积分
 		if(order.getUsedPoint()>0){
@@ -384,7 +395,17 @@ public class TdOrderServiceImpl implements TdOrderService{
 			tdUserIntegralService.addIntegral(userIntegral, integralLog);
 		}
 		//保存收货地址
-		
+		if(null!=orderForm.getUserAddress()){
+			TdUserAddress address = orderForm.getUserAddress();
+			TdOrderAddress orderAddress = new TdOrderAddress();
+			orderAddress.setOrderId(order.getOrderId());
+			orderAddress.setAddress(address.getAddress());
+			orderAddress.setCustomerName(address.getName());
+			orderAddress.setRegionFullName(address.getFullAddress());
+			orderAddress.setTelphone(address.getTelphone());
+			orderAddress.setRegionId(address.getRegionId());
+			tdOrderAddressMapper.insert(orderAddress);			
+		}
 		//保存日志
 		
 		return order;

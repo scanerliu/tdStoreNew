@@ -1,3 +1,5 @@
+<#import "/common/app.ftl" as app> 
+<#include "/common/common.ftl" />
 <script type="text/javascript">
     function warning(text){
         $('.warning').html(text)
@@ -25,7 +27,7 @@
     top: 0px;
     z-index: 99999;
     border-radius: 6px;
-    background: url(/tdStore/static/default/images/lei_buy_bd.png);
+    background: url(${app.basePath}/static/default/images/color_warning.png);
     font-size: 1.2em;
     display:none;
 }

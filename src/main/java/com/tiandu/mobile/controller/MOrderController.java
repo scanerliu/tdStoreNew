@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.tiandu.common.controller.BaseController;
@@ -63,8 +64,8 @@ public class MOrderController extends BaseController {
 		return "/mobile/order/listbody";
 	}
 	
-	@RequestMapping("/detail")
-	public String detail(Integer orderId, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	@RequestMapping("/detail{orderId}")
+	public String detail(@PathVariable("orderId") Integer orderId, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser currUser = this.getCurrentUser();
 		TdOrder order = null;
 		if(null!=orderId && orderId>0){

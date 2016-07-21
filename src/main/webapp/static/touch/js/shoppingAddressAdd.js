@@ -73,6 +73,11 @@ function save(){
 		warning("请填写详细地址");
 		return;
 	}
+	
+	if (detailAddress.length > 128) {
+		warning("请控制详细地址字数在128");
+		return;
+	}
 
 	if(!isAllLegal(detailAddress)){
 		warning("详细地址不能输入除-()#,以外的特殊字符");
@@ -81,7 +86,7 @@ function save(){
 
 	// 发送异步请求
 	$.ajax({
-		url : basePath + "/mobile/user/shippingAddressSave",
+		url : basePath + "/mobile/user/shoppingAddressSave",
 		type : "post",
 		timeout : 10000,
 		data : {
@@ -95,11 +100,12 @@ function save(){
 		},
 		error : function(XMLHttpRequest, textStatus, errorThrown) {
 			// 关闭等待图标
+			warning("添加失败")
 		},
 		success : function(res) {
 			$('.outerbox').fadeIn(400,function(){
 				$('.outerbox').fadeOut();
-				window.location.href=basePath + "/mobile/user/shippingAddress";
+				window.location.href=basePath + "/mobile/user/shoppingAddress";
 			});
 		}
 	});

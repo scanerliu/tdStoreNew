@@ -36,13 +36,22 @@
 	<section class="container">
 	
 	    <!-- order_detail_title -->
-	    <a href="normalUser/收货地址.html" title="" class="sub_order p">
+	    <#if address??>
+	    <a href="${app.basePath}/mobile/user/shoppingAddress?addressId=${randomNo!''}" title="" class="sub_order p">
 	        <p class="p1">
-	            <label>周大江</label>
-	            <span>1388***5583</span>
+	            <label>${address.name!''}</label>
+	            <span>${address.telphone?replace(address.telphone?substring(3,7),"****")}</span>
 	        </p>
-	        <p class="p2">重庆市渝中区解放碑街道邹容路50号半岛国际大厦18-A</p>
+	        <p class="p2">${address.fullAddress!''}</p>
 	    </a>
+	    <#else>
+	    <a href="${app.basePath}/mobile/user/shippingAddressAdd" title="" class="sub_order p">
+	        <p class="p1">
+	            <span></span>
+	        </p>
+	        <p class="p2">点击我去添加地址吧</p>
+	    </a>
+	    </#if>
 	    <!-- order_detail_title_end -->
 	
 	    <!-- order_detail_title -->

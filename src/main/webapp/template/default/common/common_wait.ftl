@@ -1,3 +1,5 @@
+<#import "/common/app.ftl" as app> 
+<#include "/common/common.ftl" />
 <script type="text/javascript">
     //等待开始方法
     function wait(){
@@ -22,11 +24,11 @@
         top: 0px;
         z-index: 99999999999999999;
         text-align: center;
-        background: url(/tdStore/static/default/images/colo_waitbd.png);
+        background: url(${app.basePath}/static/default/images/color_waitbd.png);
         display:none;
     }
 </style>
 <#-- 等待响应的旋转图标1 -->
 <div class="wait">  
-    <img src="/tdStore/static/default/images/colo_wait.gif" />
+    <img src="${app.basePath}/static/default/images/color_wait.gif" />
 </div>

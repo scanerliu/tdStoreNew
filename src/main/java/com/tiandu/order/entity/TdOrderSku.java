@@ -33,7 +33,7 @@ public class TdOrderSku {
 
     private Integer backQuantity;
     
-    private String produtImage;
+    private String productImage;
     
     /**
      * 属性键值对，显示时候使用
@@ -128,12 +128,12 @@ public class TdOrderSku {
         this.backQuantity = backQuantity;
     }
 
-	public String getProdutImage() {
-		return produtImage;
+	public String getProductImage() {
+		return productImage;
 	}
 
-	public void setProdutImage(String produtImage) {
-		this.produtImage = produtImage;
+	public void setProductImage(String produtImage) {
+		this.productImage = produtImage;
 	}
 
 	public List<SkuSpecialVO> getSpecialList() {
