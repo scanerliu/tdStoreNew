@@ -124,6 +124,11 @@ public class TdProductCommentServiceImpl implements TdProductCommentService{
 		return tdProductCommentMapper.deleteByProductId(proId);
 	}
 
-	
+	@Override
+	public int getTotalPageCount(TdProductCommentCrateria sc) {
+		Integer count = tdProductCommentMapper.countByCriteria(sc);
+		sc.setTotalCount(count);
+		return sc.getTotalPageCount();
+	}
 	
 }

@@ -14,6 +14,7 @@ public interface TdProductCommentService {
 	
 	Integer save(TdProductComment comment);
 	
+	int getTotalPageCount(TdProductCommentCrateria sc);
 	List<TdProductComment> findBySearchCriteria(TdProductCommentCrateria sc);
 	
 	Integer deleteByProductId(Integer proId);

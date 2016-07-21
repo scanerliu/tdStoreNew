@@ -263,7 +263,7 @@ function timer()
 <!-- Footer Start -->
 <footer>
     <div class="gopay">
-        <a href="javascript:;" class="acare" id="acare">关注</a>
+        <a href="javascript:addCollect(${product.id?c})" class="<#if collect?? && collect ==true>acare2<#else>acare</#if>" id="acare">关注</a>
         <a href="javascript:;" class="ajoin" id="addCart" onclick="addToShoppingcart();">加入购物车</a>
         <a href="javascript:;" class="apayfor" id="buyNow" title="立即购买" onclick="buyNow();">立即购买</a>
     </div>

@@ -180,3 +180,33 @@ function buyNow(){
 		alert("请先选择商品规格！");
 	}
 }
+
+
+/**
+ * 点击收藏
+ */
+function addCollect(productId)
+{
+    if (undefined == productId)
+    {
+        return;
+    }
+    
+    $.ajax({
+        type:"post",
+        url:basePath+"/mobile/product/collect",
+        data:{"productId": productId},
+        dataType: "json",
+        success:function(data){
+            // 需登录
+            if (data.code==0)
+            {
+                alert(data.msg);
+                setTimeout(function(){
+                    window.location.href = basePath+"/mobile/login";
+                }, 1000); 
+            }
+        }
+    });
+}
+

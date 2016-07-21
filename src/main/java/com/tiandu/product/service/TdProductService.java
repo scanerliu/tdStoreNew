@@ -7,7 +7,6 @@ import com.tiandu.product.entity.TdProductSku;
 import com.tiandu.product.entity.TdProductTypeAttribute;
 import com.tiandu.product.search.TdProductCriteria;
 import com.tiandu.product.vo.ProductJsonVO;
-import com.tiandu.product.vo.TdProductSkuVO;
 
 public interface TdProductService {
 
