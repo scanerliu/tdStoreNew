@@ -275,21 +275,19 @@ public class MShoppingcartController extends BaseController {
 		}
 	}
 	
-	/*
+	/**
 	 * 立即下单确认订单
+	 * @param orderForm
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @param addressId  选择订单地址，从收货地址处返回收货地址ID
+	 * @return
 	 */
 	@RequestMapping("/buynow")
 	public String buynow(OrderForm orderForm, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap ,Integer addressId) {
 		TdUser currUser = this.getCurrentUser();
 		//生成购物车
-		if(addressId == null)
-		{
-			request.getSession().setAttribute("orderForm", orderForm);
-		}
-		else
-		{
-			orderForm = (OrderForm)request.getSession().getAttribute("orderForm");
-		}
 		ShoppingcartVO shoppingcart;	
 		try {
 			shoppingcart = getShoppingcart(currUser.getUid(), orderForm);
@@ -304,17 +302,22 @@ public class MShoppingcartController extends BaseController {
 				{
 					defaultAddress = null;
 				}
+				orderForm = (OrderForm)request.getSession().getAttribute("orderForm");
 				request.getSession().removeAttribute("shopping");
 				request.getSession().removeAttribute("orderForm");
 			}
 			else
 			{
 				defaultAddress = tdUserAddressService.defaultAddressByUid(currUser.getUid());
+				request.getSession().setAttribute("orderForm", orderForm);
 			}
+			
 			if(defaultAddress != null)
 			{
 				modelMap.addAttribute("address", defaultAddress);
 			}
+			
+			
 			modelMap.addAttribute("randomNo",-(int)(Math.random()*(1000-101+1)));
 			
 			
@@ -336,6 +339,7 @@ public class MShoppingcartController extends BaseController {
 	 */
 	@RequestMapping("/singleorder")
 	public String singleorder(OrderForm orderForm, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		request.getSession().removeAttribute("orderForm");
 		if(null==orderForm.getUsePoints()){
 			orderForm.setUsePoints(false);
 		}

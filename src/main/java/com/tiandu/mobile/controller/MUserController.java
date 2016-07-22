@@ -337,18 +337,20 @@ public class MUserController extends BaseController {
 		{
 			map.addAttribute("shopping",addressId);
 			request.getSession().setAttribute("shopping", addressId);
-			if(addressId > -100)
+		}
+		Integer randomNo = (Integer)request.getSession().getAttribute("shopping");
+		
+		if(randomNo != null)
+		{
+			map.addAttribute("shopping",randomNo);
+			if(randomNo > -100)
 			{
-				map.addAttribute("path", "confirmorder");
+				map.addAttribute("returnPath", "confirmorder");
 			}
 			else
 			{
 				map.addAttribute("returnPath", "buynow");
 			}
-		}
-		else if(request.getSession().getAttribute("shopping") != null)
-		{
-			map.addAttribute("shopping",(Integer)request.getSession().getAttribute("shopping"));
 		}
 		// 系统配置
 		map.addAttribute("system", getSystem());
@@ -367,7 +369,7 @@ public class MUserController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/shoppingAddressAdd")
-	public String shoppingAddressAdd(Integer addressId,ModelMap map)
+	public String shoppingAddressAdd(Integer addressId,ModelMap map,HttpServletRequest request)
 	{
 		TdUser tdUser = this.getCurrentUser();
 		if(tdUser == null)
@@ -376,7 +378,7 @@ public class MUserController extends BaseController {
 		}
 		// 系统配置
 		map.addAttribute("system", getSystem());
-		if(addressId != null)
+		if(addressId != null && addressId > 0)
 		{
 			TdUserAddress userAddress = tdUserAddressService.findOne(addressId);
 			if(userAddress != null && userAddress.getUid() == tdUser.getUid())
@@ -386,6 +388,12 @@ public class MUserController extends BaseController {
 				Map<String, Object> regionMap = tdUserAddressService.getUserDistrictIdByRegionId(new HashMap<String,Object>(),regionId);
 				map.addAllAttributes(regionMap);
 			}
+		}
+		
+		if(addressId != null && addressId < 0)
+		{
+			map.addAttribute("shopping",addressId);
+			request.getSession().setAttribute("shopping", addressId);
 		}
 		
 		return "/mobile/user/shoppingAddressAdd";

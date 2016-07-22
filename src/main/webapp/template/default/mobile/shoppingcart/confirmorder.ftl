@@ -45,7 +45,7 @@
 	        <p class="p2">${address.fullAddress!''}</p>
 	    </a>
 	    <#else>
-	    <a href="${app.basePath}/mobile/user/shippingAddressAdd" title="" class="sub_order p">
+	    <a href="${app.basePath}/mobile/user/shoppingAddressAdd?addressId=${randomNo!''}" title="" class="sub_order p">
 	        <p class="p1">
 	            <span></span>
 	        </p>
