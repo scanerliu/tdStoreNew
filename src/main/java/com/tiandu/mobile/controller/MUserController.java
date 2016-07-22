@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,23 +29,31 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.common.utils.MessageSender;
+import com.tiandu.common.utils.TwoDimensionCode;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdAgent;
+import com.tiandu.custom.entity.TdCampaign;
 import com.tiandu.custom.entity.TdExperienceStore;
 import com.tiandu.custom.entity.TdMembership;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserAddress;
+import com.tiandu.custom.entity.TdUserCampaign;
 import com.tiandu.custom.entity.TdUserMessage;
 import com.tiandu.custom.search.TdAgentSearchCriteria;
+import com.tiandu.custom.search.TdCampaignSearchCriteria;
 import com.tiandu.custom.search.TdUserAddressCriteria;
+import com.tiandu.custom.search.TdUserCampaignCriteria;
 import com.tiandu.custom.search.TdUserSearchCriteria;
 import com.tiandu.custom.service.TdAgentService;
+import com.tiandu.custom.service.TdCampaignService;
 import com.tiandu.custom.service.TdExperienceStoreService;
 import com.tiandu.custom.service.TdMembershipService;
 import com.tiandu.custom.service.TdUserAddressService;
+import com.tiandu.custom.service.TdUserCampaignService;
 import com.tiandu.custom.service.TdUserMessageService;
 import com.tiandu.custom.service.TdUserSignService;
 import com.tiandu.district.entity.TdDistrict;
+import com.tiandu.district.search.TdDistrictSearchCriteria;
 import com.tiandu.district.service.TdDistrictService;
 import com.tiandu.order.entity.TdShoppingcartItem;
 import com.tiandu.order.search.TdShoppingcartSearchCriteria;
@@ -133,6 +142,11 @@ public class MUserController extends BaseController {
 	@Autowired
 	TdProductSkuService tdProductSkuService;
 	
+	@Autowired
+	TdCampaignService tdCampaignService;
+	
+	@Autowired
+	TdUserCampaignService tdUserCampaignService;
 	
 	// 个人中心
 	@RequestMapping("/center")
@@ -747,6 +761,16 @@ public class MUserController extends BaseController {
 	}
 	
 	/*
+	 * 参加竞选
+	 */
+	@RequestMapping("/joinElection")
+	public String joinElection(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currentUser = this.getCurrentUser();
+		modelMap.addAttribute("currentUser", currentUser);
+		return "/mobile/user/electionMaterial";	
+	}
+	
+	/*
 	 * 搜索供应商商品
 	 */
 	@RequestMapping("/searchSupplierProduct")
@@ -762,6 +786,29 @@ public class MUserController extends BaseController {
 			modelMap.addAttribute("sc", sc);
 		}
 		return "/mobile/user/myProductTemplate";	
+	}
+	
+	/*
+	 * 刷新活动描述
+	 */
+	@RequestMapping(value="/flushDescription", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> flushDescription(Integer selectedDistrictId,  HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		Map<String,String> res = new HashMap<String,String>();
+		TdCampaignSearchCriteria sc = new TdCampaignSearchCriteria();
+		sc.setFlag(false);
+		sc.setRegionId(selectedDistrictId);
+		List<TdCampaign> campaignList = tdCampaignService.findBySearchCriteria(sc);
+		if(campaignList == null || campaignList.size() != 1){
+			res.put("code", "0");
+			res.put("msg", "服务器异常，地区活动数据错误。");
+			return res;
+		}else{
+			TdCampaign  campaign =  tdCampaignService.findOne(campaignList.get(0).getId());
+			res.put("code", "1");
+			res.put("note", campaign.getNote());
+			return res;
+		}
 	}
 	
 	/*
@@ -790,6 +837,87 @@ public class MUserController extends BaseController {
 			}else{
 				res.put("msg", "下架失败。");
 			}
+		}
+		return res;
+	}
+	
+	/*
+	 * 保存会员竞选
+	 */
+	@RequestMapping(value="/saveElection", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> saveElection(TdUserCampaign userCampaign, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>();
+		TdUser currentUser = this.getCurrentUser();
+		try{
+			userCampaign.setUid(currentUser.getUid());
+			TdCampaignSearchCriteria sc = new TdCampaignSearchCriteria();
+			sc.setFlag(false);
+			sc.setRegionId(userCampaign.getRegionId());
+			List<TdCampaign> tdCampaignList = tdCampaignService.findBySearchCriteria(sc);
+			TdCampaign theCampaign = tdCampaignList.get(0);
+			userCampaign.setCid(theCampaign.getId());
+			userCampaign.setCreateTime(new Date());
+			tdUserCampaignService.save(userCampaign);
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.error("竞选保存失败。");
+			res.put("msg", "竞选提交失败。");
+			return res;
+		}
+		res.put("msg", "竞选提交成功。");
+		return res;
+	}
+	
+	
+	/*
+	 * 是否已经参加过竞选
+	 */
+	@RequestMapping(value="/hasJoinedCampaing", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> hasJoinedCampaing(HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>();
+		TdUser currentUser = this.getCurrentUser();
+		TdUserCampaignCriteria sc = new TdUserCampaignCriteria();
+		sc.setFlag(false);
+		sc.setUid(currentUser.getUid());
+		List<TdUserCampaign> userCampaignList = tdUserCampaignService.findBySearchCriteria(sc);
+		if(userCampaignList == null || userCampaignList.size() == 0){
+			res.put("code", "0"); //未参加
+		}else if(userCampaignList.size() == 1){
+			res.put("code", "1"); //已参加
+			res.put("msg", "竞选进行中，您目前的排名是：" + userCampaignList.get(0).getLevel());
+		}else{
+			res.put("code", "1"); //数据出错
+			res.put("msg", "服务器会员活动数据出错，原因：不唯一");
+		}
+		return res;
+	}
+	
+	/*
+	 * 指定地区是否有活动
+	 */
+	@RequestMapping(value="/hasElection", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> hasElection(Integer selectedDistrictId, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>();
+		try{
+			TdCampaignSearchCriteria sc = new TdCampaignSearchCriteria();
+			sc.setFlag(false);
+			sc.setRegionId(selectedDistrictId);
+			List<TdCampaign> tdCampaignList = tdCampaignService.findBySearchCriteria(sc);
+			if(tdCampaignList == null || tdCampaignList.size() == 0){
+				res.put("msg", "该地区暂无活动。");
+				res.put("code", "0");
+				return res;
+			}else if(tdCampaignList.size() > 1){
+				res.put("msg", "系统数据出错：该地区不止一个活动，请通知管理员。");
+				res.put("code", "0");
+				return res;
+			}else{
+				res.put("code", "1");
+			}
+		}catch(Exception e){
 		}
 		return res;
 	}
@@ -887,6 +1015,22 @@ public class MUserController extends BaseController {
 		modelMap.addAttribute("isTheFirstTime", "yes");
 		modelMap.addAttribute("pageNo", "1");
 		return "/mobile/user/downUserList";	
+	}
+	
+	/*
+	 * 推广
+	 */
+	@RequestMapping("/mySpread")
+	public String mySpread(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currentUser = this.getCurrentUser();
+		modelMap.addAttribute("currentUser", currentUser);
+		String spreadUrl = "http://www.cqupt.edu.cn";
+		String imgName = UUID.randomUUID().toString() + ".png";
+		String spreadImgPath = request.getServletContext().getRealPath("/") + "static/imgs/spread" + imgName;
+		TwoDimensionCode tdc = new TwoDimensionCode();
+		tdc.encoderQRCode(spreadUrl, spreadImgPath, "png");
+		modelMap.addAttribute("spreadImg", "static/imgs/spread" + imgName);
+		return "/mobile/user/mySpread";	
 	}
 	
 	/*
@@ -1025,4 +1169,42 @@ public class MUserController extends BaseController {
 		return jsonData.toString();
 	}
 	
+	/*
+	 * 加载地区
+	 */
+	@RequestMapping("/getDistrictSelections")
+	public String getDistrictSelections(Integer parentId, String nextLiId, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdDistrictSearchCriteria sc = new TdDistrictSearchCriteria();
+		sc.setFlag(false);
+		sc.setUpid(parentId);
+		List<TdDistrict> districtSelections = tdDistrictService.findBySearchCriteria(sc);
+		modelMap.addAttribute("districtSelections", districtSelections);
+		modelMap.addAttribute("nextLiId", nextLiId);
+		// 此下拉框是否可以继续响应下一级下拉框
+		TdDistrict selectedDistrict = tdDistrictService.findOne(parentId);
+		if(selectedDistrict == null){
+			// 首次进入
+			modelMap.addAttribute("canGetNextDistrictSelections", true);
+		}else{
+			if(selectedDistrict.getLevel().equals(Byte.valueOf("1"))){
+				if(isCentralCity(selectedDistrict.getName())){
+					modelMap.addAttribute("canGetNextDistrictSelections", false);
+				}else{
+					modelMap.addAttribute("canGetNextDistrictSelections", true);
+				}
+			}else{
+				modelMap.addAttribute("canGetNextDistrictSelections", false);
+			}
+		}
+		
+		return "/mobile/user/districtSelectTemplate";	
+	}
+	
+	// 是否是直辖市
+	private boolean isCentralCity(String cityName) {
+		if(cityName.indexOf("北京")>-1 || cityName.indexOf("天津")>-1 || cityName.indexOf("上海")>-1 || cityName.indexOf("重庆")>-1){
+			return true;
+		}
+		return false;
+	}
 }
