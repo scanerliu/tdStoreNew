@@ -31,7 +31,16 @@ public class TdOrderShipmentServiceImpl implements TdOrderShipmentService{
 	}
 	@Override
 	public List<TdOrderShipment> findBySearchCriteria(TdOrderShipmentSearchCriteria sc) {
+		if(sc.isFlag()){
+			Integer count = tdOrderShipmentMapper.countByCriteria(sc);
+			sc.setTotalCount(count);
+		}
 		return tdOrderShipmentMapper.findBySearchCriteria(sc);
+	}
+	
+	@Override
+	public int save(TdOrderShipment record) {
+		return tdOrderShipmentMapper.updateByPrimaryKeySelective(record);
 	}
 
 	

@@ -64,6 +64,10 @@
   	<#if !currentUser.utel??>
 	    <article class="tips">提示：PC上登陆请绑定手机号码</article>
   	</#if>
+  	<a class="a_go" href="../quanguodandai/商家发货列表.html" title="">
+        <label>去发货</label>
+        <i class="icon-next"></i>
+    </a>
     <article class="pc-nav">
       <a href="${app.basePath}/mobile/order/list" title="">
         <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_1.png" alt="">
@@ -78,9 +82,13 @@
         <span>我的积分</span>
       </a>
       <a href="我的流水.html" title="">
-        <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_4.png" alt="">
+        <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_5.png" alt="">
         <span>我的流水</span>
       </a>
+      <a href="我的退货.html" title="">
+            <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_4.png" alt="">
+            <span>我的退货</span>
+        </a>
     </article><!-- pc-nav end -->
     <article class="pc-menu">
       <a href="${app.basePath}/mobile/user/info" title="个人信息">
