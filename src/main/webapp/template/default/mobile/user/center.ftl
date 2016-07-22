@@ -141,7 +141,7 @@
         <label>商品管理</label>
         <i class="icon-next"></i>
       </a>
-      <a href="../成为代理-分类列表.html" title="">
+      <a href="javascript:goCampaign();" title="参加竞选">
         <i class="icon bg_icon_10"></i>
         <label>参加竞选</label>
         <i class="icon-next"></i>
@@ -203,7 +203,20 @@
       $('.common-footer a').click(function(){
         $(this).addClass('active').siblings().removeClass('active');
       })
-    })
+    });
+  </script>
+  <script>
+  	function goCampaign(){
+    	var url = basePath+"/mobile/user/hasJoinedCampaing";
+		$.post(url, function(data){
+			var jsonData = eval('('+data+')');
+			if(jsonData.code == "0"){
+				window.location.href=basePath+"/mobile/user/joinElection";
+			}else if(jsonData.code == "1"){
+				alert(jsonData.msg);
+			}
+		}, "text");
+    }
   </script>
   <!-- footer end -->
 </body>
