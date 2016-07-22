@@ -27,9 +27,15 @@
     	<td colspan ="3">${comment.content!''}</td>
     </tr>
     <tr>
-    	<th>图片</th>
+    	<th>评论图片</th>
     	<td colspan ="3">
-    		<img width='100' height='100' src='${comment.imageUrl!''}'/>
+    		<#if comment.images??> 
+                <#list comment.images?split(",") as uri>
+                    <#if uri!="">
+                        <img  width='100' height='100' src="${uri!''}"/>
+                    </#if>
+                </#list>
+            </#if>
     	</td>
     </tr>
     <tr>
