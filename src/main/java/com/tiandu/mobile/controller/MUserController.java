@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.common.utils.MessageSender;
+import com.tiandu.common.utils.TwoDimensionCode;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdAgent;
 import com.tiandu.custom.entity.TdCampaign;
@@ -1013,6 +1015,22 @@ public class MUserController extends BaseController {
 		modelMap.addAttribute("isTheFirstTime", "yes");
 		modelMap.addAttribute("pageNo", "1");
 		return "/mobile/user/downUserList";	
+	}
+	
+	/*
+	 * 推广
+	 */
+	@RequestMapping("/mySpread")
+	public String mySpread(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currentUser = this.getCurrentUser();
+		modelMap.addAttribute("currentUser", currentUser);
+		String spreadUrl = "http://www.cqupt.edu.cn";
+		String imgName = UUID.randomUUID().toString() + ".png";
+		String spreadImgPath = request.getServletContext().getRealPath("/") + "static/imgs/spread" + imgName;
+		TwoDimensionCode tdc = new TwoDimensionCode();
+		tdc.encoderQRCode(spreadUrl, spreadImgPath, "png");
+		modelMap.addAttribute("spreadImg", "static/imgs/spread" + imgName);
+		return "/mobile/user/mySpread";	
 	}
 	
 	/*

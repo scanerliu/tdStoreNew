@@ -103,7 +103,7 @@
         <label>联盟创客</label>
         <i class="icon-next"></i>
       </a>
-      <a href="我的推广.html" title="">
+      <a href="${app.basePath}/mobile/user/mySpread" title="我的推广">
         <i class="icon bg_icon_5"></i>
         <label>我的推广</label>
         <i class="icon-next"></i>
