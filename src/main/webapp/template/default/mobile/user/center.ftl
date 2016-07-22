@@ -118,12 +118,12 @@
         <label>成为代理</label>
         <i class="icon-next"></i>
       </a>
-      <a href="评价列表.html" title="">
+      <a href="${app.basePath}/mobile/user/productComment" title="我的评价">
         <i class="icon bg_icon_8"></i>
         <label>我的评价</label>
         <i class="icon-next"></i>
       </a>
-      <a href="我的收藏.html" title="">
+      <a href="${app.basePath}/mobile/user/collect/list" title="我的收藏">
         <i class="icon bg_icon_9"></i>
         <label>我的收藏</label>
         <i class="icon-next"></i>

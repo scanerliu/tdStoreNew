@@ -14,6 +14,9 @@
     <result column="create_by" property="createBy" jdbcType="INTEGER" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    <result column="return_cause" property="returnCause" jdbcType="INTEGER" />
+    <result column="return_amount" property="returnAmount" jdbcType="DECIMAL" />
+    
     <!-- 物流公司信息 -->
     <association property="trackExpress" resultMap="trackExpressResult"/>
     <!-- 进行 多表关联插叙，先关联shipment和shipmentitem -->
@@ -26,6 +29,7 @@
   
   <resultMap id="ResultMapWithBLOBs" type="com.tiandu.order.entity.TdOrderShipment" extends="BaseResultMap" >
     <result column="tracking_trace" property="trackingTrace" jdbcType="LONGVARCHAR" />
+    <result column="voucher_images" property="voucherImages" jdbcType="LONGVARCHAR" />
   </resultMap>
   
   <resultMap id="itemOrderSkuResult" type="com.tiandu.order.entity.TdOrderSku" >
@@ -39,7 +43,7 @@
   
   <sql id="Base_Column_List" >
     s.id, s.order_id, s.type, s.tracking_no, s.tracking_id, s.return_reason, s.cargo_status, s.status, 
-    s.create_time, s.create_by, s.update_time, s.update_by
+    s.create_time, s.create_by, s.update_time, s.update_by, s.return_cause, s.return_amount
   </sql>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
@@ -71,11 +75,12 @@
     </selectKey>
     insert into td_order_shipment (order_id, type, tracking_no, 
       tracking_id, return_reason, cargo_status, 
-      status, create_time, create_by, 
+      status, create_time, create_by, tracking_trace, voucher_images, return_cause, return_amount,
       update_time, update_by)
     values (#{orderId,jdbcType=INTEGER}, #{type,jdbcType=TINYINT}, #{trackingNo,jdbcType=VARCHAR}, 
       #{trackingId,jdbcType=INTEGER}, #{returnReason,jdbcType=VARCHAR}, #{cargoStatus,jdbcType=TINYINT}, 
-      #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=INTEGER}, 
+      #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=INTEGER}, #{trackingTrace,jdbcType=LONGVARCHAR},
+      #{voucherImages,jdbcType=LONGVARCHAR},#{returnCause,jdbcType=INTEGER}, #{returnAmount,jdbcType=DECIMAL}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.tiandu.order.entity.TdOrderShipment" >
@@ -193,6 +198,15 @@
       <if test="trackingTrace != null" >
         tracking_trace = #{trackingTrace,jdbcType=LONGVARCHAR},
       </if>
+      <if test="returnAmount != null" >
+        return_amount = #{returnAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="voucherImages != null" >
+        voucher_images = #{voucherImages,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="returnCause != null" >
+        return_cause = #{returnCause,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -208,6 +222,10 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=INTEGER},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tracking_trace = #{trackingTrace,jdbcType=LONGVARCHAR},
+      return_amount = #{returnAmount,jdbcType=DECIMAL},
+      voucher_images = #{voucherImages,jdbcType=LONGVARCHAR},
+      return_cause = #{returnCause,jdbcType=INTEGER},
       update_by = #{updateBy,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>

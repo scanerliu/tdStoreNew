@@ -3,6 +3,7 @@ package com.tiandu.comment.entity;
 import java.util.Date;
 
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.order.entity.TdOrder;
 import com.tiandu.product.entity.TdProduct;
 
 public class TdProductComment {
@@ -26,6 +27,8 @@ public class TdProductComment {
 
     private String images;
     
+    private Integer orderId;
+    
     /**
      * 评论人
      */
@@ -35,6 +38,11 @@ public class TdProductComment {
      * 评论商品
      */
     private TdProduct product;
+    
+    /**
+     * 评论订单
+     */
+    private TdOrder order;
 
     public Integer getId() {
         return id;
@@ -130,6 +138,22 @@ public class TdProductComment {
 
 	public void setProduct(TdProduct product) {
 		this.product = product;
+	}
+
+	public Integer getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(Integer orderId) {
+		this.orderId = orderId;
+	}
+
+	public TdOrder getOrder() {
+		return order;
+	}
+
+	public void setOrder(TdOrder order) {
+		this.order = order;
 	}
     
     

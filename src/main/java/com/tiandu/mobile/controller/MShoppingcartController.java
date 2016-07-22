@@ -19,13 +19,17 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.support.HttpRequestHandlerServlet;
 
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserAccount;
+import com.tiandu.custom.entity.TdUserAddress;
 import com.tiandu.custom.entity.TdUserIntegral;
+import com.tiandu.custom.search.TdUserAddressCriteria;
 import com.tiandu.custom.service.TdUserAccountService;
+import com.tiandu.custom.service.TdUserAddressService;
 import com.tiandu.custom.service.TdUserIntegralService;
 import com.tiandu.order.entity.TdJointOrder;
 import com.tiandu.order.entity.TdShoppingcartItem;
@@ -66,6 +70,9 @@ public class MShoppingcartController extends BaseController {
 	@Autowired
 	private ConfigUtil configUtil;
 	
+	
+	@Autowired
+	private TdUserAddressService tdUserAddressService;
 	/*
 	 * 我的购物车
 	 */
@@ -204,14 +211,34 @@ public class MShoppingcartController extends BaseController {
 	/*
 	 * 确认订单
 	 */
-	@RequestMapping("/confirmorder")
-	public String confirmorder(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	@RequestMapping(value = "/confirmorder")
+	public String confirmorder(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap,Integer addressId) {
 		TdUser currUser = this.getCurrentUser();
 		//获取购物车
 		ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid());
+		
 		//收货地址
-//		List<>
+		TdUserAddress defaultAddress = null;
+		if(addressId != null)
+		{
+			defaultAddress = tdUserAddressService.findOne(addressId);
+			if(defaultAddress != null && defaultAddress.getUid() != currUser.getUid())
+			{
+				defaultAddress = null;
+			}
+			request.getSession().removeAttribute("shopping");
+		}
+		else
+		{
+			defaultAddress = tdUserAddressService.defaultAddressByUid(currUser.getUid());
+		}
+		if(defaultAddress != null)
+		{
+			modelMap.addAttribute("address", defaultAddress);
+		}
+		
 		modelMap.addAttribute("shoppingcart", shoppingcart) ;
+		modelMap.addAttribute("randomNo",-(int)(Math.random()*(100-1+1)));
 	    return "/mobile/shoppingcart/confirmorder";
 	}
 	
@@ -248,17 +275,52 @@ public class MShoppingcartController extends BaseController {
 		}
 	}
 	
-	/*
+	/**
 	 * 立即下单确认订单
+	 * @param orderForm
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @param addressId  选择订单地址，从收货地址处返回收货地址ID
+	 * @return
 	 */
 	@RequestMapping("/buynow")
-	public String buynow(OrderForm orderForm, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	public String buynow(OrderForm orderForm, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap ,Integer addressId) {
 		TdUser currUser = this.getCurrentUser();
 		//生成购物车
-		ShoppingcartVO shoppingcart;
+		ShoppingcartVO shoppingcart;	
 		try {
 			shoppingcart = getShoppingcart(currUser.getUid(), orderForm);
 			modelMap.addAttribute("shoppingcart", shoppingcart) ;
+			
+			//收货地址
+			TdUserAddress defaultAddress = null;
+			if(addressId != null)
+			{
+				defaultAddress = tdUserAddressService.findOne(addressId);
+				if(defaultAddress != null && defaultAddress.getUid() != currUser.getUid())
+				{
+					defaultAddress = null;
+				}
+				orderForm = (OrderForm)request.getSession().getAttribute("orderForm");
+				request.getSession().removeAttribute("shopping");
+				request.getSession().removeAttribute("orderForm");
+			}
+			else
+			{
+				defaultAddress = tdUserAddressService.defaultAddressByUid(currUser.getUid());
+				request.getSession().setAttribute("orderForm", orderForm);
+			}
+			
+			if(defaultAddress != null)
+			{
+				modelMap.addAttribute("address", defaultAddress);
+			}
+			
+			
+			modelMap.addAttribute("randomNo",-(int)(Math.random()*(1000-101+1)));
+			
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -277,6 +339,7 @@ public class MShoppingcartController extends BaseController {
 	 */
 	@RequestMapping("/singleorder")
 	public String singleorder(OrderForm orderForm, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		request.getSession().removeAttribute("orderForm");
 		if(null==orderForm.getUsePoints()){
 			orderForm.setUsePoints(false);
 		}
@@ -444,5 +507,52 @@ public class MShoppingcartController extends BaseController {
 		}
 		cart.setTotalcount(itemList.size());
 		return cart;
+	}
+	
+	@RequestMapping(value = "/selectAddress")
+	public String SelectShoppingAddress(ModelMap map,Integer addressId)
+	{
+		TdUser tdUser = this.getCurrentUser();
+		if(tdUser == null)
+		{
+			return "redirect:/mobile/login";
+		}
+		if(addressId != null && addressId > 0)
+		{
+			tdUserAddressService.setIsDefaultFalse(tdUser.getUid());
+			TdUserAddress userAddress = tdUserAddressService.findOne(addressId);
+			userAddress.setIsDefault(true);
+			tdUserAddressService.save(userAddress);
+		}
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		TdUserAddressCriteria sc = new TdUserAddressCriteria();
+		sc.setUid(tdUser.getUid());
+		List<TdUserAddress> userAddresses = tdUserAddressService.findBySearchCriteria(sc);
+		map.addAttribute("address_list", userAddresses);
+		return "/mobile/shoppingCart/selectAddress";
+	}
+	@RequestMapping(value = "/addAddress")
+	public String addAddress(Integer addressId,ModelMap map)
+	{
+		TdUser tdUser = this.getCurrentUser();
+		if(tdUser == null)
+		{
+			return "redirect:/modile/login";
+		}
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		if(addressId != null)
+		{
+			TdUserAddress userAddress = tdUserAddressService.findOne(addressId);
+			if(userAddress != null && userAddress.getUid() == tdUser.getUid())
+			{
+				map.addAttribute("address",userAddress);
+				Integer regionId = userAddress.getRegionId();
+				Map<String, Object> regionMap = tdUserAddressService.getUserDistrictIdByRegionId(new HashMap<String,Object>(),regionId);
+				map.addAllAttributes(regionMap);
+			}
+		}
+		return "/mobile/shoppingCart/selectAddressAdd";
 	}
 }

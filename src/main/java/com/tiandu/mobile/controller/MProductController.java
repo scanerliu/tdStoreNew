@@ -1,6 +1,9 @@
 package com.tiandu.mobile.controller;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,10 +14,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.custom.entity.TdUserCollection;
+import com.tiandu.custom.search.TdUserCollectionCriteria;
+import com.tiandu.custom.service.TdUserCollectionService;
 import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.service.TdDistrictService;
 import com.tiandu.product.entity.TdProduct;
@@ -76,6 +84,9 @@ public class MProductController extends BaseController {
 	@Autowired
 	private TdDistrictService tdDistrictService; 
 	
+	@Autowired
+	private TdUserCollectionService tdUserCollectionService;
+	
 	/*
 	 * 商品列表页
 	 */
@@ -101,6 +112,21 @@ public class MProductController extends BaseController {
 	@RequestMapping("/item{id}")
 	public String item(@PathVariable("id") Integer id,HttpServletRequest req,ModelMap map)
 	{
+		TdUser user = getCurrentUser();
+		map.addAttribute("collect", false);
+		if(null != user)
+		{
+			TdUserCollectionCriteria csc = new TdUserCollectionCriteria();
+			csc.setItemId(id);
+			csc.setUid(user.getUid());
+			// 是否收藏
+			List<TdUserCollection> collect = tdUserCollectionService.findBySearchCriteria(csc);
+			if(null != collect && collect.size() > 0)
+			{
+				map.addAttribute("collect", true);
+			}
+		}
+		
 		TdProduct product  = tdProductService.findOne(id);
 		if(product.getOnshelf()==false||!product.getStatus().equals(Byte.valueOf("1"))){
 			return "redirect:404";
@@ -181,6 +207,49 @@ public class MProductController extends BaseController {
 		return "/mobile/product/productdescribe";
 	}
 	
+	
+	/**
+	 * 
+	 * @author Max
+	 * 商品收藏
+	 * 
+	 */
+	@RequestMapping(value="/collect", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> collect(Integer productId,HttpServletRequest req,ModelMap map)
+	{
+		Map<String,Object> res = new HashMap<>();
+		res.put("code", 0);
+		
+		TdUser user = getCurrentUser();
+		if(null == user)
+		{
+			res.put("msg", "请先登录");
+			return res;
+		}
+		
+		res.put("code", 1);
+		
+		TdUserCollectionCriteria sc = new TdUserCollectionCriteria();
+		sc.setItemId(productId);
+		sc.setUid(user.getUid());
+		List<TdUserCollection> list = tdUserCollectionService.findBySearchCriteria(sc);
+		
+		// 已收藏
+		if(null != list && list.size() > 0){
+			tdUserCollectionService.deleteByPrimaryKey(list.get(0).getId());
+		}else{
+			TdUserCollection collection = new TdUserCollection();
+			collection.setItemId(productId);
+			collection.setUid(user.getUid());
+			collection.setItemType((byte)1);
+			collection.setCreateTime(new Date());
+			
+			tdUserCollectionService.save(collection);
+		}
+		
+		return res;
+	}
 	
 
 }

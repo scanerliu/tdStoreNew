@@ -14,5 +14,7 @@ public interface TdComplaintService {
 	Integer deleteByPrimaryKey(Integer id);
 	
 	List<TdComplaint> findBySearchCriteria(TdComplaintCriteria sc);
+
+	int insert(TdComplaint complaint);
 	
 }

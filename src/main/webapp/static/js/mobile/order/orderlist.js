@@ -8,8 +8,8 @@ function searchOrders(f){
 	}else{
 		loadData = $("#listform").serializeArray();
 		$.get(url, loadData, function(html){
-  		  $(html).appendTo("#results");
-  	});
+	  		  $(html).appendTo("#results");
+	  	});
 	}
 }
 
@@ -18,3 +18,21 @@ var scrollHandler = function(){
     	searchOrders(false);
     } 
 };
+
+function applyRefund(){
+	var amount = $("#returnAmount").val();
+	if(amount==""||amount==0){
+		alert("请填写退款金额！");
+		return ;
+	}
+	$("#refundForm").submit();
+}
+
+function applyComplaint(){
+	var complaint = $("#complaint").val();
+	if(complaint==""||complaint.length<10){
+		alert("请正确填写投诉内容：10至100个文字！");
+		return ;
+	}
+	$("#complaintForm").submit();
+}

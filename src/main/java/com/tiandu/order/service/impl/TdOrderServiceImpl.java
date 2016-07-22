@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.common.utils.WebUtils;
+import com.tiandu.complaint.entity.TdComplaint;
+import com.tiandu.complaint.service.TdComplaintService;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserAddress;
 import com.tiandu.custom.entity.TdUserIntegral;
@@ -73,6 +75,8 @@ public class TdOrderServiceImpl implements TdOrderService{
 	private TdUserIntegralService tdUserIntegralService;
 	@Autowired
 	private TdUserAddressService tdUserAddressService;
+	@Autowired
+	private TdComplaintService tdComplaintService;
 	
 	@Autowired
 	private ConfigUtil configUtil;
@@ -486,5 +490,46 @@ public class TdOrderServiceImpl implements TdOrderService{
 		}
 		cart.setTotalcount(itemList.size());
 	}
+
+	@Override
+	public OperResult applyRefundOrder(TdOrder order, TdOrderShipment shipment) {
+		OperResult result = new OperResult();
+		if(order.getPayAmount().subtract(order.getRefundAmount()).compareTo(shipment.getReturnAmount())>=0){
+			Date now = new Date();
+			shipment.setStatus(Byte.valueOf("1"));
+			shipment.setType(Byte.valueOf("2"));
+			shipment.setCreateBy(order.getUserId());
+			shipment.setUpdateBy(order.getUserId());
+			shipment.setCreateTime(now);
+			shipment.setUpdateTime(now);
+			tdOrderShipmentMapper.insert(shipment);
+			result.setFlag(true);
+			result.setFailMsg("退款申请成功，请等待商户确认。");
+		}else{
+			result.setFailMsg("退款申请失败：退款金额大于订单金额！");
+		}
+		return result;
+	}
+
+	@Override
+	public OperResult complaintOrder(TdOrder order, TdComplaint complaint) {
+		OperResult result = new OperResult();
+		if(order.getOrderId()>0){
+			Date now = new Date();
+			complaint.setCreateTime(now);
+			complaint.setUpdateBy(order.getUserId());
+			complaint.setUpdateDate(now);
+			complaint.setCuid(order.getSupplierId());
+			complaint.setUid(order.getUserId());
+			complaint.setStatus(Byte.valueOf("1"));
+			tdComplaintService.insert(complaint);
+			result.setFlag(true);
+			result.setFailMsg("投诉已经提交，请等待平台处理。");
+		}else{
+			result.setFailMsg("投诉提交失败!");
+		}
+		return result;
+	}
+	
 	
 }

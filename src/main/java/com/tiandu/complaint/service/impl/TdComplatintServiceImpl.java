@@ -47,4 +47,10 @@ public class TdComplatintServiceImpl implements TdComplaintService{
 		return tdComplaintMapper.findBySearchCriteria(sc);
 	}
 
+	@Override
+	public int insert(TdComplaint complaint) {
+		return tdComplaintMapper.insert(complaint);
+	}
+
+	
 }

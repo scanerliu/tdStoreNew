@@ -81,14 +81,14 @@
 	              第二次点完之后，按钮变成待商家收货，商家收货成功后变成退货成功
 	            如果商家拒绝退货，立即退货按钮旁边有个投诉建议按钮 点进去是投诉建议页面
 	            -->
-					<a href="../申请退货.html" class="alinkb">申请退货</a>
+					<a href="${app.basePath}/mobile/order/applyrefund${order.orderId!'0'}" class="alinkb">申请退货</a>
 					<!--↑点击之后变成↓-->
 					<!--<a href="../提交物流信息.html" class="alinkb">提交物流信息</a>-->
 					<!-- ↑点击之后变成↓ -->
 					<!--<a href="../申请退货.html" class="alinkb">等待商家收货</a>-->
 	
 	
-					<a href="../申请退货.html" class="alinkb">投诉建议</a>
+					<a href="${app.basePath}/mobile/order/complaint${order.orderId!'0'}" class="alinkb">投诉建议</a>
 				</div>
 	
 			</section>
