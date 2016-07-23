@@ -71,4 +71,11 @@ public interface TdOrderService {
 	 * @return
 	 */
 	public OperResult complaintOrder(TdOrder order, TdComplaint complaint);
+	/**
+	 * 收货
+	 * @param order
+	 * @param user
+	 * @return
+	 */
+	public OperResult receiptOrder(TdOrder order, TdUser user);
 }

@@ -530,6 +530,53 @@ public class TdOrderServiceImpl implements TdOrderService{
 		}
 		return result;
 	}
+
+	@Override
+	public OperResult receiptOrder(TdOrder order, TdUser user) {
+		OperResult result = new OperResult();
+		//订单不存在
+		if(null==order||null==order.getOrderId()){
+			result.setFailMsg("订单不存在！");
+			return result;
+		}
+		//已完成的订单的不能进行收货操作
+		if(ConstantsUtils.ORDER_STATUS_COMPLETE.equals(order.getOrderStatus())){
+			result.setFailMsg("已完成的订单的不能进行收货操作！");
+			return result;
+		}
+		
+		//未支付的订单的不能进行收货操作
+		if(ConstantsUtils.ORDER_PAY_STATUS_UNPAY.equals(order.getPayStatus())){
+			result.setFailMsg("未支付的订单的不能进行收货操作！");
+			return result;
+		}
+		//已收货的订单的不能进行收货操作
+		if(ConstantsUtils.ORDER_PAY_STATUS_UNPAY.equals(order.getPayStatus())){
+			result.setFailMsg("未支付的订单的不能进行收货操作！");
+			return result;
+		}
+		
+		//开始操作
+		Date now  = new Date();
+		TdOrder uporder = new TdOrder();
+		uporder.setOrderId(order.getOrderId());
+		uporder.setUpdateBy(user.getUid());
+		uporder.setUpdateTime(now);
+		uporder.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_RECEIPT);
+		tdOrderMapper.updateByPrimaryKeySelective(uporder);
+		
+		//订单操作日志
+		TdOrderLog log = new TdOrderLog();
+		log.setOrderId(order.getOrderId());
+		log.setCreateBy(user.getUid());
+		log.setCreateTime(now);
+		log.setOperType(ConstantsUtils.ORDER_LOG_TYPE_RECEIPT);
+		log.setNote("订单进行收货操作");
+		tdOrderLogMapper.insert(log);
+		
+		result.setFlag(true);
+		return result;
+	}
 	
 	
 }
