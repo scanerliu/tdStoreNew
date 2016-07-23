@@ -18,8 +18,11 @@ import com.tiandu.article.service.TdArticleCategoryService;
 import com.tiandu.article.service.TdArticleContentService;
 import com.tiandu.article.service.TdArticleTitleService;
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.custom.entity.TdAgent;
 import com.tiandu.custom.entity.TdExperienceStore;
+import com.tiandu.custom.search.TdAgentSearchCriteria;
 import com.tiandu.custom.search.TdExperienceStoreSearchCriteria;
+import com.tiandu.custom.service.TdAgentService;
 import com.tiandu.custom.service.TdExperienceStoreService;
 import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.search.TdDistrictSearchCriteria;
@@ -62,6 +65,9 @@ public class MobileAgentController extends BaseController{
 	@Autowired
 	private TdDistrictService tdDistrictService;
 	
+	@Autowired
+	private TdAgentService tdAgentService;
+	
 	@RequestMapping("/list")
 	public String list(HttpServletRequest req,ModelMap map)
 	{
@@ -85,7 +91,7 @@ public class MobileAgentController extends BaseController{
 		TdAgentProduct agent = tdAgentProductService.findOne(agentId);
 		if(null == agent)
 		{
-			return "";
+			return "redirect:404";
 		}
 		
 		map.addAttribute("agent", agent);
@@ -149,7 +155,8 @@ public class MobileAgentController extends BaseController{
 		TdDistrict district = new TdDistrict();
 		
 		// 代理查询条件
-		TdExperienceStoreSearchCriteria esc = new TdExperienceStoreSearchCriteria();
+//		TdExperienceStoreSearchCriteria esc = new TdExperienceStoreSearchCriteria();
+		TdAgentSearchCriteria asc = new TdAgentSearchCriteria();
 		
 		// 一级地区
 		sc.setFlag(false);
@@ -164,7 +171,7 @@ public class MobileAgentController extends BaseController{
 			if(null != sc.getProvinceId())
 			{
 				map.addAttribute("msg", "当前选择为全国代理，无需选择下级地区");
-				esc.setRegionId(0);
+				asc.setRegionId(0);
 			}
 		}
 		else
@@ -177,7 +184,7 @@ public class MobileAgentController extends BaseController{
 				district = tdDistrictService.findOne(sc.getProvinceId());
 				
 				map.addAttribute("province", district);
-				esc.setRegionId(sc.getProvinceId());
+				asc.setRegionId(sc.getProvinceId());
 			}
 		}
 			
@@ -200,21 +207,21 @@ public class MobileAgentController extends BaseController{
 				district = tdDistrictService.findOne(sc.getCityId());
 				
 				map.addAttribute("city",district);
-				esc.setRegionId(sc.getCityId());
+				asc.setRegionId(sc.getCityId());
 			}
 			
 			// 选择区县级，复制代理查询地区ID参数
 			if(null != sc.getRegionId())
 			{
 				district = tdDistrictService.findOne(sc.getRegionId());
-				esc.setRegionId(sc.getRegionId());
+				asc.setRegionId(sc.getRegionId());
 				map.addAttribute("regin",district);
 			}
 		}
 		
 		// 查找当前选择地区已的所有代理
-		esc.setFlag(false);
-		List<TdExperienceStore> ecperList = tdExperienceStoreService.findBySearchCriteria(esc);
+		asc.setFlag(false);
+		List<TdAgent> ecperList = tdAgentService.findBySearchCriteria(asc);
 		
 		map.addAttribute("experTypeIds",getExperTypeIds(ecperList));
 		map.addAttribute("district", district);
@@ -286,22 +293,18 @@ public class MobileAgentController extends BaseController{
 	 * @author Max
 	 * 
 	 */
-	public String getExperTypeIds(List<TdExperienceStore> experList)
+	public String getExperTypeIds(List<TdAgent> experList)
 	{
 		StringBuffer ids = new StringBuffer();
 		
 		if(null != experList && experList.size() > 0)
 		{
-			for (TdExperienceStore tdExperienceStore : experList) {
-				if(null != tdExperienceStore.getStoreTypeIds())
+			for (TdAgent agent : experList) {
+				if(null != agent.getId())
 				{
-					String[] typeids = tdExperienceStore.getStoreTypeIds().split(",");
-					for (int i = 0; i < typeids.length; i++) 
+					if(!ids.toString().contains(agent.getProductTypeId().toString()))
 					{
-						if(!ids.toString().contains(typeids[i]))
-						{
-							ids.append(typeids[i]);
-						}
+						ids.append(agent.getProductTypeId().toString());
 					}
 				}
 			}
