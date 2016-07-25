@@ -174,6 +174,14 @@ public class ConstantsUtils {
 	 * 订单操作日志类型： 5订单收款
 	 */
 	public static final Byte ORDER_LOG_TYPE_PAY = 5;
+	/**
+	 * 订单操作日志类型： 6订单分配代理
+	 */
+	public static final Byte ORDER_LOG_TYPE_AGENT = 6;
+	/**
+	 * 订单操作日志类型： 7订单分润
+	 */
+	public static final Byte ORDER_LOG_TYPE_BENEFIT = 7;
 	
 	/***************************订单支付方式**************************/
 	/**

@@ -58,6 +58,23 @@
 				</span>
 			</p>
 		</li>
+		<#if order?? && order.productList?? && (order.productList?size > 0)>
+	    <#list order.productList as product>
+		<li class="goods_box p">
+			<section>
+				<h3>${product.title!''} ${product.getItemTypeStr()!''}</h3>
+				<div>
+	          		<span><label class="lab2"><span>${product.quantity!'0'}</span></label></span>
+				</div>
+				<p>￥${product.itemPrice!'0'}</p>
+				<div class="button-group">
+					<a href="${app.basePath}/mobile/order/complaint${order.orderId!'0'}" class="alinkb">投诉建议</a>
+				</div>
+	
+			</section>
+		</li>
+		</#list>
+	    </#if>
 		<#if order.skuList??>
 	    <#list order.skuList as sku>
 		<li class="goods_box p">
@@ -100,7 +117,7 @@
 	</ul>
 	<!-- order_detail_title_end -->
 	<!-- order_time -->
-	<ul class="detail_order">
+	<ul class="detail_order" style="display:none;">
 		<li class="title">
 			物流详情
 		</li>

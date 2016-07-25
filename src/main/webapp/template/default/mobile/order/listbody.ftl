@@ -14,6 +14,26 @@
 	      </#if>
 	      </span></p>
 	    </div>
+	    <#if order?? && order.productList?? && (order.productList?size > 0)>
+    	<div class="middle">
+    		<#list order.productList as product>
+    		<div class="right-content">
+	        <h3>${product.title!''} ${product.getItemTypeStr()!''}</h3>
+	        <p>
+	          <label class="lab1">￥${product.itemPrice!'0'}</label>
+	          <label class="lab2">x<span>${product.quantity!'0'}</span></label>
+	        </p>
+    		<#if product.attachments??>
+    			<p>
+				<#list product.attachments as atta>
+        			<a href="${app.basePath}${atta}" target="_blank"><img src="${app.basePath}${atta}" alt="图片" width="60"/></a>
+        		</#list>            				
+				</p>
+			</#if>
+			</div>
+    		</#list>
+    	</div>
+    	</#if>
 	    <#if order.skuList??>
 	    <#list order.skuList as sku>
 	    <div class="middle">

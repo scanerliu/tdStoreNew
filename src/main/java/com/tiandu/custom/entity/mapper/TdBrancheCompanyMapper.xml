@@ -200,4 +200,10 @@
         and d.name like CONCAT('%','${districtName}','%' )
     </if>
   </select>
+  <select id="findByUid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_branche_company as b
+    where b.uid=#{uid,jdbcType=INTEGER}
+  </select>
 </mapper>

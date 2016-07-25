@@ -18,4 +18,10 @@ public interface TdBrancheCompanyService {
 	public int countByCriteria(TdBrancheCompanySearchCriteria sc);
 	public Integer save(TdBrancheCompany tdBrancheCompany);
 	public Integer delete(Integer id);
+	/**
+	 * 按用户id查找
+	 * @param userId
+	 * @return
+	 */
+	public TdBrancheCompany findByUid(Integer userId);
 }

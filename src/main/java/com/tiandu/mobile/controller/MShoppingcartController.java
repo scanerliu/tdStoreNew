@@ -402,7 +402,7 @@ public class MShoppingcartController extends BaseController {
 					agent.setUid(uid);
 					cart.setPtype(2);
 					cart.setAgent(agent);
-					
+					cart.setTotalcount(1);
 					if(agentproduct.getId()==1){//代金券产品
 						//TODO:添加礼品包
 						
@@ -415,11 +415,13 @@ public class MShoppingcartController extends BaseController {
 					branche.setUid(uid);
 					cart.setPtype(3);
 					cart.setBranch(branche);
+					cart.setTotalcount(1);
 				}else{
 					throw new Exception("下单失败，代理产品不存在或已经下架！");
 				}
 				cart.setTotalAmount(agentproduct.getSalesPrice());
 				cart.setTotalProductAmount(agentproduct.getSalesPrice());
+				
 			}else{
 				throw new Exception("下单失败，代理产品不存在或已经下架！");
 			}

@@ -204,4 +204,10 @@
         and a.product_type_id=#{productTypeId,jdbcType=INTEGER}
     </if>
   </select>
+  <select id="findByUid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_agent as a
+    where a.uid=#{uid,jdbcType=INTEGER}
+  </select>
 </mapper>

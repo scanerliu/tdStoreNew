@@ -83,4 +83,10 @@ public class TdBrancheCompanyServiceImpl implements TdBrancheCompanyService {
 		return brancheCompanyMapper.deleteByPrimaryKey(id);
 	}
 
+	@Override
+	public TdBrancheCompany findByUid(Integer userId) {
+		return brancheCompanyMapper.findByUid(userId);
+	}
+
+	
 }

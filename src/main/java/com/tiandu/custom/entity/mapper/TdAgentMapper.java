@@ -20,4 +20,6 @@ public interface TdAgentMapper {
     
     Integer countByCriteria(TdAgentSearchCriteria sc);
     public List<TdAgent> findBySearchCriteria(TdAgentSearchCriteria sc);
+
+	TdAgent findByUid(Integer uid);
 }

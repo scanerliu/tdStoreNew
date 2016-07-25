@@ -83,4 +83,10 @@ public class TdAgentServiceImpl implements TdAgentService {
 		return agentMapper.deleteByPrimaryKey(id);
 	}
 
+	@Override
+	public TdAgent findByUid(Integer uid) {
+		return agentMapper.findByUid(uid);
+	}
+
+	
 }

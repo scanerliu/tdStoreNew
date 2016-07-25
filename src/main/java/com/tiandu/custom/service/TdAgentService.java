@@ -18,4 +18,10 @@ public interface TdAgentService {
 	public Integer save(TdAgent TdAgent);
 	public Integer delete(Integer id);
 	public int countByCriteria(TdAgentSearchCriteria sc);
+	/**
+	 * 根据用户id查找代理
+	 * @param uid
+	 * @return
+	 */
+	public TdAgent findByUid(Integer uid);
 }
