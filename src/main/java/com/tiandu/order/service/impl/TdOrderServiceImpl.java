@@ -3,22 +3,25 @@ package com.tiandu.order.service.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.complaint.entity.TdComplaint;
 import com.tiandu.complaint.service.TdComplaintService;
+import com.tiandu.custom.entity.TdAgent;
+import com.tiandu.custom.entity.TdBrancheCompany;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserAddress;
 import com.tiandu.custom.entity.TdUserIntegral;
 import com.tiandu.custom.entity.TdUserIntegralLog;
+import com.tiandu.custom.search.TdAgentSearchCriteria;
+import com.tiandu.custom.search.TdBrancheCompanySearchCriteria;
+import com.tiandu.custom.service.TdAgentService;
+import com.tiandu.custom.service.TdBrancheCompanyService;
 import com.tiandu.custom.service.TdUserAddressService;
 import com.tiandu.custom.service.TdUserIntegralService;
 import com.tiandu.order.entity.TdJointOrder;
@@ -38,11 +41,11 @@ import com.tiandu.order.entity.mapper.TdOrderProductMapper;
 import com.tiandu.order.entity.mapper.TdOrderShipmentItemMapper;
 import com.tiandu.order.entity.mapper.TdOrderShipmentMapper;
 import com.tiandu.order.entity.mapper.TdOrderSkuMapper;
-import com.tiandu.order.entity.mapper.TdShoppingcartItemMapper;
 import com.tiandu.order.search.TdOrderSearchCriteria;
 import com.tiandu.order.service.TdOrderService;
 import com.tiandu.order.vo.OperResult;
 import com.tiandu.order.vo.OrderForm;
+import com.tiandu.order.vo.OrderPay;
 import com.tiandu.order.vo.OrderRefund;
 import com.tiandu.order.vo.ShoppingcartVO;
 import com.tiandu.system.utils.ConfigUtil;
@@ -77,6 +80,10 @@ public class TdOrderServiceImpl implements TdOrderService{
 	private TdUserAddressService tdUserAddressService;
 	@Autowired
 	private TdComplaintService tdComplaintService;
+	@Autowired
+	private TdBrancheCompanyService tdBrancheCompanyService;
+	@Autowired
+	private TdAgentService tdAgentService;
 	
 	@Autowired
 	private ConfigUtil configUtil;
@@ -310,8 +317,18 @@ public class TdOrderServiceImpl implements TdOrderService{
 			}
 		}else{
 			torder.setId(0);
-			TdOrder order = this.insertOrder(currUser, orderForm, shoppingcart, torder, now);
-			torder.setJno(order.getOrderNo());
+			//普通订单
+			if(shoppingcart.getPtype()==1){
+				TdOrder order = this.insertOrder(currUser, orderForm, shoppingcart, torder, now);
+				torder.setJno(order.getOrderNo());
+			
+			}else if(shoppingcart.getPtype()==2){//单代订单
+				TdOrder order = this.insertAgentOrder(currUser, orderForm, shoppingcart, torder, now);
+				torder.setJno(order.getOrderNo());
+			}else if(shoppingcart.getPtype()==3){//分公司订单
+				TdOrder order = this.insertBrachOrder(currUser, orderForm, shoppingcart, torder, now);
+				torder.setJno(order.getOrderNo());
+			}
 			
 			torder.setPaymentId(orderForm.getPaymentId());
 		}		
@@ -490,6 +507,161 @@ public class TdOrderServiceImpl implements TdOrderService{
 		}
 		cart.setTotalcount(itemList.size());
 	}
+	
+	/**
+	 * 生成单代订单
+	 * @param currUser
+	 * @param orderForm
+	 * @param shoppingcart
+	 * @param torder
+	 * @param now
+	 * @return
+	 */
+	private TdOrder insertAgentOrder(TdUser currUser, OrderForm orderForm, ShoppingcartVO shoppingcart,TdJointOrder torder, Date now) throws RuntimeException {
+		TdOrder order = new TdOrder();
+		order.setCreateTime(now);
+		order.setGainPoints(shoppingcart.getGainPoints());
+		order.setCommented(true);
+		order.setItemNum(shoppingcart.getTotalcount());
+		order.setJointId(torder.getId());//联合订单
+		order.setOrderNo(WebUtils.generateOrderNo());
+		order.setOrderStatus(ConstantsUtils.ORDER_STATUS_NEW);
+		order.setOrderType(ConstantsUtils.ORDER_KIND_AGENTPRODUCT);
+		order.setPaymentId(orderForm.getPaymentId());
+		if(orderForm.getUsePoints()){
+			order.setUsedPoint(shoppingcart.getTotalPointsUsed());
+			order.setPointAmount(shoppingcart.getTotalPointAmount());
+		}else{
+			order.setUsedPoint(0);
+			order.setPointAmount(BigDecimal.ZERO);
+		}
+		order.setPostage(shoppingcart.getTotalPostage());
+		order.setPayStatus(ConstantsUtils.ORDER_PAY_STATUS_UNPAY);
+		order.setPaymentId(orderForm.getPaymentId());
+		order.setProductAmount(shoppingcart.getTotalProductAmount());
+		order.setRefundAmount(BigDecimal.ZERO);
+		order.setPayAmount(BigDecimal.ZERO);
+		order.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_UNSHIPPED);
+		order.setTotalAmount(shoppingcart.getTotalAmount());
+		order.setUpdateBy(currUser.getUid());
+		order.setUpdateTime(now);
+		order.setUserId(currUser.getUid());
+		order.setUserMessage(orderForm.getUserMsg());
+		order.setSupplierId(1);
+		//保存订单详情
+		TdAgent agent = shoppingcart.getAgent();
+		TdAgentSearchCriteria sc = new TdAgentSearchCriteria();
+		sc.setLevel(agent.getLevel());
+		sc.setRegionId(agent.getRegionId());
+		sc.setProductTypeId(agent.getProductTypeId());
+		int count = tdAgentService.countByCriteria(sc);
+		if(count>0){
+			throw new RuntimeException("分公司已存在，不能加入!");
+		}
+		this.save(order);
+		TdOrderProduct orderproduct = new TdOrderProduct();
+		orderproduct.setItemType(Byte.valueOf("1"));
+		orderproduct.setItemId(orderForm.getAgentProductId());
+		orderproduct.setItemPrice(shoppingcart.getAgentProduct().getSalesPrice());
+		orderproduct.setRegionId(agent.getRegionId());
+		orderproduct.setLevel(agent.getLevel());
+		orderproduct.setQuantity(1);
+		orderproduct.setTitle(shoppingcart.getAgentProduct().getTitle());
+		orderproduct.setProductTypeId(agent.getProductTypeId());
+		orderproduct.setOrderId(order.getOrderId());
+		tdOrderProductMapper.insert(orderproduct);
+		//保存订单货品
+		if(null!=shoppingcart.getItemList()){
+			for(TdShoppingcartItem item : shoppingcart.getItemList()){
+				TdOrderSku sku = new TdOrderSku();
+				sku.setDisplaySpecifications(item.getProductSku().getSpecifications());
+				sku.setItemType(item.getProduct().getKind());
+				sku.setOrderId(order.getOrderId());
+				sku.setProductSkuId(item.getProductSkuId());
+				sku.setProductId(item.getProductId());
+				sku.setPrice(item.getProductSku().getSalesPrice());
+				sku.setProductName(item.getProduct().getName());
+				sku.setProductSkuCode(item.getProductSku().getSkuCode());
+				sku.setQuantity(item.getQuantity());
+				tdOrderSkuMapper.insert(sku);
+				//更新货品库存
+				//TODO:
+			}
+			//保存收货地址
+			if(null!=orderForm.getUserAddress()){
+				TdUserAddress address = orderForm.getUserAddress();
+				TdOrderAddress orderAddress = new TdOrderAddress();
+				orderAddress.setOrderId(order.getOrderId());
+				orderAddress.setAddress(address.getAddress());
+				orderAddress.setCustomerName(address.getName());
+				orderAddress.setRegionFullName(address.getFullAddress());
+				orderAddress.setTelphone(address.getTelphone());
+				orderAddress.setRegionId(address.getRegionId());
+				tdOrderAddressMapper.insert(orderAddress);			
+			}
+		}
+		//保存日志
+		
+		return order;
+	}
+	/**
+	 * 生成分公司订单
+	 * @param currUser
+	 * @param orderForm
+	 * @param shoppingcart
+	 * @param torder
+	 * @param now
+	 * @return
+	 */
+	private TdOrder insertBrachOrder(TdUser currUser, OrderForm orderForm, ShoppingcartVO shoppingcart,TdJointOrder torder, Date now) throws RuntimeException {
+		TdOrder order = new TdOrder();
+		order.setCreateTime(now);
+		order.setGainPoints(shoppingcart.getGainPoints());
+		order.setCommented(true);
+		order.setItemNum(shoppingcart.getTotalcount());
+		order.setJointId(torder.getId());//联合订单
+		order.setOrderNo(WebUtils.generateOrderNo());
+		order.setOrderStatus(ConstantsUtils.ORDER_STATUS_NEW);
+		order.setOrderType(ConstantsUtils.ORDER_KIND_AGENTPRODUCT);
+		order.setPaymentId(orderForm.getPaymentId());
+		if(orderForm.getUsePoints()){
+			order.setUsedPoint(shoppingcart.getTotalPointsUsed());
+			order.setPointAmount(shoppingcart.getTotalPointAmount());
+		}else{
+			order.setUsedPoint(0);
+			order.setPointAmount(BigDecimal.ZERO);
+		}
+		order.setPostage(shoppingcart.getTotalPostage());
+		order.setPayStatus(ConstantsUtils.ORDER_PAY_STATUS_UNPAY);
+		order.setPaymentId(orderForm.getPaymentId());
+		order.setProductAmount(shoppingcart.getTotalProductAmount());
+		order.setRefundAmount(BigDecimal.ZERO);
+		order.setPayAmount(BigDecimal.ZERO);
+		order.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_UNSHIPPED);
+		order.setTotalAmount(shoppingcart.getTotalAmount());
+		order.setUpdateBy(currUser.getUid());
+		order.setUpdateTime(now);
+		order.setUserId(currUser.getUid());
+		order.setUserMessage(orderForm.getUserMsg());
+		order.setSupplierId(1);
+		this.save(order);
+		//保存订单货品
+		TdBrancheCompany branch = shoppingcart.getBranch();
+		TdBrancheCompanySearchCriteria sc = new TdBrancheCompanySearchCriteria();
+		sc.setLevel(branch.getLevel());
+		sc.setRegionId(branch.getRegionId());
+		int count = tdBrancheCompanyService.countByCriteria(sc);
+		if(count>0){
+			throw new RuntimeException("分公司已存在，不能加入!");
+		}
+		TdOrderProduct orderproduct = new TdOrderProduct();
+		orderproduct.setItemType(Byte.valueOf("1"));
+		orderproduct.setRegionId(branch.getRegionId());
+		orderproduct.setLevel(branch.getLevel());
+		orderproduct.setOrderId(order.getOrderId());
+		tdOrderProductMapper.insert(orderproduct);
+		return order;
+	}
 
 	@Override
 	public OperResult applyRefundOrder(TdOrder order, TdOrderShipment shipment) {
@@ -528,6 +700,108 @@ public class TdOrderServiceImpl implements TdOrderService{
 		}else{
 			result.setFailMsg("投诉提交失败!");
 		}
+		return result;
+	}
+
+	@Override
+	public OperResult receiptOrder(TdOrder order, TdUser user) {
+		OperResult result = new OperResult();
+		//订单不存在
+		if(null==order||null==order.getOrderId()){
+			result.setFailMsg("订单不存在！");
+			return result;
+		}
+		//已完成的订单的不能进行收货操作
+		if(ConstantsUtils.ORDER_STATUS_COMPLETE.equals(order.getOrderStatus())){
+			result.setFailMsg("已完成的订单的不能进行收货操作！");
+			return result;
+		}
+		
+		//未支付的订单的不能进行收货操作
+		if(ConstantsUtils.ORDER_PAY_STATUS_UNPAY.equals(order.getPayStatus())){
+			result.setFailMsg("未支付的订单的不能进行收货操作！");
+			return result;
+		}
+		//已收货的订单的不能进行收货操作
+		if(ConstantsUtils.ORDER_PAY_STATUS_UNPAY.equals(order.getPayStatus())){
+			result.setFailMsg("未支付的订单的不能进行收货操作！");
+			return result;
+		}
+		
+		//开始操作
+		Date now  = new Date();
+		TdOrder uporder = new TdOrder();
+		uporder.setOrderId(order.getOrderId());
+		uporder.setUpdateBy(user.getUid());
+		uporder.setUpdateTime(now);
+		uporder.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_RECEIPT);
+		tdOrderMapper.updateByPrimaryKeySelective(uporder);
+		
+		//订单操作日志
+		TdOrderLog log = new TdOrderLog();
+		log.setOrderId(order.getOrderId());
+		log.setCreateBy(user.getUid());
+		log.setCreateTime(now);
+		log.setOperType(ConstantsUtils.ORDER_LOG_TYPE_RECEIPT);
+		log.setNote("订单进行收货操作");
+		tdOrderLogMapper.insert(log);
+		
+		result.setFlag(true);
+		return result;
+	}
+
+	@Override
+	public OperResult payOrder(TdOrder order, OrderPay orderPay) {
+		OperResult result = new OperResult();
+		//订单不存在
+		if(null==order||null==order.getOrderId()){
+			result.setFailMsg("订单不存在！");
+			return result;
+		}
+		//已完成的订单的不能进行支付操作
+		if(ConstantsUtils.ORDER_STATUS_COMPLETE.equals(order.getOrderStatus())){
+			result.setFailMsg("已完成的订单的不能进行收货操作！");
+			return result;
+		}
+		
+		//已支付的订单的不能进行支付操作
+		if(ConstantsUtils.ORDER_PAY_STATUS_PAYED.equals(order.getPayStatus())){
+			result.setFailMsg("已支付的订单的不能进行支付操作！");
+			return result;
+		}
+		//金额不等不能进行支付操作
+		if(order.getUnPayAmount().compareTo(orderPay.getPayAmount())!=0){
+			result.setFailMsg("支付金额与订单金额不匹配不能进行支付操作！");
+			return result;
+		}
+		//开始操作
+		Date now  = new Date();
+		TdOrder uporder = new TdOrder();
+		uporder.setOrderId(order.getOrderId());
+		uporder.setUpdateBy(orderPay.getCreateBy());
+		uporder.setUpdateTime(now);
+		uporder.setPayStatus(ConstantsUtils.ORDER_PAY_STATUS_PAYED);
+		uporder.setPaymentId(orderPay.getPaymentId());
+		tdOrderMapper.updateByPrimaryKeySelective(uporder);
+		
+		//订单操作日志
+		TdOrderLog log = new TdOrderLog();
+		log.setOrderId(order.getOrderId());
+		log.setCreateBy(orderPay.getCreateBy());
+		log.setCreateTime(now);
+		log.setOperType(ConstantsUtils.ORDER_LOG_TYPE_PAY);
+		log.setNote("订单进行收款操作");
+		tdOrderLogMapper.insert(log);
+		
+		//代理产品订单添加代理和计算分润
+		if(ConstantsUtils.ORDER_KIND_AGENTPRODUCT.equals(order.getOrderType())){
+			TdOrderProduct agentProduct = tdOrderProductMapper.findByOrderIdAndTypeId(order.getOrderId(), Byte.valueOf("1"));
+			if(null!=agentProduct){
+				
+			}
+		}
+		
+		result.setFlag(true);
 		return result;
 	}
 	

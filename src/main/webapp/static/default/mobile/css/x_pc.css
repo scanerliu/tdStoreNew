@@ -1333,14 +1333,17 @@ select {
 	background: #fff;
 	padding:.2rem;
 }
-.my-evaluate .imgupload .input-file {
+.my-evaluate .imgupload .input-file .a1 {
+	position:relative;
+	display:block;
+	float:left;
 	width: 1.2rem;
 	height: 1.2rem;
 	border: .01rem solid #ddd;
 	position: relative;
 	cursor: pointer;
 }
-.my-evaluate .imgupload .input-file:before,.my-evaluate .imgupload .input-file:after {
+.my-evaluate .imgupload .input-file .a1:before,.my-evaluate .imgupload .input-file .a1:after {
 	position: absolute;
 	content: " ";
 	top:50%;
@@ -1348,23 +1351,21 @@ select {
 	background: #ddd;
 	border-radius: .03rem;
 }
-.my-evaluate .imgupload .input-file:before {
+.my-evaluate .imgupload .input-file .a1:before {
 	width: .62rem;
 	height: .1rem;
 	margin-top: -.05rem;
 	margin-left: -.31rem;
 }
-.my-evaluate .imgupload .input-file:after {
+.my-evaluate .imgupload .input-file .a1:after {
 	width: .1rem;
 	height: .62rem;
 	margin-left: -.05rem;
 	margin-top: -.31rem;
 }
-.my-evaluate .imgupload .input-file input[type='file'] {
+.my-evaluate .imgupload .input-file {
 	width: 100%;
-	height: 100%;
-	opacity: 0;
-	z-index: 5;
+height:1.22rem;
 }
 .my-evaluate .imgupload .imgwrap {
 	float: left;

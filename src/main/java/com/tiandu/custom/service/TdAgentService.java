@@ -17,4 +17,5 @@ public interface TdAgentService {
 	public List<TdAgent> findBySearchCriteria(TdAgentSearchCriteria sc);
 	public Integer save(TdAgent TdAgent);
 	public Integer delete(Integer id);
+	public int countByCriteria(TdAgentSearchCriteria sc);
 }

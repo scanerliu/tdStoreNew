@@ -433,7 +433,7 @@
       update_by = #{updateBy,jdbcType=INTEGER},
       joint_id = #{jointId,jdbcType=INTEGER},
       gain_points = #{gainPoints,jdbcType=INTEGER},
-      commented = #{commented,jdbcType=BIT},
+      commented = #{commented,jdbcType=BIT}
     where order_id = #{orderId,jdbcType=INTEGER}
   </update>
 </mapper>
