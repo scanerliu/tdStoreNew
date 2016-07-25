@@ -170,6 +170,10 @@ public class ConstantsUtils {
 	 * 订单操作日志类型： 4订单收货
 	 */
 	public static final Byte ORDER_LOG_TYPE_RECEIPT = 4;
+	/**
+	 * 订单操作日志类型： 5订单收款
+	 */
+	public static final Byte ORDER_LOG_TYPE_PAY = 5;
 	
 	/***************************订单支付方式**************************/
 	/**

@@ -10,6 +10,7 @@ import com.tiandu.order.entity.TdOrderShipment;
 import com.tiandu.order.search.TdOrderSearchCriteria;
 import com.tiandu.order.vo.OperResult;
 import com.tiandu.order.vo.OrderForm;
+import com.tiandu.order.vo.OrderPay;
 import com.tiandu.order.vo.OrderRefund;
 import com.tiandu.order.vo.ShoppingcartVO;
 
@@ -78,4 +79,11 @@ public interface TdOrderService {
 	 * @return
 	 */
 	public OperResult receiptOrder(TdOrder order, TdUser user);
+	/**
+	 * 订单支付
+	 * @param order
+	 * @param orderPay
+	 * @return
+	 */
+	public OperResult payOrder(TdOrder order, OrderPay orderPay);
 }

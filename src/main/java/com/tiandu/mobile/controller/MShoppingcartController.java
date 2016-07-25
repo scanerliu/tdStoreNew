@@ -389,6 +389,7 @@ public class MShoppingcartController extends BaseController {
 		ShoppingcartVO cart = new ShoppingcartVO();
 		//判断商品类型，1普通商品，2代理产品
 		if(orderForm.getProductType()==2){
+			cart.setPtype(2);
 			TdAgentProduct agentproduct = tdAgentProductService.findOne(orderForm.getAgentProductId());
 			if(null!=agentproduct && null!=agentproduct.getId()){
 				cart.setAgentProduct(agentproduct);
@@ -418,10 +419,12 @@ public class MShoppingcartController extends BaseController {
 					throw new Exception("下单失败，代理产品不存在或已经下架！");
 				}
 				cart.setTotalAmount(agentproduct.getSalesPrice());
+				cart.setTotalProductAmount(agentproduct.getSalesPrice());
 			}else{
 				throw new Exception("下单失败，代理产品不存在或已经下架！");
 			}
 		}else{
+			cart.setPtype(1);
 			TdShoppingcartItem item = new TdShoppingcartItem();
 			TdProductSku sku = tdProductSkuService.findOneWithProduct(orderForm.getProductSkuId());
 			if(null!=sku && sku.getProduct().getStatus().equals(Byte.valueOf("1")) && sku.getProduct().getOnshelf()){
@@ -447,7 +450,7 @@ public class MShoppingcartController extends BaseController {
 			BigDecimal quantity = new BigDecimal(item.getQuantity());
 			BigDecimal amount = item.getPrice().multiply(quantity);
 			cart.setTotalProductAmount(amount);
-			cart.setTotalAmount(amount);
+			cart.setTotalAmount(amount.add(postage));
 			//计算可以积分抵扣金额
 			BigDecimal pointAmount =BigDecimal.ZERO;
 			if(ConstantsUtils.PRODUCT_KIND_PART_POINT_EXCHANGE.equals(item.getProduct().getKind()) && partproductpointpercent>0 && integralexchangerate>0){

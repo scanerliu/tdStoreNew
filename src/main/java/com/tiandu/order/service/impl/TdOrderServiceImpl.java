@@ -45,6 +45,7 @@ import com.tiandu.order.search.TdOrderSearchCriteria;
 import com.tiandu.order.service.TdOrderService;
 import com.tiandu.order.vo.OperResult;
 import com.tiandu.order.vo.OrderForm;
+import com.tiandu.order.vo.OrderPay;
 import com.tiandu.order.vo.OrderRefund;
 import com.tiandu.order.vo.ShoppingcartVO;
 import com.tiandu.system.utils.ConfigUtil;
@@ -564,6 +565,8 @@ public class TdOrderServiceImpl implements TdOrderService{
 		orderproduct.setItemPrice(shoppingcart.getAgentProduct().getSalesPrice());
 		orderproduct.setRegionId(agent.getRegionId());
 		orderproduct.setLevel(agent.getLevel());
+		orderproduct.setQuantity(1);
+		orderproduct.setTitle(shoppingcart.getAgentProduct().getTitle());
 		orderproduct.setProductTypeId(agent.getProductTypeId());
 		orderproduct.setOrderId(order.getOrderId());
 		tdOrderProductMapper.insert(orderproduct);
@@ -742,6 +745,61 @@ public class TdOrderServiceImpl implements TdOrderService{
 		log.setOperType(ConstantsUtils.ORDER_LOG_TYPE_RECEIPT);
 		log.setNote("订单进行收货操作");
 		tdOrderLogMapper.insert(log);
+		
+		result.setFlag(true);
+		return result;
+	}
+
+	@Override
+	public OperResult payOrder(TdOrder order, OrderPay orderPay) {
+		OperResult result = new OperResult();
+		//订单不存在
+		if(null==order||null==order.getOrderId()){
+			result.setFailMsg("订单不存在！");
+			return result;
+		}
+		//已完成的订单的不能进行支付操作
+		if(ConstantsUtils.ORDER_STATUS_COMPLETE.equals(order.getOrderStatus())){
+			result.setFailMsg("已完成的订单的不能进行收货操作！");
+			return result;
+		}
+		
+		//已支付的订单的不能进行支付操作
+		if(ConstantsUtils.ORDER_PAY_STATUS_PAYED.equals(order.getPayStatus())){
+			result.setFailMsg("已支付的订单的不能进行支付操作！");
+			return result;
+		}
+		//金额不等不能进行支付操作
+		if(order.getUnPayAmount().compareTo(orderPay.getPayAmount())!=0){
+			result.setFailMsg("支付金额与订单金额不匹配不能进行支付操作！");
+			return result;
+		}
+		//开始操作
+		Date now  = new Date();
+		TdOrder uporder = new TdOrder();
+		uporder.setOrderId(order.getOrderId());
+		uporder.setUpdateBy(orderPay.getCreateBy());
+		uporder.setUpdateTime(now);
+		uporder.setPayStatus(ConstantsUtils.ORDER_PAY_STATUS_PAYED);
+		uporder.setPaymentId(orderPay.getPaymentId());
+		tdOrderMapper.updateByPrimaryKeySelective(uporder);
+		
+		//订单操作日志
+		TdOrderLog log = new TdOrderLog();
+		log.setOrderId(order.getOrderId());
+		log.setCreateBy(orderPay.getCreateBy());
+		log.setCreateTime(now);
+		log.setOperType(ConstantsUtils.ORDER_LOG_TYPE_PAY);
+		log.setNote("订单进行收款操作");
+		tdOrderLogMapper.insert(log);
+		
+		//代理产品订单添加代理和计算分润
+		if(ConstantsUtils.ORDER_KIND_AGENTPRODUCT.equals(order.getOrderType())){
+			TdOrderProduct agentProduct = tdOrderProductMapper.findByOrderIdAndTypeId(order.getOrderId(), Byte.valueOf("1"));
+			if(null!=agentProduct){
+				
+			}
+		}
 		
 		result.setFlag(true);
 		return result;
