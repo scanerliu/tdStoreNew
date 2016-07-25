@@ -93,7 +93,4 @@ $(function(){
         $("#J_checkall").prop("checked",$subBox.length == $("input[name='subbox']:checked").length ? true : false);
     });
 });
-
-
-
 </script>
