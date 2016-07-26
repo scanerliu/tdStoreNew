@@ -1,9 +1,16 @@
 package com.tiandu.comment.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.order.entity.TdOrder;
+import com.tiandu.order.vo.SkuSpecialVO;
 import com.tiandu.product.entity.TdProduct;
 
 public class TdProductComment {
@@ -43,6 +50,11 @@ public class TdProductComment {
      * 评论订单
      */
     private TdOrder order;
+    
+    /**
+     * 属性键值对，显示时候使用
+     */
+    private List<SkuSpecialVO> specialList;
 
     public Integer getId() {
         return id;
@@ -156,6 +168,35 @@ public class TdProductComment {
 		this.order = order;
 	}
     
-    
+	public List<SkuSpecialVO> getSpecialList() {
+		if(null!=this.specialList){
+			return specialList;
+		}
+		List<SkuSpecialVO> slist = new ArrayList<SkuSpecialVO>();
+		if(StringUtils.isNotEmpty(this.getSpecifications())){
+			String opt = this.getSpecifications();
+			JSONObject json;
+			try {
+				json = new JSONObject(opt);
+				String[] keys = json.getNames(json);
+				for(String key : keys){
+					SkuSpecialVO special = new SkuSpecialVO();
+					String val = (String) json.get(key);
+					special.setSname(key);
+					special.setSoption(val);
+					slist.add(special);						
+				}
+				this.setSpecialList(slist);
+			} catch (JSONException e) {
+				
+				e.printStackTrace();
+			}
+		}
+		return specialList;
+	}
+
+	public void setSpecialList(List<SkuSpecialVO> specialList) {
+		this.specialList = specialList;
+	}
     
 }

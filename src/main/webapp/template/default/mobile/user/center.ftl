@@ -116,7 +116,7 @@
         <label>我的推广</label>
         <i class="icon-next"></i>
       </a>
-      <a href="../成为代理-分类列表.html" title="">
+      <a href="${app.basePath}/mobile/user/index" title="我的店铺">
         <i class="icon bg_icon_6"></i>
         <label>我的店铺</label>
         <i class="icon-next"></i>

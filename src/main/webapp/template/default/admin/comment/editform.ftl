@@ -14,7 +14,13 @@
     </tr>
     <tr>
         <th width="150">商品属性：</th>
-        <td colspan ="3">${comment.specifications!''}</td>
+        <td colspan ="3">
+        		<#if comment.specialList??>
+              	<#list comment.specialList as special>
+              	${special.sname!''}：${special.soption!''} &emsp;&emsp;&emsp;
+                </#list>
+                </#if>
+       </td>
     </tr>
     <tr>
         <th width="150">评论时间：</th>

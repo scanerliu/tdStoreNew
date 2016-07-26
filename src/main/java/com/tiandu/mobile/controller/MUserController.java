@@ -26,11 +26,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tiandu.article.entity.TdAdsense;
+import com.tiandu.article.search.TdAdvertisementSearchCriteria;
+import com.tiandu.article.service.TdAdsenseService;
+import com.tiandu.article.service.TdAdvertisementService;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.common.utils.MessageSender;
 import com.tiandu.common.utils.TwoDimensionCode;
 import com.tiandu.common.utils.WebUtils;
+import com.tiandu.complaint.search.TdComplaintCriteria;
+import com.tiandu.complaint.service.TdComplaintService;
 import com.tiandu.custom.entity.TdAgent;
 import com.tiandu.custom.entity.TdCampaign;
 import com.tiandu.custom.entity.TdExperienceStore;
@@ -153,6 +159,15 @@ public class MUserController extends BaseController {
 	
 	@Autowired
 	TdUserSupplierService tdUserSupplierService; 
+	
+	@Autowired
+	private TdAdsenseService tdAdsenseService;
+	
+	@Autowired
+	private TdAdvertisementService tdAdvertisementService;
+	
+	@Autowired
+	private TdComplaintService tdComplaintService;
 	
 	// 个人中心
 	@RequestMapping("/center")
@@ -1255,6 +1270,66 @@ public class MUserController extends BaseController {
 		
 		return "/mobile/user/districtSelectTemplate";	
 	}
+	
+	/**
+	 * 
+	 * @author Max
+	 * 我的店铺
+	 * 
+	 */
+	@RequestMapping("/index")
+	public String index(HttpServletRequest request, HttpServletResponse response, ModelMap map) {
+		
+		TdUser user = this.getCurrentUser();
+		if(null == user){
+			return "redirect:/mobile/login";
+		}
+		
+		// 轮播广告
+		TdAdvertisementSearchCriteria sc = new TdAdvertisementSearchCriteria();
+		sc.setCreateTime(new Date());
+		sc.setEndTime(new Date());
+		sc.setOrderBy("2");
+		sc.setStatus((byte)1);
+		TdAdsense adsense = tdAdsenseService.findByName("触屏首页轮播大图广告");
+		if(null != adsense)
+		{
+			sc.setAdsId(adsense.getId());
+			map.addAttribute("adList", tdAdvertisementService.findBySearchCriteria(sc));
+		}
+		
+		adsense = tdAdsenseService.findByName("触屏竞选内容广告");
+		if(null != adsense)
+		{
+			sc.setAdsId(adsense.getId());
+			map.addAttribute("compAdList", tdAdvertisementService.findBySearchCriteria(sc));
+		}
+		
+		adsense = tdAdsenseService.findByName("触屏精品专区广告");
+		if(null != adsense)
+		{
+			sc.setAdsId(adsense.getId());
+			map.addAttribute("hotAdList", tdAdvertisementService.findBySearchCriteria(sc));
+		}
+		
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		
+		// 股东竞选
+		TdComplaintCriteria csc = new TdComplaintCriteria();
+		sc.setStatus((byte)1);
+		map.addAttribute("complaintList", tdComplaintService.findBySearchCriteria(csc));
+		
+		// 热销推荐
+		TdProductCriteria psc = new TdProductCriteria();
+		psc.setHotRecommend(1);
+		psc.setOnshelf(true);
+		psc.setUid(user.getUid());
+		map.addAttribute("productList", tdProductService.findBySearchCriteria(psc));
+		
+	    return "/mobile/user/index";
+	}
+	
 	
 	// 是否是直辖市
 	private boolean isCentralCity(String cityName) {

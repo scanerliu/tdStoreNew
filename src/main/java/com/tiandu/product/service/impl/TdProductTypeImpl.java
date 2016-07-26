@@ -163,6 +163,7 @@ public class TdProductTypeImpl implements TdProductTypeService{
 	 */
 	public List<TdProductAttribute> findNotProducrAttribute(Integer typeId)
 	{
+		List<TdProductAttribute> productAttrList = new ArrayList<>();
 		
 		// 查出所有属性
 		TdProductAttributeCriteria sc = new TdProductAttributeCriteria();
@@ -175,6 +176,7 @@ public class TdProductTypeImpl implements TdProductTypeService{
 		
 		if(null != attrList && attrList.size() > 0 )
 		{
+			productAttrList = attrList;
 			if(null != typeAttrList && typeAttrList.size() > 0)
 			{
 				// 循环所有属性
@@ -188,13 +190,14 @@ public class TdProductTypeImpl implements TdProductTypeService{
 						if(tdProductAttribute.getAttriId() == typeAttr.getAttriId())
 						{
 							// 去掉已有的属性
-							attrList.remove(i);
+							productAttrList.remove(i);
+							if(i != 0 ){i--;}
 						}
 					}
 				}
 			}
 		}
-		return attrList;
+		return productAttrList;
 	}
 
 }

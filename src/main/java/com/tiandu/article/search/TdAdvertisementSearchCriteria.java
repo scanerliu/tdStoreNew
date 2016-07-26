@@ -13,6 +13,8 @@ public class TdAdvertisementSearchCriteria extends SearchCriteria{
     private Date endTime;
     
     private Integer adsId;
+//    
+//    private Integer uId
 
 	public Byte getStatus() {
 		return status;
