@@ -90,6 +90,15 @@ public class TdUserServiceImpl implements TdUserService {
 		return user;
 	}
 
+	@Override
+	public TdUser findOneWithAccount(Integer id) {
+		TdUser user = userMapper.selectDetailByPrimaryKey(id);
+		//查询账户信息
+		TdUserAccount account = tdUserAccountService.findOne(user.getUid());
+		user.setUserAccount(account);
+		return user;
+	}
+
 	/**
 	 * 删除用户所有信息
 	 * @param id
