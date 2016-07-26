@@ -3,6 +3,7 @@ package com.tiandu.product.entity.mapper;
 import java.util.List;
 
 import com.tiandu.product.entity.TdProductSku;
+import com.tiandu.product.search.TdProductSkuCriteria;
 
 public interface TdProductSkuMapper {
     int deleteByPrimaryKey(Integer id);
@@ -22,5 +23,8 @@ public interface TdProductSkuMapper {
     List<TdProductSku> findByProductId(Integer proId);
     Integer deleteByProductId(Integer proId);
     List<TdProductSku> selectByProductId(Integer proId);
+    
+    Integer countByCriteria(TdProductSkuCriteria sc);
+    public List<TdProductSku> findBySearchCriteria(TdProductSkuCriteria sc);
     
 }

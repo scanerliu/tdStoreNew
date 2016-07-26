@@ -22,4 +22,11 @@ public interface TdBrancheCompanyMapper {
     
     Integer countByCriteria(TdBrancheCompanySearchCriteria sc);
     public List<TdBrancheCompany> findBySearchCriteria(TdBrancheCompanySearchCriteria sc);
+
+    /**
+	 * 按用户id查找
+	 * @param userId
+	 * @return
+	 */
+	TdBrancheCompany findByUid(Integer userId);
 }

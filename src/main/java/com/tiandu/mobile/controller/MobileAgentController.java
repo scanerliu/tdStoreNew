@@ -28,7 +28,6 @@ import com.tiandu.custom.entity.TdAgent;
 import com.tiandu.custom.entity.TdExperienceStore;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.search.TdAgentSearchCriteria;
-import com.tiandu.custom.search.TdExperienceStoreSearchCriteria;
 import com.tiandu.custom.service.TdAgentService;
 import com.tiandu.custom.service.TdExperienceStoreService;
 import com.tiandu.district.entity.TdDistrict;
@@ -75,6 +74,7 @@ public class MobileAgentController extends BaseController{
 	@Autowired
 	private TdDistrictService tdDistrictService;
 	
+	
 	@RequestMapping("/list")
 	public String list(HttpServletRequest req,ModelMap map)
 	{
@@ -98,7 +98,7 @@ public class MobileAgentController extends BaseController{
 		TdAgentProduct agent = tdAgentProductService.findOne(agentId);
 		if(null == agent)
 		{
-			return "";
+			return "redirect:404";
 		}
 		
 		map.addAttribute("agent", agent);
@@ -204,12 +204,12 @@ public class MobileAgentController extends BaseController{
 		if(null != district){
 			str.append(district.getName());
 		}
-		if(null != experience.getAddress()){
-			str.append(experience.getAddress());
-		}
+//		if(null != experience.getAddress()){
+//			str.append(experience.getAddress());
+//		}
 		// 详细地址
 		experience.setRegionFullName(str.toString());
-		experience.setStatus((byte)2);
+		experience.setStatus((byte)1);
 		experience.setCreateTime(new Date());
 		experience.setSort(1);
 		
@@ -248,7 +248,6 @@ public class MobileAgentController extends BaseController{
 		TdDistrict district = new TdDistrict();
 		
 		// 代理查询条件
-		TdExperienceStoreSearchCriteria esc = new TdExperienceStoreSearchCriteria();
 		TdAgentSearchCriteria asc = new TdAgentSearchCriteria();
 		
 		// 一级地区
@@ -313,8 +312,7 @@ public class MobileAgentController extends BaseController{
 		}
 		
 		// 查找当前选择地区已的所有代理
-		esc.setFlag(false);
-//		List<TdExperienceStore> ecperList = tdExperienceStoreService.findBySearchCriteria(esc);
+		asc.setFlag(false);
 		
 		List<TdAgent> agentList = tdAgentService.findBySearchCriteria(asc);
 		

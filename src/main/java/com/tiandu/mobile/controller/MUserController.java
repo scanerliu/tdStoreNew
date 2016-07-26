@@ -39,11 +39,13 @@ import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserAddress;
 import com.tiandu.custom.entity.TdUserCampaign;
 import com.tiandu.custom.entity.TdUserMessage;
+import com.tiandu.custom.entity.TdUserSupplier;
 import com.tiandu.custom.search.TdAgentSearchCriteria;
 import com.tiandu.custom.search.TdCampaignSearchCriteria;
 import com.tiandu.custom.search.TdUserAddressCriteria;
 import com.tiandu.custom.search.TdUserCampaignCriteria;
 import com.tiandu.custom.search.TdUserSearchCriteria;
+import com.tiandu.custom.search.TdUserSupplierSearchCriteria;
 import com.tiandu.custom.service.TdAgentService;
 import com.tiandu.custom.service.TdCampaignService;
 import com.tiandu.custom.service.TdExperienceStoreService;
@@ -52,6 +54,7 @@ import com.tiandu.custom.service.TdUserAddressService;
 import com.tiandu.custom.service.TdUserCampaignService;
 import com.tiandu.custom.service.TdUserMessageService;
 import com.tiandu.custom.service.TdUserSignService;
+import com.tiandu.custom.service.TdUserSupplierService;
 import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.search.TdDistrictSearchCriteria;
 import com.tiandu.district.service.TdDistrictService;
@@ -147,6 +150,9 @@ public class MUserController extends BaseController {
 	
 	@Autowired
 	TdUserCampaignService tdUserCampaignService;
+	
+	@Autowired
+	TdUserSupplierService tdUserSupplierService; 
 	
 	// 个人中心
 	@RequestMapping("/center")
@@ -1018,6 +1024,27 @@ public class MUserController extends BaseController {
 	}
 	
 	/*
+	 * 供应商资质认证
+	 */
+	@RequestMapping("/supplierApply")
+	public String supplierApply(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currentUser = this.getCurrentUser();
+		TdUserSupplierSearchCriteria sc = new TdUserSupplierSearchCriteria();
+		sc.setFlag(false);
+		sc.setUserId(currentUser.getUid());
+		List<TdUserSupplier> userSupplierList = tdUserSupplierService.findBySearchCriteria(sc);
+		if(userSupplierList != null && userSupplierList.size() > 1){
+			logger.error("供应商资质认证数据出错：供应商资质认证数据不唯一");
+		}
+		if(userSupplierList != null && userSupplierList.size() > 0){
+			modelMap.addAttribute("userSupplier", userSupplierList.get(0));
+			String[] imgList = userSupplierList.get(0).getImages().split(":");
+			modelMap.addAttribute("imgList", imgList);
+		}
+		return "/mobile/user/supplierApply";	
+	}
+	
+	/*
 	 * 推广
 	 */
 	@RequestMapping("/mySpread")
@@ -1031,6 +1058,35 @@ public class MUserController extends BaseController {
 		tdc.encoderQRCode(spreadUrl, spreadImgPath, "png");
 		modelMap.addAttribute("spreadImg", "static/imgs/spread" + imgName);
 		return "/mobile/user/mySpread";	
+	}
+	
+	/*
+	 * 保存供应商资质认证申请
+	 */
+	@RequestMapping("/saveUserSupplierApply")
+	@ResponseBody
+	public Map<String, String> saveUserSupplierApply(TdUserSupplier userSupplier, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		Map<String, String> res = new HashMap<>();
+		try{
+			TdUser currentUser = this.getCurrentUser();
+			userSupplier.setUid(currentUser.getUid());
+			userSupplier.setCreateTime(new Date());
+			userSupplier.setUpdateTime(new Date());
+			userSupplier.setUpdateBy(currentUser.getUid());
+			if(userSupplier.getId() == null){
+				tdUserSupplierService.save(userSupplier);				
+			}else{
+				tdUserSupplierService.save(userSupplier);
+			}
+			res.put("code", "1");
+			res.put("msg", "资质上传成功！");
+			return res;
+		} catch(Exception e){
+			res.put("code", "0");
+			res.put("msg", "资质上传失败！");
+			logger.error("供应商资质上传保存失败！");
+			return res;
+		}
 	}
 	
 	/*

@@ -177,13 +177,13 @@ function searcAgentAddr()
 	$("#tarea").load(url,loadData);
 }
 
-function deleteProduct(id){
+function addAgent(id){
 	var url = basePath+"/mobile/agent/addagent";
 	var loadData = $("#form").serializeArray();
 	$.post(url,loadData,saveCallback,"text");
 }
 
-function delProductTypeCallback(data){
+function saveCallback(data){
 	var result = eval("("+data+")");
 	if(result.code==1){
 		$("#pay_warn").css("display","block")

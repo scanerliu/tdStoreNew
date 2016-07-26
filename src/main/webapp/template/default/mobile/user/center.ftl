@@ -85,9 +85,9 @@
         <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_5.png" alt="">
         <span>我的流水</span>
       </a>
-      <a href="我的退货.html" title="">
+      <a href="${app.basePath}/mobile/order/refundlist" title="">
             <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_4.png" alt="">
-            <span>我的退货</span>
+            <span>我的退款</span>
         </a>
     </article><!-- pc-nav end -->
     <article class="pc-menu">
@@ -151,7 +151,7 @@
         <label>下载app</label>
         <i class="icon-next"></i>
       </a>
-      <a href="../成为代理-分类列表.html" title="">
+      <a href="${app.basePath}/mobile/user/supplierApply" title="供应商资质认证">
         <i class="icon bg_icon_12"></i>
         <label>供应商资质认证</label>
         <i class="icon-next"></i>
