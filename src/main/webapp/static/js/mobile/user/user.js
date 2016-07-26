@@ -48,11 +48,20 @@ function commonCallback(data){
 var wait=60;
 function waitSeconds(o) {
     if (wait == 0) {
-    	o.removeAttr("disabled");
+    	// 为获取验证按钮绑定获取验证码事件
+		$("#getChangeUserPasswordValidCode").bind("click", function(){
+			var url = basePath+"/mobile/user/getChangeUserPasswordValidCode";
+			alert("发送");
+			//$.post(url, commonCallback, "text");
+		});
+		// 为获取验证按钮绑定等待60秒事件
+		$("#getChangeUserPasswordValidCode").bind("click", function(){
+			waitSeconds($("#getChangeUserPasswordValidCode"));
+		});
     	o.text("获取验证码");
         wait = 60;
     } else {
-    	o.attr("disabled", true);
+    	$('#getChangeUserPasswordValidCode').unbind("click");
         o.text("重新发送(" + wait + ")");
         wait--;
         setTimeout(function() {
