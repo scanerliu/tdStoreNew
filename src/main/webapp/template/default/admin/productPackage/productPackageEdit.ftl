@@ -1,15 +1,12 @@
 <#import "/common/app.ftl" as app>
-<script src="${app.basePath}/static/js/jquery-1.12.3.min.js" type="text/javascript"></script>
 <script src="${app.basePath}/static/js/easyui/jquery.easyui.min.js" type="text/javascript"></script>
 <script src="${app.basePath}/static/js/easyui/easyui-lang-zh_CN.js" type="text/javascript"></script>
 <script src="${app.basePath}/static/js/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="${app.basePath}/static/js/easyui/themes/default/easyui.css" />
-<link rel="stylesheet" type="text/css" href="${app.basePath}/static/js/easyui/themes/icon.css" />
 <link rel="stylesheet" type="text/css" href="${app.basePath}/static/js/uploadify/uploadify.css" />
 <div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="returnList()"><em>返回列表</em></a>&#12288;</div></div>
 <div class="pad_lr_10">
 <form id="productPackageForm" action="${app.basePath}/admin/productPackage/save" class="easyui-form" method="post" data-options="novalidate:true">
-<input type="hidden" name="productId" value="<#if tdProduct??>${tdProduct.id?c}</#if>">
+<input type="hidden" name="id" value="<#if tdProduct?? && tdProduct.id??>${tdProduct.id?c}</#if>">
 <div class="easyui-tabs" style="width:100%； height:750px;">
 		<div title="商品信息" style="padding:10px">
 			<table class="table_form" width="100%;hright:700px;">
@@ -23,11 +20,12 @@
 		    </tr>
 		    <tr>
 		        <th width="150">包含商品：</th>
-		        <td><button type="button" class="btn" onclick="$('#dlg').dialog('open')">添加</button></td>
+		        <td><button type="button" class="btn" onclick="openDialog()">添加</button></td>
 		    </tr>
 		    <tr>
 		        <th width="150"></th>
-		        <td>[<a href="">一个</a>][<a href="">一个</a>][<a href="">一个</a>]</td>
+		        <td id="skusTr">
+		        </td>
 		    </tr>
 		    <tr>
 		        <th width="150">编号：</th>
@@ -36,12 +34,12 @@
 		    <tr>
 		        <th width="150">参考价：</th>
 		        
-		        <td><input type="text" name="price" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.price?string('0.00')}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="currency"></td>
+		        <td><input type="text" name="price" class="easyui-textbox" value="<#if tdProduct?? && tdProduct.price??>${tdProduct.price?string('0.00')}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="currency"></td>
 		    </tr>
 		    <tr>
 		        <th width="150">运费：</th>
 		        
-		        <td><input type="text" name="postage" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.postage?string('0.00')}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="currency"></td>
+		        <td><input type="text" name="postage" class="easyui-textbox" value="<#if tdProduct?? && tdProduct.postage??>${tdProduct.postage?string('0.00')}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="currency"></td>
 		    </tr>
 		    <tr>
 		        <th width="150">库存：</th>
@@ -102,6 +100,7 @@
 			        		</#if>
 			        	</div>
 			        	<input type="file" id="file_uploads"/>
+			        	<input type="hidden" id="attachmentUrls" name="attachmentUrls" value="">
 			        </td>
 			    </tr>
 			    <tr>
@@ -168,51 +167,10 @@
 		</div>
 </div>
  <input type="hidden" name="tableData" value="" id="formTableData">
+ <input type="hidden" id="skuIdStrInput" name="skuIdStr" value="<#if skuIdStr??>${skuIdStr}</#if>" id="skuIdStr">
  <button type="button" class="smt mr10" onclick="setData()">保存</button>
 </form>
-<#--用作规格顺序-->
-<input type="hidden" value="${speOrder!''}" id="speOrder">
-<input type="hidden" value="${specifiactionNum!''}" id="speSize">
 
-<#--弹框-->
-<div id="dlg" class="easyui-dialog" title="货品列表" style="width:800px;height:600px;padding:10px"
-			data-options="
-				iconCls: 'icon-save',
-				toolbar: '#dlg-toolbar',
-				buttons: '#dlg-buttons',
-				closed: 'true'
-			">
-			<div id="content" class="easyui-panel" style="height:400px"
-					data-options="href:'${app.basePath}/admin/productPackage/skuList'">
-			</div>
-			<div id="selectedSku" class="easyui-panel" style="height:50px">
-				已选择的商品1  已选择的商品2
-			</div>
-	</div>
-		
-	</div>
-	<div id="dlg-toolbar" style="padding:2px 0">
-		<table cellpadding="0" cellspacing="0" style="width:100%">
-			<tr>
-				<td style="text-align:right;padding-right:2px">
-					<input class="easyui-searchbox" data-options="prompt:'请输入商品名称...',searcher:doSearch" style="width:300px"></input>
-				</td>
-			</tr>
-		</table>
-	</div>
-	<div id="dlg-buttons">
-		<div class="easyui-pagination" style="border:1px solid #ccc;"
-			data-options="
-				total: 2000,
-				pageSize: 10,
-				onSelectPage: function(pageNumber, pageSize){
-					$('#content').panel('refresh', '${app.basePath}/admin/productPackage/skuList?pageNo='+pageNumber);
-				}">
-		</div>
-		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:alert('save')">确定</a>
-		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#dlg').dialog('close')">关闭</a>
-	</div>
-<#--弹框-->
 </div>
 <!-- 配置文件 -->
 <script type="text/javascript" src="${app.basePath}/static/js/ueditor/ueditor.config.js"></script>
@@ -230,7 +188,7 @@
 	$(function(){
 		// 图片上传
 		$('#file_upload').uploadify({
-				'multi'    : 'false', // 限制单图上传
+				'multi'    : false, // 限制单图上传
 				'formData' : {'type' : "product"},
 				'swf'      : basePath+'/static/js/uploadify/uploadify.swf', // swf存放的路径
 				'fileObjName' : 'file',
@@ -249,7 +207,7 @@
 		        }
 		});
 		$('#file_uploads').uploadify({
-				'multi'    : 'true', // 多图上传
+				'multi'    : true, // 多图上传
 				'formData' : {'type' : "product"},
 				'swf'      : basePath+'/static/js/uploadify/uploadify.swf', // swf存放的路径
 				'fileObjName' : 'file',
@@ -257,7 +215,7 @@
 				'buttonText' : '点击选择图片',
 				'onUploadSuccess' : function(file, data, response) {
 					var result = eval("("+data+")");
-					$("#attachmentDiv").append("<img width='100' height='100' onclick='$(this).remove()' src='"+basePath+result.savedFile+"'/>");
+					$("#attachmentDiv").append("<img width='100' height='100' style='margin-left: 10px;' onclick='$(this).remove()' src='"+basePath+result.savedFile+"'/>");
 				//	$.messager.alert('消息提醒','图片' + file.name + ' 上传成功。 ');
 		        },
 		        'onUploadError' : function(file, errorCode, errorMsg, errorString) {
@@ -265,10 +223,19 @@
 		        	$.messager.alert('消息提醒','上传失败。');
 		        }
 		});
+		// 货品展示
+		removeSkuIdStrBlank();
+		flushSkuShow();
 	});
 	
 	// 提交前设置百度编辑器和展示图片的值
 	function setData(){
+		removeSkuIdStrBlank();
+		var sisi = $("#skuIdStrInput").val();
+		if(sisi == ""){
+			$.messager.alert('提示','包含的商品不能为空！');
+			return;
+		}
 		var detail = UE.getEditor('detail').getContent();
 		$("#detailArea").html(detail);
 		var dispatch = UE.getEditor('dispatch').getContent();
@@ -278,16 +245,47 @@
 		var imgs = $("#attachmentDiv").find("img");
 		var imgsStr = "";
 		for(var i = 0; i < imgs.length; i ++){
-			imgsStr = imgsStr + $(imgs[i]).attr("src");
+			var imgsrc = $(imgs[i]).attr("src");
+			imgsrc = imgsrc.replace(basePath, "");
+			imgsStr = imgsStr + imgsrc;
 			if(i < imgs.length - 1){
 				imgsStr = imgsStr + ":";	
 			}
-			
 		}
-		alert(imgsStr);
+		$("#attachmentUrls").val(imgsStr);
+		console.log(imgsStr);
+		removeSkuIdStrBlank();
+		
+		
+		var f = $('#productPackageForm').form('enableValidation').form('validate');
+		if(f){
+			$("#productPackageForm").form("submit",{
+				success : function(data){
+					var jsonData = eval('('+data+')');
+					$.messager.alert('提示',jsonData.msg);
+					if(jsonData.code == "1"){
+						returnList();
+						refreshList();
+					}
+				}
+			});
+		}
+		
 	}
 	
-	function doSearch(value){
-		alert(value);
+	function openDialog(){
+		var url = basePath+"/admin/productPackage/skuList"; 	
+		$('#pskuswindow').window({
+			title: '货品列表',
+			width: 800,
+			height: 400,
+			closed: false,
+			cache: false,
+			modal: true,
+			href: url,
+			onClose: function() {
+                $(this).window({closed:true});
+            }
+		});
 	}
 </script>

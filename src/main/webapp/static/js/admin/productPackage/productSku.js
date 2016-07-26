@@ -1,134 +1,75 @@
 function searchProductSku(f){
-	var url = basePath+"/admin/productSku/skuSearch";
+	var url = basePath+"/admin/productPackage/skuSearch";
 	var loadData = "";
 	if(f){
 		loadData = null;
 	}else{
-		loadData = $("#skuListForm").serializeArray();
+		loadData = $("#pageForm").serializeArray();
 	}
-	$("#results").load(url,loadData);
+	$("#skuListForm").load(url,loadData);
 }
 
 function fnGotoPageProductSku(num){
 	searchProductSku(false);
 }
 
-function editProductSku(num){
-	var url = basePath+"/admin/productSku/edit";
-	var loadData={"id":num};
-	$("#rightform").load(url,loadData);
-	showForm();
-}
-
-function showForm(){
-	$("#rightlist").hide();
-	$("#rightform").show();
-}
-function returnList(){
-	$("#rightlist").show();
-	$("#rightform").html("").hide();
-}
-function refreshList(){
+function searchSkuByProductName(){
+	var productName = $("#searchProductName").val();
+	$("#productName").val(productName);
 	searchProductSku(false);
-}
-function saveProductSku(){
-	var f = $('#productSkuForm').form('enableValidation').form('validate');
-	if(f){
-		$('#expressForm').form('submit',{
-			  success : function(data){
-				  var result = eval("("+data+")");
-				  if(result.code==1){
-					  $.messager.alert('消息提醒','快递公司保存成功。');
-					  returnList();
-					  refreshList();
-				  }else{
-					  $.messager.alert('消息提醒','快递公司保存失败!');
-				  }
-			  }
-			 });
-	};
+	
 }
 
-function delProductSku(id){
-	$.messager.confirm('消息提醒', '确定要删掉该商品包吗?', function(r){
-		if (r){
-			var url = basePath+"/admin/productSku/delete";
-			var loadData={"id":id};
-			$.post(url,loadData,commonCallback,"text");
-		}
-	});
-}
-
-function commonCallback(data){
-	var result = eval("("+data+")");
-	var msg = result.msg;
-	$.messager.alert('消息提醒',msg);
-	if(result.code==1){
-		refreshList();
-	}
-}
-
-function batchDelete(){
-	var ids = $("input[name='subbox']:checked");
-	if(ids.length == 0){
-		$.messager.alert('消息提醒','请选择要删除的商品包。');
-		return;
-	}else{
-		var idStr = "";
-		for(var i = 0; i < ids.length; i ++){
-			idStr += $(ids[i]).val() + ",";
-		}
-		var url = basePath+"/admin/productSku/batchDelete";
-		var loadData = {"idStr":idStr};
-		$.post(url,loadData,commonCallback,"text");
-		refreshList();
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-function editPermissions(id){
-	var url = basePath+"/admin/role/permissions";
-	var loadData={"roleId":id};
-	$("#rightform").load(url,loadData);
-	showForm();
-}
-
-function savePermissions(){
-	var url = basePath+"/admin/role/savepermission";
-	var nodes = $('#permissionForm #menuTree').tree('getChecked');
-	var s = '';
-	for(var i=0; i<nodes.length; i++){
-		if(nodes[i].id>0){
-			if (s != '') {s += ',';}
-			s += nodes[i].id;
+function selectedSkus(){
+	var skuIdStr = "";
+	var idLabels = $("#selectedSkuDiv").find("label");
+	for(var i = 0; i < idLabels.length; i ++){
+		var skuId = $(idLabels[i]).attr("theId");
+		skuIdStr = skuIdStr + skuId;
+		if(i < idLabels.length - 1){
+			skuIdStr = skuIdStr + ",";
 		}
 	}
-	var roleId = $("#permissionForm #roleId").val();
-	if(roleId==""||roleId==undefined){
-		$.messager.alert('消息提醒','角色未选择，请重新操作!');
-		return ;
-	}
-	var postData = {"id":roleId,"menuIds":s};
-	$.post(url,postData,savePermissionsCallback,"text");
+	var str = $("#skuIdStrInput").val();
+	str = str + "," + skuIdStr
+	$("#skuIdStrInput").val(str);
+	$('#pskuswindow').window('close');
+	flushSkuShow();
 }
 
-function savePermissionsCallback(data){
-	var result = eval("("+data+")");
-	if(result.code==1){
-		$.messager.alert('消息提醒','权限保存成功。');
-	}else{
-	  $.messager.alert('消息提醒','权限保存失败!');
-	}
+// 展示商品包的货品
+function flushSkuShow(){
+	removeSkuIdStrBlank();
+	var skuIdStr = $("#skuIdStrInput").val();
+	var loadData = {'skuIdStr': skuIdStr};
+	var url = basePath+"/admin/productPackage/skuShow";
+	$("#skusTr").load(url,loadData);
 }
+
+// 点击图片删除skuid
+function removeSkuId(theSkuImg){
+	var skuId = $(theSkuImg).attr("skuId");
+	$(theSkuImg).remove();
+	var skuIdStr = $("#skuIdStrInput").val();
+	skuIdStr = skuIdStr.replace(skuId ,"");
+	removeSkuIdStrBlank();
+	$("#skuIdStrInput").val(skuIdStr);
+}
+
+// 去掉skuIdStrInput中的空字符串
+function removeSkuIdStrBlank(){
+	var skuIdStr = $("#skuIdStrInput").val();
+	var skuIdArrayWithBlank =  skuIdStr.split(",");
+	var str = "";
+	for(var i = 0; i < skuIdArrayWithBlank.length; i ++){
+		if(skuIdArrayWithBlank[i] != ""){
+			str = str + skuIdArrayWithBlank[i];
+			if(i < skuIdArrayWithBlank.length - 1){
+				str = str + ",";
+			}
+		}
+	}
+	$("#skuIdStrInput").val(str);
+}
+
 

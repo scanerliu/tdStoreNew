@@ -24,15 +24,15 @@ public class TdProduct {
 
 	private Integer brandId;
 
-	private Integer typeId;
+	private Integer typeId = 0;
 
 	private Integer uid;
 
-	private Boolean specification;
+	private Boolean specification = false;
 	
-	private Boolean onshelf;
+	private Boolean onshelf = false;
 
-	private Byte status;
+	private Byte status = 1;
 
 	private String keyword;
 

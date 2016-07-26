@@ -22,11 +22,13 @@
   
   <resultMap id="productResult" type="com.tiandu.product.entity.TdProduct" >
   	<result column="p_name" property="name" jdbcType="VARCHAR" />
+  	<result column="p_imgurl" property="imageUrl" jdbcType="VARCHAR" />
   	<result column="p_kind" property="kind" jdbcType="VARCHAR" />
   	<result column="p_uid" property="uid" jdbcType="VARCHAR" />
   	<result column="p_postage" property="postage" jdbcType="DECIMAL" />
   	<result column="p_status" property="status" jdbcType="TINYINT" />
   	<result column="p_onshelf" property="onshelf" jdbcType="BIT" />
+  	<result column="p_price" property="price" jdbcType="DECIMAL" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -42,7 +44,7 @@
   <select id="selectByPrimaryKeyWithProduct" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    ,p.kind as p_kind, p.uid as p_uid, p.name as p_name, p.postage as p_postage, p.status as p_status, p.onshelf as p_onshelf
+    ,p.image_url as p_imgurl, p.kind as p_kind, p.uid as p_uid, p.name as p_name, p.postage as p_postage, p.status as p_status, p.onshelf as p_onshelf, p.price as p_price 
     from td_product_sku s left join td_product p on s.product_id = p.id
     where s.id = #{id,jdbcType=INTEGER}
   </select>
@@ -232,7 +234,7 @@
 	  <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.custom.search.TdAgentSearchCriteria" >
 	    select 
 	    <include refid="Base_Column_List" />
-	    ,p.kind as p_kind, p.uid as p_uid, p.name as p_name, p.postage as p_postage, p.status as p_status, p.onshelf as p_onshelf
+	    ,p.image_url as p_imgurl, p.kind as p_kind, p.uid as p_uid, p.name as p_name, p.postage as p_postage, p.status as p_status, p.onshelf as p_onshelf, p.price as p_price
 	    from td_product_sku as s
 	    left join td_product p on s.product_id= p.id
 	    where 1=1 

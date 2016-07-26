@@ -58,6 +58,9 @@ public class TdProductSkuServiceImpl implements TdProductSkuService{
 
 	@Override
 	public List<TdProductSku> findBySearchCriteria(TdProductSkuCriteria sc) {
+		if(sc.getProductName() != null && sc.getProductName().equals("")){
+			sc.setProductName(null);
+		}
 		Integer count = tdProductSkuMapper.countByCriteria(sc);
 		sc.setTotalCount(count);
 		List<TdProductSku> skuList = tdProductSkuMapper.findBySearchCriteria(sc);

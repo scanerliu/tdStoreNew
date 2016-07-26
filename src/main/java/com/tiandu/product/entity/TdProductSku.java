@@ -187,6 +187,29 @@ public class TdProductSku {
 	public void setSpecialList(List<SkuSpecialVO> specialList) {
 		this.specialList = specialList;
 	}
+	
+	public String getStatusStr(){
+		if(this.getStatus().equals(Byte.valueOf("1"))){
+			return "已上架";
+		}else{
+			return "已下架";
+		}
+	}
+	
+	public String getSpecStr(){
+		String specStr = "";
+		List<SkuSpecialVO> slist = this.getSpecialList();
+		if(slist == null){
+			return specStr;
+		}
+		for(int i = 0; i < slist.size(); i ++){
+			specStr += "["+slist.get(i).getSname() + ":" + slist.get(i).getSoption() +"]";
+			if(i < slist.size() - 1){
+				specStr += "，";
+			}
+		}
+		return specStr;
+	}
     
     
 }
