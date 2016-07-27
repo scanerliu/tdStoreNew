@@ -21,6 +21,8 @@ public class TdExperienceStoreSearchCriteria extends SearchCriteria {
 	
 	private Integer provinceId;	//省id
 	private Integer cityId;	//市id
+	
+	private Integer productTypeId; //商品分类id
 
 	public Integer getId() {
 		return id;
@@ -86,7 +88,13 @@ public class TdExperienceStoreSearchCriteria extends SearchCriteria {
 		this.cityId = cityId;
 	}
 
-	
-	
+	public Integer getProductTypeId() {
+		return productTypeId;
+	}
+
+	public void setProductTypeId(Integer productTypeId) {
+		this.productTypeId = productTypeId;
+	}
+
 
 }

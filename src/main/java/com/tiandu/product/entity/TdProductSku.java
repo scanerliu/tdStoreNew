@@ -176,7 +176,7 @@ public class TdProductSku {
 					slist.add(special);						
 				}
 				this.setSpecialList(slist);
-			} catch (JSONException e) {
+			} catch (Exception e) {
 				
 				e.printStackTrace();
 			}
