@@ -1,6 +1,7 @@
 package com.tiandu.custom.service.impl;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,11 +27,13 @@ public class TdUserAccountServiceImpl implements TdUserAccountService {
 
 	@Override
 	public int insert(TdUserAccount u) {
+		u.setUpdateTime(new Date());
 		return tdUserAccountMapper.insert(u);
 	}
 
 	@Override
 	public int updateByPrimaryKeySelective(TdUserAccount record) {
+		record.setUpdateTime(new Date());
 		return tdUserAccountMapper.updateByPrimaryKeySelective(record);
 	}
 

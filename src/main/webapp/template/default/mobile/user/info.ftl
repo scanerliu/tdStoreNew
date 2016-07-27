@@ -135,8 +135,8 @@
 		</li>
 		<li class="li02">
 			<font>手机号码</font>
-			<a class="inp-phone-num" href="#" title="修改手机号">
-				<input name="utel" type="text" value="${currentUser.utel!''}">
+			<a class="inp-phone-num" href="${app.basePath}/mobile/user/changePhoneNum" title="修改手机号">
+				<label>${currentUser.utel!''}</label>
 				<span></span>
 			</a>
 		</li>
