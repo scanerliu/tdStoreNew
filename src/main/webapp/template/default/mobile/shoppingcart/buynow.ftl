@@ -59,7 +59,7 @@
 	    <#if shoppingcart?? && shoppingcart.itemList??>
         	<#list shoppingcart.itemList as item>
 	        <li class="goods_box p">
-	            <img alt="图片" src="${app.basePath} <#if item.product??>${item.product.imageUrl!''}</#if>"/>
+	            <img alt="图片" src="${app.basePath}<#if item.product??>${item.product.imageUrl!''}</#if>"/>
 	            <section>
 	                <h3>${item.product.name!''}</h3>
 	                <div>
