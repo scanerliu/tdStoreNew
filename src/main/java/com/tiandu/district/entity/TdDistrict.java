@@ -92,6 +92,20 @@ public class TdDistrict {
     	}
     	return null;
     }
+    /**
+     * 获取地区的省份直辖市
+     * @return
+     */
+    public TdDistrict getRegionProvince(){
+    	if(null!=this.getParent()){
+    		if(this.getParent().getUpid()==0){
+    			return this.getParent();
+    		}else if(null!=this.getParent().getParent()){
+    			return this.getParent().getParent();
+    		}
+    	}
+    	return null;
+    }
     
     /**
      * 获取地区的path,如：[2][12]
@@ -120,5 +134,24 @@ public class TdDistrict {
     		}
     	}
     	return null;
+    }
+    
+    /**
+     *是否代理 区
+     * @return
+     */
+    public Boolean isAgentRegion(){
+    	if(null!=this.getParent()){
+    		if(this.getParent().getUpid()==0){
+    			if(this.getParent().gentralCity()){
+    				return true;
+    			}
+    		}else{
+    			return true;
+    		}
+    	}else if(null!=this.getUpid() && this.getUpid()==0){
+    		return true;
+    	}
+    	return false;
     }
 }

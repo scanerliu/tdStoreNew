@@ -2,6 +2,8 @@ package com.tiandu.custom.entity.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.tiandu.custom.entity.TdAgent;
 import com.tiandu.custom.search.TdAgentSearchCriteria;
 
@@ -22,4 +24,6 @@ public interface TdAgentMapper {
     public List<TdAgent> findBySearchCriteria(TdAgentSearchCriteria sc);
 
 	TdAgent findByUid(Integer uid);
+
+	public TdAgent findByTypeIdAndRegionId(@Param("productTypeId") Integer productTypeId, @Param("regionId") Integer regionId);
 }
