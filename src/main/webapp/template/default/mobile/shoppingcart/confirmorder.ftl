@@ -133,11 +133,11 @@
 </form>
 	<!-- Footer Start -->
 	<footer>
-	    <div class="gopay">
+	    <div class="gopay" onclick="genernateOrder()">
 	        <span class="totalprice">总计：<font color="red" id="totalAmountdv">￥${shoppingcart.totalAmount!''}</font></span>
 	        <a href="javascript:;" onclick="genernateOrder()" class="a-pay" title="">提交订单</a>
 	    </div>
-	    <span class="footclear"></span>
+	    <span class="footclear" onclick="genernateOrder()"></span>
 	</footer>
 	<!-- Footer End -->
 <script>

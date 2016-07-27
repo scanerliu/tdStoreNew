@@ -10,7 +10,7 @@ function changeProductSku(skus){
 		var sected = $(this).find("li[class='active']");
 		if(sected.length==0){
 			selected = false;
-			return;
+			return false;
 		}else{
 			idkey = idkey+"_"+sected.text();
 		}
@@ -36,6 +36,7 @@ function changeProductSku(skus){
 			price = o.salesPrice;
 			stock = o.stock;
 			skuId = o.id;
+			return false;
 		}
 	});
 	if(exist){

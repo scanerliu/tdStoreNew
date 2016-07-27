@@ -415,6 +415,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 			sku.setProductSkuId(item.getProductSkuId());
 			sku.setProductId(item.getProductId());
 			sku.setPrice(item.getProductSku().getSalesPrice());
+			sku.setSupplierPrice(item.getProductSku().getSupplierPrice());
 			sku.setProductName(item.getProduct().getName());
 			sku.setProductSkuCode(item.getProductSku().getSkuCode());
 			sku.setQuantity(item.getQuantity());
@@ -589,6 +590,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 		orderproduct.setItemType(Byte.valueOf("1"));
 		orderproduct.setItemId(orderForm.getAgentProductId());
 		orderproduct.setItemPrice(shoppingcart.getAgentProduct().getSalesPrice());
+		orderproduct.setSupplierPrice(shoppingcart.getAgentProduct().getSupplierPrice());
 		orderproduct.setRegionId(agent.getRegionId());
 		orderproduct.setLevel(agent.getLevel());
 		orderproduct.setQuantity(1);
@@ -606,6 +608,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 				sku.setProductSkuId(item.getProductSkuId());
 				sku.setProductId(item.getProductId());
 				sku.setPrice(item.getProductSku().getSalesPrice());
+				sku.setSupplierPrice(item.getProductSku().getSupplierPrice());
 				sku.setProductName(item.getProduct().getName());
 				sku.setProductSkuCode(item.getProductSku().getSkuCode());
 				sku.setQuantity(item.getQuantity());
@@ -686,6 +689,12 @@ public class TdOrderServiceImpl implements TdOrderService{
 		orderproduct.setRegionId(branch.getRegionId());
 		orderproduct.setLevel(branch.getLevel());
 		orderproduct.setOrderId(order.getOrderId());
+		orderproduct.setItemType(Byte.valueOf("1"));
+		orderproduct.setItemId(orderForm.getAgentProductId());
+		orderproduct.setItemPrice(shoppingcart.getAgentProduct().getSalesPrice());
+		orderproduct.setSupplierPrice(shoppingcart.getAgentProduct().getSupplierPrice());
+		orderproduct.setQuantity(1);
+		orderproduct.setTitle(shoppingcart.getAgentProduct().getTitle());
 		tdOrderProductMapper.insert(orderproduct);
 		return order;
 	}
