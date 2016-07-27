@@ -1,5 +1,6 @@
 <#import "/common/app.ftl" as app>
 <#include "/common/common.ftl" />
+<script src="${app.basePath}/static/js/easyui/easyui-lang-zh_CN.js" type="text/javascript"></script>
 <script src="${app.basePath}/static/js/admin/productPackage/productPackage.js" type="text/javascript"></script>
 <script src="${app.basePath}/static/js/admin/productPackage/productSku.js" type="text/javascript"></script>
 <div id="rightlist">

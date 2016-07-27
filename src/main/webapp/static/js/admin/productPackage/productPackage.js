@@ -53,7 +53,7 @@ function delProductPackage(id){
 	$.messager.confirm('消息提醒', '确定要删掉该商品包吗?', function(r){
 		if (r){
 			var url = basePath+"/admin/productPackage/delete";
-			var loadData={"id":id};
+			var loadData={"idStr":id};
 			$.post(url,loadData,commonCallback,"text");
 		}
 	});

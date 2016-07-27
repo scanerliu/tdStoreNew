@@ -346,6 +346,14 @@ public class MUserController extends BaseController {
 		return "/mobile/user/changePassword";		
 	}
 	
+	/*
+	 * 修改手机号
+	 */
+	@RequestMapping("/changePhoneNum")
+	public String changePhoneNum(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		return "/mobile/user/changePhoneNum";		
+	}
+	
 	/**
 	 * 收货地址
 	 * @param request

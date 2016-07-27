@@ -69,3 +69,30 @@ function waitSeconds(o) {
         }, 1000);
     }
 }
+
+
+//验证码
+var pwait=60;
+function waitSecondsForPhoneNum(o) {
+    if (pwait == 0) {
+    	// 为获取验证按钮绑定获取验证码事件
+		$("#getChangePhoneNumValidCode").bind("click", function(){
+			var url = basePath+"/mobile/user/getChangePhoneNumValidCode";
+			alert("发送");
+			//$.post(url, commonCallback, "text");
+		});
+		// 为获取验证按钮绑定等待60秒事件
+		$("#getChangePhoneNumValidCode").bind("click", function(){
+			waitSeconds($("#getChangePhoneNumValidCode"));
+		});
+    	o.text("获取验证码");
+        pwait = 60;
+    } else {
+    	$('#getChangePhoneNumValidCode').unbind("click");
+        o.text("重新发送(" + wait + ")");
+        pwait--;
+        setTimeout(function() {
+        	waitSeconds(o)
+        }, 1000);
+    }
+}
