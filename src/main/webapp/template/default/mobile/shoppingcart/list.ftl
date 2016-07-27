@@ -50,7 +50,7 @@
         	<#list shoppingcart.itemList as item>
           <li>
             <section class="div1"><input type="checkbox" name="ids" class="" value="${item.id}"></section>
-            <section class="div2"><a href="javascript:;" title="" class="aimg"><img src="${app.basePath} <#if item.product??>${item.product.imageUrl!''}</#if>" alt="商品图片"></a></section>
+            <section class="div2"><a href="javascript:;" title="" class="aimg"><img src="${app.basePath}<#if item.product??>${item.product.imageUrl!''}</#if>" alt="商品图片"></a></section>
             <section class="div3">
               <section class="sec1">${item.product.name!''}</section>
               <section class="sec2">
