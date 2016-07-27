@@ -28,6 +28,7 @@
   <resultMap id="productSkuResult" type="com.tiandu.product.entity.TdProductSku" >
   	<result column="p_specifications" property="specifications" jdbcType="VARCHAR" />
   	<result column="p_salesPrice" property="salesPrice" jdbcType="DECIMAL" />
+  	<result column="p_supplierPrice" property="supplierPrice" jdbcType="DECIMAL" />
   	<result column="p_stock" property="stock" jdbcType="INTEGER" />
   </resultMap>
   
@@ -58,7 +59,7 @@
     select 
     <include refid="Base_Column_List" />
     ,p.kind as p_kind, p.uid as p_uid, p.name as p_name, p.postage as p_postage, p.image_url as p_image, p.status as p_status, p.onshelf as p_onshelf
-    , k.specifications as p_specifications, k.sales_price as p_salesPrice, k.stock as p_stock
+    , k.specifications as p_specifications, k.sales_price as p_salesPrice, k.stock as p_stock, k.supplier_price as p_supplierPrice
     from td_shoppingcart_item s left join td_product p on s.product_id = p.id left join td_product_sku k on s.product_sku_id = k.id
     where 1=1 
     <if test="uid != null" >

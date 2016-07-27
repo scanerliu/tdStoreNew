@@ -499,6 +499,7 @@ public class MShoppingcartController extends BaseController {
 		Integer commonproductpointpercent = configUtil.getCommonProductPointPercent(); //普通商品可积分抵扣的比例
 		Integer partproductpointpercent = configUtil.getPartProductPointPercent(); //部分积分兑换商品可积分抵扣的比例
 		ShoppingcartVO cart = new ShoppingcartVO();
+		cart.setPtype(1);
 		//重新计算
 		TdShoppingcartSearchCriteria sc = new TdShoppingcartSearchCriteria();
 		sc.setFlag(false);
