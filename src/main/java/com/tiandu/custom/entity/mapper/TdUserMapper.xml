@@ -50,7 +50,7 @@
     a.uprovince_id, a.uregion_path, a.uaddress, a.ubirthday, a.ugenter, a.membership_id, a.supplier_type
   </sql>
   <sql id="Base_Role_Column_List" >
-    SELECT u.uid, u.uavatar, u.unick, u.utel, u.supplier_type ,u.ugenter, u.uparent_id, u.ubirthday, u.joint_id, u.membership_id, u.uname,u.upassword,r.id as ROLE_ID, r.name as ROLE_NAME, m.id as MENU_ID, m.action_name as PERMISSION_NAME  
+    SELECT u.uid, u.uregion_id, u.uavatar, u.unick, u.utel, u.supplier_type ,u.ugenter, u.uparent_id, u.ubirthday, u.joint_id, u.membership_id, u.uname,u.upassword,r.id as ROLE_ID, r.name as ROLE_NAME, m.id as MENU_ID, m.action_name as PERMISSION_NAME  
 	FROM td_user as u left join td_user_role as ru on ru.uid=u.uid  left join td_role as r on r.id=ru.rid left join td_role_permission as pr on r.id = pr.rid left join td_menu as m on  m.id = pr.pid 
   </sql>
   

@@ -175,5 +175,13 @@ public class TdOrderSku {
 	public void setSpecialList(List<SkuSpecialVO> specialList) {
 		this.specialList = specialList;
 	}
+	
+	public BigDecimal getBenefitAmount(){
+		if(null!=this.getPrice() && null!=this.getSupplierPrice() && null!=this.getQuantity() && null!=this.getBackQuantity() && this.getPrice().compareTo(this.getSupplierPrice())>0){
+			int quantity = this.getQuantity()-this.getBackQuantity();
+			return this.getPrice().subtract(this.getSupplierPrice()).multiply(new BigDecimal(quantity));
+		}
+		return BigDecimal.ZERO;
+	}
     
 }
