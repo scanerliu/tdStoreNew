@@ -329,6 +329,24 @@ public class TdProduct {
     	
     	return sb.toString();
     }
+    
+    public String getKindStr(){
+    	//商品类型,1-普通商品，2-商品包，3-零元购，4-10元购，5-预售，6-秒杀商品
+    	if(this.getKind().equals(Byte.valueOf("1"))){
+    		return "普通商品";
+    	}else if(this.getKind().equals(Byte.valueOf("2"))){
+    		return "商品包";
+    	}else if(this.getKind().equals(Byte.valueOf("3"))){
+    		return "零元购";
+    	}else if(this.getKind().equals(Byte.valueOf("4"))){
+    		return "10元购";
+    	}else if(this.getKind().equals(Byte.valueOf("5"))){
+    		return "预售";
+    	}else{
+    		return "秒杀商品";
+    	}
+    }
+    
     /**
      * 获取上架状态文字说明
      * @return
