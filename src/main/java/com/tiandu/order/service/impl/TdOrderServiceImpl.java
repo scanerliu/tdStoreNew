@@ -724,7 +724,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 	}
 
 	@Override
-	public OperResult applyRefundOrder(TdOrder order, TdOrderShipment shipment) {
+	public OperResult applyRefundOrder(TdOrder order, TdOrderShipment shipment,Integer skuId) {
 		OperResult result = new OperResult();
 		if(order.getPayAmount().subtract(order.getRefundAmount()).compareTo(shipment.getReturnAmount())>=0){
 			Date now = new Date();
@@ -734,7 +734,26 @@ public class TdOrderServiceImpl implements TdOrderService{
 			shipment.setUpdateBy(order.getUserId());
 			shipment.setCreateTime(now);
 			shipment.setUpdateTime(now);
+			shipment.setSupplyId(order.getSupplierId());
 			tdOrderShipmentMapper.insert(shipment);
+			
+			/**
+			 * 添加退款详情  Max
+			 */
+			List<TdOrderShipmentItem> itemList = new ArrayList<TdOrderShipmentItem>();
+			TdOrderSku sku = tdOrderSkuMapper.selectByPrimaryKey(skuId);
+			if(null != sku){
+				TdOrderShipmentItem item = new TdOrderShipmentItem();
+				item.setOrderSkuId(sku.getOrderSkuId());
+				item.setQuantity(sku.getQuantity());
+				item.setShipmentId(shipment.getId());
+				itemList.add(item);
+				shipment.setItemList(itemList);
+				tdOrderShipmentItemMapper.insertOrderShipmentItems(shipment);
+			}
+			order.setOrderStatus((byte)5); // 订单状态改为申请退货
+			this.save(order);
+			
 			result.setFlag(true);
 			result.setFailMsg("退款申请成功，请等待商户确认。");
 		}else{
