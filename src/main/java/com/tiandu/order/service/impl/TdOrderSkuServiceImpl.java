@@ -25,6 +25,10 @@ public class TdOrderSkuServiceImpl implements TdOrderSkuService{
 	@Autowired
 	private TdOrderSkuMapper tdOrderSkuMapper;
 	
+	@Override
+	public TdOrderSku findOne(Integer id) {
+		return tdOrderSkuMapper.selectByPrimaryKey(id);
+	}
 
 	@Override
 	public List<TdOrderSku> findBySearchCriteria(TdOrderSkuSearchCriteria sc) {

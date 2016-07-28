@@ -47,6 +47,10 @@ public class TdOrderShipment {
      * 订单信息（查询退货订单时使用）
      */
     private TdOrder order;
+    
+    private Integer supplyId;
+    
+    private String remark;
 
     public Integer getId() {
         return id;
@@ -199,5 +203,22 @@ public class TdOrderShipment {
 	public void setItemList(List<TdOrderShipmentItem> itemList) {
 		this.itemList = itemList;
 	}
+
+	public Integer getSupplyId() {
+		return supplyId;
+	}
+
+	public void setSupplyId(Integer supplyId) {
+		this.supplyId = supplyId;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
     
 }

@@ -24,4 +24,11 @@ public interface TdAgentService {
 	 * @return
 	 */
 	public TdAgent findByUid(Integer uid);
+	/**
+	 * 根据商品分类和地区id查找代理
+	 * @param productTypeId
+	 * @param regionId
+	 * @return
+	 */
+	public TdAgent findByTypeIdAndRegionId(Integer productTypeId, Integer regionId);
 }

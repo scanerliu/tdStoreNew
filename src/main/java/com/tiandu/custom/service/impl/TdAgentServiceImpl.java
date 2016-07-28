@@ -88,5 +88,10 @@ public class TdAgentServiceImpl implements TdAgentService {
 		return agentMapper.findByUid(uid);
 	}
 
+	@Override
+	public TdAgent findByTypeIdAndRegionId(Integer productTypeId, Integer regionId) {
+		return agentMapper.findByTypeIdAndRegionId(productTypeId, regionId);
+	}
+
 	
 }

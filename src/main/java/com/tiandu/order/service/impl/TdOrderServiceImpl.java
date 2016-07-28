@@ -59,7 +59,9 @@ import com.tiandu.order.vo.OrderPay;
 import com.tiandu.order.vo.OrderRefund;
 import com.tiandu.order.vo.ShoppingcartVO;
 import com.tiandu.product.entity.TdAgentProduct;
+import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.service.TdAgentProductService;
+import com.tiandu.product.service.TdProductService;
 import com.tiandu.system.entity.TdBenefit;
 import com.tiandu.system.search.TdBenefitSearchCriteria;
 import com.tiandu.system.service.TdBenefitService;
@@ -111,6 +113,8 @@ public class TdOrderServiceImpl implements TdOrderService{
 	private TdDistrictService tdDistrictService;
 	@Autowired
 	private TdExperienceStoreService tdExperienceStoreService;
+	@Autowired
+	private TdProductService tdProductService;
 	
 	@Autowired
 	private ConfigUtil configUtil;
@@ -705,7 +709,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 	}
 
 	@Override
-	public OperResult applyRefundOrder(TdOrder order, TdOrderShipment shipment) {
+	public OperResult applyRefundOrder(TdOrder order, TdOrderShipment shipment,Integer skuId) {
 		OperResult result = new OperResult();
 		if(order.getPayAmount().subtract(order.getRefundAmount()).compareTo(shipment.getReturnAmount())>=0){
 			Date now = new Date();
@@ -715,7 +719,26 @@ public class TdOrderServiceImpl implements TdOrderService{
 			shipment.setUpdateBy(order.getUserId());
 			shipment.setCreateTime(now);
 			shipment.setUpdateTime(now);
+			shipment.setSupplyId(order.getSupplierId());
 			tdOrderShipmentMapper.insert(shipment);
+			
+			/**
+			 * 添加退款详情  Max
+			 */
+			List<TdOrderShipmentItem> itemList = new ArrayList<TdOrderShipmentItem>();
+			TdOrderSku sku = tdOrderSkuMapper.selectByPrimaryKey(skuId);
+			if(null != sku){
+				TdOrderShipmentItem item = new TdOrderShipmentItem();
+				item.setOrderSkuId(sku.getOrderSkuId());
+				item.setQuantity(sku.getQuantity());
+				item.setShipmentId(shipment.getId());
+				itemList.add(item);
+				shipment.setItemList(itemList);
+				tdOrderShipmentItemMapper.insertOrderShipmentItems(shipment);
+			}
+			order.setOrderStatus((byte)5); // 订单状态改为申请退货
+			this.save(order);
+			
 			result.setFlag(true);
 			result.setFailMsg("退款申请成功，请等待商户确认。");
 		}else{
@@ -1051,10 +1074,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 								}
 							}
 							//单类代理分润
-							//displayAgentBenefit(amount,order, orderProduct, benefitList, 3, now);
-							if(null!=orderProduct.getProductTypeId()){
-								
-							}
+							displayAgentBenefit(amount, order, orderProduct, benefitList, 3, now);
 							//三级分销分润
 							displayDistributionBenefit(amount, order, orderUser, benefitList, 3, now);
 						}
@@ -1067,12 +1087,94 @@ public class TdOrderServiceImpl implements TdOrderService{
 					//}
 				}
 			}else if(ConstantsUtils.ORDER_KIND_COMMON.equals(order.getOrderType())){//普通商品分润
-				
+				//普通商品分润设置
+				TdBenefitSearchCriteria sc = new TdBenefitSearchCriteria();
+				sc.setFlag(false);
+				sc.setTypeId(8);
+				List<TdBenefit> benefitList = tdBenefitService.findBySearchCriteria(sc);
+				//分公司分润
+				List<TdOrderSku> orderSkuList = order.getSkuList();
+				if(null!=orderSkuList && orderSkuList.size()>0){
+					for(TdOrderSku ordersku : orderSkuList){
+						if(BigDecimal.ZERO.compareTo(ordersku.getBenefitAmount())<0){//有利润空间才分润
+							BigDecimal amount = ordersku.getBenefitAmount();
+							TdProduct product = tdProductService.findOne(ordersku.getProductId());
+							if(null!=product){
+								
+							}
+						}
+					}
+				}
 			}
 		}
 		
 	}
+	/**
+	 *  普通商品分公司分润
+	 * @param amount
+	 * @param order
+	 * @param benefitList
+	 * @param size
+	 * @param now
+	 */
+	private void displayCommonProductBranchBenefit(BigDecimal amount, TdOrder order, List<TdBenefit> benefitList, int size, Date now){
+		if(null!=benefitList && benefitList.size()>0){
+			TdUser orderUser = tdUserService.findOneWithAccount(order.getUserId());
+			if(null==orderUser||null==orderUser.getUregionId()){
+				//订单操作日志
+				TdOrderLog log3 = new TdOrderLog();
+				log3.setOrderId(order.getOrderId());
+				log3.setCreateBy(1);
+				log3.setCreateTime(now);
+				log3.setOperType(ConstantsUtils.ORDER_LOG_TYPE_BENEFIT);
+				log3.setNote("订单进行分润操作失败:订单用户信息不全。");
+				tdOrderLogMapper.insert(log3);
+			}
+			TdDistrict district = tdDistrictService.findOneFull(orderUser.getUregionId());
+			if(null!=district){//地区分公司分润
+				for(int i=0; i<size; i++){
+					int level = i+1;
+					//分销设置
+					TdBenefit  benefit = this.getBenefitConfig(benefitList, ConstantsUtils.AGENT_GROUPID_BRANCH, level);
+					if(null==benefit){
+						logger.error("分公司分润操作错误：分公司分润级别"+level+"设置未找到，");
+						continue;
+					}
+					if(level==1){//分公司第一级为平台
+						String note = "";
+						TdUserAccount account = tdUserAccountService.findOne(1);
+						saveBenefit(account, amount, order, benefit, now, note);								
+					}else{
+						TdBrancheCompanySearchCriteria bsc = new TdBrancheCompanySearchCriteria();
+						bsc.setLevel(level);
+						bsc.setRegionId(district.getId());
+						bsc.setFlag(false);
+						List<TdBrancheCompany> branchList = tdBrancheCompanyService.findBySearchCriteria(bsc);
+						if(null!= branchList && branchList.size()>0){
+							String note = "";
+							TdBrancheCompany branch = branchList.get(0);
+							TdUserAccount account = tdUserAccountService.findOne(branch.getUid());
+							saveBenefit(account, amount, order, benefit, now, note);
+						}else{//未找到分公司，分润转给平台
+							String note = "";
+							TdUserAccount account = tdUserAccountService.findOne(1);
+							saveBenefit(account, amount, order, benefit, now, note);								
+						}
+					}
+				}
+			}
+		}
+	}
 
+	/**
+	 * 代理产品代理分润
+	 * @param amount
+	 * @param order
+	 * @param orderProduct
+	 * @param benefitList
+	 * @param size
+	 * @param now
+	 */
 	private void displayAgentBenefit(BigDecimal amount, TdOrder order, TdOrderProduct orderProduct, List<TdBenefit> benefitList, int size, Date now) {
 		TdDistrict district = null;
 		if(orderProduct.getRegionId()>0){
@@ -1092,31 +1194,85 @@ public class TdOrderServiceImpl implements TdOrderService{
 				String note = "代理产品没有分类，故没有"+level+"级分销 ,分润划归归平台";
 				saveBenefit(account, amount, order, benefit, now, note);
 			}else{
-				/*TdAgent agent = tdAgentService.findByTypeIdAndRegionId(sc)
-				if(>0){//上级分销用户id 存在
-					TdUser buser = tdUserService.findOneWithAccount(userId);
+				//代理分润
+				saveAgentBenefit(amount, order, orderProduct, benefit, district, now);
+			}
+		}
+		
+	}
+	/**
+	 * 代理分润
+	 * @param amount
+	 * @param order
+	 * @param orderProduct
+	 * @param benefit
+	 * @param district
+	 * @param now
+	 */
+	private void saveAgentBenefit(BigDecimal amount, TdOrder order, TdOrderProduct orderProduct, TdBenefit benefit, TdDistrict district, Date now){
+		if(null==orderProduct.getProductTypeId()){//不存在代理分类，购买分公司时，代理归平台所有
+			TdUserAccount account = tdUserAccountService.findOne(1);
+			//分润
+			String note = "代理产品没有分类，故没有"+benefit.getLevel()+"级分销代理 ,分润划归归平台";
+			saveBenefit(account, amount, order, benefit, now, note);
+		}else if(orderProduct.getLevel()>=benefit.getLevel()){//购买产品级别比分润级别大和相等时，分润归平台
+			TdUserAccount account = tdUserAccountService.findOne(1);
+			//分润
+			String note = "购买产品级别为"+orderProduct.getLevel()+" ，大于等于分润级别"+benefit.getLevel()+" ,分润划归归平台";
+			saveBenefit(account, amount, order, benefit, now, note);
+		}else{
+			if(benefit.getLevel()==1){//全国单代分润
+				TdAgent agent = tdAgentService.findByTypeIdAndRegionId(orderProduct.getProductTypeId(), 0);
+				if(agent !=null){//上级分销用户id 存在
+					TdUser buser = tdUserService.findOneWithAccount(agent.getUid());
 					if(null!=buser && null!=buser.getUserAccount()){
-						userId = buser.getUparentId();
 						TdUserAccount account = buser.getUserAccount();
 						//分润
 						String note = "";
 						saveBenefit(account, amount, order, benefit, now, note);
-					}else{//未找到分公司，分润转给平台
-						userId = 0;
+					}else{//未找到代理，分润转给平台
 						TdUserAccount account = tdUserAccountService.findOne(1);
 						//分润
-						String note = "未找到"+level+"级分销  ，当前用户userid="+user.getUid()+" ,分润划归归平台";
+						String note = "未找到全国代理  ，当前分类id="+orderProduct.getProductTypeId()+" ,分润划归归平台";
 						saveBenefit(account, amount, order, benefit, now, note);
 					}
-				}else{//上级分销用户id 不存在
+				}else{//全国单代分润不存在
 					TdUserAccount account = tdUserAccountService.findOne(1);
 					//分润
-					String note = "未找到"+level+"级分销  ,当前用户userid="+user.getUid()+" ,分润划归归平台";
+					String note = "未找到全国代理  ，当前分类id="+orderProduct.getProductTypeId()+" ,分润划归归平台";
 					saveBenefit(account, amount, order, benefit, now, note);
-				}*/
+				}
+			}else if(benefit.getLevel()==2){//省市单代分润
+				TdDistrict region = district.getRegionProvince();
+				if(null!=region){
+					TdAgent agent = tdAgentService.findByTypeIdAndRegionId(orderProduct.getProductTypeId(), 0);
+					if(agent !=null){//省市代理存在
+						TdUser buser = tdUserService.findOneWithAccount(agent.getUid());
+						if(null!=buser && null!=buser.getUserAccount()){
+							TdUserAccount account = buser.getUserAccount();
+							//分润
+							String note = "";
+							saveBenefit(account, amount, order, benefit, now, note);
+						}else{//未找到代理，分润转给平台
+							TdUserAccount account = tdUserAccountService.findOne(1);
+							//分润
+							String note = "未找到省市代理  ，当前分类id="+orderProduct.getProductTypeId()+" ,分润划归归平台";
+							saveBenefit(account, amount, order, benefit, now, note);
+						}
+					}else{//省市代理分润不存在
+						TdUserAccount account = tdUserAccountService.findOne(1);
+						//分润
+						String note = "未找到省市代理  ，当前分类id="+orderProduct.getProductTypeId()+" ,分润划归归平台";
+						saveBenefit(account, amount, order, benefit, now, note);
+					}
+				}else{//地区不存在
+					TdUserAccount account = tdUserAccountService.findOne(1);
+					//分润
+					String note = "未找到省市代理   ，分润划归归平台";
+					saveBenefit(account, amount, order, benefit, now, note);
+				}
 			}
 		}
-		
 	}
 
 	/**
