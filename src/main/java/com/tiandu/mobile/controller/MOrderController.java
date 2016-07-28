@@ -30,6 +30,7 @@ import com.tiandu.order.search.TdOrderShipmentSearchCriteria;
 import com.tiandu.order.service.TdOrderLogService;
 import com.tiandu.order.service.TdOrderService;
 import com.tiandu.order.service.TdOrderShipmentService;
+import com.tiandu.order.service.TdOrderSkuService;
 import com.tiandu.order.vo.OperResult;
 
 /**
@@ -54,6 +55,9 @@ public class MOrderController extends BaseController {
 	
 	@Autowired
 	private TdOrderLogService tdOrderLogService;
+	
+	@Autowired
+	private TdOrderSkuService tdOrderSkuService;
 	
 	@RequestMapping("/list")
 	public String list(TdOrderSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
@@ -110,7 +114,7 @@ public class MOrderController extends BaseController {
 	}
 	
 	@RequestMapping("/applyrefund{orderId}")
-	public String applyRefund(@PathVariable("orderId") Integer orderId, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	public String applyRefund(@PathVariable("orderId") Integer orderId,Integer skuId, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser currUser = this.getCurrentUser();
 		TdOrder order = null;
 		if(null!=orderId && orderId>0){
@@ -120,11 +124,12 @@ public class MOrderController extends BaseController {
 		    return "redirect:404";
 		}
 		modelMap.addAttribute("order", order) ;
+		modelMap.addAttribute("sku", tdOrderSkuService.findOne(skuId));
 		return "/mobile/order/applyrefund";
 	}
 	
 	@RequestMapping("/refund")
-	public String refund(TdOrderShipment shipment, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	public String refund(TdOrderShipment shipment,Integer skuId, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser currUser = this.getCurrentUser();
 		TdOrder order = null;
 		if(null!=shipment.getOrderId() && shipment.getOrderId()>0){
@@ -133,7 +138,7 @@ public class MOrderController extends BaseController {
 		if(null==order || !order.getUserId().equals(currUser.getUid())){
 		    return "redirect:404";
 		}
-		OperResult result = tdOrderService.applyRefundOrder(order, shipment);
+		OperResult result = tdOrderService.applyRefundOrder(order, shipment,skuId);
 		modelMap.addAttribute("result", result) ;
 		return "/mobile/order/refund";
 	}

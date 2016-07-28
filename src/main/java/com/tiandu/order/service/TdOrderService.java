@@ -63,7 +63,7 @@ public interface TdOrderService {
 	 * @param shipment
 	 * @return
 	 */
-	public OperResult applyRefundOrder(TdOrder order, TdOrderShipment shipment);
+	public OperResult applyRefundOrder(TdOrder order, TdOrderShipment shipment,Integer skuId);
 
 	/**
 	 * 投诉

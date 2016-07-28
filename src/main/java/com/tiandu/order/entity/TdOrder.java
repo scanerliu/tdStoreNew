@@ -81,7 +81,6 @@ public class TdOrder extends TdBaseEntity{
      */
     private List<TdOrderProduct> productList;
     
-
     public Integer getOrderId() {
         return orderId;
     }
@@ -321,7 +320,7 @@ public class TdOrder extends TdBaseEntity{
 	public void setProductList(List<TdOrderProduct> productList) {
 		this.productList = productList;
 	}
-
+	
 	/**
 	 * 获取订单未支付金额
 	 * @return
