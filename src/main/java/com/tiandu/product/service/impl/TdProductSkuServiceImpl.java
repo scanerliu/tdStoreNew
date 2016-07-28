@@ -66,5 +66,14 @@ public class TdProductSkuServiceImpl implements TdProductSkuService{
 		List<TdProductSku> skuList = tdProductSkuMapper.findBySearchCriteria(sc);
 		return skuList;
 	}
+
+	@Override
+	public int updateStock(Integer productSkuId, int num) {
+		TdProductSku sku = new TdProductSku(); 
+		sku.setId(productSkuId);
+		sku.setStock(num);
+		return tdProductSkuMapper.updateStock(sku);
+	}
+	
 	
 }

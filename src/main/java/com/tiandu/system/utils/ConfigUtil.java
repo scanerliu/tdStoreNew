@@ -228,5 +228,16 @@ public class ConfigUtil {
 	public Integer getOrderDeliveryIntegral(){
 		return getConfig("orderdeliveryintegral",0);
 	}
+	/**
+	 * 系统是否启用700元的单类代理领取商品包
+	 * @return
+	 */
+	public boolean isAgentProductUsePackage(){
+		Integer config = getConfig("integralexchangerate",2);
+		if(config.equals(1)){
+			return true;
+		}
+		return false;
+	}
 
 }

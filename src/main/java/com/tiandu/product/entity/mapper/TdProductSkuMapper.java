@@ -26,5 +26,11 @@ public interface TdProductSkuMapper {
     
     Integer countByCriteria(TdProductSkuCriteria sc);
     public List<TdProductSku> findBySearchCriteria(TdProductSkuCriteria sc);
+
+    /**
+	 * 更新货品库存
+	 * @return
+	 */
+	public int updateStock(TdProductSku record);
     
 }

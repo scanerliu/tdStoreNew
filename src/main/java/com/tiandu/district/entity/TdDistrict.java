@@ -93,6 +93,20 @@ public class TdDistrict {
     	return null;
     }
     /**
+     * 获取地区的省份直辖市名称
+     * @return
+     */
+    public String getRegionProvinceName(){
+    	if(null!=this.getParent()){
+    		if(this.getParent().getUpid()==0){
+    			return this.getParent().getName();
+    		}else if(null!=this.getParent().getParent()){
+    			return this.getParent().getParent().getName();
+    		}
+    	}
+    	return null;
+    }
+    /**
      * 获取地区的省份直辖市
      * @return
      */
