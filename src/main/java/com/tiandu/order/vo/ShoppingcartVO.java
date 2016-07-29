@@ -65,6 +65,11 @@ public class ShoppingcartVO {
 	private TdAgentProduct agentProduct;
 	
 	/**
+	 * 图片订单
+	 */
+	private ImageOrderVO imageOrder;
+	
+	/**
 	 * 购买类型1-普通商品，2-单代产品，3-供应商，4-图片订单
 	 */
 	private Integer ptype;
@@ -228,6 +233,14 @@ public class ShoppingcartVO {
 
 	public void setAgentProduct(TdAgentProduct agentProduct) {
 		this.agentProduct = agentProduct;
+	}
+
+	public ImageOrderVO getImageOrder() {
+		return imageOrder;
+	}
+
+	public void setImageOrder(ImageOrderVO imageOrder) {
+		this.imageOrder = imageOrder;
 	}
 	
 	

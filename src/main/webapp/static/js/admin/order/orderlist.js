@@ -220,3 +220,29 @@ function payop(){
 function closerepaywin(){
 	$('#paywindow').window({closed:true});
 }
+/**
+ * 完成订单
+ * @param id
+ */
+function completeOrder(id){
+	$.messager.confirm('消息提醒', '确定要完成该订单吗?', function(r){
+		if (r){
+			var url = basePath+"/admin/order/completeorder";
+			var loadData={"id":id};
+			$.post(url,loadData,completeOrderCallback,"text");
+		}
+	});
+}
+/**
+ * 完成订单返回函数
+ * @param data
+ */
+function completeOrderCallback(data){
+	var result = eval("("+data+")");
+	if(result.code==1){
+		$.messager.alert('消息提醒','订单完成成功。');
+		refreshList();
+	}else{
+	  $.messager.alert('消息提醒','订单完成失败!');
+	}
+}

@@ -331,6 +331,50 @@ public class OrderController extends BaseController {
 	}
 	
 	/**
+	 * 订单退款操作
+	 * @param id 订单id
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
+	@RequestMapping(value="/completeorder", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> completeorder(Integer id, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>(); 
+		if(null!=id && id>0){
+			try {
+				Date now = new Date();
+				TdUser currUser = this.getCurrentUser();
+				//收款操作
+				TdOrder order = tdOrderService.findOne(id);
+				if(null!=order){
+					OperResult result = tdOrderService.completeOrder(order, currUser);
+					if(result.isFlag()){
+						res.put("code", "1");
+					}else{
+						res.put("code", "0");
+						res.put("msg", result.getFailMsg());
+					}
+				}else{
+					res.put("code", "0");
+					res.put("msg", "订单完成失败：订单未找到！");
+				}
+				return res;
+			}catch (Exception e) {
+				logger.error("订单完成失败错误信息:"+e);
+				res.put("code", "0");
+				res.put("msg", "系统错误："+e.getMessage());
+				return res;
+			}
+		}else{
+			res.put("code", "0");
+			res.put("msg", "数据有误！");
+			return res;
+		}
+	}
+	
+	/**
 	 * 获取订单操作日志信息
 	 * @param id 订单id
 	 * @param request

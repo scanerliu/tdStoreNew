@@ -295,7 +295,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 		Date now  = new Date();
 		TdOrder uporder = new TdOrder();
 		uporder.setOrderId(order.getOrderId());
-		uporder.setUpdateBy(0);
+		uporder.setUpdateBy(1);
 		uporder.setUpdateTime(now);
 		uporder.setOrderStatus(ConstantsUtils.ORDER_STATUS_COMPLETE);
 		tdOrderMapper.updateByPrimaryKeySelective(uporder);
@@ -303,14 +303,54 @@ public class TdOrderServiceImpl implements TdOrderService{
 		//订单操作日志
 		TdOrderLog log = new TdOrderLog();
 		log.setOrderId(order.getOrderId());
-		log.setCreateBy(0);
+		log.setCreateBy(1);
 		log.setCreateTime(now);
 		log.setOperType(ConstantsUtils.ORDER_LOG_TYPE_COMPLETE);
 		log.setNote("订单进行完成操作");
 		tdOrderLogMapper.insert(log);
 		
 		//分润开始
-		//
+		this.benefitOrder(order);
+		
+		result.setFlag(true);
+		return result;
+	}
+
+	@Override
+	public OperResult completeOrder(TdOrder order, TdUser user) {
+		OperResult result = new OperResult();
+		//已完成的订单的不能进行完成操作
+		if(ConstantsUtils.ORDER_STATUS_COMPLETE.equals(order.getOrderStatus())){
+			result.setFailMsg("已完成的订单的不能进行完成操作！");
+			return result;
+		}
+		
+		//未支付的订单的不能进行完成操作
+		if(ConstantsUtils.ORDER_PAY_STATUS_UNPAY.equals(order.getPayStatus())){
+			result.setFailMsg("未支付的订单的不能进行完成操作！");
+			return result;
+		}
+		
+		//开始操作
+		Date now  = new Date();
+		TdOrder uporder = new TdOrder();
+		uporder.setOrderId(order.getOrderId());
+		uporder.setUpdateBy(user.getUid());
+		uporder.setUpdateTime(now);
+		uporder.setOrderStatus(ConstantsUtils.ORDER_STATUS_COMPLETE);
+		tdOrderMapper.updateByPrimaryKeySelective(uporder);
+		
+		//订单操作日志
+		TdOrderLog log = new TdOrderLog();
+		log.setOrderId(order.getOrderId());
+		log.setCreateBy(user.getUid());
+		log.setCreateTime(now);
+		log.setOperType(ConstantsUtils.ORDER_LOG_TYPE_COMPLETE);
+		log.setNote("订单进行完成操作");
+		tdOrderLogMapper.insert(log);
+		
+		//分润
+		this.benefitOrder(order);
 		
 		result.setFlag(true);
 		return result;
@@ -364,6 +404,9 @@ public class TdOrderServiceImpl implements TdOrderService{
 			}else if(shoppingcart.getPtype()==3){//分公司订单
 				TdOrder order = this.insertBrachOrder(currUser, orderForm, shoppingcart, torder, now);
 				torder.setJno(order.getOrderNo());
+			}else if(shoppingcart.getPtype()==4){//图片美化订单
+				TdOrder order = this.insertImageOrder(currUser, orderForm, shoppingcart, torder, now);
+				torder.setJno(order.getOrderNo());
 			}
 			
 			torder.setPaymentId(orderForm.getPaymentId());
@@ -403,7 +446,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 		order.setPaymentId(orderForm.getPaymentId());
 		order.setProductAmount(shoppingcart.getTotalProductAmount());
 		order.setRefundAmount(BigDecimal.ZERO);
-		order.setPayAmount(BigDecimal.ZERO);
+		order.setPayAmount(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount()));
 		order.setBenefitAmount(BigDecimal.ZERO);
 		order.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_UNSHIPPED);
 		order.setTotalAmount(shoppingcart.getTotalAmount());
@@ -591,7 +634,8 @@ public class TdOrderServiceImpl implements TdOrderService{
 		order.setPaymentId(orderForm.getPaymentId());
 		order.setProductAmount(shoppingcart.getTotalProductAmount());
 		order.setRefundAmount(BigDecimal.ZERO);
-		order.setPayAmount(BigDecimal.ZERO);
+		order.setPayAmount(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount()));
+		order.setBenefitAmount(BigDecimal.ZERO);
 		order.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_UNSHIPPED);
 		order.setTotalAmount(shoppingcart.getTotalAmount());
 		order.setUpdateBy(currUser.getUid());
@@ -690,7 +734,8 @@ public class TdOrderServiceImpl implements TdOrderService{
 		order.setPaymentId(orderForm.getPaymentId());
 		order.setProductAmount(shoppingcart.getTotalProductAmount());
 		order.setRefundAmount(BigDecimal.ZERO);
-		order.setPayAmount(BigDecimal.ZERO);
+		order.setPayAmount(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount()));
+		order.setBenefitAmount(BigDecimal.ZERO);
 		order.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_UNSHIPPED);
 		order.setTotalAmount(shoppingcart.getTotalAmount());
 		order.setUpdateBy(currUser.getUid());
@@ -723,6 +768,65 @@ public class TdOrderServiceImpl implements TdOrderService{
 		return order;
 	}
 
+	/**
+	 * 生成图片美化订单
+	 * @param currUser
+	 * @param orderForm
+	 * @param shoppingcart
+	 * @param torder
+	 * @param now
+	 * @return
+	 */
+	private TdOrder insertImageOrder(TdUser currUser, OrderForm orderForm, ShoppingcartVO shoppingcart,TdJointOrder torder, Date now) throws RuntimeException {
+		TdOrder order = new TdOrder();
+		order.setCreateTime(now);
+		order.setGainPoints(shoppingcart.getGainPoints());
+		order.setCommented(true);
+		order.setBenefited(4);//不参与分润
+		order.setItemNum(shoppingcart.getTotalcount());
+		order.setJointId(torder.getId());//联合订单
+		order.setOrderNo(WebUtils.generateOrderNo());
+		order.setOrderStatus(ConstantsUtils.ORDER_STATUS_NEW);
+		order.setOrderType(ConstantsUtils.ORDER_KIND_IMAGEPRODUCT);
+		if(orderForm.getUsePoints()){
+			order.setUsedPoint(shoppingcart.getTotalPointsUsed());
+			order.setPointAmount(shoppingcart.getTotalPointAmount());
+		}else{
+			order.setUsedPoint(0);
+			order.setPointAmount(BigDecimal.ZERO);
+		}
+		order.setPostage(BigDecimal.ZERO);
+		order.setPayStatus(ConstantsUtils.ORDER_PAY_STATUS_UNPAY);
+		order.setPaymentId(orderForm.getPaymentId());
+		order.setProductAmount(shoppingcart.getTotalProductAmount());
+		order.setRefundAmount(BigDecimal.ZERO);
+		order.setPayAmount(shoppingcart.getTotalAmount());
+		order.setBenefitAmount(BigDecimal.ZERO);
+		order.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_UNSHIPPED);
+		order.setTotalAmount(shoppingcart.getTotalAmount());
+		order.setUpdateBy(currUser.getUid());
+		order.setUpdateTime(now);
+		order.setUserId(currUser.getUid());
+		order.setUserMessage(orderForm.getUserMsg());
+		order.setSupplierId(1);
+		this.save(order);
+		//保存订单详情
+		TdOrderProduct orderproduct = new TdOrderProduct();
+		orderproduct.setItemType(Byte.valueOf("3"));//图片订单信息
+		orderproduct.setItemId(orderForm.getProductId());
+		orderproduct.setItemPrice(new BigDecimal(shoppingcart.getImageOrder().getPrice()));
+		orderproduct.setSupplierPrice(BigDecimal.ZERO);
+		orderproduct.setRegionId(0);
+		orderproduct.setLevel(0);
+		orderproduct.setQuantity(shoppingcart.getImageOrder().getImageNum());
+		orderproduct.setTitle(shoppingcart.getImageOrder().getProduct().getName());
+		orderproduct.setProductTypeId(0);
+		orderproduct.setOrderId(order.getOrderId());
+		orderproduct.setAttachment(shoppingcart.getImageOrder().getAttachmentString());
+		tdOrderProductMapper.insert(orderproduct);
+		//保存日志
+		return order;
+	}
 	@Override
 	public OperResult applyRefundOrder(TdOrder order, TdOrderShipment shipment,Integer skuId) {
 		OperResult result = new OperResult();
@@ -1266,7 +1370,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 				if(orderUser.getUparentId()!=0){
 					//查找体验店
 					TdExperienceStore store = tdExperienceStoreService.findByUid(orderUser.getUparentId());
-					if(null!=store && store.isProductTypeStore(product.getTypeId())){
+					if(null!=store && Byte.valueOf("1").equals(store.getStatus()) && store.isProductTypeStore(product.getTypeId())){//体验店存在，且代理分类符合。状态正常的参与分润
 						TdUser buser = tdUserService.findOneWithAccount(orderUser.getUparentId());
 						if(null!=buser && null!=buser.getUserAccount()){
 							TdUserAccount account = buser.getUserAccount();
@@ -1503,6 +1607,26 @@ public class TdOrderServiceImpl implements TdOrderService{
     	alog.setNote("订单分润收入，订单编号："+order.getOrderNo()+" "+note);
 		tdUserAccountService.addAmount(account, alog);	
 		return benefitAmount;
+	}
+
+	@Override
+	public TdOrder findByOrderNo(String orderNo) {
+		return tdOrderMapper.findByOrderNo(orderNo);
+	}
+
+	@Override
+	public void AfterPaySuccess(TdOrder order) {
+		if(null == order){
+			return;
+		}
+		
+		OrderPay orderPay = new OrderPay();
+		orderPay.setPayAmount(order.getPayAmount());
+		orderPay.setPaymentId(order.getPaymentId());
+		orderPay.setCreateBy(order.getUserId());
+		
+		this.payOrder(order, orderPay);
+		
 	}
 	
 }

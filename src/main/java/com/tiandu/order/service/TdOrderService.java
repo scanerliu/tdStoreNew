@@ -24,6 +24,17 @@ public interface TdOrderService {
 	public TdOrder findOrderWithOrderSku(Integer id);
 	
 	public List<TdOrder> findBySearchCriteria(TdOrderSearchCriteria sc);
+	
+	TdOrder findByOrderNo(String orderNo);
+	
+	/**
+	 * 支付成功后操作
+	 * @author Max
+	 *
+	 * @param tdOrder
+	 */
+	void AfterPaySuccess(TdOrder tdOrder);
+	
 	/**
 	 * 订单发货操作
 	 * @param order
@@ -41,11 +52,17 @@ public interface TdOrderService {
 	
 	/**
 	 * 订单完成操作,根据订单类型进行分润处理
-	 * @param order
-	 * @param refund
+	 * @param Integer id
 	 * @return
 	 */
 	public OperResult completeorder(Integer id);
+	/**
+	 * 订单手动完成操作
+	 * @param order
+	 * @param user
+	 * @return
+	 */
+	public OperResult completeOrder(TdOrder order, TdUser user);
 
 	/**
 	 * 生成订单
