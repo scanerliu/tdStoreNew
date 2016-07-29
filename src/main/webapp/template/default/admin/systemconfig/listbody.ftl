@@ -31,6 +31,12 @@
             <td align="right">部分积分兑换商品可抵扣金额比例:</td><td><input type="hidden" name="configKey" value="partproductpointpercent"/><input type="text" name="partproductpointpercent" id="partproductpointpercent" value="${configMap.partproductpointpercent!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,100]"/>（部分积分兑换商品可用积分抵扣金额的比例，如：100元的商品可以用积分抵扣20元时，比例为20%，此项填20）</td>
         </tr>
         <tr>
+            <td align="right">竞选活动三级会员中区县级代理数量:</td><td><input type="hidden" name="configKey" value="campaignagentnum"/><input type="text" name="campaignagentnum" id="campaignagentnum" value="${configMap.campaignagentnum!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,10000000]"/>（竞选活动规则，参与者三级会员中区县级以上代理数量，如：需要300个区县级以上代理才满足条件，此项填300）</td>
+        </tr>
+        <tr>
+            <td align="right">竞选活动直接下级中企业级供应商数量:</td><td><input type="hidden" name="configKey" value="campaigncompanysuppliernum"/><input type="text" name="campaigncompanysuppliernum" id="campaigncompanysuppliernum" value="${configMap.campaigncompanysuppliernum!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,10000000]"/>（竞选活动规则，参与者的一级下级中企业级供应商数量，如：需要300个企业级供应商才满足条件，此项填300）</td>
+        </tr>
+        <tr>
             <td align="right">图片美化单价:</td><td><input type="hidden" name="configKey" value="imageprocessingprice"/><input type="text" name="imageprocessingprice" id="imageprocessingprice" value="${configMap.imageprocessingprice!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,100]"/>（图片美化单价，如：处理一周商品图片的价格为5元时，此项填5）</td>
         </tr>
         <tr>
