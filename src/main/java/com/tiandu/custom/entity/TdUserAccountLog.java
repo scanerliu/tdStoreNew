@@ -36,6 +36,10 @@ public class TdUserAccountLog {
     private String note;
 
     private String relation;
+    
+    private String username;
+    
+    private BigDecimal totalUpamount;
 
     public Integer getId() {
         return id;
@@ -101,7 +105,27 @@ public class TdUserAccountLog {
         this.relation = relation == null ? null : relation.trim();
     }
     
-    /**
+    
+    
+    public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	
+
+	public BigDecimal getTotalUpamount() {
+		return totalUpamount;
+	}
+
+	public void setTotalUpamount(BigDecimal totalUpamount) {
+		this.totalUpamount = totalUpamount;
+	}
+
+	/**
      * 获取金额变更类型文字说明
      * @return
      */

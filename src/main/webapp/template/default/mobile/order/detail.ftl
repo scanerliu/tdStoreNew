@@ -61,6 +61,13 @@
 		<#if order?? && order.productList?? && (order.productList?size > 0)>
 	    <#list order.productList as product>
 		<li class="goods_box p">
+			<#if product.attachments??>
+    		<#list product.attachments as atta>
+    		<#if atta_index==0>
+    		<img src="${app.basePath}${atta!''}" alt="商品图片"/>
+    		</#if>
+    		</#list>
+    		</#if>
 			<section>
 				<h3>${product.title!''} ${product.getItemTypeStr()!''}</h3>
 				<div>

@@ -9,7 +9,6 @@
 	<th align="center">商品名称</th>
 	<th align="center">商品类型</th>
 	<th align="center">商品编号</th>
-	<th align="center">创建时间</th>
 </tr>
 </thead>
 <tbody>
@@ -19,7 +18,6 @@
         <td align="center">${product.name!''}</td>
         <td align="center">${product.kindStr!''}</td>
         <td align="center">${product.code!''}</td>
-        <td align="center">${product.createTime?string('yyyy-MM-dd')}</td>
     </tr>
 </#list>
 </#if>

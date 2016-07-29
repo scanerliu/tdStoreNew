@@ -152,6 +152,7 @@
 	    	<otherwise></otherwise>
     	</choose>
     </if>
+    order by o.create_time desc
   </select>
   
   <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.order.search.TdOrderSearchCriteria" >

@@ -1,6 +1,12 @@
 package com.tiandu.mobile.controller;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +37,7 @@ import com.tiandu.article.search.TdAdvertisementSearchCriteria;
 import com.tiandu.article.service.TdAdsenseService;
 import com.tiandu.article.service.TdAdvertisementService;
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.common.tencent.common.TdUserQRcodeTools;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.common.utils.MessageSender;
 import com.tiandu.common.utils.TwoDimensionCode;
@@ -173,6 +180,9 @@ public class MUserController extends BaseController {
 	
 	@Autowired
 	private TdComplaintService tdComplaintService;
+	
+	@Autowired
+	private TdUserQRcodeTools tdUserQRcodeTools;
 	
 	// 个人中心
 	@RequestMapping("/center")
@@ -1128,7 +1138,7 @@ public class MUserController extends BaseController {
 	 * 推广
 	 */
 	@RequestMapping("/mySpread")
-	public String mySpread(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	public String mySpread(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) throws UnrecoverableKeyException, KeyManagementException, NoSuchAlgorithmException, KeyStoreException, IOException, JSONException {
 		TdUser currentUser = this.getCurrentUser();
 		modelMap.addAttribute("currentUser", currentUser);
 		String spreadUrl = "http://www.cqupt.edu.cn";
@@ -1137,7 +1147,16 @@ public class MUserController extends BaseController {
 		TwoDimensionCode tdc = new TwoDimensionCode();
 		tdc.encoderQRCode(spreadUrl, spreadImgPath, "png");
 		modelMap.addAttribute("spreadImg", "static/imgs/spread" + imgName);
-		return "/mobile/user/mySpread";	
+		return "/mobile/user/mySpread";
+	}
+	
+	@RequestMapping(value = "/mySpread/qrcode")
+	public void spreadQRcode(HttpServletResponse response) throws UnsupportedEncodingException, JSONException
+	{
+		TdUser currentUser = this.getCurrentUser();
+//		tdUserQRcodeTools.QRcodeByUidAndResponse(currentUser.getUid(), response);
+//		TdUserQRcodeTools QRcodeTools = new TdUserQRcodeTools();
+		tdUserQRcodeTools.QRcodeByUidAndResponse(currentUser.getUid(), response);
 	}
 	
 	/*
