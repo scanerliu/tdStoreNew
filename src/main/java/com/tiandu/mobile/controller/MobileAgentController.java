@@ -114,16 +114,6 @@ public class MobileAgentController extends BaseController{
 		{
 			return "/mobile/agent/agentform";
 		}
-		//是否有礼品包
-		Boolean haspackage = false;
-		if(agentId==4){//区县单类代理产品
-			//系统是否启用区县单类代理产品领取礼品包
-			if(configUtil.isAgentProductUsePackage()){
-				haspackage = true;
-			}
-		}else if(agentId==1){
-			haspackage = true;
-		}
 		return "/mobile/agent/typelist";
 	}
 	
@@ -344,6 +334,18 @@ public class MobileAgentController extends BaseController{
 		map.addAttribute("agent", tdAgentProductService.findOne(agentId));
 		map.addAttribute("regionId", regionId);
 		map.addAttribute("typeId", typeId);
+		
+		//是否有礼品包
+		Boolean haspackage = false;
+		if(agentId==4){//区县单类代理产品
+			//系统是否启用区县单类代理产品领取礼品包
+			if(configUtil.isAgentProductUsePackage()){
+				haspackage = true;
+			}
+		}else if(agentId==1){
+			haspackage = true;
+		}
+		map.addAttribute("haspackage", haspackage);
 		
 		return "/mobile/agent/agent";
 	}

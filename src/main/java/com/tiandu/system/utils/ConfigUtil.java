@@ -239,5 +239,13 @@ public class ConfigUtil {
 		}
 		return false;
 	}
+	
+	/**
+	 * 获取美化图片单价
+	 * @return
+	 */
+	public Integer getImageProcessingPrice(){
+		return getConfig("imageprocessingprice",5);
+	}
 
 }

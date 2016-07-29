@@ -47,6 +47,12 @@
 <div class="btn_wrap_fixed">
 </div>
 </div>
+<input type="hidden" name="orderStatus" value="${sc.orderStatus!''}">
+<input type="hidden" name="payStatus" value="${sc.payStatus!''}">
+<input type="hidden" name="shipmentStatus" value="${sc.shipmentStatus!''}">
+<input type="hidden" name="shipmentStatus" value="${sc.shipmentStatus!''}">
+<input type="hidden" name="orderNo" value="${sc.orderNo!''}">
+<input type="hidden" name="orderType" value="${sc.orderType!''}">
 <div class="btn_wrap_fixed">
 <#assign pageId="Orders" />
 <#include "/admin/common/common_postpage.ftl" />

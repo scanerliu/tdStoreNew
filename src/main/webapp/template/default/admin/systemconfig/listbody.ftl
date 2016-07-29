@@ -31,6 +31,9 @@
             <td align="right">部分积分兑换商品可抵扣金额比例:</td><td><input type="hidden" name="configKey" value="partproductpointpercent"/><input type="text" name="partproductpointpercent" id="partproductpointpercent" value="${configMap.partproductpointpercent!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,100]"/>（部分积分兑换商品可用积分抵扣金额的比例，如：100元的商品可以用积分抵扣20元时，比例为20%，此项填20）</td>
         </tr>
         <tr>
+            <td align="right">图片美化单价:</td><td><input type="hidden" name="configKey" value="imageprocessingprice"/><input type="text" name="imageprocessingprice" id="imageprocessingprice" value="${configMap.imageprocessingprice!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,100]"/>（图片美化单价，如：处理一周商品图片的价格为5元时，此项填5）</td>
+        </tr>
+        <tr>
             <td align="right">700元的单类代理启用商品包:</td><td><label><input type="hidden" name="configKey" value="agentproductusepackage"/><input type="radio" name="agentproductusepackage" value="1" <#if configMap.agentproductusepackage?? && configMap.agentproductusepackage=="1">checked=checked</#if> />启用</label> <input type="radio" name="agentproductusepackage" value="2" <#if configMap.agentproductusepackage?? && configMap.agentproductusepackage=="2">checked=checked</#if>  />禁用</label>（启用此项，购买700元区县单类代理时可以领取一个700元礼包）</td>
         </tr>
         </table>

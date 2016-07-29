@@ -142,7 +142,7 @@ public class TdOrderProduct {
     		return this.attachments;
     	}else{
     		if(null!=this.getAttachment()){
-    			attachments = this.getAttachment().split(":");
+    			attachments = this.getAttachment().split(",");
     		}
     	}
     	return attachments;

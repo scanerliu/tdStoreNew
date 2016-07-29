@@ -41,11 +41,17 @@ public interface TdOrderService {
 	
 	/**
 	 * 订单完成操作,根据订单类型进行分润处理
-	 * @param order
-	 * @param refund
+	 * @param Integer id
 	 * @return
 	 */
 	public OperResult completeorder(Integer id);
+	/**
+	 * 订单手动完成操作
+	 * @param order
+	 * @param user
+	 * @return
+	 */
+	public OperResult completeOrder(TdOrder order, TdUser user);
 
 	/**
 	 * 生成订单
