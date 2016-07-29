@@ -88,6 +88,16 @@
     where o.order_id = #{orderId,jdbcType=INTEGER}
   </select>
   
+  <!-- 根据订单号查找  Max -->
+  <select id="findByOrderNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    , s.uname as supp_uname, s.unick as supp_unick
+    , u.uname as order_uname, u.unick as order_unick
+    from td_order o left join td_user s on s.uid=o.supplier_id left join td_user u on u.uid = o.user_id
+    where o.order_no = #{orderNo,jdbcType=INTEGER}
+  </select>
+  
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.order.search.TdOrderSearchCriteria" >
     select 
     <include refid="Base_Column_List" />

@@ -24,6 +24,17 @@ public interface TdOrderService {
 	public TdOrder findOrderWithOrderSku(Integer id);
 	
 	public List<TdOrder> findBySearchCriteria(TdOrderSearchCriteria sc);
+	
+	TdOrder findByOrderNo(String orderNo);
+	
+	/**
+	 * 支付成功后操作
+	 * @author Max
+	 *
+	 * @param tdOrder
+	 */
+	void AfterPaySuccess(TdOrder tdOrder);
+	
 	/**
 	 * 订单发货操作
 	 * @param order

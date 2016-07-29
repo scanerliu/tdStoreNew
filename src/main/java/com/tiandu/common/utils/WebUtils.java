@@ -10,10 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 public class WebUtils {
 
+	private final static String[] agent = { "Android", "iPhone", "iPod","iPad", "Windows Phone", "MQQBrowser" };
+	
 	/**
 	 * 生成用户密码
 	 * @param name 用户名
@@ -90,4 +91,41 @@ public class WebUtils {
 	   }
 	   return sb.toString();
    }
+	
+	/**
+	 * 判断是否为移动端
+	 * @author Max
+	 */
+	public static boolean checkAgentIsMobile(String ua) {
+		boolean flag = false;
+		if (!ua.contains("Windows NT") || (ua.contains("Windows NT") && ua.contains("compatible; MSIE 9.0;"))) 
+		{
+			// 排除 苹果桌面系统
+			if (!ua.contains("Windows NT") && !ua.contains("Macintosh")) 
+			{
+				for (String item : agent)
+				{
+					if (ua.contains(item)) 
+					{
+						flag = true;
+						break;
+					}
+				}
+			}
+		}
+		return flag;
+	}
+	
+	/**
+	 * 判断是否为微信断
+	 * @author Max
+	 */
+	public static boolean checkAgentIsWX(String ua){
+		boolean flag = false;
+		String ag = ua .toLowerCase();
+		if (ag.indexOf("micromessenger") > 0) {// 是微信浏览器
+			  flag =true;
+		}
+		return flag;
+	}
 }

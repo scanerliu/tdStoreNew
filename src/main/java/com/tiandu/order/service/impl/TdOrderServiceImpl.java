@@ -1504,5 +1504,25 @@ public class TdOrderServiceImpl implements TdOrderService{
 		tdUserAccountService.addAmount(account, alog);	
 		return benefitAmount;
 	}
+
+	@Override
+	public TdOrder findByOrderNo(String orderNo) {
+		return tdOrderMapper.findByOrderNo(orderNo);
+	}
+
+	@Override
+	public void AfterPaySuccess(TdOrder order) {
+		if(null == order){
+			return;
+		}
+		
+		OrderPay orderPay = new OrderPay();
+		orderPay.setPayAmount(order.getPayAmount());
+		orderPay.setPaymentId(order.getPaymentId());
+		orderPay.setCreateBy(order.getUserId());
+		
+		this.payOrder(order, orderPay);
+		
+	}
 	
 }
