@@ -21,5 +21,7 @@
     <context:property-placeholder location="classpath:/conf/property/system.properties"/>
     <import resource="spring-source.xml"/>
     <import resource="spring-shiro.xml"/>
+    <import resource="quartz-context.xml"/>
+    
     <!-- <import resource="spring-mvc.xml"/> -->
 </beans>

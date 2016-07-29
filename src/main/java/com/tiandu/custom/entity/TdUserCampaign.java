@@ -27,7 +27,7 @@ public class TdUserCampaign {
 
     private Date createTime;
 
-    private Byte status;
+    private Byte status = 2;
 
     private String resume;
     

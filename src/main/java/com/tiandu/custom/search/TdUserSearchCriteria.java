@@ -18,6 +18,8 @@ public class TdUserSearchCriteria extends SearchCriteria {
 
 	private String parentIdsStr; // 下三级所有id字符串，格式为"[1],[2],[3]"
 	private Integer parentId; // 父类id
+	
+	private Integer uregionId; // 地区id
 
 	public String getUname() {
 		return uname;
@@ -98,5 +100,15 @@ public class TdUserSearchCriteria extends SearchCriteria {
 	public void setParentId(Integer parentId) {
 		this.parentId = parentId;
 	}
+
+	public Integer getUregionId() {
+		return uregionId;
+	}
+
+	public void setUregionId(Integer uregionId) {
+		this.uregionId = uregionId;
+	}
+	
+	
 
 }

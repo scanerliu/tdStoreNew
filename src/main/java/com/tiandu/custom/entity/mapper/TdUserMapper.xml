@@ -94,6 +94,9 @@
         left join td_user_role rr on rr.uid= a.uid
     </if>
     where 1=1 
+    <if test="uregionId != null" >
+        and a.uregion_id=#{uregionId,jdbcType=INTEGER}
+    </if>
     <if test="ustatus != null" >
         and a.ustatus=#{ustatus,jdbcType=TINYINT}
     </if>
@@ -113,7 +116,7 @@
         and a.uparent_id = #{parentId,jdbcType=INTEGER}
     </if>
     <if test="parentIdsStr != null and parentIdsStr !=''" >
-        and #{parentIdsStr,jdbcType=VARCHAR} like CONCAT('%[', a.uparent_id, ']%')
+        and #{parentIdsStr,jdbcType=VARCHAR} like CONCAT('%[', a.uparent_id, ']%')  
     </if>
     <if test="branch" >
         and r.rid=11
