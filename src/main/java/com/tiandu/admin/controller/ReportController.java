@@ -15,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.custom.entity.TdUserAccountLog;
+import com.tiandu.custom.search.TdUserAccountLogSearchCriteria;
+import com.tiandu.custom.service.TdUserAccountLogService;
 import com.tiandu.order.entity.TdOrderSku;
 import com.tiandu.order.search.TdOrderSkuSearchCriteria;
 import com.tiandu.order.service.TdOrderService;
@@ -28,7 +30,7 @@ import com.tiandu.product.service.TdProductService;
 import com.tiandu.report.SaleProductReportEntity;
 
 /**
- * 
+ * 统计
  * @author L. Gao
  *
  */
@@ -46,6 +48,10 @@ public class ReportController extends BaseController {
 	
 	@Autowired
 	private TdOrderSkuService tdOrderSkuService;
+	
+	@Autowired
+	private TdUserAccountLogService tdUserAccountLogService;
+	
 
 	@RequestMapping("/unsaleList")
 	public String unsaleList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
@@ -57,6 +63,14 @@ public class ReportController extends BaseController {
 		return "/admin/report/saleList";
 	}
 	
+	@RequestMapping("/user/incomeList")
+	public String incomeList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		return "/admin/report/userIncomeList";
+	}
+	
+	/*
+	 * 未销售
+	 */
 	@RequestMapping("/unsale/search")
 	public String unsaleSearch(TdProductCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdOrderSkuSearchCriteria ssc = new TdOrderSkuSearchCriteria();
@@ -77,6 +91,9 @@ public class ReportController extends BaseController {
 		return "/admin/report/unsaleListBody";
 	}
 	
+	/*
+	 * 销售
+	 */
 	@RequestMapping("/sale/search")
 	public String saleSearch(TdOrderSkuSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		Date endTime = sc.getEndTime();
@@ -96,6 +113,25 @@ public class ReportController extends BaseController {
 		modelMap.addAttribute("saleProductReportList", saleProductReportList);
 		modelMap.addAttribute("sc", sc);
 		return "/admin/report/saleListBody";
+	}
+	
+	@RequestMapping("/user/incomeSearch")
+	public String userIncomeSearch(TdUserAccountLogSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		Date endDate = sc.getEndDate();
+		if(endDate != null){
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Calendar endCalendar = Calendar.getInstance();
+			endCalendar.setTime(endDate);
+			endCalendar.add(Calendar.DATE, 1);
+			endDate = endCalendar.getTime();
+			sc.setEndDate(endDate);
+		}
+		
+		List<TdUserAccountLog> userAccountLogList = tdUserAccountLogService.findGroupBySearchCriteria(sc);
+		
+		modelMap.addAttribute("userAccountLogList", userAccountLogList);
+		modelMap.addAttribute("sc", sc);
+		return "/admin/report/userIncomeListBody";
 	}
 	
 }

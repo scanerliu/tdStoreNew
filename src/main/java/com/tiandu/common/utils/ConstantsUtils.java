@@ -255,6 +255,8 @@ public class ConstantsUtils {
 	
 	public static final Integer RETURN_CODE_FAILURE = 0;		//失败
 	
-	/**********************错误描述*********************************/
+	/**********************系统配置key*********************************/
+	
+	public static final String K_ACCESSTOKEN = "wechat_accessToken"; //微信accessToken
 	
 }

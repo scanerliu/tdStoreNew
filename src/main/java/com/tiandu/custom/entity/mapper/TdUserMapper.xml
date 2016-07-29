@@ -26,6 +26,9 @@
     <result column="ugenter" property="ugenter" jdbcType="TINYINT" />
     <result column="membership_id" property="membershipId" jdbcType="INTEGER" />
     <result column="supplier_type" property="supplierType" jdbcType="TINYINT" />
+    <result column="qrcode_url" property="qrcodeUrl" jdbcType="VARCHAR" />
+    <result column="qrcode_update" property="qrcodeUpdate" jdbcType="TIMESTAMP" />
+    
     <!-- 更新人信息 -->
 	<association property="updateUser" resultMap="updateUserResult"/>
     <!-- 进行 多表关联插叙，先关联user和role -->
@@ -47,7 +50,8 @@
   <sql id="Base_Column_List" >
     a.uid, a.uname, a.upassword, a.joint_id, a.unick, a.utel, a.uverification, a.ustatus, a.utype, a.uparent_id, 
     a.create_time, a.update_by, a.update_time, a.last_login_time, a.last_login_ip, a.uavatar, a.uregion_id, 
-    a.uprovince_id, a.uregion_path, a.uaddress, a.ubirthday, a.ugenter, a.membership_id, a.supplier_type
+    a.uprovince_id, a.uregion_path, a.uaddress, a.ubirthday, a.ugenter, a.membership_id, a.supplier_type,
+    a.qrcode_url, a.qrcode_update
   </sql>
   <sql id="Base_Role_Column_List" >
     SELECT u.uid, u.uregion_id, u.uavatar, u.unick, u.utel, u.supplier_type ,u.ugenter, u.uparent_id, u.ubirthday, u.joint_id, u.membership_id, u.uname,u.upassword,r.id as ROLE_ID, r.name as ROLE_NAME, m.id as MENU_ID, m.action_name as PERMISSION_NAME  
@@ -177,7 +181,8 @@
       last_login_time, last_login_ip, uavatar, 
       uregion_id, uprovince_id, uregion_path, 
       uaddress, ubirthday, ugenter, 
-      membership_id, supplier_type)
+      membership_id, supplier_type,
+      qrcode_url,qrcode_update)
     values (#{uname,jdbcType=VARCHAR}, #{upassword,jdbcType=VARCHAR}, #{jointId,jdbcType=VARCHAR}, 
       #{unick,jdbcType=VARCHAR}, #{utel,jdbcType=VARCHAR}, #{uverification,jdbcType=TINYINT}, 
       #{ustatus,jdbcType=TINYINT}, #{utype,jdbcType=TINYINT}, #{uparentId,jdbcType=INTEGER}, 
@@ -185,7 +190,8 @@
       #{lastLoginTime,jdbcType=TIMESTAMP}, #{lastLoginIp,jdbcType=VARCHAR}, #{uavatar,jdbcType=VARCHAR}, 
       #{uregionId,jdbcType=INTEGER}, #{uprovinceId,jdbcType=INTEGER}, #{uregionPath,jdbcType=VARCHAR}, 
       #{uaddress,jdbcType=VARCHAR}, #{ubirthday,jdbcType=DATE}, #{ugenter,jdbcType=TINYINT}, 
-      #{membershipId,jdbcType=INTEGER}, #{supplierType,jdbcType=TINYINT})
+      #{membershipId,jdbcType=INTEGER}, #{supplierType,jdbcType=TINYINT},
+      #{qrcodeUrl,jdbcType=VARCHAR}, #{qrcodeUpdate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.tiandu.custom.entity.TdUser" >
     <selectKey resultType="java.lang.Integer" keyProperty="uid" order="AFTER" >
@@ -262,6 +268,12 @@
       <if test="supplierType != null" >
         supplier_type,
       </if>
+      <if test="qrcodeUrl != null" >
+        qrcode_url,
+      </if>
+      <if test="qrcodeUpdate != null" >
+        qrcode_update,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="uname != null" >
@@ -333,6 +345,12 @@
       <if test="supplierType != null" >
         #{supplierType,jdbcType=TINYINT},
       </if>
+      <if test="qrcodeUrl != null">
+       #{qrcodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcodeUpdate != null">
+       #{qrcodeUpdate,jdbcType=TIMESTAMP},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tiandu.custom.entity.TdUser" >
@@ -398,6 +416,12 @@
       <if test="supplierType != null" >
         supplier_type = #{supplierType,jdbcType=TINYINT},
       </if>
+      <if test="qrcodeUrl != null">
+       #{qrcode_url,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcodeUpdate != null">
+       #{qrcode_update,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where uid = #{uid,jdbcType=INTEGER}
   </update>
@@ -417,6 +441,8 @@
       ugenter = #{ugenter,jdbcType=TINYINT},
       membership_id = #{membershipId,jdbcType=INTEGER},
       supplier_type = #{supplierType,jdbcType=TINYINT}
+      qrcode_url =  #{qrcodeUrl,jdbcType=VARCHAR},
+      qrcode_update =  #{qrcodeUpdate,jdbcType=TIMESTAMP},
     where uid = #{uid,jdbcType=INTEGER}
   </update>
   <update id="updateCustomerByPrimaryKey" parameterType="com.tiandu.custom.entity.TdUser" >
@@ -428,7 +454,9 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       ubirthday = #{ubirthday,jdbcType=DATE},
       uverification = #{uverification,jdbcType=TINYINT},
-      ugenter = #{ugenter,jdbcType=TINYINT}
+      ugenter = #{ugenter,jdbcType=TINYINT},
+      qrcode_url =  #{qrcodeUrl,jdbcType=VARCHAR},
+      qrcode_update =  #{qrcodeUpdate,jdbcType=TIMESTAMP}
     where uid = #{uid,jdbcType=INTEGER}
   </update>
   <update id="updateManagerByPrimaryKey" parameterType="com.tiandu.custom.entity.TdUser" >

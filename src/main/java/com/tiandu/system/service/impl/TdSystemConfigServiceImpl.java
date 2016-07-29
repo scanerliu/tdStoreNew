@@ -1,5 +1,6 @@
 package com.tiandu.system.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +30,10 @@ public class TdSystemConfigServiceImpl implements TdSystemConfigService {
 	@Override
 	public int save(TdSystemConfig record) {
 		if(null==record.getId()){
+			record.setUpdateTime(new Date());
 			return systemConfigMapper.insert(record);
 		}else{
+			record.setUpdateTime(new Date());
 			return systemConfigMapper.updateByPrimaryKey(record);
 		}
 	}

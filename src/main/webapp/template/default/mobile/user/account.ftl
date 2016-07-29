@@ -26,7 +26,7 @@
 
   <!-- header_top -->
   <div class="top_heater">
-    <a href="javascript:;" title="" class="hleft hback"></a>
+    <a href="${app.basePath}/mobile/user/center" title="" class="hleft hback"></a>
     <span>我的钱包</span>
   </div>
   <!-- header_top end -->
