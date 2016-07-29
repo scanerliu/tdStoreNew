@@ -1,3 +1,4 @@
+// ----------------销售----------------
 function searchSale(f){
 	var url = basePath+"/admin/report/sale/search";
 	var loadData = "";
@@ -13,11 +14,7 @@ function fnGotoPageSale(num){
 	searchSale(false);
 }
 
-function refreshList(){
-	searchSale(false);
-}
-
-
+//----------------未销售----------------
 function searchUnsale(f){
 	var url = basePath+"/admin/report/unsale/search";
 	var loadData = "";
@@ -33,7 +30,19 @@ function fnGotoPageUnsale(num){
 	searchUnsale(false);
 }
 
-function refreshList(){
-	searchUnsale(false);
+//----------------用户收入 ----------------
+function searchUserIncome(f){
+	var url = basePath+"/admin/report/user/incomeSearch";
+	var loadData = "";
+	if(f){
+		loadData = $("#searchform").serializeArray();
+	}else{
+		loadData = $("#userIncomeListForm").serializeArray();
+	}
+	$("#results").load(url,loadData);
+}
+
+function fnGotoPageUserIncome(num){
+	searchUserIncome(false);
 }
 

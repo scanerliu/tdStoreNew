@@ -20,4 +20,7 @@ public interface TdUserAccountLogMapper {
     
     public List<TdUserAccountLog>  findBySearchCriteria(TdUserAccountLogSearchCriteria sc);
     public int countByCriteria(TdUserAccountLogSearchCriteria sc);
+    
+    public List<TdUserAccountLog>  findGroupBySearchCriteria(TdUserAccountLogSearchCriteria sc);
+    public int countGroupByCriteria(TdUserAccountLogSearchCriteria sc);
 }

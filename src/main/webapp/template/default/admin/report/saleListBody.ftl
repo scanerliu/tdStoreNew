@@ -8,7 +8,6 @@
 <thead>
 <tr>
 	<th align="center">商品名称</th>
-	<th align="center">下单时间</th>
 	<th align="center">销量</th>
 	<th align="center">销售额</th>
 	<th align="center">成本</th>
@@ -20,7 +19,6 @@
 <#list saleProductReportList as saleProduct>
     <tr>
         <td align="center">${saleProduct.pname!''}</td>
-        <td align="center">${saleProduct.ctime?string('yyyy-MM-dd')}</td>
         <td align="center"><#if saleProduct.totalNum??>${saleProduct.totalNum?c}</#if></td>
         <td align="center"><#if saleProduct.totalPrice??>${saleProduct.totalPrice?c}</#if></td>
         <td align="center"><#if saleProduct.totalSupplierPrice??>${saleProduct.totalSupplierPrice?c}</#if></td>

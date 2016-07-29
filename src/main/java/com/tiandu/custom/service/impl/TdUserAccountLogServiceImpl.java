@@ -37,5 +37,14 @@ public class TdUserAccountLogServiceImpl implements TdUserAccountLogService {
 		sc.setTotalCount(count);
 		return tdUserAccountLogMapper.findBySearchCriteria(sc);
 	}
+
+	@Override
+	public List<TdUserAccountLog> findGroupBySearchCriteria(TdUserAccountLogSearchCriteria sc) {
+		if(sc.isFlag() == true){
+			Integer count = tdUserAccountLogMapper.countGroupByCriteria(sc);
+			sc.setTotalCount(count);
+		}
+		return tdUserAccountLogMapper.findGroupBySearchCriteria(sc);
+	}
 	
 }

@@ -11,5 +11,6 @@ public interface TdUserAccountLogService {
 	public int updateByPrimaryKeySelective(TdUserAccountLog record);
 	public TdUserAccountLog findOne(Integer id);
 	public List<TdUserAccountLog>  findBySearchCriteria(TdUserAccountLogSearchCriteria sc);
+	public List<TdUserAccountLog>  findGroupBySearchCriteria(TdUserAccountLogSearchCriteria sc);
 	
 }
