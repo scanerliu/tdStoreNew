@@ -78,6 +78,10 @@
     <bean id="configUtil" class="com.tiandu.system.utils.ConfigUtil" lazy-init="false" factory-method="getInstance" autowire="byName">
 		<property name="tdSystemConfigService" ref="tdSystemConfigService" />
 	</bean>
+    <bean id="tdUserQRcodeTools" class="com.tiandu.common.tencent.common.TdUserQRcodeTools" lazy-init="false" autowire="byName">
+		<property name="tdSystemConfigService" ref="tdSystemConfigService" />
+		<property name="tdUserService" ref="tdUserService" />
+	</bean>
   
 	<tx:advice id="txAdvice" transaction-manager="transactionManager">
 	  <tx:attributes >

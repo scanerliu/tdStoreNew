@@ -67,6 +67,10 @@ public class TdUser {
 
     private Byte supplierType;
     
+    private String qrcodeUrl;
+    
+    private Date qrcodeUpdate;
+    
     private Set<TdRole> roleSet = new HashSet<TdRole>();
     /**
 	 * 后台保存角色使用
@@ -274,6 +278,22 @@ public class TdUser {
     public void setSupplierType(Byte supplierType) {
         this.supplierType = supplierType;
     }
+
+	public String getQrcodeUrl() {
+		return qrcodeUrl;
+	}
+
+	public void setQrcodeUrl(String qrcodeUrl) {
+		this.qrcodeUrl = qrcodeUrl;
+	}
+
+	public Date getQrcodeUpdate() {
+		return qrcodeUpdate;
+	}
+
+	public void setQrcodeUpdate(Date qrcodeUpdate) {
+		this.qrcodeUpdate = qrcodeUpdate;
+	}
 
 	public Set<TdRole> getRoleSet() {
 		return roleSet;
