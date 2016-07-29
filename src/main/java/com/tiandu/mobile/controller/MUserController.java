@@ -1392,6 +1392,7 @@ public class MUserController extends BaseController {
 		sc.setEndTime(new Date());
 		sc.setOrderBy("2");
 		sc.setStatus((byte)1);
+		sc.setRegionId(user.getUregionId());
 		TdAdsense adsense = tdAdsenseService.findByName("触屏首页轮播大图广告");
 		if(null != adsense)
 		{
@@ -1424,6 +1425,7 @@ public class MUserController extends BaseController {
 		// 热销推荐
 		TdProductCriteria psc = new TdProductCriteria();
 		psc.setHotRecommend(1);
+		psc.setKind((byte)1);
 		psc.setOnshelf(true);
 		psc.setUid(user.getUid());
 		map.addAttribute("productList", tdProductService.findBySearchCriteria(psc));

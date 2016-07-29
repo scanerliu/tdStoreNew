@@ -122,7 +122,7 @@
 <#if productList?? && productList?size gt 0 >
 <div class="hot">
     <section class="index_title">
-        <label class="lab1 fl">热销推荐</label>
+        <label class="lab1 fl">体验店</label>
         <a href="javascript:;" class="a_link"></a>
     </section>
     <section class="sec2">
@@ -144,8 +144,8 @@
 <div style="width:100%;height:0.9rem"></div>
 <div class="index_foot">
     <a href="${app.basePath}/mobile" title="首页" class="active"><p>首页</p></a>
-    <a href="${app.basePath}/mobile/productType/list" title=""><p>分类</p></a>
-    <a href="${app.basePath}/mobile/shoppingcart/list" title=""><p>购物车</p></a>
+    <a href="${app.basePath}/mobile/productType/list" title="分类"><p>分类</p></a>
+    <a href="${app.basePath}/mobile/shoppingcart/list" title="购物车"><p>购物车</p></a>
     <a href="${app.basePath}/mobile/user/center" title="个人中心"><p>我的</p></a>
 </div>
 <!-- 底部-结束 -->

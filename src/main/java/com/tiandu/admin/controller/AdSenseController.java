@@ -176,6 +176,10 @@ public class AdSenseController extends BaseController{
 					// 创建人
 					tdAdvertisement.setCreateBy(user.getUid());
 				}
+				// 地区
+				if(null == tdAdvertisement.getRegionId()){
+					tdAdvertisement.setRegionId(user.getUregionId());
+				}
 				// 最后更新人
 				tdAdvertisement.setUpdateBy(user.getUid());
 				

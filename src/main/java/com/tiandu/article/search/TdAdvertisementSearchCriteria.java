@@ -13,8 +13,8 @@ public class TdAdvertisementSearchCriteria extends SearchCriteria{
     private Date endTime;
     
     private Integer adsId;
-//    
-//    private Integer uId
+    
+    private Integer regionId;
 
 	public Byte getStatus() {
 		return status;
@@ -46,6 +46,14 @@ public class TdAdvertisementSearchCriteria extends SearchCriteria{
 
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
+	}
+
+	public Integer getRegionId() {
+		return regionId;
+	}
+
+	public void setRegionId(Integer regionId) {
+		this.regionId = regionId;
 	}
     
 	
