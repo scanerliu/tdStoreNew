@@ -34,6 +34,7 @@
  <!-- Center Start -->
 <form id="refundForm" method="post" action="${app.basePath}/mobile/order/refund">
 <input type="hidden" name="orderId" value="${order.orderId!'0'}"/>
+<input type="hidden" name="skuId" value="${sku.orderSkuId!'0'}"/>
 <section class="container zizhirenzheng">
     <article>
         <span>申请服务</span>
@@ -62,7 +63,7 @@
     </article>
     <article>
         <span>退款金额</span>
-        <input type="text" placeholder="0" value="0" id="returnAmount" name="returnAmount" onkeyup="formatInputPrice(this,0,${order.totalAmount-order.refundAmount})">
+        <input type="text" placeholder="0" value="0" id="returnAmount" name="returnAmount" onkeyup="formatInputPrice(this,0,${sku.price-sku.quantity})">
     </article>
     <article>
         <span>退货说明</span>

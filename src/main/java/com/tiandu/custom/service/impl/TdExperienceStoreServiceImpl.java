@@ -72,4 +72,9 @@ public class TdExperienceStoreServiceImpl implements TdExperienceStoreService {
 		return experienceStoreMapper.deleteByPrimaryKey(id);
 	}
 
+	@Override
+	public TdExperienceStore findByUid(Integer uparentId) {
+		return experienceStoreMapper.findByUid(uparentId);
+	}
+
 }

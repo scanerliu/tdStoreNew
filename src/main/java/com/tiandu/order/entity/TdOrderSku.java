@@ -19,6 +19,9 @@ public class TdOrderSku {
 
     private Integer productSkuId;
 
+    /**
+     * 货品类型：1-普通商品，2-商品包，3-零元购，4-10元购，5-预售，6-秒杀商品   7-全积分兑换，8-部分积分兑换
+     */
     private Byte itemType;
 
     private String productName;
@@ -174,6 +177,14 @@ public class TdOrderSku {
 
 	public void setSpecialList(List<SkuSpecialVO> specialList) {
 		this.specialList = specialList;
+	}
+	
+	public BigDecimal getBenefitAmount(){
+		if(null!=this.getPrice() && null!=this.getSupplierPrice() && null!=this.getQuantity() && null!=this.getBackQuantity() && this.getPrice().compareTo(this.getSupplierPrice())>0){
+			int quantity = this.getQuantity()-this.getBackQuantity();
+			return this.getPrice().subtract(this.getSupplierPrice()).multiply(new BigDecimal(quantity));
+		}
+		return BigDecimal.ZERO;
 	}
     
 }

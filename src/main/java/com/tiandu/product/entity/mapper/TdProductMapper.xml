@@ -430,6 +430,13 @@
 	    </foreach>  
 	    )    	
     </if>
+    <if test="orderskuIdSet != null">
+    	and p.id not in (
+	    <foreach collection="orderskuIdSet" item="sid" index="index" separator="," >  
+	        #{sid, jdbcType=INTEGER}  
+	    </foreach>  
+	    )    	
+    </if>
   </select>
   
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.product.search.TdProductCriteria">
@@ -485,6 +492,13 @@
     	and p.type_id in (
 	    <foreach collection="productTypeIds" item="ptid" index="index" separator="," >  
 	        #{ptid, jdbcType=INTEGER}  
+	    </foreach>  
+	    )    	
+    </if>
+    <if test="orderskuIdSet != null">
+    	and p.id not in (
+	    <foreach collection="orderskuIdSet" item="sid" index="index" separator="," >  
+	        #{sid, jdbcType=INTEGER}  
 	    </foreach>  
 	    )    	
     </if>

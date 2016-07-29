@@ -236,7 +236,8 @@ public class MUserController extends BaseController {
 		if(!valideCode.equals(changePasswordValidCode)){
 			res.put("info", "验证码错误！");
 			res.put("status", "n");
-//			return res;
+			request.getSession().removeAttribute("changePasswordValidCode");
+			return res;
 		}
 		
 		TdUser currentUser = this.getCurrentUser();
@@ -255,6 +256,7 @@ public class MUserController extends BaseController {
     	tdUserService.saveUserPassword(currentUser);
     	res.put("info", "密码修改成功！");
 		res.put("status", "y");
+		request.getSession().removeAttribute("changePasswordValidCode");
 		return res;
 	}
 	
@@ -366,6 +368,32 @@ public class MUserController extends BaseController {
 	 */
 	@RequestMapping("/changePhoneNum")
 	public String changePhoneNum(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currentUser = this.getCurrentUser();
+		List<Integer> reginIds = new ArrayList<>();
+		if(currentUser.getUregionId() != null){
+			TdDistrict dis = tdDistrictService.findOne(currentUser.getUregionId());
+			reginIds.add(dis.getId());
+			if(!dis.getLevel().equals(Byte.valueOf("1"))){
+				dis = tdDistrictService.findOne(dis.getUpid());
+				reginIds.add(dis.getId());
+				if(!dis.getLevel().equals(Byte.valueOf("1"))){
+					dis = tdDistrictService.findOne(dis.getUpid());
+					reginIds.add(dis.getId());
+				}
+			}
+		}
+		if(reginIds.size() > 0){
+			modelMap.addAttribute("levelCount", reginIds.size());
+			reginIds.add(0);
+			String disIdStr = "";
+			for(int i = reginIds.size() - 1; i >= 0; i --){
+				disIdStr += reginIds.get(i);
+				if(i > 0){
+					disIdStr += ",";
+				}
+			}
+			modelMap.addAttribute("disIdStr", disIdStr);
+		}
 		return "/mobile/user/changePhoneNum";		
 	}
 	
@@ -1159,6 +1187,41 @@ public class MUserController extends BaseController {
 			return res;
 		}
 	}
+	/*
+	 * 修改手机号及地区
+	 */
+	@RequestMapping("/savePhoneNum")
+	@ResponseBody
+	public Map<String, String> savePhoneNum(TdUser user, String valideCode, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		Map<String, String> res = new HashMap<>();
+		try{
+			String changePasswordValidCode = (String) request.getSession().getAttribute("changePasswordValidCode");
+			if(!valideCode.equals(changePasswordValidCode)){
+				res.put("info", "验证码错误！");
+				res.put("status", "n");
+				request.getSession().removeAttribute("changePasswordValidCode");
+				//return res;
+			}
+			TdUser currentUser = this.getCurrentUser();
+			TdUser u = new TdUser();
+			u.setUid(currentUser.getUid());
+			u.setUtel(user.getUtel());
+			u.setUregionId(user.getUregionId());
+			tdUserService.saveUserInfo(u);
+		} catch(Exception e){
+			res.put("status", "n");
+			res.put("info", "保存失败！");
+			logger.error("用户修改手机号及地区失败！");
+			request.getSession().removeAttribute("changePasswordValidCode");
+			e.printStackTrace();
+			return res;
+		}
+		res.put("status", "y");
+		res.put("info", "修改成功！");
+		request.getSession().removeAttribute("changePasswordValidCode");
+		return res;
+	}
+	
 	
 	/*
 	 * 加载对应商品类别的规格
@@ -1300,13 +1363,14 @@ public class MUserController extends BaseController {
 	 * 加载地区
 	 */
 	@RequestMapping("/getDistrictSelections")
-	public String getDistrictSelections(Integer parentId, String nextLiId, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	public String getDistrictSelections(Integer parentId, String nextLiId, Integer selectedId, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdDistrictSearchCriteria sc = new TdDistrictSearchCriteria();
 		sc.setFlag(false);
 		sc.setUpid(parentId);
 		List<TdDistrict> districtSelections = tdDistrictService.findBySearchCriteria(sc);
 		modelMap.addAttribute("districtSelections", districtSelections);
 		modelMap.addAttribute("nextLiId", nextLiId);
+		modelMap.addAttribute("selectedId", selectedId);
 		// 此下拉框是否可以继续响应下一级下拉框
 		TdDistrict selectedDistrict = tdDistrictService.findOne(parentId);
 		if(selectedDistrict == null){
@@ -1347,6 +1411,7 @@ public class MUserController extends BaseController {
 		sc.setEndTime(new Date());
 		sc.setOrderBy("2");
 		sc.setStatus((byte)1);
+		sc.setRegionId(user.getUregionId());
 		TdAdsense adsense = tdAdsenseService.findByName("触屏首页轮播大图广告");
 		if(null != adsense)
 		{
@@ -1379,6 +1444,7 @@ public class MUserController extends BaseController {
 		// 热销推荐
 		TdProductCriteria psc = new TdProductCriteria();
 		psc.setHotRecommend(1);
+		psc.setKind((byte)1);
 		psc.setOnshelf(true);
 		psc.setUid(user.getUid());
 		map.addAttribute("productList", tdProductService.findBySearchCriteria(psc));

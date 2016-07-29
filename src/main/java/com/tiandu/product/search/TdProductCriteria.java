@@ -1,8 +1,8 @@
 package com.tiandu.product.search;
 
-import java.util.List;
-
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import com.tiandu.common.search.SearchCriteria;
 
@@ -18,6 +18,7 @@ public class TdProductCriteria extends SearchCriteria {
 	private Integer fineRecommend; // 精品推荐
 	private Integer typeRecommend; // 分类推荐
 	private Boolean isNormalProduct = false;
+	private Set<Integer> orderskuIdSet;
 
 	private Integer typeId;
 
@@ -30,9 +31,9 @@ public class TdProductCriteria extends SearchCriteria {
 	private Date startTime;
 	// 结束时间
 	private Date endTime;
-	
+
 	private String keyword;
-	
+
 	public String getName() {
 		return name;
 	}
@@ -129,7 +130,6 @@ public class TdProductCriteria extends SearchCriteria {
 		this.productTypeIds = productTypeIds;
 	}
 
-
 	public Date getStartTime() {
 		return startTime;
 	}
@@ -145,7 +145,7 @@ public class TdProductCriteria extends SearchCriteria {
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
-	
+
 	public String getKeyword() {
 		return keyword;
 	}
@@ -153,8 +153,6 @@ public class TdProductCriteria extends SearchCriteria {
 	public void setKeyword(String keyword) {
 		this.keyword = keyword;
 	}
-	
-	
 
 	public Boolean getIsNormalProduct() {
 		return isNormalProduct;
@@ -162,6 +160,14 @@ public class TdProductCriteria extends SearchCriteria {
 
 	public void setIsNormalProduct(Boolean isNormalProduct) {
 		this.isNormalProduct = isNormalProduct;
+	}
+
+	public Set<Integer> getOrderskuIdSet() {
+		return orderskuIdSet;
+	}
+
+	public void setOrderskuIdSet(Set<Integer> orderskuIdSet) {
+		this.orderskuIdSet = orderskuIdSet;
 	}
 
 	// 列表页排序 1-综合升序，2-综合降序，3-销量升序，4-销量降序，5-价格升序，6,-价格降序。

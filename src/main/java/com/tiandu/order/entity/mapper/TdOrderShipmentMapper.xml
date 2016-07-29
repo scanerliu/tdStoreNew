@@ -16,7 +16,8 @@
     <result column="update_by" property="updateBy" jdbcType="INTEGER" />
     <result column="return_cause" property="returnCause" jdbcType="INTEGER" />
     <result column="return_amount" property="returnAmount" jdbcType="DECIMAL" />
-    
+    <result column="supply_id" property="supplyId" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
     <!-- 订单信息 -->
     <association property="order" resultMap="orderResult"/>
     <!-- 物流公司信息 -->
@@ -38,9 +39,13 @@
     <result column="total_amount" property="totalAmount" jdbcType="DECIMAL" />
     <result column="pay_amount" property="payAmount" jdbcType="DECIMAL" />
     <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="order_status" property="orderStatus" jdbcType="TINYINT" />
+    <result column="order_pay" property="payStatus" jdbcType="TINYINT" />
+    <result column="order_ship" property="shipmentStatus" jdbcType="TINYINT" />
   </resultMap>
   
   <resultMap id="itemOrderSkuResult" type="com.tiandu.order.entity.TdOrderSku" >
+  	<result column="item_img" property="productImage" jdbcType="VARCHAR" />
   	<result column="item_productName" property="productName" jdbcType="VARCHAR" />
   	<result column="item_specification" property="displaySpecifications" jdbcType="VARCHAR" />
   </resultMap>
@@ -51,12 +56,17 @@
   
   <sql id="Base_Column_List" >
     s.id, s.order_id, s.type, s.tracking_no, s.tracking_id, s.return_reason, s.cargo_status, s.status, 
-    s.create_time, s.create_by, s.update_time, s.update_by, s.return_cause, s.return_amount
+    s.create_time, s.create_by, s.update_time, s.update_by, s.return_cause, s.return_amount,s.supply_id,s.remark
   </sql>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
+    , r.total_amount, r.pay_amount, r.order_no ,r.order_status as order_status,r.pay_status as order_pay,r.shipment_status as order_ship
+   , i.id as ITEM_ID, i.quantity as ITEM_QUANTITY,o.product_image as item_img, o.product_name as item_productName, o.display_specifications as item_specification
     from td_order_shipment s
+    	left join td_order_shipment_item i on i.shipment_id = s.id 
+    	left join td_order_sku o on i.order_sku_id = o.order_sku_id
+    	left join td_order r on r.order_id=s.order_id 
     where s.id = #{id,jdbcType=INTEGER}
   </select>
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.order.search.TdOrderShipmentSearchCriteria" >
@@ -65,7 +75,7 @@
     <if test="getOrder">
     , r.total_amount, r.pay_amount, r.order_no 
     </if>
-    , e.name as express_name, i.id as ITEM_ID, i.quantity as ITEM_QUANTITY, o.product_name as item_productName, o.display_specifications as item_specification
+    , e.name as express_name, i.id as ITEM_ID, i.quantity as ITEM_QUANTITY,o.product_image as item_img, o.product_name as item_productName, o.display_specifications as item_specification
     from td_order_shipment s left join td_express e on s.tracking_id = e.id left join td_order_shipment_item i on i.shipment_id = s.id left join td_order_sku o on i.order_sku_id = o.order_sku_id
     <if test="getOrder">
      left join td_order r on r.order_id=s.order_id 
@@ -80,13 +90,12 @@
     <if test="uid != null" >
         and r.user_id=#{uid,jdbcType=INTEGER}
     </if>
+    <if test="supplyId != null" >
+        and s.supply_id=#{supplyId,jdbcType=INTEGER}
+    </if>
   </select>
   <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.order.search.TdOrderShipmentSearchCriteria" >
-    select 
-    <include refid="Base_Column_List" />
-    <if test="getOrder">
-    , total_amount, pay_amount
-    </if>
+    select count(*)
     from td_order_shipment s 
     <if test="getOrder">
      left join td_order o on o.order_id=s.order_id 
@@ -101,6 +110,9 @@
     <if test="uid != null" >
         and o.user_id=#{uid,jdbcType=INTEGER}
     </if>
+    <if test="supplyId != null" >
+        and s.supply_id=#{supplyId,jdbcType=INTEGER}
+    </if>
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
@@ -114,12 +126,12 @@
     insert into td_order_shipment (order_id, type, tracking_no, 
       tracking_id, return_reason, cargo_status, 
       status, create_time, create_by, tracking_trace, voucher_images, return_cause, return_amount,
-      update_time, update_by)
+      update_time, update_by,supply_id,remark)
     values (#{orderId,jdbcType=INTEGER}, #{type,jdbcType=TINYINT}, #{trackingNo,jdbcType=VARCHAR}, 
       #{trackingId,jdbcType=INTEGER}, #{returnReason,jdbcType=VARCHAR}, #{cargoStatus,jdbcType=TINYINT}, 
       #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=INTEGER}, #{trackingTrace,jdbcType=LONGVARCHAR},
       #{voucherImages,jdbcType=LONGVARCHAR},#{returnCause,jdbcType=INTEGER}, #{returnAmount,jdbcType=DECIMAL}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER})
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER},#{supplyId,jdbcType=INTEGER},#{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tiandu.order.entity.TdOrderShipment" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -160,6 +172,12 @@
       <if test="updateBy != null" >
         update_by,
       </if>
+      <if test="supplyId != null" >
+        supply_id,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="orderId != null" >
@@ -194,6 +212,12 @@
       </if>
       <if test="updateBy != null" >
         #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="supplyId != null" >
+        #{supplyId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -245,6 +269,12 @@
       <if test="returnCause != null" >
         return_cause = #{returnCause,jdbcType=INTEGER},
       </if>
+      <if test="supplyId != null" >
+        supply_id = #{supplyId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -264,7 +294,9 @@
       return_amount = #{returnAmount,jdbcType=DECIMAL},
       voucher_images = #{voucherImages,jdbcType=LONGVARCHAR},
       return_cause = #{returnCause,jdbcType=INTEGER},
-      update_by = #{updateBy,jdbcType=INTEGER}
+      update_by = #{updateBy,jdbcType=INTEGER},
+      supply_id = #{supplyId,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -38,6 +38,7 @@ import com.tiandu.product.search.TdAgentProductSearchCriteria;
 import com.tiandu.product.search.TdProductTypeCriteria;
 import com.tiandu.product.service.TdAgentProductService;
 import com.tiandu.product.service.TdProductTypeService;
+import com.tiandu.system.utils.ConfigUtil;
 
 /**
  * 
@@ -74,6 +75,8 @@ public class MobileAgentController extends BaseController{
 	@Autowired
 	private TdDistrictService tdDistrictService;
 	
+	@Autowired
+	private ConfigUtil configUtil;
 	
 	@RequestMapping("/list")
 	public String list(HttpServletRequest req,ModelMap map)
@@ -111,7 +114,16 @@ public class MobileAgentController extends BaseController{
 		{
 			return "/mobile/agent/agentform";
 		}
-		
+		//是否有礼品包
+		Boolean haspackage = false;
+		if(agentId==4){//区县单类代理产品
+			//系统是否启用区县单类代理产品领取礼品包
+			if(configUtil.isAgentProductUsePackage()){
+				haspackage = true;
+			}
+		}else if(agentId==1){
+			haspackage = true;
+		}
 		return "/mobile/agent/typelist";
 	}
 	

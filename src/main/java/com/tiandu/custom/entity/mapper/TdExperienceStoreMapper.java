@@ -20,4 +20,6 @@ public interface TdExperienceStoreMapper {
     
     Integer countByCriteria(TdExperienceStoreSearchCriteria sc);
     public List<TdExperienceStore> findBySearchCriteria(TdExperienceStoreSearchCriteria sc);
+
+	public TdExperienceStore findByUid(Integer uparentId);
 }

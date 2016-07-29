@@ -9,6 +9,8 @@ public class TdOrderShipmentSearchCriteria extends SearchCriteria {
     private boolean getUpdateUser = false; //获取更新人信息
     private boolean getOrder = false; //获取订单信息
     private Integer uid;	//用户id
+    private Integer supplyId; // 供应商ID
+    
 	public Integer getOrderId() {
 		return orderId;
 	}
@@ -39,5 +41,12 @@ public class TdOrderShipmentSearchCriteria extends SearchCriteria {
 	public void setUid(Integer uid) {
 		this.uid = uid;
 	}
+	public Integer getSupplyId() {
+		return supplyId;
+	}
+	public void setSupplyId(Integer supplyId) {
+		this.supplyId = supplyId;
+	}
+	
 	
 }

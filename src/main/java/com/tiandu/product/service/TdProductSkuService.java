@@ -20,4 +20,12 @@ public interface TdProductSkuService {
 	Integer deleteByProductId(Integer proId);
 	
 	public List<TdProductSku> findBySearchCriteria(TdProductSkuCriteria sc);
+
+	/**
+	 * 更新货品库存
+	 * @param productSkuId 货品id
+	 * @param num 增减数量,负数为减，正数为加
+	 * @return
+	 */
+	public int updateStock(Integer productSkuId, int num);
 }

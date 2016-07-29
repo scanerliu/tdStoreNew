@@ -196,5 +196,15 @@ public class TdExperienceStore {
 			return "未通过";
 		}
 	}
+	
+	public boolean isProductTypeStore(Integer typeId){
+		if(null!=this.getStoreTypeIds()){
+			String str = "["+typeId+"]";
+			if(this.getStoreTypeIds().indexOf(str)>=0){
+				return true;
+			}
+		}
+		return false;
+	}
 
 }

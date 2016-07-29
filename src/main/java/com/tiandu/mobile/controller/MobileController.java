@@ -96,6 +96,7 @@ public class MobileController extends BaseController {
 		TdProductCriteria psc = new TdProductCriteria();
 		psc.setHotRecommend(1);
 		psc.setOnshelf(true);
+		psc.setKind((byte)1);
 		map.addAttribute("productList", tdProductService.findBySearchCriteria(psc));
 		
 	    return "/mobile/index";
@@ -147,6 +148,7 @@ public class MobileController extends BaseController {
 		TdProductCriteria psc = new TdProductCriteria();
 		psc.setHotRecommend(1);
 		psc.setOnshelf(true);
+		psc.setKind((byte)1);
 		map.addAttribute("productList", tdProductService.findBySearchCriteria(psc));
 		
 		return "/mobile/index";

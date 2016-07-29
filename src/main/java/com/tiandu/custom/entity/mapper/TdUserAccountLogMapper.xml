@@ -10,9 +10,15 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="note" property="note" jdbcType="VARCHAR" />
     <result column="relation" property="relation" jdbcType="VARCHAR" />
+    
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="totalUpamount" property="totalUpamount" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, uid, preamount, type, upamount, create_time, note, relation
+  </sql>
+  <sql id="Base_Column_With_Username_List">
+    g.id, g.uid, g.preamount, g.type, sum(g.upamount) as totalUpamount, g.create_time, g.note, g.relation, u.uname as username
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -39,6 +45,55 @@
         and uid=#{uid,jdbcType=INTEGER}
     </if>
   </select>
+  
+  <select id="countGroupByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.custom.search.TdUserAccountLogSearchCriteria" >
+  	select count(*) from (
+    select count(*)
+    from td_user_account_log as g
+    left join td_user as u 
+    on g.uid = u.uid
+    where 1=1 
+    	and type = 2
+    <if test="username != null and username != ''" >
+        and u.uname like CONCAT('%',#{username,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="beginDate != null">
+		and g.create_time <![CDATA[ >= ]]>
+		#{beginDate,jdbcType=TIMESTAMP}
+	</if>
+	<if test="endDate != null">
+		and g.create_time <![CDATA[ < ]]>
+		#{endDate,jdbcType=TIMESTAMP}
+	</if>
+	group by g.uid) as t
+  </select>
+  
+  <select id="findGroupBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.custom.search.TdUserAccountLogSearchCriteria" >
+    select 
+    <include refid="Base_Column_With_Username_List" />
+    from td_user_account_log as g
+    left join td_user as u 
+    on g.uid = u.uid
+    where 1=1 
+    and type = 2
+    <if test="username != null and username != ''" >
+        and u.uname like CONCAT('%',#{username,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="beginDate != null">
+		and g.create_time <![CDATA[ >= ]]>
+		#{beginDate,jdbcType=TIMESTAMP}
+	</if>
+	<if test="endDate != null">
+		and g.create_time <![CDATA[ < ]]>
+		#{endDate,jdbcType=TIMESTAMP}
+	</if>
+	group by g.uid
+    <choose>
+		<when test="isAsc != null and isAsc == true">order by totalUpamount asc</when>
+		<when test="isAsc != null and isAsc == false">order by totalUpamount desc</when>
+	</choose>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from td_user_account_log
     where id = #{id,jdbcType=INTEGER}
