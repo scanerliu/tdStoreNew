@@ -510,7 +510,14 @@ public class MShoppingcartController extends BaseController {
 			Set<Integer> suppliers = new HashSet<Integer>(); 
 			for(TdShoppingcartItem item : itemList){
 				//累加每个商品的运费
-				BigDecimal postage = (null!=item.getProduct() && null!=item.getProduct().getPostage())?item.getProduct().getPostage():BigDecimal.ZERO;
+				BigDecimal postage = BigDecimal.ZERO;
+				if(null!=item.getProduct() && null!=item.getProduct().getPostage()){
+					if(ConstantsUtils.PRODUCT_KIND_ZEROBUY.equals(item.getProduct().getKind())){
+						postage = item.getProduct().getPostage().multiply(new BigDecimal(item.getQuantity()));
+					}else{
+						postage = item.getProduct().getPostage();
+					}
+				}
 				cart.setTotalPostage(postage.add(cart.getTotalPostage()));
 				//累加单个商品总金额（价格*数量）
 				BigDecimal quantity = new BigDecimal(item.getQuantity());

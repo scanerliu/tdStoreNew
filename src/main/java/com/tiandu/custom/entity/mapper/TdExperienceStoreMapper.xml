@@ -247,6 +247,7 @@
         and u.uname like CONCAT('%','${searchName}','%' )
     </if>
   </select>
+  
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.custom.search.TdExperienceStoreSearchCriteria" >
     select 
     <include refid="Base_Column_List" />
@@ -276,4 +277,10 @@
     order by sort asc
   </select>
   
+   <select id="findByUid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_experience_store as s
+    where s.uid=#{uid,jdbcType=INTEGER}
+  </select>
 </mapper>

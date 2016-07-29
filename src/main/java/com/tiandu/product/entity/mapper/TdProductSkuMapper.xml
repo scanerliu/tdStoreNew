@@ -206,6 +206,12 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   
+  <update id="updateStock" parameterType="com.tiandu.product.entity.TdProductSku" >
+    update td_product_sku
+    set stock = stock+#{stock,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
   	<select id="selectByProductId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
 	    select 
 	    <include refid="Base_Column_List" />

@@ -19,6 +19,9 @@ public class TdOrderSku {
 
     private Integer productSkuId;
 
+    /**
+     * 货品类型：1-普通商品，2-商品包，3-零元购，4-10元购，5-预售，6-秒杀商品   7-全积分兑换，8-部分积分兑换
+     */
     private Byte itemType;
 
     private String productName;

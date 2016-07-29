@@ -35,6 +35,8 @@ public class TdOrder extends TdBaseEntity{
     private BigDecimal productAmount;
     
     private BigDecimal refundAmount;
+    
+    private BigDecimal benefitAmount;
 
     private Byte paymentId;
 
@@ -279,6 +281,14 @@ public class TdOrder extends TdBaseEntity{
 
 	public void setBenefited(Integer benefited) {
 		this.benefited = benefited;
+	}
+
+	public BigDecimal getBenefitAmount() {
+		return benefitAmount;
+	}
+
+	public void setBenefitAmount(BigDecimal benefitAmount) {
+		this.benefitAmount = benefitAmount;
 	}
 
 	public TdUser getOrderUser() {

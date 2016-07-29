@@ -62,6 +62,7 @@ import com.tiandu.product.entity.TdAgentProduct;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.service.TdAgentProductService;
 import com.tiandu.product.service.TdProductService;
+import com.tiandu.product.service.TdProductSkuService;
 import com.tiandu.system.entity.TdBenefit;
 import com.tiandu.system.search.TdBenefitSearchCriteria;
 import com.tiandu.system.service.TdBenefitService;
@@ -115,6 +116,8 @@ public class TdOrderServiceImpl implements TdOrderService{
 	private TdExperienceStoreService tdExperienceStoreService;
 	@Autowired
 	private TdProductService tdProductService;
+	@Autowired
+	private TdProductSkuService tdProductSkuService;
 	
 	@Autowired
 	private ConfigUtil configUtil;
@@ -401,6 +404,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 		order.setProductAmount(shoppingcart.getTotalProductAmount());
 		order.setRefundAmount(BigDecimal.ZERO);
 		order.setPayAmount(BigDecimal.ZERO);
+		order.setBenefitAmount(BigDecimal.ZERO);
 		order.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_UNSHIPPED);
 		order.setTotalAmount(shoppingcart.getTotalAmount());
 		order.setUpdateBy(currUser.getUid());
@@ -423,14 +427,18 @@ public class TdOrderServiceImpl implements TdOrderService{
 			sku.setOrderId(order.getOrderId());
 			sku.setProductSkuId(item.getProductSkuId());
 			sku.setProductId(item.getProductId());
-			sku.setPrice(item.getProductSku().getSalesPrice());
+			if(ConstantsUtils.PRODUCT_KIND_ZEROBUY.equals(sku.getItemType())){
+				sku.setPrice(item.getProduct().getPostage());
+			}else{
+				sku.setPrice(item.getProductSku().getSalesPrice());
+			}
 			sku.setSupplierPrice(item.getProductSku().getSupplierPrice());
 			sku.setProductName(item.getProduct().getName());
 			sku.setProductSkuCode(item.getProductSku().getSkuCode());
 			sku.setQuantity(item.getQuantity());
 			tdOrderSkuMapper.insert(sku);
 			//更新货品库存
-			//TODO:
+			tdProductSkuService.updateStock(item.getProductSkuId(),-item.getQuantity());
 		}
 		//扣除抵扣积分
 		if(order.getUsedPoint()>0){
@@ -517,7 +525,14 @@ public class TdOrderServiceImpl implements TdOrderService{
 		if(null!=itemList && itemList.size()>0){
 			for(TdShoppingcartItem item : itemList){
 				//累加每个商品的运费
-				BigDecimal postage = (null!=item.getProduct() && null!=item.getProduct().getPostage())?item.getProduct().getPostage():BigDecimal.ZERO;
+				BigDecimal postage = BigDecimal.ZERO;
+				if(null!=item.getProduct() && null!=item.getProduct().getPostage()){
+					if(ConstantsUtils.PRODUCT_KIND_ZEROBUY.equals(item.getProduct().getKind())){
+						postage = item.getProduct().getPostage().multiply(new BigDecimal(item.getQuantity()));
+					}else{
+						postage = item.getProduct().getPostage();
+					}
+				}
 				cart.setTotalPostage(postage.add(cart.getTotalPostage()));
 				//累加单个商品总金额（价格*数量）
 				BigDecimal quantity = new BigDecimal(item.getQuantity());
@@ -941,67 +956,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 					log2.setNote("订单生成代理操作失败：代理产品未找到!");
 				}
 				//分润开始
-				BigDecimal amount = orderProduct.getItemPrice().subtract(agentProduct.getSupplierPrice());
-				TdBenefitSearchCriteria sc = new TdBenefitSearchCriteria();
-				sc.setFlag(false);
-				sc.setTypeId(agentProduct.getId());
-				List<TdBenefit> benefitList = tdBenefitService.findBySearchCriteria(sc);
-				if(null!=benefitList && benefitList.size()>0){
-					TdUser orderUser = tdUserService.findOneWithAccount(order.getUserId());
-					if(null==orderUser||null==orderUser.getUregionId()){
-						//订单操作日志
-						TdOrderLog log3 = new TdOrderLog();
-						log3.setOrderId(order.getOrderId());
-						log3.setCreateBy(1);
-						log3.setCreateTime(now);
-						log3.setOperType(ConstantsUtils.ORDER_LOG_TYPE_BENEFIT);
-						log3.setNote("订单进行分润操作失败:订单用户信息不全。");
-						tdOrderLogMapper.insert(log3);
-					}
-					TdDistrict district = tdDistrictService.findOneFull(orderUser.getUregionId());
-					if(null!=district){//地区分公司分润
-						int size=3;
-						for(int i=0; i<size; i++){
-							int level = i+1;
-							//分销设置
-							TdBenefit  benefit = this.getBenefitConfig(benefitList, ConstantsUtils.AGENT_GROUPID_BRANCH, level);
-							if(null==benefit){
-								logger.error("分公司分润操作错误：分公司分润级别"+level+"设置未找到，");
-								continue;
-							}
-							if(level==1){//分公司第一级为平台
-								String note = "";
-								TdUserAccount account = tdUserAccountService.findOne(1);
-								saveBenefit(account, amount, order, benefit, now, note);								
-							}else{
-								TdBrancheCompanySearchCriteria bsc = new TdBrancheCompanySearchCriteria();
-								bsc.setLevel(level);
-								bsc.setRegionId(district.getId());
-								bsc.setFlag(false);
-								List<TdBrancheCompany> branchList = tdBrancheCompanyService.findBySearchCriteria(bsc);
-								if(null!= branchList && branchList.size()>0){
-									String note = "";
-									TdBrancheCompany branch = branchList.get(0);
-									TdUserAccount account = tdUserAccountService.findOne(branch.getUid());
-									saveBenefit(account, amount, order, benefit, now, note);
-								}else{//未找到分公司，分润转给平台
-									String note = "";
-									TdUserAccount account = tdUserAccountService.findOne(1);
-									saveBenefit(account, amount, order, benefit, now, note);								
-								}
-							}
-						}
-					}
-					//三级分销分润
-					displayDistributionBenefit(amount, order, orderUser, benefitList, 3, now);
-				}
-				Date now2  = new Date();
-				TdOrder uporder2 = new TdOrder();
-				uporder2.setOrderId(order.getOrderId());
-				uporder2.setUpdateBy(1);
-				uporder2.setUpdateTime(now2);
-				uporder2.setBenefited(3);
-				tdOrderMapper.updateByPrimaryKeySelective(uporder2);
+				benefitOrder(order);
 			}else{
 				log2.setNote("订单生成代理操作失败：订单详情未找到!");
 			}			
@@ -1015,76 +970,35 @@ public class TdOrderServiceImpl implements TdOrderService{
 	@Override
 	public void benefitOrder(TdOrder order) throws RuntimeException {
 		Date now  = new Date();
+		//分润花费金额
+		BigDecimal totalBenefitAmount = BigDecimal.ZERO;
+		//订单用于分润金额
+		BigDecimal orderBenefitAmount = BigDecimal.ZERO;
+		
 		if(order.getBenefited()==1||order.getBenefited()==3){
+			//订单用户信息
+			TdUser orderUser = tdUserService.findOneWithAccount(order.getUserId());
 			if(ConstantsUtils.ORDER_KIND_AGENTPRODUCT.equals(order.getOrderType())){//代理产品分润
 				//代理产品添加代理
 				TdOrderProduct orderProduct = tdOrderProductMapper.findByOrderIdAndTypeId(order.getOrderId(), Byte.valueOf("1"));
 				if(null!=orderProduct){
-					//TdAgentProduct agentProduct = tdAgentProductService.findOne(orderProduct.getItemId());
-					//if(null!=agentProduct){
 						BigDecimal amount = orderProduct.getItemPrice().subtract(orderProduct.getSupplierPrice());
 						TdBenefitSearchCriteria sc = new TdBenefitSearchCriteria();
 						sc.setFlag(false);
 						sc.setTypeId(orderProduct.getItemId());
 						List<TdBenefit> benefitList = tdBenefitService.findBySearchCriteria(sc);
-						if(null!=benefitList && benefitList.size()>0){
-							TdUser orderUser = tdUserService.findOneWithAccount(order.getUserId());
-							if(null==orderUser||null==orderUser.getUregionId()){
-								//订单操作日志
-								TdOrderLog log3 = new TdOrderLog();
-								log3.setOrderId(order.getOrderId());
-								log3.setCreateBy(1);
-								log3.setCreateTime(now);
-								log3.setOperType(ConstantsUtils.ORDER_LOG_TYPE_BENEFIT);
-								log3.setNote("订单进行分润操作失败:订单用户信息不全。");
-								tdOrderLogMapper.insert(log3);
-							}
-							TdDistrict district = tdDistrictService.findOneFull(orderUser.getUregionId());
-							if(null!=district){//地区分公司分润
-								int size=3;
-								for(int i=0; i<size; i++){
-									int level = i+1;
-									//分销设置
-									TdBenefit  benefit = this.getBenefitConfig(benefitList, ConstantsUtils.AGENT_GROUPID_BRANCH, level);
-									if(null==benefit){
-										logger.error("分公司分润操作错误：分公司分润级别"+level+"设置未找到，");
-										continue;
-									}
-									if(level==1){//分公司第一级为平台
-										String note = "";
-										TdUserAccount account = tdUserAccountService.findOne(1);
-										saveBenefit(account, amount, order, benefit, now, note);								
-									}else{
-										TdBrancheCompanySearchCriteria bsc = new TdBrancheCompanySearchCriteria();
-										bsc.setLevel(level);
-										bsc.setRegionId(district.getId());
-										bsc.setFlag(false);
-										List<TdBrancheCompany> branchList = tdBrancheCompanyService.findBySearchCriteria(bsc);
-										if(null!= branchList && branchList.size()>0){
-											String note = "";
-											TdBrancheCompany branch = branchList.get(0);
-											TdUserAccount account = tdUserAccountService.findOne(branch.getUid());
-											saveBenefit(account, amount, order, benefit, now, note);
-										}else{//未找到分公司，分润转给平台
-											String note = "";
-											TdUserAccount account = tdUserAccountService.findOne(1);
-											saveBenefit(account, amount, order, benefit, now, note);								
-										}
-									}
-								}
-							}
-							//单类代理分润
-							displayAgentBenefit(amount, order, orderProduct, benefitList, 3, now);
-							//三级分销分润
-							displayDistributionBenefit(amount, order, orderUser, benefitList, 3, now);
-						}
-						TdOrder uporder2 = new TdOrder();
-						uporder2.setOrderId(order.getOrderId());
-						uporder2.setUpdateBy(1);
-						uporder2.setUpdateTime(now);
-						uporder2.setBenefited(2);
-						tdOrderMapper.updateByPrimaryKeySelective(uporder2);
-					//}
+						
+						//单类代理分润
+						BigDecimal agentBenefitAmount = displayAgentBenefit(amount, order, orderProduct, benefitList, 3, now);
+						totalBenefitAmount = totalBenefitAmount.add(agentBenefitAmount);
+						
+						//分公司分润
+						BigDecimal branchBenefitAmount = displayBranchBenefit(amount, order, orderUser, benefitList, 3, now);
+						totalBenefitAmount = totalBenefitAmount.add(branchBenefitAmount);
+						
+						//三级分销分润
+						BigDecimal distriBenefitAmount = displayDistributionBenefit(amount, order, orderUser, benefitList, 3, now);
+						totalBenefitAmount = totalBenefitAmount.add(distriBenefitAmount);
 				}
 			}else if(ConstantsUtils.ORDER_KIND_COMMON.equals(order.getOrderType())){//普通商品分润
 				//普通商品分润设置
@@ -1092,80 +1006,301 @@ public class TdOrderServiceImpl implements TdOrderService{
 				sc.setFlag(false);
 				sc.setTypeId(8);
 				List<TdBenefit> benefitList = tdBenefitService.findBySearchCriteria(sc);
-				//分公司分润
+				
 				List<TdOrderSku> orderSkuList = order.getSkuList();
 				if(null!=orderSkuList && orderSkuList.size()>0){
+					//单类代理分润
 					for(TdOrderSku ordersku : orderSkuList){
 						if(BigDecimal.ZERO.compareTo(ordersku.getBenefitAmount())<0){//有利润空间才分润
 							BigDecimal amount = ordersku.getBenefitAmount();
-							TdProduct product = tdProductService.findOne(ordersku.getProductId());
-							if(null!=product){
-								
+							if(BigDecimal.ZERO.compareTo(amount)<0){
+								orderBenefitAmount = orderBenefitAmount.add(amount);
+								//单类代理分润
+								BigDecimal agentBenefitAmount = displayCommonProductAgentBenefit(amount, order, ordersku, orderUser, benefitList, 4, now);
+								totalBenefitAmount = totalBenefitAmount.add(agentBenefitAmount);								
 							}
 						}
 					}
+					if(BigDecimal.ZERO.compareTo(orderBenefitAmount)<0){
+						//分公司分润
+						BigDecimal branchBenefitAmount = displayBranchBenefit(orderBenefitAmount, order, orderUser, benefitList, 3, now);
+						totalBenefitAmount = totalBenefitAmount.add(branchBenefitAmount);
+						
+						//三级分销分润
+						BigDecimal distBenefitAmount = displayDistributionBenefit(orderBenefitAmount, order, orderUser, benefitList, 4, now);
+						totalBenefitAmount = totalBenefitAmount.add(distBenefitAmount);
+					}
 				}
 			}
+			//更新订单分润信息
+			TdOrder uporder2 = new TdOrder();
+			uporder2.setOrderId(order.getOrderId());
+			uporder2.setBenefitAmount(totalBenefitAmount);
+			uporder2.setUpdateBy(1);
+			uporder2.setUpdateTime(now);
+			uporder2.setBenefited(2);
+			tdOrderMapper.updateByPrimaryKeySelective(uporder2);
 		}
-		
 	}
 	/**
-	 *  普通商品分公司分润
+	 *  商品分公司分润
 	 * @param amount
 	 * @param order
 	 * @param benefitList
 	 * @param size
 	 * @param now
 	 */
-	private void displayCommonProductBranchBenefit(BigDecimal amount, TdOrder order, List<TdBenefit> benefitList, int size, Date now){
-		if(null!=benefitList && benefitList.size()>0){
-			TdUser orderUser = tdUserService.findOneWithAccount(order.getUserId());
-			if(null==orderUser||null==orderUser.getUregionId()){
-				//订单操作日志
-				TdOrderLog log3 = new TdOrderLog();
-				log3.setOrderId(order.getOrderId());
-				log3.setCreateBy(1);
-				log3.setCreateTime(now);
-				log3.setOperType(ConstantsUtils.ORDER_LOG_TYPE_BENEFIT);
-				log3.setNote("订单进行分润操作失败:订单用户信息不全。");
-				tdOrderLogMapper.insert(log3);
+	private BigDecimal displayBranchBenefit(BigDecimal amount, TdOrder order, TdUser orderUser, List<TdBenefit> benefitList, int size, Date now){
+		BigDecimal totalBenefitAmount = BigDecimal.ZERO;//已分润金额
+		TdDistrict district = null;
+		if(null!=orderUser&& null!=orderUser.getUregionId()){
+			district = tdDistrictService.findOneFull(orderUser.getUregionId());//用户注册地址
+		}
+		logger.info("订单"+order.getOrderNo()+" 分公司分润:start");
+		for(int i=0; i<size; i++){
+			int level = i+1;
+			logger.info("订单"+order.getOrderNo()+" 分公司分润:"+level+"级分公司分润");
+			//分销设置
+			TdBenefit  benefit = this.getBenefitConfig(benefitList, ConstantsUtils.AGENT_GROUPID_BRANCH, level);
+			if(null==benefit){
+				logger.info("订单"+order.getOrderNo()+" 分公司分润:"+level+"级分公司分润配置未找到");
+				continue;
 			}
-			TdDistrict district = tdDistrictService.findOneFull(orderUser.getUregionId());
-			if(null!=district){//地区分公司分润
-				for(int i=0; i<size; i++){
-					int level = i+1;
-					//分销设置
-					TdBenefit  benefit = this.getBenefitConfig(benefitList, ConstantsUtils.AGENT_GROUPID_BRANCH, level);
-					if(null==benefit){
-						logger.error("分公司分润操作错误：分公司分润级别"+level+"设置未找到，");
-						continue;
-					}
-					if(level==1){//分公司第一级为平台
+			if(level==1){//分公司第一级为平台
+				String note = "";
+				TdUserAccount account = tdUserAccountService.findOne(1);
+				BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+				totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+			}else if(level==2 && null!=district && null!=district.getRegionProvinceId()){//省直辖市市分公司
+				TdBrancheCompanySearchCriteria bsc = new TdBrancheCompanySearchCriteria();
+				bsc.setLevel(level);
+				bsc.setRegionId(district.getRegionProvinceId());
+				bsc.setFlag(false);
+				List<TdBrancheCompany> branchList = tdBrancheCompanyService.findBySearchCriteria(bsc);
+				if(null!= branchList && branchList.size()>0){
+					String note = "";
+					TdBrancheCompany branch = branchList.get(0);
+					TdUserAccount account = tdUserAccountService.findOne(branch.getUid());
+					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+				}else{//未找到分公司，分润转给平台
+					String note = "未找到"+district.getRegionProvinceName()+" 分公司,分润划归平台。";
+					TdUserAccount account = tdUserAccountService.findOne(1);
+					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+				}
+			}else if(level==3 && null!=district){//地区分公司
+				TdBrancheCompanySearchCriteria bsc = new TdBrancheCompanySearchCriteria();
+				bsc.setLevel(level);
+				bsc.setRegionId(orderUser.getUregionId());
+				bsc.setFlag(false);
+				List<TdBrancheCompany> branchList = tdBrancheCompanyService.findBySearchCriteria(bsc);
+				if(null!= branchList && branchList.size()>0){
+					String note = "";
+					TdBrancheCompany branch = branchList.get(0);
+					TdUserAccount account = tdUserAccountService.findOne(branch.getUid());
+					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+				}else{//未找到分公司，分润转给平台
+					String note = "未找到"+district.getName()+" 分公司,分润划归平台。";
+					TdUserAccount account = tdUserAccountService.findOne(1);
+					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);	
+					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+				}					
+			}else{
+				String note = "未找到地区id"+orderUser.getUregionId()+" 的相关分公司,分润划归平台。";
+				TdUserAccount account = tdUserAccountService.findOne(1);
+				BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+				totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+			}
+		}
+		logger.info("订单"+order.getOrderNo()+" 分公司分润:end，分润金额:"+totalBenefitAmount);
+		return totalBenefitAmount;
+	}
+	
+	/**
+	 *  普通商品单类代理分润
+	 * @param amount
+	 * @param order
+	 * @param benefitList
+	 * @param size
+	 * @param now
+	 */
+	private BigDecimal displayCommonProductAgentBenefit(BigDecimal amount, TdOrder order, TdOrderSku ordersku, TdUser orderUser, List<TdBenefit> benefitList, int size, Date now){
+		BigDecimal totalBenefitAmount = BigDecimal.ZERO;//已分润金额
+		TdDistrict district = null;
+		if(null!=orderUser&& null!=orderUser.getUregionId()){
+			district = tdDistrictService.findOneFull(orderUser.getUregionId());//用户注册地址
+		}
+		//商品信息
+		TdProduct product = tdProductService.findOne(ordersku.getProductId());
+		logger.info("订单"+order.getOrderNo()+" 全国单代分润:start");
+		for(int i=0; i<size; i++){
+			int level = i+1;
+			//分销设置
+			TdBenefit  benefit = this.getBenefitConfig(benefitList, ConstantsUtils.AGENT_GROUPID_AGENT, level);
+			if(null==benefit){
+				logger.info("订单"+order.getOrderNo()+"  全国单代分润:"+level+"级代理分润配置未找到");
+				continue;
+			}else if(null==product||null==product.getTypeId()){
+				String note = "全国单代分润：未找到商品信息,商品id="+ordersku.getProductId()+",分润划归平台。";
+				TdUserAccount account = tdUserAccountService.findOne(1);
+				BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+				totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+			}else if(null==district){
+				String note = "全国单代分润：未找到会员注册地址,商品id="+ordersku.getProductId()+",分润划归平台。";
+				TdUserAccount account = tdUserAccountService.findOne(1);
+				BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+				totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+			}else{
+				BigDecimal benefitAmount = saveCommonProductAgentBenefit(amount, order, orderUser, product, benefit, district, now);
+				totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+			}
+		}
+		logger.info("订单"+order.getOrderNo()+" 全国单代分润:end 分润金额 "+totalBenefitAmount);
+		return totalBenefitAmount;
+	}
+
+	/**
+	 * 普通商品单类代理分润逻辑
+	 * @param amount
+	 * @param order
+	 * @param orderUser
+	 * @param product
+	 * @param benefit
+	 * @param district
+	 * @param now
+	 * @return
+	 */
+	private BigDecimal saveCommonProductAgentBenefit(BigDecimal amount, TdOrder order, TdUser orderUser, TdProduct product, TdBenefit benefit, TdDistrict district, Date now) {
+		BigDecimal totalBenefitAmount = BigDecimal.ZERO;//已分润金额
+		if(null==product.getTypeId()){//不存在代理分类，购买分公司时，代理归平台所有
+			TdUserAccount account = tdUserAccountService.findOne(1);
+			//分润
+			String note = "商品没有分类，故没有"+benefit.getLevel()+"级分销代理 ,分润划归归平台";
+			BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+			totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+		}else{
+			if(benefit.getLevel()==1){//全国单代分润
+				TdAgent agent = tdAgentService.findByTypeIdAndRegionId(product.getTypeId(), 0);
+				if(agent !=null){//上级分销用户id 存在
+					TdUser buser = tdUserService.findOneWithAccount(agent.getUid());
+					if(null!=buser && null!=buser.getUserAccount()){
+						TdUserAccount account = buser.getUserAccount();
+						//分润
 						String note = "";
+						BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+						totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+					}else{//未找到代理，分润转给平台
 						TdUserAccount account = tdUserAccountService.findOne(1);
-						saveBenefit(account, amount, order, benefit, now, note);								
-					}else{
-						TdBrancheCompanySearchCriteria bsc = new TdBrancheCompanySearchCriteria();
-						bsc.setLevel(level);
-						bsc.setRegionId(district.getId());
-						bsc.setFlag(false);
-						List<TdBrancheCompany> branchList = tdBrancheCompanyService.findBySearchCriteria(bsc);
-						if(null!= branchList && branchList.size()>0){
-							String note = "";
-							TdBrancheCompany branch = branchList.get(0);
-							TdUserAccount account = tdUserAccountService.findOne(branch.getUid());
-							saveBenefit(account, amount, order, benefit, now, note);
-						}else{//未找到分公司，分润转给平台
-							String note = "";
-							TdUserAccount account = tdUserAccountService.findOne(1);
-							saveBenefit(account, amount, order, benefit, now, note);								
-						}
+						//分润
+						String note = "未找到全国代理  ，当前分类id="+product.getTypeId()+" ,分润划归归平台";
+						BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+						totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 					}
+				}else{//全国单代分润不存在
+					TdUserAccount account = tdUserAccountService.findOne(1);
+					//分润
+					String note = "未找到全国代理  ，当前分类id="+product.getTypeId()+" ,分润划归归平台";
+					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+				}
+			}else if(benefit.getLevel()==2){//省市单代分润
+				TdDistrict region = district.getRegionProvince();
+				if(null!=region){
+					TdAgent agent = tdAgentService.findByTypeIdAndRegionId(product.getTypeId(), region.getId());
+					if(agent !=null){//省市代理存在
+						TdUser buser = tdUserService.findOneWithAccount(agent.getUid());
+						if(null!=buser && null!=buser.getUserAccount()){
+							TdUserAccount account = buser.getUserAccount();
+							//分润
+							String note = "";
+							BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+							totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+						}else{//未找到代理，分润转给平台
+							TdUserAccount account = tdUserAccountService.findOne(1);
+							//分润
+							String note = "未找到省市代理  ，当前分类id="+product.getTypeId()+" ,分润划归归平台";
+							BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+							totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+						}
+					}else{//省市代理分润不存在
+						TdUserAccount account = tdUserAccountService.findOne(1);
+						//分润
+						String note = "未找到省市代理  ，当前分类id="+product.getTypeId()+" ,分润划归归平台";
+						BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+						totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+					}
+				}else{//地区不存在
+					TdUserAccount account = tdUserAccountService.findOne(1);
+					//分润
+					String note = "未找到省市代理   ，分润划归归平台";
+					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+				}
+			}else if(benefit.getLevel()==3){//地区单代分润
+				TdAgent agent = tdAgentService.findByTypeIdAndRegionId(product.getTypeId(), district.getId());
+				if(agent !=null){//省市代理存在
+					TdUser buser = tdUserService.findOneWithAccount(agent.getUid());
+					if(null!=buser && null!=buser.getUserAccount()){
+						TdUserAccount account = buser.getUserAccount();
+						//分润
+						String note = "";
+						BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+						totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+					}else{//未找到代理，分润转给平台
+						TdUserAccount account = tdUserAccountService.findOne(1);
+						//分润
+						String note = "未找到省市代理  ，当前分类id="+product.getTypeId()+" ,分润划归归平台";
+						BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+						totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+					}
+				}else{//省市代理分润不存在
+					TdUserAccount account = tdUserAccountService.findOne(1);
+					//分润
+					String note = "未找到省市代理  ，当前分类id="+product.getTypeId()+" ,分润划归归平台";
+					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+				}
+			}else if(benefit.getLevel()==4){//体验点分润：体验店发展的会员购买体验店拥有类目的商品是才参与分润
+				if(orderUser.getUparentId()!=0){
+					//查找体验店
+					TdExperienceStore store = tdExperienceStoreService.findByUid(orderUser.getUparentId());
+					if(null!=store && store.isProductTypeStore(product.getTypeId())){
+						TdUser buser = tdUserService.findOneWithAccount(orderUser.getUparentId());
+						if(null!=buser && null!=buser.getUserAccount()){
+							TdUserAccount account = buser.getUserAccount();
+							//分润
+							String note = "";
+							BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+							totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+						}else{//未找到代理，分润转给平台
+							TdUserAccount account = tdUserAccountService.findOne(1);
+							//分润
+							String note = "未找到体验店账号,分润划归归平台";
+							BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+							totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+						}
+					}else{
+						TdUserAccount account = tdUserAccountService.findOne(1);
+						//分润
+						String note = "没有体验店,分润划归归平台";
+						BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+						totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
+					}
+				}else{
+					TdUserAccount account = tdUserAccountService.findOne(1);
+					//分润
+					String note = "没有体验店,分润划归归平台";
+					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 				}
 			}
 		}
+		return totalBenefitAmount;
 	}
 
+	
 	/**
 	 * 代理产品代理分润
 	 * @param amount
@@ -1175,33 +1310,38 @@ public class TdOrderServiceImpl implements TdOrderService{
 	 * @param size
 	 * @param now
 	 */
-	private void displayAgentBenefit(BigDecimal amount, TdOrder order, TdOrderProduct orderProduct, List<TdBenefit> benefitList, int size, Date now) {
+	private BigDecimal displayAgentBenefit(BigDecimal amount, TdOrder order, TdOrderProduct orderProduct, List<TdBenefit> benefitList, int size, Date now) {
+		BigDecimal totalBenefitAmount = BigDecimal.ZERO;//已分润金额
 		TdDistrict district = null;
 		if(orderProduct.getRegionId()>0){
 			district = tdDistrictService.findOneFull(orderProduct.getRegionId());
 		}
+		logger.info("订单"+order.getOrderNo()+" 全国单代分润:start");
 		for(int i=0; i<size;i++){
 			int level = i+1;
 			//分销设置
 			TdBenefit  benefit = this.getBenefitConfig(benefitList, ConstantsUtils.AGENT_GROUPID_AGENT, level);
 			if(null==benefit){
-				logger.error("全国单类代理分销分润操作错误：全国单类代理分销分润级别"+(i+1)+"设置未找到，");
-				throw new RuntimeException("全国单类代理分销分润操作错误：全国单类代理分销分润级别"+(i+1)+"设置未找到，");
+				logger.info("订单"+order.getOrderNo()+"  全国单代分润:"+level+"级代理分润配置未找到");
+				continue;
 			}
 			if(null==orderProduct.getProductTypeId()){
 				TdUserAccount account = tdUserAccountService.findOne(1);
 				//分润
 				String note = "代理产品没有分类，故没有"+level+"级分销 ,分润划归归平台";
-				saveBenefit(account, amount, order, benefit, now, note);
+				BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+				totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 			}else{
 				//代理分润
-				saveAgentBenefit(amount, order, orderProduct, benefit, district, now);
+				BigDecimal benefitAmount = saveAgentBenefit(amount, order, orderProduct, benefit, district, now);
+				totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 			}
 		}
-		
+		logger.info("订单"+order.getOrderNo()+" 全国单代分润:end 分润金额 "+totalBenefitAmount);
+		return totalBenefitAmount;		
 	}
 	/**
-	 * 代理分润
+	 * 代理产品全国分润分润
 	 * @param amount
 	 * @param order
 	 * @param orderProduct
@@ -1209,17 +1349,10 @@ public class TdOrderServiceImpl implements TdOrderService{
 	 * @param district
 	 * @param now
 	 */
-	private void saveAgentBenefit(BigDecimal amount, TdOrder order, TdOrderProduct orderProduct, TdBenefit benefit, TdDistrict district, Date now){
-		if(null==orderProduct.getProductTypeId()){//不存在代理分类，购买分公司时，代理归平台所有
-			TdUserAccount account = tdUserAccountService.findOne(1);
-			//分润
-			String note = "代理产品没有分类，故没有"+benefit.getLevel()+"级分销代理 ,分润划归归平台";
-			saveBenefit(account, amount, order, benefit, now, note);
-		}else if(orderProduct.getLevel()>=benefit.getLevel()){//购买产品级别比分润级别大和相等时，分润归平台
-			TdUserAccount account = tdUserAccountService.findOne(1);
-			//分润
-			String note = "购买产品级别为"+orderProduct.getLevel()+" ，大于等于分润级别"+benefit.getLevel()+" ,分润划归归平台";
-			saveBenefit(account, amount, order, benefit, now, note);
+	private BigDecimal saveAgentBenefit(BigDecimal amount, TdOrder order, TdOrderProduct orderProduct,TdBenefit benefit, TdDistrict district, Date now){
+		BigDecimal totalBenefitAmount = BigDecimal.ZERO;//已分润金额
+		if(orderProduct.getLevel()>=benefit.getLevel()){//购买产品级别比分润级别大和相等时，返回
+			return totalBenefitAmount;
 		}else{
 			if(benefit.getLevel()==1){//全国单代分润
 				TdAgent agent = tdAgentService.findByTypeIdAndRegionId(orderProduct.getProductTypeId(), 0);
@@ -1273,6 +1406,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 				}
 			}
 		}
+		return totalBenefitAmount;
 	}
 
 	/**
@@ -1282,20 +1416,23 @@ public class TdOrderServiceImpl implements TdOrderService{
 	 * @param benefitList
 	 * @param size 分几级
 	 */
-	private void displayDistributionBenefit(BigDecimal amount, TdOrder order, TdUser user, List<TdBenefit> benefitList, int size, Date now) throws RuntimeException{
+	private BigDecimal displayDistributionBenefit(BigDecimal amount, TdOrder order, TdUser user, List<TdBenefit> benefitList, int size, Date now){
+		BigDecimal totalBenefitAmount = BigDecimal.ZERO;//已分润金额
 		int userId = user.getUparentId();
+		logger.info("订单"+order.getOrderNo()+" 三级分销分润:start");
 		for(int i=0; i<size;i++){
 			int level = i+1;
 			//分销设置
 			TdBenefit  benefit = this.getBenefitConfig(benefitList, ConstantsUtils.AGENT_GROUPID_DISTRIBUTION, level);
 			if(null==benefit){
-				logger.error("三级分销分润操作错误：三级分销分润级别"+(i+1)+"设置未找到，");
-				throw new RuntimeException("三级分销分润操作错误：三级分销分润级别"+(i+1)+"设置未找到，");
+				logger.info("订单"+order.getOrderNo()+"  三级分销分润:"+level+"级代理分润配置未找到");
+				continue;
 			}
 			if(i==3 && size==4){//自己购买分润
 				String note = "";
 				TdUserAccount account = user.getUserAccount();
-				saveBenefit(account, amount, order, benefit, now, note);
+				BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+				totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 			}else{
 				//三级分销用户
 				if(userId>0){//上级分销用户id 存在
@@ -1305,22 +1442,27 @@ public class TdOrderServiceImpl implements TdOrderService{
 						TdUserAccount account = buser.getUserAccount();
 						//分润
 						String note = "";
-						saveBenefit(account, amount, order, benefit, now, note);
+						BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+						totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 					}else{//未找到分公司，分润转给平台
 						userId = 0;
 						TdUserAccount account = tdUserAccountService.findOne(1);
 						//分润
 						String note = "未找到"+level+"级分销  ，当前用户userid="+user.getUid()+" ,分润划归归平台";
-						saveBenefit(account, amount, order, benefit, now, note);
+						BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+						totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 					}
 				}else{//上级分销用户id 不存在
 					TdUserAccount account = tdUserAccountService.findOne(1);
 					//分润
 					String note = "未找到"+level+"级分销  ,当前用户userid="+user.getUid()+" ,分润划归归平台";
-					saveBenefit(account, amount, order, benefit, now, note);
+					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 				}
 			}
 		}
+		logger.info("订单"+order.getOrderNo()+" 三级分销分润:end 分润金额 "+totalBenefitAmount);
+		return totalBenefitAmount;
 	}
 	
 	/**
@@ -1331,9 +1473,11 @@ public class TdOrderServiceImpl implements TdOrderService{
 	 * @return
 	 */
 	private TdBenefit getBenefitConfig(List<TdBenefit> benefitList, Integer groupId, Integer level){
-		for(TdBenefit benefit : benefitList){
-			if(groupId.equals(benefit.getGroupId()) && level.equals(benefit.getLevel())){
-				return benefit;
+		if(null!=benefitList&&benefitList.size()>0){
+			for(TdBenefit benefit : benefitList){
+				if(groupId.equals(benefit.getGroupId()) && level.equals(benefit.getLevel())){
+					return benefit;
+				}
 			}
 		}
 		return null;
@@ -1346,17 +1490,19 @@ public class TdOrderServiceImpl implements TdOrderService{
 	 * @param benefit
 	 * @param now
 	 */
-	private void saveBenefit(TdUserAccount account, BigDecimal amount, TdOrder order, TdBenefit benefit, Date now, String note){
+	private BigDecimal saveBenefit(TdUserAccount account, BigDecimal amount, TdOrder order, TdBenefit benefit, Date now, String note){
+		BigDecimal benefitAmount = amount.multiply(new BigDecimal(benefit.getPercent())).divide(new BigDecimal(100));
 		account.setUpdateBy(1);
 		account.setUpdateTime(now);
 		TdUserAccountLog alog = new TdUserAccountLog();
 		alog.setPreamount(account.getAmount());
 		alog.setUid(account.getUid());
-		alog.setUpamount(amount.multiply(new BigDecimal(benefit.getPercent()).divide(new BigDecimal(100))));
+		alog.setUpamount(benefitAmount);
 		alog.setType(TdUserAccountLog.USERACCOUNTLOG_TYPE_PROFIT_INCOME);
     	alog.setCreateTime(now);
     	alog.setNote("订单分润收入，订单编号："+order.getOrderNo()+" "+note);
 		tdUserAccountService.addAmount(account, alog);	
+		return benefitAmount;
 	}
 	
 }

@@ -1,8 +1,10 @@
 package com.tiandu.order.service;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
 
 import com.tiandu.order.entity.TdOrderSku;
+import com.tiandu.order.search.TdOrderSkuSearchCriteria;
+import com.tiandu.report.SaleProductReportEntity;
 
 /**
  * 
@@ -12,5 +14,10 @@ import com.tiandu.order.entity.TdOrderSku;
  */
 public interface TdOrderSkuService {
 
+	public List<TdOrderSku> findBySearchCriteria(TdOrderSkuSearchCriteria sc);
+	
+	public List<SaleProductReportEntity> findGroupBySearchCriteria(TdOrderSkuSearchCriteria sc);
+	
 	TdOrderSku findOne(Integer id);
+	
 }
