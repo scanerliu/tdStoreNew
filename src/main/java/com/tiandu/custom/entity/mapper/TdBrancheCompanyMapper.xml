@@ -187,6 +187,9 @@
     <if test="id != null" >
         and b.id=#{id,jdbcType=INTEGER}
     </if>
+    <if test="uid != null" >
+        and b.uid=#{uid,jdbcType=INTEGER}
+    </if>
     <if test="level != null" >
         and b.level=#{level,jdbcType=TINYINT}
     </if>

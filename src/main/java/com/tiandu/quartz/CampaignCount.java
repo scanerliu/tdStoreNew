@@ -39,7 +39,7 @@ public class CampaignCount {
 	private TdAgentService tdAgentService;
 	
 	public void countCampain(){
-		Map<String, String> smsConfig = ConfigUtil.getInstance().getSMSConfig();
+		Map<String, String> smsConfig = ConfigUtil.getInstance().getCampaignConfig();
 		String campaignagentnumStr = smsConfig.get("campaignagentnum");
 		String campaigncompanysuppliernumStr = smsConfig.get("campaigncompanysuppliernum");
 		Integer campaignagentnum = 999999999;

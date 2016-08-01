@@ -17,9 +17,13 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.custom.entity.TdUser;
+import com.tiandu.custom.entity.TdUserAccount;
 import com.tiandu.custom.entity.TdUserAccountLog;
+import com.tiandu.custom.search.TdUserAccountCriteria;
 import com.tiandu.custom.search.TdUserAccountLogSearchCriteria;
 import com.tiandu.custom.service.TdUserAccountLogService;
+import com.tiandu.custom.service.TdUserAccountService;
 import com.tiandu.order.entity.TdOrderSku;
 import com.tiandu.order.search.TdOrderSkuSearchCriteria;
 import com.tiandu.order.service.TdOrderService;
@@ -52,6 +56,8 @@ public class ReportController extends BaseController {
 	@Autowired
 	private TdUserAccountLogService tdUserAccountLogService;
 	
+	@Autowired
+	private TdUserAccountService tdUserAccountService;
 
 	@RequestMapping("/unsaleList")
 	public String unsaleList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
@@ -66,6 +72,20 @@ public class ReportController extends BaseController {
 	@RequestMapping("/user/incomeList")
 	public String incomeList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		return "/admin/report/userIncomeList";
+	}
+	
+	@RequestMapping("/user/acountLogList")
+	public String acountLogList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currentUser = this.getCurrentUser();
+		TdUserAccount userAccount = tdUserAccountService.findByUid(currentUser.getUid());
+		if(userAccount == null ){
+			modelMap.addAttribute("amount", 0);
+		}else if(userAccount.getAmount() == null){
+			modelMap.addAttribute("amount", 0);
+		}else{
+			modelMap.addAttribute("amount", userAccount.getAmount());
+		}
+		return "/admin/acountLog/acountLogList";
 	}
 	
 	/*
@@ -115,6 +135,9 @@ public class ReportController extends BaseController {
 		return "/admin/report/saleListBody";
 	}
 	
+	/*
+	 * 会员收入
+	 */
 	@RequestMapping("/user/incomeSearch")
 	public String userIncomeSearch(TdUserAccountLogSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		Date endDate = sc.getEndDate();
@@ -132,6 +155,28 @@ public class ReportController extends BaseController {
 		modelMap.addAttribute("userAccountLogList", userAccountLogList);
 		modelMap.addAttribute("sc", sc);
 		return "/admin/report/userIncomeListBody";
+	}
+	
+	/*
+	 * 收支明细
+	 */
+	@RequestMapping("/user/acountLog/search")
+	public String saleSearch(TdUserAccountLogSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		Date endDate = sc.getEndDate();
+		if(endDate != null){
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Calendar endCalendar = Calendar.getInstance();
+			endCalendar.setTime(endDate);
+			endCalendar.add(Calendar.DATE, 1);
+			endDate = endCalendar.getTime();
+			sc.setEndDate(endDate);
+		}
+		
+		List<TdUserAccountLog> acountLogList = tdUserAccountLogService.findBySearchCriteria(sc);
+		
+		modelMap.addAttribute("acountLogList", acountLogList);
+		modelMap.addAttribute("sc", sc);
+		return "/admin/acountLog/acountLogListBody";
 	}
 	
 }

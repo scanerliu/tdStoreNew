@@ -13,6 +13,8 @@ public class TdBrancheCompanySearchCriteria extends SearchCriteria {
 	private Integer level;
 	
 	private Integer regionId;
+	
+	private Integer uid;
 
 	private String districtName;
 
@@ -93,5 +95,14 @@ public class TdBrancheCompanySearchCriteria extends SearchCriteria {
 	public void setRegionId(Integer regionId) {
 		this.regionId = regionId;
 	}
+
+	public Integer getUid() {
+		return uid;
+	}
+
+	public void setUid(Integer uid) {
+		this.uid = uid;
+	}
+	
 
 }

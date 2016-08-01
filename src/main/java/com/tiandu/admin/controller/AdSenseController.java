@@ -2,6 +2,7 @@ package com.tiandu.admin.controller;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +25,10 @@ import com.tiandu.article.search.TdAdvertisementSearchCriteria;
 import com.tiandu.article.service.TdAdsenseService;
 import com.tiandu.article.service.TdAdvertisementService;
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.custom.entity.TdBrancheCompany;
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.custom.search.TdBrancheCompanySearchCriteria;
+import com.tiandu.custom.service.TdBrancheCompanyService;
 
 /**
  * 
@@ -41,6 +45,9 @@ public class AdSenseController extends BaseController{
 	
 	@Autowired
 	private TdAdvertisementService tdAdvertService;
+	
+	@Autowired
+	private TdBrancheCompanyService tdBrancheCompanyService;
 	
 	/**
 	 * @author Max
@@ -132,6 +139,15 @@ public class AdSenseController extends BaseController{
 	@RequestMapping(value="/advert/search")
 	public String adSearch(TdAdvertisementSearchCriteria sc,HttpServletRequest req,ModelMap map)
 	{
+		TdUser currentUser = this.getCurrentUser();
+		TdBrancheCompanySearchCriteria bsc = new TdBrancheCompanySearchCriteria();
+		bsc.setFlag(false);
+		bsc.setUid(currentUser.getUid());
+		List<TdBrancheCompany> bclist = tdBrancheCompanyService.findBySearchCriteria(bsc);
+		if(bclist != null && bclist.size() == 1){
+			sc.setCreateBy(currentUser.getUid());
+		}
+		
 		map.addAttribute("adlist", tdAdvertService.findBySearchCriteria(sc));
 		map.addAttribute("sc", sc);
 		

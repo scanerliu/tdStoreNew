@@ -20,6 +20,8 @@ public class TdUserSearchCriteria extends SearchCriteria {
 	private Integer parentId; // 父类id
 	
 	private Integer uregionId; // 地区id
+	
+	private Integer uprovinceId; // 所属省id
 
 	public String getUname() {
 		return uname;
@@ -108,7 +110,14 @@ public class TdUserSearchCriteria extends SearchCriteria {
 	public void setUregionId(Integer uregionId) {
 		this.uregionId = uregionId;
 	}
-	
-	
 
+	public Integer getUprovinceId() {
+		return uprovinceId;
+	}
+
+	public void setUprovinceId(Integer uprovinceId) {
+		this.uprovinceId = uprovinceId;
+	}
+
+	
 }

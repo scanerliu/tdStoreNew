@@ -54,6 +54,14 @@ public class TdUserAccountServiceImpl implements TdUserAccountService {
 		return true;
 	}
 
+	@Override
+	public TdUserAccount findByUid(Integer uId) {
+		if(uId == null){
+			return null;
+		}
+		return tdUserAccountMapper.selectByPrimaryKey(uId);
+	}
+
 	
 
 	
