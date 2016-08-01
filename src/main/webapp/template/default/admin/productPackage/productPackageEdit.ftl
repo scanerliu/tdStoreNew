@@ -19,6 +19,13 @@
 		        <td><input type="text" name="title" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.title!''}</#if>"  style="width:200px;height:30px"  ></td>
 		    </tr>
 		    <tr>
+		        <th width="150">上架状态：</th>
+		        <td>
+			        <input type="radio" name="onshelf" value="true" <#if !tdProduct?? || (tdProduct.onshelf?? && tdProduct.onshelf)>checked</#if>>${tdProduct.getOnshelfStr()!''}
+			        <input type="radio" name="onshelf" value="false" <#if tdProduct?? && tdProduct.onshelf?? && !tdProduct.onshelf>checked</#if>>${tdProduct.getOnshelfStr()!''}
+		        </td>
+		    </tr>
+		    <tr>
 		        <th width="150">包含商品：</th>
 		        <td><button type="button" class="btn" onclick="openDialog()">添加</button></td>
 		    </tr>
