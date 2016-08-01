@@ -1,7 +1,9 @@
 package com.tiandu.mobile.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -16,13 +18,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tiandu.alipay.util.AlipayNotify;
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.common.utils.ConstantsUtils;
+import com.tiandu.common.utils.WebUtils;
 import com.tiandu.complaint.entity.TdComplaint;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.express.entity.TdExpress;
 import com.tiandu.express.search.TdExpressSearchCriteria;
 import com.tiandu.express.service.TdExpressService;
-import com.tiandu.order.entity.TdJointOrder;
 import com.tiandu.order.entity.TdOrder;
 import com.tiandu.order.entity.TdOrderShipment;
 import com.tiandu.order.search.TdOrderSearchCriteria;
@@ -32,6 +36,9 @@ import com.tiandu.order.service.TdOrderService;
 import com.tiandu.order.service.TdOrderShipmentService;
 import com.tiandu.order.service.TdOrderSkuService;
 import com.tiandu.order.vo.OperResult;
+import com.tiandu.payment.alipay.AlipayConfig;
+import com.tiandu.payment.alipay.Constants;
+import com.tiandu.payment.alipay.PaymentChannelAlipay;
 
 /**
  * 
@@ -258,4 +265,142 @@ public class MOrderController extends BaseController {
 		return map;
 	}
 	
+	/**
+	 * 立即支付
+	 * @author Max
+	 * 
+	 */
+	@RequestMapping("/dopay{orderId}")
+	public String dopay(@PathVariable Integer orderId,HttpServletRequest req,ModelMap map){
+		
+		String ua = req.getHeader("User-Agent");
+		if(WebUtils.checkAgentIsMobile(ua)){
+			req.setAttribute("type", "m");
+		}
+		
+		if(null == orderId){
+			return "redirect:404";
+		}
+		
+		TdOrder order = tdOrderService.findOne(orderId);
+		if(null == order){
+			return "redirect:404";
+		}
+		
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		
+		// 支付时间验证，订单生成24小时内
+		Date cur = new Date();
+		long temp = cur.getTime() - order.getCreateTime().getTime();
+		if (temp > 1000 * 3600 * 24) {
+			order.setOrderStatus((byte)-1);
+			tdOrderService.save(order);
+			return "/mobile/overtime";
+		}
+		
+		// 非待支付订单
+		if(order.getPayStatus() != 2){
+			return "redirect:404";
+		}
+		
+		// 支付金额
+		req.setAttribute("totalAmount", order.getTotalAmount().toString());
+		// 订单编号
+		req.setAttribute("orderNo", order.getOrderNo());
+		
+		String payForm = "";
+		Byte pay = order.getPaymentId();
+		
+		if(ConstantsUtils.ORDER_PAYMENT_ALIPAY.equals(pay)){
+			// 支付宝支付
+			PaymentChannelAlipay paymentChannelAlipay = new PaymentChannelAlipay();
+			payForm = paymentChannelAlipay.getPayFormData(req);
+		}
+		System.err.println(payForm);
+		map.addAttribute("payForm", payForm);
+		
+		return "/mobile/pay_form";
+	}
+	
+	@RequestMapping(value = "/pay/notify_alipay")
+    public void payNotifyAlipay(ModelMap map, HttpServletRequest req,
+            HttpServletResponse resp) {
+    	PaymentChannelAlipay payChannelAlipay = new PaymentChannelAlipay();
+        payChannelAlipay.doResponse(req, resp);
+    }
+	
+	@RequestMapping(value = "/pay/result_alipay")
+    public String payResultAlipay( ModelMap map, HttpServletRequest req,
+            HttpServletResponse resp) {
+        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String[]> requestParams = req.getParameterMap();
+        for (Iterator<String> iter = requestParams.keySet().iterator(); iter
+                .hasNext();) {
+            String name = iter.next();
+            String[] values = requestParams.get(name);
+            String valueStr = "";
+            for (int i = 0; i < values.length; i++) {
+                valueStr = (i == values.length - 1) ? valueStr + values[i]
+                        : valueStr + values[i] + ",";
+            }
+            // 乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
+            try {
+                valueStr = new String(valueStr.getBytes("ISO-8859-1"),
+                        AlipayConfig.CHARSET);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            params.put(name, valueStr);
+        }
+
+        // 获取支付宝的返回参数
+        String orderNo = "";
+        String trade_status = "";
+        try {
+            // 商户订单号
+            orderNo = new String(req.getParameter(Constants.KEY_OUT_TRADE_NO)
+                    .getBytes("ISO-8859-1"), AlipayConfig.CHARSET);
+            // 交易状态
+            trade_status = new String(req.getParameter("trade_status")
+                    .getBytes("ISO-8859-1"), AlipayConfig.CHARSET);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        // 计算得出通知验证结果
+        boolean verify_result = AlipayNotify.verify(params);
+
+        TdOrder order = tdOrderService.findByOrderNo(orderNo);
+        String ua = req.getHeader("User-Agent");
+        if (order == null) {
+            // 订单不存在
+        	// 触屏
+        	
+    		if(WebUtils.checkAgentIsMobile(ua)){
+    			return "/touch/order_pay_failed";
+    		}
+            return "/client/order_pay_failed";
+        }
+        map.put("order", order);
+        if (verify_result) {// 验证成功
+            if ("TRADE_SUCCESS".equals(trade_status)) {
+
+                // 订单支付成功
+                tdOrderService.AfterPaySuccess(order);
+                // 触屏
+            	if(WebUtils.checkAgentIsMobile(ua)){
+                    return "/touch/order_pay_success";
+                }
+                return "/client/order_pay_success";
+            }
+        }
+
+        // 验证失败或者支付失败
+        // 触屏
+        if(WebUtils.checkAgentIsMobile(ua)){
+            return "/touch/order_pay_failed";
+        }
+        return "/client/order_pay_failed";
+    }
 }

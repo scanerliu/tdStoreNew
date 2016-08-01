@@ -95,6 +95,7 @@ public class ConstantsUtils {
 	
 	
 	/**---------------------------订单状态---------------------------**/
+	//订单状态:-1-已取消，1-新订单，2-已支付，3-已发货，4-已收货，5-申请退款， 6-完成
 	/**
 	 * 订单状态：-1 已取消
 	 */
@@ -104,9 +105,25 @@ public class ConstantsUtils {
 	 */
 	public static final Byte ORDER_STATUS_NEW = 1;
 	/**
-	 * 订单状态：2 已完成
+	 * 订单状态：2 已支付
 	 */
-	public static final Byte ORDER_STATUS_COMPLETE = 2;
+	public static final Byte ORDER_STATUS_PAYED = 2;
+	/**
+	 * 订单状态：3 已发货
+	 */
+	public static final Byte ORDER_STATUS_SHIPPMENTED = 3;
+	/**
+	 * 订单状态：4已收货
+	 */
+	public static final Byte ORDER_STATUS_RECEIPTED = 4;
+	/**
+	 * 订单状态：5申请退款
+	 */
+	public static final Byte ORDER_STATUS_APPLYREFUND = 5;
+	/**
+	 * 订单状态：6 已完成
+	 */
+	public static final Byte ORDER_STATUS_COMPLETE = 6;
 	/**
 	 * 订单支付状态： 1 已支付
 	 */

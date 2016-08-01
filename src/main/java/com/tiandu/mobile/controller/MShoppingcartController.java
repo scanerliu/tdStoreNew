@@ -39,11 +39,16 @@ import com.tiandu.order.entity.TdShoppingcartItem;
 import com.tiandu.order.search.TdShoppingcartSearchCriteria;
 import com.tiandu.order.service.TdOrderService;
 import com.tiandu.order.service.TdShoppingcartItemService;
+import com.tiandu.order.vo.ImageOrderVO;
 import com.tiandu.order.vo.OrderForm;
 import com.tiandu.order.vo.ShoppingcartVO;
 import com.tiandu.product.entity.TdAgentProduct;
+import com.tiandu.product.entity.TdProduct;
+import com.tiandu.product.entity.TdProductAttachment;
 import com.tiandu.product.entity.TdProductSku;
 import com.tiandu.product.service.TdAgentProductService;
+import com.tiandu.product.service.TdProductAttachmentService;
+import com.tiandu.product.service.TdProductService;
 import com.tiandu.product.service.TdProductSkuService;
 import com.tiandu.system.utils.ConfigUtil;
 
@@ -75,6 +80,12 @@ public class MShoppingcartController extends BaseController {
 	private TdAgentService tdAgentService;
 	@Autowired
 	private TdAgentProductService tdAgentProductService;
+	
+	@Autowired
+	private TdProductService tdProductService;
+	
+	@Autowired
+	private TdProductAttachmentService tdProductAttachmentService;
 	
 	@Autowired
 	private ConfigUtil configUtil;
@@ -387,7 +398,7 @@ public class MShoppingcartController extends BaseController {
 		Integer commonproductpointpercent = configUtil.getCommonProductPointPercent(); //普通商品可积分抵扣的比例
 		Integer partproductpointpercent = configUtil.getPartProductPointPercent(); //部分积分兑换商品可积分抵扣的比例
 		ShoppingcartVO cart = new ShoppingcartVO();
-		//判断商品类型，1普通商品，2代理产品
+		//判断商品类型，1普通商品，2代理产品，3图片美化
 		if(orderForm.getProductType()==2){
 			cart.setPtype(2);
 			TdAgentProduct agentproduct = tdAgentProductService.findOne(orderForm.getAgentProductId());
@@ -425,6 +436,40 @@ public class MShoppingcartController extends BaseController {
 			}else{
 				throw new Exception("下单失败，代理产品不存在或已经下架！");
 			}
+		}else if(orderForm.getProductType()==3){//图片美化订单
+			cart.setPtype(4); //图片订单类型
+			TdProduct product = null;
+			//获取商品信息
+			if(null!=orderForm.getProductId() && orderForm.getProductId()>0){
+				product = tdProductService.findOne(orderForm.getProductId());
+			}
+			
+			if(null==product || !product.getUid().equals(uid)){
+				throw new Exception("下单失败，商品不存在！");
+			}
+			
+			List<TdProductAttachment> attachmentList = tdProductAttachmentService.findByProductId(product.getId());
+			if(null==attachmentList || attachmentList.size()==0){
+				throw new Exception("下单失败，商品图片不存在！");
+			}
+			Integer imageNum = attachmentList.size();
+			Integer imageprice = configUtil.getImageProcessingPrice();
+			ImageOrderVO imageorder = new ImageOrderVO();
+			imageorder.setAttachmentList(attachmentList);
+			imageorder.setImageNum(imageNum);
+			imageorder.setPrice(imageprice);
+			imageorder.setProduct(product);
+			BigDecimal totalAmount = new BigDecimal(imageNum * imageprice);
+			
+			cart.setImageOrder(imageorder);
+			cart.setTotalAmount(totalAmount);
+			cart.setTotalProductAmount(totalAmount);
+			cart.setTotalCommonPointAmount(BigDecimal.ZERO);
+			cart.setTotalPointAmount(BigDecimal.ZERO);
+			cart.setTotalcount(1);
+			cart.setGainPoints(0);
+			cart.setSupplierId(1);
+			
 		}else{
 			cart.setPtype(1);
 			TdShoppingcartItem item = new TdShoppingcartItem();

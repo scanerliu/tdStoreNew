@@ -14,6 +14,8 @@ public class TdDistrict {
     private Integer upid;
 
     private Short displayorder;
+    
+    
     /**
      * 地区的上级地区
      */
@@ -66,6 +68,7 @@ public class TdDistrict {
 	public void setParent(TdDistrict parent) {
 		this.parent = parent;
 	}
+	
 
 	/**
      * 直辖市判断 根据id判断

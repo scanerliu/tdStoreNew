@@ -21,4 +21,6 @@ public interface TdOrderMapper {
     public List<TdOrder> findBySearchCriteria(TdOrderSearchCriteria sc);
     public Integer countByCriteria(TdOrderSearchCriteria sc);
     public TdOrder findDetail(Integer orderId);
+    
+    TdOrder findByOrderNo(String orderNo);
 }
