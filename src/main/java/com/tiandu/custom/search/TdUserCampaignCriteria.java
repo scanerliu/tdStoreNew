@@ -12,6 +12,8 @@ public class TdUserCampaignCriteria extends SearchCriteria {
 	private Integer uid;
 
 	private Integer cid; // 活动Id
+	
+	private Byte status;
 
 	public Integer getRegionId() {
 		return regionId;
@@ -60,5 +62,15 @@ public class TdUserCampaignCriteria extends SearchCriteria {
 	public void setUid(Integer uid) {
 		this.uid = uid;
 	}
+
+	public Byte getStatus() {
+		return status;
+	}
+
+	public void setStatus(Byte status) {
+		this.status = status;
+	}
+	
+	
 
 }

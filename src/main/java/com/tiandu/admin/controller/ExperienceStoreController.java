@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.custom.entity.TdExperienceStore;
-import com.tiandu.custom.entity.TdUserSupplier;
 import com.tiandu.custom.search.TdExperienceStoreSearchCriteria;
 import com.tiandu.custom.service.TdExperienceStoreService;
 import com.tiandu.custom.service.TdUserService;

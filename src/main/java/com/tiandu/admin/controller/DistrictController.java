@@ -1,6 +1,5 @@
 package com.tiandu.admin.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,14 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.tiandu.common.utils.MessageSender;
-import com.tiandu.custom.entity.TdRole;
-import com.tiandu.custom.service.TdRoleService;
-import com.tiandu.custom.service.TdUserService;
 import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.search.TdDistrictSearchCriteria;
 import com.tiandu.district.service.TdDistrictService;
-import com.tiandu.menu.service.TdMenuService;
 
 /**
  * 

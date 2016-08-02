@@ -1,10 +1,10 @@
 package com.tiandu.alipay.util.httpClient;
 
+import java.io.UnsupportedEncodingException;
+
 import org.apache.commons.httpclient.Header;
 
 import com.tiandu.alipay.config.AlipayConfig;
-
-import java.io.UnsupportedEncodingException;
 
 /* *
  *类名：HttpResponse

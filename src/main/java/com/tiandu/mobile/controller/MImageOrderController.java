@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,9 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.custom.entity.TdUser;
-import com.tiandu.order.entity.TdJointOrder;
-import com.tiandu.order.vo.OrderForm;
-import com.tiandu.order.vo.ShoppingcartVO;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductAttachment;
 import com.tiandu.product.service.TdProductAttachmentService;

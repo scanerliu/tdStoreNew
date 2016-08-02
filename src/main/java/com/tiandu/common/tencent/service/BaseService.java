@@ -1,12 +1,12 @@
 package com.tiandu.common.tencent.service;
 
-import com.tiandu.common.tencent.common.Configure;
-
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
+
+import com.tiandu.common.tencent.common.Configure;
 
 /**
  * User: rizenguo

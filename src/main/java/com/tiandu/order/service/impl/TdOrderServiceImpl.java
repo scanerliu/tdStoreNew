@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tiandu.common.utils.ConstantsUtils;
+import com.tiandu.common.utils.DateUtil;
+import com.tiandu.common.utils.MessageSender;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.complaint.entity.TdComplaint;
 import com.tiandu.complaint.service.TdComplaintService;
@@ -24,7 +27,6 @@ import com.tiandu.custom.entity.TdUserIntegral;
 import com.tiandu.custom.entity.TdUserIntegralLog;
 import com.tiandu.custom.search.TdAgentSearchCriteria;
 import com.tiandu.custom.search.TdBrancheCompanySearchCriteria;
-import com.tiandu.custom.search.TdExperienceStoreSearchCriteria;
 import com.tiandu.custom.service.TdAgentService;
 import com.tiandu.custom.service.TdBrancheCompanyService;
 import com.tiandu.custom.service.TdExperienceStoreService;
@@ -894,7 +896,26 @@ public class TdOrderServiceImpl implements TdOrderService{
 			result.setFlag(true);
 			result.setFailMsg("投诉已经提交，请等待平台处理。");
 			//发送短信通知管理员
-			//TODO:
+			String phoneNums = configUtil.getComplaintTelphone();
+			if(StringUtils.isNotEmpty(phoneNums)){
+				String message = "投诉订单号："+order.getOrderNo();
+				String[] phones = phoneNums.split(",");
+				List<String> phoneList = new ArrayList<>();
+				for(String phone : phones){
+					phoneList.add(phone);
+				}
+				List<String> datas = new ArrayList<>();
+				datas.add(message);
+				MessageSender ms = new MessageSender();
+				ms.init();
+				boolean isSendSuccess = ms.send(phoneList, ConstantsUtils.SMS_TEMPLATE_COMPLAINT, datas);
+				if(!isSendSuccess){
+					logger.error("投诉短信发送失败,投诉订单编号："+order.getOrderNo());		
+				}
+			}else{
+				logger.error("投诉短信发送失败，系统配置未设置投诉管理员手机号码");
+			}
+			
 		}else{
 			result.setFailMsg("投诉提交失败!");
 		}
@@ -1643,5 +1664,50 @@ public class TdOrderServiceImpl implements TdOrderService{
 		this.payOrder(order, orderPay);
 		
 	}
+
+	@Override
+	public void receiptOrderBySystemJob() {
+		Date now = new Date();
+		Integer orderreceiptperiod = configUtil.getOrderReceiptPeriod();
+		Date receiptTime = DateUtil.getNewDate(now, -orderreceiptperiod);//获取n天前的时间
+		
+		TdOrderSearchCriteria sc = new TdOrderSearchCriteria();
+		sc.setFlag(false);
+//		sc.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_SHIPPED);
+		sc.setOrderStatus(ConstantsUtils.ORDER_STATUS_SHIPPMENTED);
+		sc.setShippmentTime(receiptTime);
+		List<TdOrder> orderList = tdOrderMapper.findBySearchCriteria(sc);
+		if(null!=orderList){
+			TdUser user = tdUserService.findOne(1);//系统账号
+			for(TdOrder order : orderList){
+				this.receiptOrder(order, user);
+			}
+		}
+		
+	}
+
+	@Override
+	public void completeOrderBySystemJob() {
+		Date now = new Date();
+		Integer ordercompleteperiod = configUtil.getOrderCompletePeriod();
+		Date receiptTime = DateUtil.getNewDate(now, -ordercompleteperiod);//获取n天前的时间
+		
+		TdOrderSearchCriteria sc = new TdOrderSearchCriteria();
+		sc.setFlag(false);
+//		sc.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_RECEIPT);
+		sc.setOrderStatus(ConstantsUtils.ORDER_STATUS_RECEIPTED);
+		sc.setReceiptTime(receiptTime);
+		sc.setGetProductSku(true);
+		List<TdOrder> orderList = tdOrderMapper.findBySearchCriteria(sc);
+		if(null!=orderList){
+			TdUser user = tdUserService.findOne(1);//系统账号
+			for(TdOrder order : orderList){
+				this.completeOrder(order, user);
+			}
+		}
+		
+	}
+	
+	
 	
 }

@@ -2,7 +2,6 @@ package com.tiandu.custom.service;
 
 import com.tiandu.custom.entity.TdUserIntegral;
 import com.tiandu.custom.entity.TdUserIntegralLog;
-import com.tiandu.custom.entity.TdUserSign;
 
 public interface TdUserIntegralService {
 

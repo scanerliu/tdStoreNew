@@ -29,14 +29,46 @@
 		<property name="jobDetails">
 			<list>
 				<ref bean="complexJobDetail" />
+				<ref bean="orderReciptJobDetail" />
 			</list>
 		</property>
 
 		<property name="triggers">
 			<list>
 				<ref bean="cronTrigger" />
+				<ref bean="orderReciptTrigger" />
 			</list>
 		</property>
+	</bean>
+	
+	<!-- 订单定时器 -->
+	<!-- 订单自动收货定时任务 -->
+	<bean name="orderReciptJobDetail" 	class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.tiandu.quartz.OrderReceiptScheduledJob" />
+		<property name="jobDataMap">
+			<map>
+				<entry key="tdOrderService" value-ref="tdOrderService"/>
+			</map>
+		</property>
+		<property name="durability" value="true"/>
+	</bean>
+	<bean id="orderReciptTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="orderReciptJobDetail"/>
+		<property name="cronExpression" value="0 0 5 ? * *"/>
+	</bean>
+	<!-- 订单自动完成定时任务 -->
+	<bean name="orderCompleteJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.tiandu.quartz.OrderCompleteScheduledJob" />
+		<property name="jobDataMap">
+			<map>
+				<entry key="tdOrderService" value-ref="tdOrderService"/>
+			</map>
+		</property>
+		<property name="durability" value="true"/>
+	</bean>
+	<bean id="orderCompleteTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="orderCompleteJobDetail"/>
+		<property name="cronExpression" value="0 0 6 ? * *"/>
 	</bean>
 
 </beans>

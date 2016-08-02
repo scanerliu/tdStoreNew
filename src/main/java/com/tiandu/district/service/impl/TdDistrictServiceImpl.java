@@ -10,7 +10,6 @@ import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.entity.mapper.TdDistrictMapper;
 import com.tiandu.district.search.TdDistrictSearchCriteria;
 import com.tiandu.district.service.TdDistrictService;
-import com.tiandu.menu.entity.TdMenu;
 
 /**
  * 
