@@ -344,6 +344,7 @@ public class OrderController extends BaseController {
 		Map<String,String> res = new HashMap<String,String>(); 
 		if(null!=id && id>0){
 			try {
+				Date now = new Date();
 				TdUser currUser = this.getCurrentUser();
 				//收款操作
 				TdOrder order = tdOrderService.findOne(id);

@@ -259,4 +259,8 @@ public class ConstantsUtils {
 	
 	public static final String K_ACCESSTOKEN = "wechat_accessToken"; //微信accessToken
 	
+	
+	/***** 投诉短信通知模板id**************/
+	public static final String SMS_TEMPLATE_COMPLAINT = "105647";
+	
 }
