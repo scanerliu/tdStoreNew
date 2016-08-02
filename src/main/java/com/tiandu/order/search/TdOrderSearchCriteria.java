@@ -1,5 +1,7 @@
 package com.tiandu.order.search;
 
+import java.util.Date;
+
 import com.tiandu.common.search.SearchCriteria;
 
 public class TdOrderSearchCriteria extends SearchCriteria {
@@ -12,6 +14,10 @@ public class TdOrderSearchCriteria extends SearchCriteria {
     private Byte payStatus;  // 支付状态：1-已支付，2-未支付，3-部分退款，4全部退款
     private Byte shipmentStatus; //发货状态：1-已发货，2-未发货，3-部分退货，4-全部退货
     private Boolean getUpdateUser = false; //获取更新人信息
+    
+    //发货时间段查询
+    private Date shippmentTime; // 发货时间
+    private Date receiptTime; //收货时间
     
     //前台查询使用
     private Integer uid; //用户id
@@ -97,6 +103,22 @@ public class TdOrderSearchCriteria extends SearchCriteria {
 
 	public void setSupplierId(Integer supplierId) {
 		this.supplierId = supplierId;
+	}
+
+	public Date getShippmentTime() {
+		return shippmentTime;
+	}
+
+	public void setShippmentTime(Date shippmentTime) {
+		this.shippmentTime = shippmentTime;
+	}
+
+	public Date getReceiptTime() {
+		return receiptTime;
+	}
+
+	public void setReceiptTime(Date receiptTime) {
+		this.receiptTime = receiptTime;
 	}
     
     

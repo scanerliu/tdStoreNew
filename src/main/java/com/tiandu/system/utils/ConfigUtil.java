@@ -254,6 +254,27 @@ public class ConfigUtil {
 	public String getCustomerStatisticsTelphone(){
 		return getConfig("customer_statistics_telphone");
 	}
+	/**
+	 * 获取投诉发送手机号码
+	 * @return
+	 */
+	public String getComplaintTelphone(){
+		return getConfig("complaint_telphone");
+	}
+	/**
+	 * 获取订单自动收货天数
+	 * @return
+	 */
+	public Integer getOrderReceiptPeriod(){
+		return getConfig("orderreceiptperiod",8);
+	}
+	/**
+	 * 获取订单自动完成天数
+	 * @return
+	 */
+	public Integer getOrderCompletePeriod(){
+		return getConfig("ordercompleteperiod",7);
+	}
 	
 	/**
 	 * 获取竞选活动条件配置
