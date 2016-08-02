@@ -1,5 +1,6 @@
 package com.tiandu.mobile.controller;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +43,7 @@ import com.tiandu.product.service.TdProductSkuService;
 import com.tiandu.product.service.TdProductStatService;
 import com.tiandu.product.service.TdProductTypeAttributeService;
 import com.tiandu.product.service.TdProductTypeService;
+import com.tiandu.system.utils.ConfigUtil;
 
 /**
  * 
@@ -86,6 +88,9 @@ public class MProductController extends BaseController {
 	
 	@Autowired
 	private TdUserCollectionService tdUserCollectionService;
+	
+	@Autowired
+	private ConfigUtil configUtil;
 	
 	/*
 	 * 商品列表页
@@ -161,6 +166,13 @@ public class MProductController extends BaseController {
 		TdProductType productType = tdProductTypeService.findOne(product.getTypeId());
 		map.addAttribute("productType", productType);
 		
+		//全积分兑换商品
+		Integer integralexchangerate = configUtil.getIntegralExchangerate(); //积分抵扣金额比例
+		map.addAttribute("integralexchangerate", integralexchangerate);
+		if(ConstantsUtils.PRODUCT_KIND_POINT_EXCHANGE.equals(product.getKind())){
+			Integer points = product.getPrice().multiply(new BigDecimal(integralexchangerate)).setScale(0, BigDecimal.ROUND_FLOOR).intValue();
+			product.setExchangepoints(points);
+		}
 		//推荐商品
 		TdProductCriteria sc = new TdProductCriteria();
 		sc.setKind(ConstantsUtils.PRODUCT_KIND_COMMON);

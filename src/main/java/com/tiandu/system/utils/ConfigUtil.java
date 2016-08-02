@@ -214,11 +214,11 @@ public class ConfigUtil {
 		return getConfig("partproductpointpercent",0);
 	}
 	/**
-	 * 积分抵扣金额比例
+	 * 积分抵扣金额比例(已换算成元单位的比例)
 	 * @return
 	 */
 	public Integer getIntegralExchangerate(){
-		return getConfig("integralexchangerate",0);
+		return getConfig("integralexchangerate",0)*100;
 	}
 	/**
 	 * 订单金额赠送积分比例

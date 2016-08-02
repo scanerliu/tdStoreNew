@@ -337,7 +337,7 @@ public class TdOrder extends TdBaseEntity{
 	 */
 	public BigDecimal getUnPayAmount(){
 		if(null!=this.getTotalAmount()&&null!=this.getPointAmount()&&null!=this.getPayAmount()){
-			return this.getTotalAmount().subtract(this.getPayAmount()).subtract(this.getPointAmount());
+			return this.getTotalAmount().subtract(this.getPointAmount());
 		}
 		return BigDecimal.ZERO;
 	}
@@ -409,6 +409,8 @@ public class TdOrder extends TdBaseEntity{
     			sb.append("微信");
     		}else if(ConstantsUtils.ORDER_PAYMENT_UNIONPAY.equals(this.getPaymentId())){
     			sb.append("银联");
+    		}else if(ConstantsUtils.ORDER_PAYMENT_ACCOUNT.equals(this.getPaymentId())){
+    			sb.append("钱包余额");
     		}
     	}
     	return sb.toString();

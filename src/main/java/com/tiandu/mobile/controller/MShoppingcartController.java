@@ -532,6 +532,9 @@ public class MShoppingcartController extends BaseController {
 			if(ConstantsUtils.PRODUCT_KIND_PART_POINT_EXCHANGE.equals(item.getProduct().getKind()) && partproductpointpercent>0 && integralexchangerate>0){
 				pointAmount =  amount.multiply(new BigDecimal(partproductpointpercent)).divide(new BigDecimal(100));
 				cart.setTotalPartPointAmount(pointAmount);
+			}else if(ConstantsUtils.PRODUCT_KIND_POINT_EXCHANGE.equals(item.getProduct().getKind()) && partproductpointpercent>0 && integralexchangerate>0){
+				pointAmount =  amount;
+				cart.setTotalPartPointAmount(pointAmount.add(cart.getTotalPartPointAmount()));
 			}else if(commonproductpointpercent>0 && integralexchangerate>0){
 				pointAmount =  amount.multiply(new BigDecimal(commonproductpointpercent)).divide(new BigDecimal(100));
 				cart.setTotalCommonPointAmount(pointAmount);
@@ -602,6 +605,9 @@ public class MShoppingcartController extends BaseController {
 				BigDecimal pointAmount =BigDecimal.ZERO;
 				if(ConstantsUtils.PRODUCT_KIND_PART_POINT_EXCHANGE.equals(item.getProduct().getKind()) && partproductpointpercent>0 && integralexchangerate>0){
 					pointAmount =  amount.multiply(new BigDecimal(partproductpointpercent)).divide(new BigDecimal(100));
+					cart.setTotalPartPointAmount(pointAmount.add(cart.getTotalPartPointAmount()));
+				}else if(ConstantsUtils.PRODUCT_KIND_POINT_EXCHANGE.equals(item.getProduct().getKind()) && partproductpointpercent>0 && integralexchangerate>0){
+					pointAmount =  amount;
 					cart.setTotalPartPointAmount(pointAmount.add(cart.getTotalPartPointAmount()));
 				}else if(commonproductpointpercent>0 && integralexchangerate>0){
 					pointAmount =  amount.multiply(new BigDecimal(commonproductpointpercent)).divide(new BigDecimal(100));

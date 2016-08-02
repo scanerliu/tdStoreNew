@@ -93,7 +93,7 @@
         <p>${product.name!''}</p>
         <p>${product.title!''}</p>
         <p>
-        	<label for="" class="fl">￥<span id="prodprice">${product.price!''}</span></label>
+        	<label for="" class="fl"><#if product.kind==7><span id="prodprice">${product.exchangepoints!''}</span>积分<#else>￥<span id="prodprice">${product.price!''}</span></#if></label>
         	<#-- 预售、秒杀倒计时  -->
         	<#if product.kind ==5 || product.kind ==6>
         	 <label for="" id="timeLeft" class="fr">离结束：<span>00</span>天 <span>00</span>时<span>00</span>分<span>00</span>秒</label>
@@ -182,7 +182,7 @@ function timer()
         </section>
         <#if taList??>
         <#list taList as typeatt>
-        <section>
+        <section class="sec1">
             <label class="fl">${typeatt.attribute.name}</label>
             <ul class="fl slect" id="attul_${typeatt.attribute.attriId}">
             	<#if typeatt.attribute.tdProductAttributeOptionList??>
@@ -205,7 +205,7 @@ function timer()
         </section>
         </#list>
         </#if>
-        <section>
+        <section class="sec4">
             <label class="fl">数量</label>
             <aside class="fl">
                 <span  onclick="additem(2)">-</span>
@@ -219,7 +219,7 @@ function timer()
         <input type="hidden" id="propostage" value="${product.postage!'0'}">
         <input type="hidden" id="productId" value="${product.id!''}">
         <input type="hidden" id="productKind" value="${product.kind!'0'}">
-        <input type="hidden" id="pointpercent" value="${system.integralexchangerate!'0'}">
+        <input type="hidden" id="pointpercent" value="${integralexchangerate!'1000'}">
     </div>
     <div class="detail4">
         <section>
@@ -273,6 +273,7 @@ function timer()
 <!-- Footer End -->
 <script>
 	var __skuJsons = ${productjson};
+	__integralexchangerate = ${integralexchangerate!'1000'};
 $(function(){
 });
 </script>

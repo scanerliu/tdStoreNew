@@ -1187,8 +1187,7 @@
 	font-size:0.28rem;
 	color:#666;
 }
-.detail3 section:nth-child(2) li,
-.detail3 section:nth-child(3) li{
+.detail3 section.sec1 li{
 	float:left;
 	padding:0.1rem 0.2rem;
 	margin-right:0.1rem;
@@ -1199,28 +1198,27 @@
 	border:0.02rem solid #959595;
 	border-radius:0.1rem;
 }
-.detail3 section:nth-child(2) li.active,
-.detail3 section:nth-child(3) li.active{
+.detail3 section.sec1 li.active{
 	color:#fff;
 	border:0.02rem solid #f23030;
 	background:#f23030;
 }
-.detail3 section:nth-child(4) span,
-.detail3 section:nth-child(4) input{
+.detail3 section.sec4 span,
+.detail3 section.sec4 input{
 	float:left;
 	width:0.5rem;
-	height:0.5rem;
 	line-height:0.5rem;
 	text-align:center;
 	font-size:0.28rem;
 	color:#666;
+	box-sizing:border-box;
 	border:0.02rem solid #959595;
 }
-.detail3 section:nth-child(4) span:nth-of-type(1){
+.detail3 section.sec4 span:nth-of-type(1){
 	border-radius:0.1rem 0 0 0.1rem;
 	border-right:none;
 }
-.detail3 section:nth-child(4) span:nth-of-type(2){
+.detail3 section.sec4 span:nth-of-type(2){
 	border-radius:0 0.1rem 0.1rem 0 ;
 	border-left:none;
 }

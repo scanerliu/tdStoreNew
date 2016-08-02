@@ -178,7 +178,7 @@ function payOrder(num){
 	if(num>0){
 		var url = basePath+"/admin/order/pay?id="+num;
 		$('#paywindow').window({
-		    title: '订单退款',
+		    title: '订单收款',
 		    closed: false,
 		    cache: false,
 		    minimizable: false,
@@ -194,7 +194,7 @@ function payOrder(num){
 	}
 }
 /**
- * 退款操作
+ * 收款操作
  */
 function payop(){
 	var f = $('#payForm').form('enableValidation').form('validate');

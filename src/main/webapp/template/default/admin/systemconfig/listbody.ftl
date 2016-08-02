@@ -22,7 +22,7 @@
             <td align="right">订单赠送积分比例:</td><td><input type="hidden" name="configKey" value="orderdeliveryintegral"/><input type="text" name="orderdeliveryintegral" id="orderdeliveryintegral" value="${configMap.orderdeliveryintegral!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[0,10000]"/>（是订单金额赠送积分比例，如：每满10元赠送1积分时，此项填10）</td>
         </tr>
         <tr>
-            <td align="right">积分抵扣金额比例:</td><td><input type="hidden" name="configKey" value="integralexchangerate"/><input type="text" name="integralexchangerate" id="integralexchangerate" value="${configMap.integralexchangerate!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,100000000]"/>（积分抵扣一元金额的比例，如：10个积分抵扣一元钱时，此项填10）</td>
+            <td align="right">积分抵扣金额比例:</td><td><input type="hidden" name="configKey" value="integralexchangerate"/><input type="text" name="integralexchangerate" id="integralexchangerate" value="${configMap.integralexchangerate!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,100000000]"/>（积分抵扣一分钱金额的比例，如：10个积分抵扣一分钱时，此项填10）</td>
         </tr>
         <tr>
             <td align="right">普通商品积分可抵扣金额比例:</td><td><input type="hidden" name="configKey" value="commonproductpointpercent"/><input type="text" name="commonproductpointpercent" id="commonproductpointpercent" value="${configMap.commonproductpointpercent!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,100]"/>（普通商品可用积分抵扣金额的比例，如：100元的商品可以用积分抵扣10元时，比例为10%，此项填10）</td>

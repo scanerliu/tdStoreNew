@@ -213,6 +213,10 @@ public class ConstantsUtils {
 	 * 订单支付方式： 3银联
 	 */
 	public static final Byte ORDER_PAYMENT_UNIONPAY = 3;
+	/**
+	 * 订单支付方式： 4钱包余额
+	 */
+	public static final Byte ORDER_PAYMENT_ACCOUNT = 4;
 	
 	
 	/***************************商品类型**************************/

@@ -64,6 +64,10 @@ public class TdProduct {
 
 	// 关联类别
 	private TdProductType tdProductType;
+	/**
+	 * 积分兑换所需积分数量
+	 */
+	private Integer exchangepoints;
 
 	public Integer getId() {
 		return id;
@@ -305,7 +309,15 @@ public class TdProduct {
 		this.tdProductType = tdProductType;
 	}
 	
-	 /**
+	public Integer getExchangepoints() {
+		return exchangepoints;
+	}
+
+	public void setExchangepoints(Integer exchangepoints) {
+		this.exchangepoints = exchangepoints;
+	}
+
+	/**
      * 获取状态文字说明
      * @return
      */
