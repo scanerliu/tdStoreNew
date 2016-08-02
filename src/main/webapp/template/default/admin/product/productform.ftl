@@ -60,11 +60,12 @@
 		        <th>商品类型：</th>
 		        <td>
 		            <input type="radio" name="kind" onclick="changekind(1)" value="1" <#if !tdProduct?? || (tdProduct.kind?? && tdProduct.kind==1)>checked</#if>>普通商品&emsp;
-		            <input type="radio" name="kind" onclick="changekind(this.value)" value="2" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==2>checked</#if>>商品包&emsp;
 		            <input type="radio" name="kind" onclick="changekind(this.value)" value="3" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==3>checked</#if>>0元购&emsp;
 		            <input type="radio" name="kind" onclick="changekind(this.value)" value="4" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==4>checked</#if>>10元购&emsp;
 		            <input type="radio" name="kind" onclick="changekind(this.value)" value="5" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==5>checked</#if>>预售&emsp;
 		            <input type="radio" name="kind" onclick="changekind(this.value)" value="6" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==6>checked</#if>>秒杀&emsp;
+		            <input type="radio" name="kind" onclick="changekind(this.value)" value="7" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==7>checked</#if>>全积分兑换&emsp;
+		            <input type="radio" name="kind" onclick="changekind(this.value)" value="8" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==8>checked</#if>>部分积分兑换&emsp;
 		        </td>
 		    </tr>
 		     <tr>

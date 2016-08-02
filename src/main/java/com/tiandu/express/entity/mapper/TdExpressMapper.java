@@ -2,7 +2,6 @@ package com.tiandu.express.entity.mapper;
 
 import java.util.List;
 
-import com.tiandu.custom.search.TdRoleSearchCriteria;
 import com.tiandu.express.entity.TdExpress;
 import com.tiandu.express.search.TdExpressSearchCriteria;
 

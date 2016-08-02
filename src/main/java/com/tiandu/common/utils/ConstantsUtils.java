@@ -213,6 +213,10 @@ public class ConstantsUtils {
 	 * 订单支付方式： 3银联
 	 */
 	public static final Byte ORDER_PAYMENT_UNIONPAY = 3;
+	/**
+	 * 订单支付方式： 4钱包余额
+	 */
+	public static final Byte ORDER_PAYMENT_ACCOUNT = 4;
 	
 	
 	/***************************商品类型**************************/
@@ -258,5 +262,9 @@ public class ConstantsUtils {
 	/**********************系统配置key*********************************/
 	
 	public static final String K_ACCESSTOKEN = "wechat_accessToken"; //微信accessToken
+	
+	
+	/***** 投诉短信通知模板id**************/
+	public static final String SMS_TEMPLATE_COMPLAINT = "105647";
 	
 }

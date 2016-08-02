@@ -1,5 +1,9 @@
 package com.tiandu.common.tencent.protocol.pay_protocol;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * User: rizenguo
  * Date: 2014/10/22
@@ -9,10 +13,6 @@ package com.tiandu.common.tencent.protocol.pay_protocol;
 import com.tiandu.common.tencent.common.Configure;
 import com.tiandu.common.tencent.common.RandomStringGenerator;
 import com.tiandu.common.tencent.common.Signature;
-
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 请求被扫支付API需要提交的数据

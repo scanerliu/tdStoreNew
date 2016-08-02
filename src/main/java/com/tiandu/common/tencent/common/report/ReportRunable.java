@@ -1,12 +1,12 @@
 package com.tiandu.common.tencent.common.report;
 
-import com.tiandu.common.tencent.common.report.service.ReportService;
-
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
+
+import com.tiandu.common.tencent.common.report.service.ReportService;
 
 /**
  * User: rizenguo

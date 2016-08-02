@@ -77,7 +77,7 @@
         <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_2.png" alt="">
         <span>我的钱包</span>
       </a>
-      <a href="我的积分.html" title="">
+      <a href="${app.basePath}/mobile/user/point/list" title="">
         <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_3.png" alt="">
         <span>我的积分</span>
       </a>
@@ -121,7 +121,7 @@
         <label>我的店铺</label>
         <i class="icon-next"></i>
       </a>
-      <a href="../成为代理-分类列表.html" title="">
+      <a href="${app.basePath}/mobile/agent/list" title="">
         <i class="icon bg_icon_7"></i>
         <label>成为代理</label>
         <i class="icon-next"></i>
@@ -146,7 +146,7 @@
         <label>参加竞选</label>
         <i class="icon-next"></i>
       </a>
-      <a href="下载app.html" title="">
+      <a href="${app.basePath}/mobile/app" title="">
         <i class="icon bg_icon_11"></i>
         <label>下载app</label>
         <i class="icon-next"></i>
@@ -163,7 +163,7 @@
       </a>
     </article><!-- pc-menu end -->
   </section>
-  <a class="btn-sign-out" href="javascript:;" title="">退出登录</a>
+  <a class="btn-sign-out" href="${app.basePath}/mobile/logout" title="">退出登录</a>
 
   <div class="clear" style="width:100%;height:1rem;"></div>
 

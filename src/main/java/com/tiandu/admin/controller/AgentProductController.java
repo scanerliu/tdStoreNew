@@ -17,11 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.common.controller.BaseController;
-import com.tiandu.common.utils.WebUtils;
-import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.entity.TdUser;
-import com.tiandu.custom.search.TdRoleSearchCriteria;
-import com.tiandu.custom.search.TdUserSearchCriteria;
 import com.tiandu.product.entity.TdAgentProduct;
 import com.tiandu.product.search.TdAgentProductSearchCriteria;
 import com.tiandu.product.service.TdAgentProductService;

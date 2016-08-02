@@ -11,3 +11,12 @@
         </a>
 	</#list>
 </#if>
+<script type="text/javascript">
+  $(function(){
+   	 var pageno = ${sc.pageNo+1};
+   	 $("#pageNo").val(pageno);
+   	<#if sc.hasNextPage?? && sc.hasNextPage==true>
+   		$(window).scroll(scrollHandler);
+   	</#if>
+  })
+</script>

@@ -15,14 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.tiandu.custom.entity.TdRole;
-import com.tiandu.custom.search.TdRoleSearchCriteria;
-import com.tiandu.custom.service.TdRoleService;
-import com.tiandu.custom.service.TdUserService;
 import com.tiandu.express.entity.TdExpress;
 import com.tiandu.express.search.TdExpressSearchCriteria;
 import com.tiandu.express.service.TdExpressService;
-import com.tiandu.menu.service.TdMenuService;
 
 /**
  * 

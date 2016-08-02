@@ -99,9 +99,28 @@
 	
 	    <!-- order-detail-pay -->
 	    <ul class="payinfo">
-	        <li>
+	        <style>
+	        .payinfo .sli{
+	        position:relative;
+	        padding-right:.3rem;
+	        }
+	        .payinfo .sli:after{
+	        	content:"";
+	        	position:absolute;
+	        	right:0;
+	        	top:.33rem;
+	        	display:block;
+	        	width:.14rem;
+	        	height:.14rem;
+	        	border:1px solid #ddd;
+	        	border-left:none;
+	        	border-top:none;
+	        	transform:rotate(-45deg);
+	        }
+	        </style>
+	        <li class="sli">
 	            <span>支付方式</span>
-	            <select name="paymentId" class="fr">
+	            <select name="paymentId" class="fr" style="height:100%;border:none;appearance:none;-webkit-appearance:none;font-size:.3rem;color:#999;">
 	                <#if shoppingcart.canUserAccount==true>
 	            	<option value="4">钱包余额支付</option>
 	            	</#if>
@@ -137,7 +156,7 @@
 			</#if>
 	        <li>
 	            <span>买家留言</span>
-	            <span class="message"><input type="text" name="userMsg" value="" placeholder="可填写您与卖家达成一致的要求"/></span>
+	            <span class="message" style="width:70%;"><input type="text" name="userMsg" value="" placeholder="可填写您与卖家达成一致的要求" style="width:100%;text-align:right;border:none;" /></span>
 	        </li>
 	
 	        <li class="total">

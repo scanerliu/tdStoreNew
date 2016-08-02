@@ -35,6 +35,16 @@
 						<input type="text" value="" size="12" class="date" id="time_start" name="time_start">
 						-<input type="text" value="" size="12" class="date" id="time_end" name="time_end">
 						&nbsp;&nbsp;-->
+						<select name="status" class="J_cate_select mr10">
+							<option value="">-商品类型-</option>
+							<option value="1">普通商品</option>
+							<option value="3">0元购</option>
+							<option value="4">10元购</option>
+							<option value="5">预售</option>
+							<option value="6">秒杀</option>
+							<option value="7">全积分兑换</option>
+							<option value="8">部分积分兑换</option>
+						</select>
 						商品名称:<input type="text" value="" size="25" class="input-text" name="name">
 						&nbsp;&nbsp;供应商ID:<input type="text" value="" size="25" class="input-text" name="uid">
 						&nbsp;&nbsp;

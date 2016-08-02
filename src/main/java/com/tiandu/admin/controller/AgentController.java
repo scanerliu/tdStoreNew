@@ -19,9 +19,6 @@ import com.tiandu.common.controller.BaseController;
 import com.tiandu.custom.entity.TdAgent;
 import com.tiandu.custom.search.TdAgentSearchCriteria;
 import com.tiandu.custom.service.TdAgentService;
-import com.tiandu.custom.service.TdUserService;
-import com.tiandu.district.service.TdDistrictService;
-import com.tiandu.product.service.TdProductTypeService;
 
 /**
  * 
@@ -36,15 +33,6 @@ public class AgentController extends BaseController {
 
 	@Autowired
 	private TdAgentService tdAgentService;
-
-	@Autowired
-	private TdUserService tdUserService;
-
-	@Autowired
-	private TdDistrictService tdDistrictService;
-
-	@Autowired
-	private TdProductTypeService tdProductTypeService;
 
 	@RequestMapping("/list")
 	public String list(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {

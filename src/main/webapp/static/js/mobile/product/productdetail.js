@@ -1,3 +1,4 @@
+var __integralexchangerate = 1000;
 /**
  * 规格选择货品操作
  * @param type
@@ -28,12 +29,17 @@ function changeProductSku(skus){
 	var price = 0;
 	var stock = 0;
 	var skuId = 0;
+	var kind = $("#productKind").val();
 	$.each(skuList,function(i,o){
 		var specifica = o.specificationids.split("_");
 		specifica.sort();
 		if(specifica.toString()==idkeys.toString()){
 			exist = true;
-			price = o.salesPrice;
+			if(kind==7){
+				price = o.salesPrice * __integralexchangerate;
+			}else{
+				price = o.salesPrice;
+			}
 			stock = o.stock;
 			skuId = o.id;
 			return false;

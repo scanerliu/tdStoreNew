@@ -1,12 +1,18 @@
 package com.tiandu.mobile.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,6 +26,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.alipay.util.AlipayNotify;
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.common.tencent.common.Configure;
+import com.tiandu.common.tencent.common.RandomStringGenerator;
+import com.tiandu.common.tencent.common.Signature;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.complaint.entity.TdComplaint;
@@ -305,7 +314,7 @@ public class MOrderController extends BaseController {
 		}
 		
 		// 支付金额
-		req.setAttribute("totalAmount", order.getTotalAmount().toString());
+		req.setAttribute("totalAmount", order.getPayAmount().toString());
 		// 订单编号
 		req.setAttribute("orderNo", order.getOrderNo());
 		
@@ -316,12 +325,142 @@ public class MOrderController extends BaseController {
 			// 支付宝支付
 			PaymentChannelAlipay paymentChannelAlipay = new PaymentChannelAlipay();
 			payForm = paymentChannelAlipay.getPayFormData(req);
+		}else if(ConstantsUtils.ORDER_PAYMENT_WEIXIN.equals(pay)){
+			
+			TdUser user = this.getCurrentUser();
+			
+			String openId = user.getJointId();
+			if(null == openId || openId.contains("sys")){
+				return "redirect:404";
+			}
+			// 微信支付
+			//统一支付接口
+			String noncestr = RandomStringGenerator.getRandomStringByLength(32);
+			ModelMap signMap = new ModelMap();
+			signMap.addAttribute("appid", Configure.getAppid());
+			signMap.addAttribute("attach", "订单支付");
+			signMap.addAttribute("body", "支付订单" + order.getOrderNo());
+			signMap.addAttribute("mch_id", Configure.getMchid());
+			signMap.addAttribute("nonce_str",noncestr);
+			signMap.addAttribute("notify_url", "http://120.76.217.106/tdStore/order/wx_notify");
+			signMap.addAttribute("openid", openId);
+			signMap.addAttribute("out_trade_no", order.getOrderNo());
+			signMap.addAttribute("spbill_create_ip", "120.76.217.106");
+			signMap.addAttribute("total_fee", Math.round(order.getPayAmount().doubleValue()*100));
+			signMap.addAttribute("trade_type", "JSAPI");
+
+			String mysign = Signature.getSign(signMap);
+
+			String content = "<xml>\n" 
+					+ "<appid>"+ Configure.getAppid()+ "</appid>\n"
+					+ "<attach>订单支付</attach>\n"
+					+ "<body>支付订单"+ order.getOrderNo()+ "</body>\n"
+					+ "<mch_id>"+ Configure.getMchid()+ "</mch_id>\n"
+					+ "<nonce_str>"+ noncestr+ "</nonce_str>\n"
+					+ "<notify_url>http://120.76.217.106/tdStore/order/wx_notify</notify_url>\n"
+					+ "<openid>" + openId + "</openid>\n" 
+					+ "<out_trade_no>" + order.getOrderNo() + "</out_trade_no>\n"
+					+ "<spbill_create_ip>120.76.217.106</spbill_create_ip>\n"
+					+ "<total_fee>" + Math.round(order.getPayAmount().doubleValue()*100)+ "</total_fee>\n" 
+					+ "<trade_type>JSAPI</trade_type>\n"
+					+ "<sign>" + mysign + "</sign>\n"
+					+ "</xml>\n";
+	    	
+	    	System.err.println("Max:xml-----"+content);
+	    	
+	    	String return_code = null;
+			String prepay_id = null;
+			String result_code = null;
+			String line = null;
+			HttpsURLConnection urlCon = null;
+			try
+			{
+				urlCon = (HttpsURLConnection) (new URL("https://api.mch.weixin.qq.com/pay/unifiedorder")).openConnection();
+				urlCon.setDoInput(true);
+				urlCon.setDoOutput(true);
+				urlCon.setRequestMethod("POST");
+				urlCon.setRequestProperty("Content-Length",String.valueOf(content.getBytes().length));
+				urlCon.setUseCaches(false);
+				urlCon.getOutputStream().write(content.getBytes("utf-8"));
+				urlCon.getOutputStream().flush();
+				urlCon.getOutputStream().close();
+				BufferedReader in = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
+
+				while ((line = in.readLine()) != null)
+				{
+					System.out.println(": rline: " + line);
+					if (line.contains("<return_code>"))
+					{
+						return_code = line.replaceAll(
+								"<xml><return_code><\\!\\[CDATA\\[", "")
+								.replaceAll("\\]\\]></return_code>", "");
+					} 
+					else if (line.contains("<prepay_id>")) 
+					{
+						prepay_id = line.replaceAll("<prepay_id><\\!\\[CDATA\\[",
+								"").replaceAll("\\]\\]></prepay_id>", "");
+					}
+					else if (line.contains("<result_code>"))
+					{
+						result_code = line.replaceAll(
+								"<result_code><\\!\\[CDATA\\[", "").replaceAll(
+										"\\]\\]></result_code>", "");
+					}
+				}
+
+				System.out.println("Max: return_code: " + return_code + "\n");
+				System.out.println("Max: prepay_id: " + prepay_id + "\n");
+				System.out.println("Max: result_code: " + result_code + "\n");
+
+				if ("SUCCESS".equalsIgnoreCase(return_code)
+						&& "SUCCESS".equalsIgnoreCase(result_code)
+						&& null != prepay_id)
+				{
+					noncestr = RandomStringGenerator.getRandomStringByLength(32);
+
+					String timeStamp = String.valueOf(System.currentTimeMillis() / 1000);
+					String packageString = "prepay_id=" + prepay_id;
+					String signType = "MD5";
+					ModelMap returnsignmap = new ModelMap();
+					returnsignmap.addAttribute("appId", Configure.getAppid());
+					returnsignmap.addAttribute("timeStamp", timeStamp);
+					returnsignmap.addAttribute("nonceStr", noncestr);
+					returnsignmap.addAttribute("package", packageString);
+					returnsignmap.addAttribute("signType", signType);
+
+					
+					String returnsign = Signature.getSign(returnsignmap);
+					content = "<xml>\n" + 
+					"<appid>" + Configure.getAppid() + "</appid>\n" + 
+					"<nonceStr>" + noncestr + "</nonceStr>\n" + 
+					"<package>" + packageString + "</package>\n" + 
+					"<signType>" + signType + "</signType>\n" + 
+					"<signType>" + returnsign + "</signType>\n" + 
+					"<timeStamp>" + timeStamp + "</timeStamp>\n" +
+					"</xml>\n";
+
+					System.out.print("Max: returnPayData xml=" + content);
+					map.addAttribute("appId", Configure.getAppid());
+					map.addAttribute("timeStamp", timeStamp);
+					map.addAttribute("nonceStr", noncestr);
+					map.addAttribute("package", packageString);
+					map.addAttribute("signType", signType);
+					map.addAttribute("paySign", returnsign);
+					
+					return "/mobile/pay_wx";
+				}
+			}
+			catch (IOException e)
+			{
+				return "redirect:404";
+			}
+			
 		}
-		System.err.println(payForm);
 		map.addAttribute("payForm", payForm);
 		
 		return "/mobile/pay_form";
 	}
+	
 	
 	@RequestMapping(value = "/pay/notify_alipay")
     public void payNotifyAlipay(ModelMap map, HttpServletRequest req,
@@ -354,6 +493,9 @@ public class MOrderController extends BaseController {
             params.put(name, valueStr);
         }
 
+        // 系统配置
+        map.addAttribute("system", getSystem());
+        
         // 获取支付宝的返回参数
         String orderNo = "";
         String trade_status = "";
@@ -378,7 +520,7 @@ public class MOrderController extends BaseController {
         	// 触屏
         	
     		if(WebUtils.checkAgentIsMobile(ua)){
-    			return "/touch/order_pay_failed";
+    			return "/mobile/pay_failed";
     		}
             return "/client/order_pay_failed";
         }
@@ -390,7 +532,7 @@ public class MOrderController extends BaseController {
                 tdOrderService.AfterPaySuccess(order);
                 // 触屏
             	if(WebUtils.checkAgentIsMobile(ua)){
-                    return "/touch/order_pay_success";
+                    return "/mobile/pay_success";
                 }
                 return "/client/order_pay_success";
             }
@@ -399,8 +541,78 @@ public class MOrderController extends BaseController {
         // 验证失败或者支付失败
         // 触屏
         if(WebUtils.checkAgentIsMobile(ua)){
-            return "/touch/order_pay_failed";
+            return "/mobile/pay_failed";
         }
         return "/client/order_pay_failed";
+    }
+	
+    @RequestMapping(value = "/wx_notify")
+    public void wx_notify(HttpServletResponse response,HttpServletRequest request) throws IOException
+    {
+    	System.out.println("Max: 回调方法触发！\n");
+		BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+
+		String line = null;
+		String return_code = null;
+		String result_code = null;
+//		String noncestr = null;
+		String out_trade_no = null;
+
+		try {
+			while ((line = br.readLine()) != null) {
+				System.out.print("Max: notify" + line + "\n");
+
+				if (line.contains("<return_code>")) {
+					return_code = line.replaceAll("<return_code><\\!\\[CDATA\\[", "") .replaceAll("\\]\\]></return_code>", "");
+				} else if (line.contains("<out_trade_no>")) {
+					out_trade_no = line.replaceAll("<out_trade_no><\\!\\[CDATA\\[", "").replaceAll("\\]\\]></out_trade_no>", "");
+				} else if (line.contains("<result_code>")) {
+					result_code = line.replaceAll("<result_code><\\!\\[CDATA\\[", "").replaceAll("\\]\\]></result_code>", "");
+				}
+			}
+
+			System.out.println("Max: notify return_code: " + return_code + "\n");
+			System.out.println("Max: notify out_trade_no: " + out_trade_no + "\n");
+			System.out.println("Max: notify result_code: " + result_code + "\n");
+
+			if (return_code.contains("SUCCESS") && 
+					result_code.contains("SUCCESS") && 
+					null != out_trade_no)
+			{
+				TdOrder order = tdOrderService.findByOrderNo(out_trade_no);
+
+				if (null != order)
+				{
+					 tdOrderService.AfterPaySuccess(order);
+				}
+				
+				String content = "<xml>\n"
+						+ "<result_code>SUCCESS</result_code>\n"
+						+ "<return_code></return_code>\n"
+						+ "</xml>\n";
+
+				System.out.print("Max: return xml=" + content + "\n");
+
+				try {
+					// 把xml字符串写入响应
+					byte[] xmlData = content.getBytes();
+
+					response.setContentType("text/xml");
+					response.setContentLength(xmlData.length);
+
+					ServletOutputStream os = response.getOutputStream();
+					os.write(xmlData);
+
+					os.flush();
+					os.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			br.close();
+		}
     }
 }

@@ -1,7 +1,6 @@
 package com.tiandu.custom.search;
 
 import com.tiandu.common.search.SearchCriteria;
-import com.tiandu.district.entity.TdDistrict;
 
 public class TdBrancheCompanySearchCriteria extends SearchCriteria {
 	private Integer id;

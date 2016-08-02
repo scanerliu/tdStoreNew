@@ -11,3 +11,26 @@ function searchNew(o){
 	
 	$("#results").load(url,loadData);
 }
+
+//查询积分兑换
+function searchPointProducts(f){
+	var url = basePath+"/mobile/product/point/search";
+	var loadData = "";
+	$(window).off("scroll", scrollHandler);
+	var fliter = $("#sc_fliterType").val();
+	if(f){
+		loadData = $("#searchform").serializeArray();
+		$("#results").loading().load(url,loadData);
+	}else{
+		loadData = $("#listform").serializeArray();
+		$.get(url, loadData, function(html){
+	  		  $(html).appendTo("#results");
+	  	});
+	}
+}
+//查询积分兑换 分页
+var scrollHandler = function(){
+    if ($(document).height() - $(this).scrollTop() - $(this).height()<100){
+    	searchPointProducts(false);
+    } 
+};

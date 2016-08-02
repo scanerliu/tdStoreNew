@@ -25,7 +25,7 @@
 </head>
 <script>
   window.onload=function(){
-    two2();
+    //two2();
     //all_sel();
   }
 </script>
@@ -39,10 +39,6 @@
   <!-- header_top end -->
   <!-- Center Start -->
   <section class="container">
-    <div class="two" id="two2">
-      <a href="javascript:;" title="" class="active"><span>商城</span></a>
-      <a href="javascript:;" title=""><span class="dot">积分</span></a>
-    </div>
     <div class="two2_match" id="two2_match">
       <div id="product_goods">
         <ul class="car_goods">

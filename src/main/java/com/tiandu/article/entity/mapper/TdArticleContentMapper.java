@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.tiandu.article.entity.TdArticleContent;
 import com.tiandu.article.search.TdArticleContentSearchCriteria;
-import com.tiandu.article.search.TdArticleTitleSearchCriteria;
 
 public interface TdArticleContentMapper {
     int deleteByPrimaryKey(Integer aid);

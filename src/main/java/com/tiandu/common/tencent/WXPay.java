@@ -11,7 +11,12 @@ import com.tiandu.common.tencent.protocol.pay_query_protocol.ScanPayQueryReqData
 import com.tiandu.common.tencent.protocol.refund_protocol.RefundReqData;
 import com.tiandu.common.tencent.protocol.refund_query_protocol.RefundQueryReqData;
 import com.tiandu.common.tencent.protocol.reverse_protocol.ReverseReqData;
-import com.tiandu.common.tencent.service.*;
+import com.tiandu.common.tencent.service.DownloadBillService;
+import com.tiandu.common.tencent.service.RefundQueryService;
+import com.tiandu.common.tencent.service.RefundService;
+import com.tiandu.common.tencent.service.ReverseService;
+import com.tiandu.common.tencent.service.ScanPayQueryService;
+import com.tiandu.common.tencent.service.ScanPayService;
 
 /**
  * SDK总入口

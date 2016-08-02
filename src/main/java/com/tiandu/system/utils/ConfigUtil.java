@@ -7,7 +7,6 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tiandu.system.service.TdSystemConfigService;
 
@@ -215,11 +214,11 @@ public class ConfigUtil {
 		return getConfig("partproductpointpercent",0);
 	}
 	/**
-	 * 积分抵扣金额比例
+	 * 积分抵扣金额比例(已换算成元单位的比例)
 	 * @return
 	 */
 	public Integer getIntegralExchangerate(){
-		return getConfig("integralexchangerate",0);
+		return getConfig("integralexchangerate",0)*100;
 	}
 	/**
 	 * 订单金额赠送积分比例
@@ -253,6 +252,27 @@ public class ConfigUtil {
 	 */
 	public String getCustomerStatisticsTelphone(){
 		return getConfig("customer_statistics_telphone");
+	}
+	/**
+	 * 获取投诉发送手机号码
+	 * @return
+	 */
+	public String getComplaintTelphone(){
+		return getConfig("complaint_telphone");
+	}
+	/**
+	 * 获取订单自动收货天数
+	 * @return
+	 */
+	public Integer getOrderReceiptPeriod(){
+		return getConfig("orderreceiptperiod",8);
+	}
+	/**
+	 * 获取订单自动完成天数
+	 * @return
+	 */
+	public Integer getOrderCompletePeriod(){
+		return getConfig("ordercompleteperiod",7);
 	}
 	
 	/**

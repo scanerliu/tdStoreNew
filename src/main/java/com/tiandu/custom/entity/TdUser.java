@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.tiandu.district.entity.TdDistrict;
-import com.tiandu.order.vo.ShoppingcartVO;
 
 public class TdUser {
 	

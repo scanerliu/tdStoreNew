@@ -3,9 +3,7 @@ package com.tiandu.custom.entity.mapper;
 import java.util.List;
 
 import com.tiandu.custom.entity.TdBrancheCompany;
-import com.tiandu.custom.entity.TdExperienceStore;
 import com.tiandu.custom.search.TdBrancheCompanySearchCriteria;
-import com.tiandu.custom.search.TdExperienceStoreSearchCriteria;
 
 public interface TdBrancheCompanyMapper {
     int deleteByPrimaryKey(Integer id);

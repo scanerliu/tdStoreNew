@@ -1,8 +1,6 @@
 package com.tiandu.custom.search;
 
 import com.tiandu.common.search.SearchCriteria;
-import com.tiandu.custom.entity.TdUser;
-import com.tiandu.district.entity.TdDistrict;
 
 public class TdCampaignSearchCriteria extends SearchCriteria {
 	private Integer id;

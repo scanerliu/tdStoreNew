@@ -2,9 +2,7 @@ package com.tiandu.custom.entity.mapper;
 
 import java.util.List;
 
-import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.entity.TdUser;
-import com.tiandu.custom.search.TdRoleSearchCriteria;
 import com.tiandu.custom.search.TdUserSearchCriteria;
 
 public interface TdUserMapper {

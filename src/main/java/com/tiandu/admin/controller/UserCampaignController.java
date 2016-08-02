@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.custom.entity.TdUserCampaign;
-import com.tiandu.custom.search.TdCampaignSearchCriteria;
 import com.tiandu.custom.search.TdUserCampaignCriteria;
 import com.tiandu.custom.service.TdCampaignService;
 import com.tiandu.custom.service.TdUserCampaignService;

@@ -63,6 +63,12 @@ public interface TdOrderService {
 	 * @return
 	 */
 	public OperResult completeOrder(TdOrder order, TdUser user);
+	
+	/**
+	 * 系统自动完成订单任务
+	 * @return
+	 */
+	public void completeOrderBySystemJob();
 
 	/**
 	 * 生成订单
@@ -96,6 +102,11 @@ public interface TdOrderService {
 	 * @return
 	 */
 	public OperResult receiptOrder(TdOrder order, TdUser user);
+	/**
+	 * 系统自动收货任务
+	 * @return
+	 */
+	public void receiptOrderBySystemJob();
 	/**
 	 * 订单支付
 	 * @param order

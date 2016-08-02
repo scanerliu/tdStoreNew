@@ -152,6 +152,12 @@
 	    	<otherwise></otherwise>
     	</choose>
     </if>
+    <if test="shippmentTime != null" >
+        and o.update_time <![CDATA[ < ]]> #{shippmentTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="receiptTime != null" >
+        and o.update_time <![CDATA[ < ]]> #{receiptTime,jdbcType=TIMESTAMP}
+    </if>
     order by o.create_time desc
   </select>
   
@@ -193,6 +199,12 @@
 	    	</when>
 	    	<otherwise></otherwise>
     	</choose>
+    </if>
+    <if test="shippmentTime != null" >
+        and o.update_time <![CDATA[ < ]]> #{shippmentTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="receiptTime != null" >
+        and o.update_time <![CDATA[ < ]]> #{receiptTime,jdbcType=TIMESTAMP}
     </if>
   </select>
   

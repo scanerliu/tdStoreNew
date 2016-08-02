@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.search.TdProductCriteria;
 import com.tiandu.product.service.TdProductService;
@@ -252,6 +254,27 @@ public class MobileProductListController extends BaseController{
 		}
 		
 		return "/mobile/product/new_list_more";
+	}
+	
+	//积分兑换列表
+	@RequestMapping("/point/list")
+	public String point(HttpServletRequest request, HttpServletResponse response,ModelMap map)
+	{
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		return "/mobile/product/point_list";
+	}
+	
+	//积分兑换列表内容
+	@RequestMapping("/point/search")
+	public String pointsearch(TdProductCriteria sc,HttpServletRequest request, HttpServletResponse response, ModelMap map)
+	{
+		sc.setOnshelf(true);
+		sc.setStatus(Byte.valueOf("1"));
+		sc.setStatus(Byte.valueOf("1"));		
+		map.addAttribute("pointList", tdProductService.findBySearchCriteria(sc));
+		map.addAttribute("sc", sc);
+		return "/mobile/product/point_listbody";
 	}
 	
 }

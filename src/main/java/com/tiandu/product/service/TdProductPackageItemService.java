@@ -3,7 +3,6 @@ package com.tiandu.product.service;
 import java.util.List;
 
 import com.tiandu.product.entity.TdProductPackageItem;
-import com.tiandu.product.search.TdBrandSearchCriteria;
 import com.tiandu.product.search.TdProductPackageItemSearchCriteria;
 
 public interface TdProductPackageItemService {
