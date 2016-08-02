@@ -24,17 +24,27 @@ function selectedSkus(){
 	var skuIdStr = "";
 	var idLabels = $("#selectedSkuDiv").find("label");
 	for(var i = 0; i < idLabels.length; i ++){
+		// 获取数据
 		var skuId = $(idLabels[i]).attr("theId");
-		skuIdStr = skuIdStr + skuId;
-		if(i < idLabels.length - 1){
-			skuIdStr = skuIdStr + ",";
-		}
+		var productName = $(idLabels[i]).attr("productName");
+		var productImage = $(idLabels[i]).attr("productImage");
+		var price = $(idLabels[i]).attr("price");
+		var specStr = $(idLabels[i]).attr("specStr");
+		var imgStr = 
+		"<div style='float:left;margin-left:10px;' id='ppiDiv' onclick='removeSkuId(this)'>" +
+			"<div id='productImage'>" + 
+				"<img width='100px' height='100px' src='"+productImage+"'>" + 
+			"</div>" + 
+			"<div>" + 
+				"商品名称：<label id='productName'>"+productName+"</label><br>" + 
+				"销售价：<label id='price'>"+price+"</label><br>" + 
+				"<input type='hidden' id='specifications' value='"+specStr+"'>" + 
+			"</div>" + 
+		"</div>";
+		$("#skusTr").append(imgStr);
+		console.log(imgStr);
 	}
-	var str = $("#skuIdStrInput").val();
-	str = str + "," + skuIdStr
-	$("#skuIdStrInput").val(str);
 	$('#pskuswindow').window('close');
-	flushSkuShow();
 }
 
 // 展示商品包的货品

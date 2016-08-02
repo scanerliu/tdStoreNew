@@ -11,6 +11,7 @@
     <result column="product_name" property="productName" jdbcType="VARCHAR" />
     <result column="product_image" property="productImage" jdbcType="VARCHAR" />
     <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="specifications" property="specifications" jdbcType="VARCHAR" />
     <association property="prouduct" resultMap="ProductResult"/>
     <association property="preProuduct" resultMap="PProductResult"/>
     <association property="productSku" resultMap="productSkuResult"/>
@@ -33,7 +34,7 @@
     <result column="sku_specifications" property="specifications" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    k.id, k.product_id, k.sku_id, k.sort, k.quantity, k.preprouduct_id, k.product_name, k.product_image, k.price
+    k.id, k.product_id, k.sku_id, k.sort, k.quantity, k.preprouduct_id, k.product_name, k.product_image, k.price, k.specifications
   </sql>
   <sql id="Product_Column_List" >
     p.id, p.kind, p.name, p.image_url, p.price
@@ -63,9 +64,9 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into td_product_package_item (product_id, sku_id, sort, 
-      quantity, preprouduct_id, product_name, product_image, price)
+      quantity, preprouduct_id, product_name, product_image, price, specifications)
     values (#{productId,jdbcType=INTEGER}, #{skuId,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, 
-      #{quantity,jdbcType=INTEGER}, #{preprouductId,jdbcType=INTEGER}, #{productName,jdbcType=VARCHAR}, #{productImage,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL})
+      #{quantity,jdbcType=INTEGER}, #{preprouductId,jdbcType=INTEGER}, #{productName,jdbcType=VARCHAR}, #{productImage,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{specifications,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tiandu.product.entity.TdProductPackageItem" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -152,6 +153,9 @@
       <if test="price != null" >
         price = #{price,jdbcType=DECIMAL},
       </if>
+      <if test="specifications != null" >
+        specifications = #{specifications,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -164,7 +168,8 @@
       preprouduct_id = #{preprouductId,jdbcType=INTEGER},
       product_name = #{productName,jdbcType=VARCHAR},
       product_image = #{productImage,jdbcType=VARCHAR},
-      price = #{price,jdbcType=DECIMAL}
+      price = #{price,jdbcType=DECIMAL},
+      specifications = #{specifications,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   

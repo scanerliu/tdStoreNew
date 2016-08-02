@@ -21,8 +21,11 @@ public class TdProductPackageItem {
     
     private BigDecimal price;
     
+    private String specifications;
+    
     private TdProduct prouduct;
     private TdProduct preProuduct;
+    
 
     private TdProductSku productSku;
     
@@ -122,6 +125,14 @@ public class TdProductPackageItem {
 
 	public void setProductSku(TdProductSku productSku) {
 		this.productSku = productSku;
+	}
+
+	public String getSpecifications() {
+		return specifications;
+	}
+
+	public void setSpecifications(String specifications) {
+		this.specifications = specifications;
 	}
     
 	

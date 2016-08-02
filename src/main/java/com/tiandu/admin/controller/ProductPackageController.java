@@ -1,5 +1,6 @@
 package com.tiandu.admin.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -130,6 +131,19 @@ public class ProductPackageController extends BaseController{
 			psc.setFlag(false);
 			psc.setProductId(productPackage.getId());
 			List<TdProductPackageItem> ppiList = tdProductPackageItemService.findBySearchCriteria(psc);
+			List<TdProductPackageItem> addedList = new ArrayList<>();
+			for(TdProductPackageItem ppi : ppiList){
+				Integer quantity =  ppi.getQuantity();
+				if(quantity != null){
+					for(int i = 1; i < quantity; i ++){
+						addedList.add(ppi);
+					}
+				}
+			}
+			ppiList.addAll(addedList);
+			map.addAttribute("ppiList", ppiList);
+			// 下面的内容不起作用，可以删除
+			/*
 			String skuIdStr = "";
 			for(TdProductPackageItem ppi : ppiList){
 				Integer quantity =  ppi.getQuantity();
@@ -139,7 +153,7 @@ public class ProductPackageController extends BaseController{
 					}
 				}
 			}
-			map.addAttribute("skuIdStr", skuIdStr);
+			map.addAttribute("skuIdStr", skuIdStr);*/
 			
 			
 		}
@@ -151,7 +165,7 @@ public class ProductPackageController extends BaseController{
 	
 	@RequestMapping("/save")
 	@ResponseBody
-	public Map<String, String> save(HttpServletRequest request, ModelMap modelMap, TdProduct product, String detail, String dispatch, String service, String attachmentUrls, String skuIdStr){
+	public Map<String, String> save(HttpServletRequest request, ModelMap modelMap, TdProduct product, String detail, String dispatch, String service, String attachmentUrls, String skuIdStr, String[] productImages, String[] productNames, String[] prices, String[] specs){
 		Map<String, String> res = new HashMap<>();
 		try{
 			Date now = new Date();
@@ -196,35 +210,46 @@ public class ProductPackageController extends BaseController{
 			
 			String[] urlArray = attachmentUrls.split(":");
 			for(String url : urlArray){
-				String fileName = url.substring(url.lastIndexOf("/") + 1);
-				TdProductAttachment tpa = new TdProductAttachment();
-				tpa.setFilename(fileName);
-				tpa.setAttachment(url);
-				tpa.setProductId(product.getId());
-				tdProductAttachmentService.save(tpa);
+				if(!url.equals("")){
+					String fileName = url.substring(url.lastIndexOf("/") + 1);
+					TdProductAttachment tpa = new TdProductAttachment();
+					tpa.setFilename(fileName);
+					tpa.setAttachment(url);
+					tpa.setProductId(product.getId());
+					tdProductAttachmentService.save(tpa);					
+				}
 			}
 			
+			//保存productPackageItem
 			tdProductPackageItemService.deleteByProductId(product.getId());
 			
-			List<TdProductSku> skuList = new ArrayList<>();
-			String[] skuIdArray = {};
-			if(!skuIdStr.equals("")){
-				skuIdArray = skuIdStr.split(",");				
+			List<PackageItemEntity> pieList = new ArrayList<>();
+			for(int i = 0; i < productImages.length; i ++){
+				PackageItemEntity pie = new PackageItemEntity();
+				pie.setPrice(prices[i]);
+				pie.setProductImage(productImages[i]);
+				pie.setProductName(productNames[i]);
+				pie.setSpec(specs[i]);
+				pieList.add(pie);
 			}
-			for(String skuId : skuIdArray){
-				TdProductSku pk = tdProductSkuService.findOneWithProduct(Integer.parseInt(skuId));
-				skuList.add(pk);
-			}
-			List<TdProductSku> uniqueSkuList = uniqueSkuList(skuList);
-			for(TdProductSku sku : uniqueSkuList){
+			Set<PackageItemEntity> pieSet = getPakcageItemSet(pieList);
+			for(PackageItemEntity pie : pieSet){
+				int quantity = 0;
+				for(int i = 0; i < pieList.size(); i ++){
+					if(pie.equals(pieList.get(i))){
+						quantity ++;
+					}
+				}
 				TdProductPackageItem ppi = new TdProductPackageItem();
 				ppi.setProductId(product.getId());
-				ppi.setSkuId(sku.getId());
-				ppi.setQuantity(countSkuQuantity(sku.getId(), skuList));
-				ppi.setPreprouductId(sku.getProductId());
-				ppi.setProductName(sku.getProduct().getName());
-				ppi.setProductImage(sku.getProduct().getImageUrl());
-				ppi.setPrice(sku.getProduct().getPrice());
+				ppi.setSkuId(0);
+				ppi.setQuantity(quantity);
+				ppi.setPreprouductId(0);
+				
+				ppi.setProductName(pie.getProductName());
+				ppi.setProductImage(pie.getProductImage());
+				ppi.setSpecifications(pie.getSpec());
+				ppi.setPrice(new BigDecimal(pie.getPrice()));
 				tdProductPackageItemService.save(ppi);
 			}
 			
@@ -260,7 +285,11 @@ public class ProductPackageController extends BaseController{
 		List<TdProductSku> skuList = new ArrayList<>();
 		for(String skuId : skuIdArray){
 			if(!skuId.equals("")){
-				TdProductSku sku = tdProductSkuService.findOneWithProduct(Integer.parseInt(skuId));				
+				TdProductSku sku = tdProductSkuService.findOneWithProduct(Integer.parseInt(skuId));
+				// 若商品对应的货品id已经变更（删除货品，重新保存货品）
+				if(sku == null){
+					
+				}
 				skuList.add(sku);
 			}
 		}
@@ -339,5 +368,79 @@ public class ProductPackageController extends BaseController{
 		res.put("msg", "商品包批量删除成功。");
 		return res;
 	}
+	
+	public Set<PackageItemEntity> getPakcageItemSet(List<PackageItemEntity> pieList){
+		Set<PackageItemEntity> pieSet = new HashSet<>();
+		for(PackageItemEntity pie : pieList){
+			pieSet.add(pie);
+		}
+		return pieSet;
+	}
+	
+	
+}
+
+class PackageItemEntity{
+	private String productImage;
+	private String productName;
+	private String price;
+	private String spec;
+	
+	public String getProductImage() {
+		return productImage;
+	}
+	public void setProductImage(String productImage) {
+		this.productImage = productImage;
+	}
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+	public String getPrice() {
+		return price;
+	}
+	public void setPrice(String price) {
+		this.price = price;
+	}
+	public String getSpec() {
+		return spec;
+	}
+	public void setSpec(String spec) {
+		this.spec = spec;
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((productName == null) ? 0 : productName.hashCode());
+		result = prime * result + ((spec == null) ? 0 : spec.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PackageItemEntity other = (PackageItemEntity) obj;
+		if (productName == null) {
+			if (other.productName != null)
+				return false;
+		} else if (!productName.equals(other.productName))
+			return false;
+		if (spec == null) {
+			if (other.spec != null)
+				return false;
+		} else if (!spec.equals(other.spec))
+			return false;
+		return true;
+	}
+	
+	
+	
 	
 }

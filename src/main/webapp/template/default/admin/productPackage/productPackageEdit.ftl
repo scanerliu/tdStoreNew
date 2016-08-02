@@ -32,6 +32,20 @@
 		    <tr>
 		        <th width="150"></th>
 		        <td id="skusTr">
+		        	<#if ppiList??>
+						<#list ppiList as ppi>
+							<div style="float:left;margin-left:10px;" id="ppiDiv" onclick="removeSkuId(this)">
+								<div id="productImage">
+									<img width="100px" height="100px" src="${ppi.productImage!''}">
+								</div>
+								<div>
+									商品名称：<label id="productName">${ppi.productName!''}</label><br>
+									销售价：<label id="price"><#if ppi.price??>${ppi.price?c}</#if></label><br>
+									<input type="hidden" id="specifications" value="${ppi.specifications!'' }">
+								</div>
+							</div>
+						</#list> 
+					</#if>
 		        </td>
 		    </tr>
 		    <tr>
@@ -173,6 +187,7 @@
 		</table>
 		</div>
 </div>
+ <div id="packageItemInputDiv"></div>
  <input type="hidden" name="tableData" value="" id="formTableData">
  <input type="hidden" id="skuIdStrInput" name="skuIdStr" value="<#if skuIdStr??>${skuIdStr}</#if>" id="skuIdStr">
  <button type="button" class="smt mr10" onclick="setData()">保存</button>
@@ -232,17 +247,18 @@
 		});
 		// 货品展示
 		removeSkuIdStrBlank();
-		flushSkuShow();
+		//flushSkuShow();
 	});
 	
 	// 提交前设置百度编辑器和展示图片的值
 	function setData(){
 		removeSkuIdStrBlank();
 		var sisi = $("#skuIdStrInput").val();
-		if(sisi == ""){
+		if($("#skusTr").find("div").length == 0){
 			$.messager.alert('提示','包含的商品不能为空！');
 			return;
 		}
+		getPackageItemData();
 		var detail = UE.getEditor('detail').getContent();
 		$("#detailArea").html(detail);
 		var dispatch = UE.getEditor('dispatch').getContent();
@@ -277,7 +293,6 @@
 				}
 			});
 		}
-		
 	}
 	
 	function openDialog(){
@@ -294,5 +309,27 @@
                 $(this).window({closed:true});
             }
 		});
+	}
+	
+	function getPackageItemData(){
+		var pidInputStr = "";
+		var skus = $("#skusTr").find("div[id='ppiDiv']");
+		for(var i = 0; i < skus.length; i ++){
+			var productImages = $(skus[i]).find("#productImage img").attr("src");
+			var productNames = $(skus[i]).find("#productName").text();
+			var prices = $(skus[i]).find("#price").text();
+			var specs = $(skus[i]).find("#specifications").val();
+			var piInput = "<input type='hidden' name='productImages' value='"+productImages+"'>";
+			var pnInput = "<input type='hidden' name='productNames' value='"+productNames+"'>";
+			var prInput = "<input type='hidden' name='prices' value='"+prices+"'>";
+			var spInput = "<input type='hidden' name='specs' value='"+specs+"'>";
+			console.log(piInput);
+			console.log(pnInput);
+			console.log(prInput);
+			console.log(spInput);
+			console.log("-----------------------------------------------");
+			pidInputStr = pidInputStr + piInput + pnInput + prInput + spInput;
+		}
+		$("#packageItemInputDiv").html(pidInputStr);
 	}
 </script>

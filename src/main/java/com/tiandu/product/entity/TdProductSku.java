@@ -156,6 +156,8 @@ public class TdProductSku {
 	public void setProduct(TdProduct product) {
 		this.product = product;
 	}
+	
+	
 
 	public List<SkuSpecialVO> getSpecialList() {
 		if(null!=this.specialList){
@@ -211,5 +213,6 @@ public class TdProductSku {
 		return specStr;
 	}
     
+	
     
 }
