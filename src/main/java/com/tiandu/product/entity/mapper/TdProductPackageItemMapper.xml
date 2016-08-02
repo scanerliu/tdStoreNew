@@ -13,6 +13,7 @@
     <result column="price" property="price" jdbcType="DECIMAL" />
     <association property="prouduct" resultMap="ProductResult"/>
     <association property="preProuduct" resultMap="PProductResult"/>
+    <association property="productSku" resultMap="productSkuResult"/>
   </resultMap>
   <resultMap id="ProductResult" type="com.tiandu.product.entity.TdProduct" >
     <id column="pid" property="id" jdbcType="INTEGER" />
@@ -28,6 +29,9 @@
     <result column="ppimage_url" property="imageUrl" jdbcType="VARCHAR" />
     <result column="ppprice" property="price" jdbcType="DECIMAL" />
   </resultMap>
+  <resultMap id="productSkuResult" type="com.tiandu.product.entity.TdProductSku" >
+    <result column="sku_specifications" property="specifications" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Base_Column_List" >
     k.id, k.product_id, k.sku_id, k.sort, k.quantity, k.preprouduct_id, k.product_name, k.product_image, k.price
   </sql>
@@ -36,6 +40,9 @@
   </sql>
   <sql id="PProduct_Column_List" >
     pp.id, pp.kind, pp.name, pp.image_url, pp.price
+  </sql>
+  <sql id="productSku_Column_List" >
+    s.specifications as sku_specifications
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -183,9 +190,11 @@
     <include refid="Base_Column_List" />
     , <include refid="Product_Column_List" />
     , <include refid="PProduct_Column_List" />
+    , <include refid="productSku_Column_List" />
     from td_product_package_item as k
     left join td_product p on p.id= k.product_id
     left join td_product pp on pp.id= k.preprouduct_id
+    left join td_product_sku s on k.sku_id = s.id
     where 1=1 
     <if test="id != null" >
         and k.id=#{id,jdbcType=INTEGER}

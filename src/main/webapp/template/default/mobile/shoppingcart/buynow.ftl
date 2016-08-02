@@ -58,6 +58,23 @@
 	    <ul class="order_goods">
 	    <#if shoppingcart?? && shoppingcart.itemList??>
         	<#list shoppingcart.itemList as item>
+        	<#if item.itemType==2>
+        	<li class="goods_box p">
+	            <img alt="图片" src="${app.basePath}<#if item.productPackageItem??>${item.productPackageItem.productImage!''}</#if>"/>
+	            <section>
+	                <h3>${item.productPackageItem.productName!''}</h3>
+	                <div>
+	                	<#if item.productPackageItem.productSku?? && item.productPackageItem.productSku.specialList??>
+		              	<#list item.productPackageItem.productSku.specialList as special>
+		              	<span><label for="">${special.sname!''}：</label><font>${special.soption!''}</font></span>
+		                </#list>
+		                </#if>
+		                <span><label for="">数量：</label><font>${item.quantity!'0'}</font></span>
+	                </div>
+	                <p>￥${item.productPackageItem.price!'0'}</p>
+	            </section>
+	        </li>
+        	<#else>
 	        <li class="goods_box p">
 	            <img alt="图片" src="${app.basePath}<#if item.product??>${item.product.imageUrl!''}</#if>"/>
 	            <section>
@@ -74,6 +91,7 @@
 	                <p>￥${item.productSku.salesPrice!'0'}</p>
 	            </section>
 	        </li>
+	        </#if>
 	        </#list>
 	     </#if>
 	    </ul>
@@ -133,6 +151,7 @@
 	    <input type="hidden" name="quantity" value="${orderForm.quantity!''}"/>
 	    <input type="hidden" name="productType" value="${orderForm.productType!''}"/>
 	    <input type="hidden" name="agentProductId" value="${orderForm.agentProductId!''}"/>
+	    <input type="hidden" name="addressId" value="${address.id!''}"/>
 	    <!-- order-detail-pay-end -->
 	</section>
 </form>
@@ -142,7 +161,7 @@
 	        <span class="totalprice">总计：<font color="red" id="totalAmountdv">￥${shoppingcart.totalAmount!''}</font></span>
 	        <a href="javascript:;" onclick="genernateOrder2()" class="a-pay" title="">提交订单</a>
 	    </div>
-	    <span class="footclear"></span>
+	    <span class="footclear" onclick="genernateOrder2()"></span>
 	</footer>
 	<!-- Footer End -->
 <script>

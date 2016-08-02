@@ -15,14 +15,16 @@
 	      </span></p>
 	    </div>
 	    <#if order?? && order.productList?? && (order.productList?size > 0)>
+	    <#list order.productList as product>
     	<div class="middle">
-    		<#list order.productList as product>
     		<#if product.attachments??>
     		<#list product.attachments as atta>
     		<#if atta_index==0>
     		<img src="${app.basePath}${atta!''}" alt="商品图片"/>
     		</#if>
     		</#list>
+    		<#else>
+    		<img src="${app.basePath}" alt="没有图片"/>
     		</#if>
     		<div class="right-content">
 	        <h3>${product.title!''} ${product.getItemTypeStr()!''}</h3>
@@ -31,8 +33,8 @@
 	          <label class="lab2">x<span>${product.quantity!'0'}</span></label>
 	        </p>
 			</div>
-    		</#list>
     	</div>
+    	</#list>
     	</#if>
 	    <#if order.skuList??>
 	    <#list order.skuList as sku>

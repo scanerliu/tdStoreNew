@@ -24,6 +24,8 @@ public class TdProductPackageItem {
     private TdProduct prouduct;
     private TdProduct preProuduct;
 
+    private TdProductSku productSku;
+    
     public Integer getId() {
         return id;
     }
@@ -112,6 +114,14 @@ public class TdProductPackageItem {
 
 	public void setProuduct(TdProduct prouduct) {
 		this.prouduct = prouduct;
+	}
+
+	public TdProductSku getProductSku() {
+		return productSku;
+	}
+
+	public void setProductSku(TdProductSku productSku) {
+		this.productSku = productSku;
 	}
     
 	
