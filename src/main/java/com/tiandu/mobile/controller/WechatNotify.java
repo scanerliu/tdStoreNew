@@ -88,6 +88,7 @@ public class WechatNotify {
 			{
 				logger.error("error-------------------->进入新增用户!");
 				this.initUserByOpenIdAndSpreadId(openid, Integer.parseInt(evenKeys[1]));
+				logger.error("error-------------------->进入新增用户end!");
 			}
 		}
 	}
@@ -109,7 +110,7 @@ public class WechatNotify {
 		TdUserSearchCriteria sc = new TdUserSearchCriteria();
 		sc.setJointId(opendI);
 		List<TdUser> joinUser = tdUserSerivce.findBySearchCriteria(sc);
-		if(joinUser == null)
+		if(joinUser == null || joinUser.size() < 1)
 		{
 			TdUser user = new TdUser();
 			Date currentDate = new Date();
