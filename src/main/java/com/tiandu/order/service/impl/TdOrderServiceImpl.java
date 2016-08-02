@@ -610,6 +610,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 	 * @return
 	 */
 	private TdOrder insertAgentOrder(TdUser currUser, OrderForm orderForm, ShoppingcartVO shoppingcart,TdJointOrder torder, Date now) throws RuntimeException {
+		Boolean canuserpackage = configUtil.isAgentProductUsePackage();//是否启用700元的单类代理领取商品包
 		TdOrder order = new TdOrder();
 		order.setCreateTime(now);
 		order.setGainPoints(shoppingcart.getGainPoints());
@@ -650,7 +651,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 		sc.setProductTypeId(agent.getProductTypeId());
 		int count = tdAgentService.countByCriteria(sc);
 		if(count>0){
-			throw new RuntimeException("分公司已存在，不能加入!");
+			throw new RuntimeException("单类代理已存在，不能加入!");
 		}
 		this.save(order);
 		TdOrderProduct orderproduct = new TdOrderProduct();
@@ -666,22 +667,34 @@ public class TdOrderServiceImpl implements TdOrderService{
 		orderproduct.setOrderId(order.getOrderId());
 		tdOrderProductMapper.insert(orderproduct);
 		//保存订单货品
-		if(null!=shoppingcart.getItemList()){
+		if(null!=shoppingcart.getItemList() && orderForm.getAgentProductId().equals(1)||( orderForm.getAgentProductId().equals(4)&&canuserpackage)&& null!=orderForm.getProductId()){
+			//保存商品包信息到订单详情
+			TdOrderProduct orderproduct2 = new TdOrderProduct();
+			orderproduct2.setItemType(Byte.valueOf("2"));
+			orderproduct2.setItemId(orderForm.getProductId());
+			orderproduct2.setItemPrice(shoppingcart.getProductPackage().getPrice());
+			orderproduct2.setSupplierPrice(BigDecimal.ZERO);
+			orderproduct2.setRegionId(0);
+			orderproduct2.setLevel(0);
+			orderproduct2.setQuantity(1);
+			orderproduct2.setTitle(shoppingcart.getProductPackage().getName());
+			orderproduct2.setProductTypeId(0);
+			orderproduct2.setOrderId(order.getOrderId());
+			tdOrderProductMapper.insert(orderproduct2);
+			//保存商品包详情
 			for(TdShoppingcartItem item : shoppingcart.getItemList()){
 				TdOrderSku sku = new TdOrderSku();
-				sku.setDisplaySpecifications(item.getProductSku().getSpecifications());
-				sku.setItemType(item.getProduct().getKind());
+				sku.setDisplaySpecifications(item.getProductPackageItem().getProductSku().getSpecifications());
+				sku.setItemType(item.getItemType().byteValue());
 				sku.setOrderId(order.getOrderId());
 				sku.setProductSkuId(item.getProductSkuId());
 				sku.setProductId(item.getProductId());
-				sku.setPrice(item.getProductSku().getSalesPrice());
-				sku.setSupplierPrice(item.getProductSku().getSupplierPrice());
-				sku.setProductName(item.getProduct().getName());
-				sku.setProductSkuCode(item.getProductSku().getSkuCode());
+				sku.setPrice(item.getProductPackageItem().getPrice());
+				sku.setSupplierPrice(BigDecimal.ZERO);
+				sku.setProductName(item.getProductPackageItem().getProductName());
+				sku.setProductSkuCode(item.getProductPackageItem().getProductSku().getSkuCode());
 				sku.setQuantity(item.getQuantity());
 				tdOrderSkuMapper.insert(sku);
-				//更新货品库存
-				//TODO:
 			}
 			//保存收货地址
 			if(null!=orderForm.getUserAddress()){
@@ -879,6 +892,8 @@ public class TdOrderServiceImpl implements TdOrderService{
 			tdComplaintService.insert(complaint);
 			result.setFlag(true);
 			result.setFailMsg("投诉已经提交，请等待平台处理。");
+			//发送短信通知管理员
+			//TODO:
 		}else{
 			result.setFailMsg("投诉提交失败!");
 		}

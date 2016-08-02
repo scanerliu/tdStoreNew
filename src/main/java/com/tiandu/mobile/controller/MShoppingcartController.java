@@ -44,9 +44,12 @@ import com.tiandu.order.vo.ShoppingcartVO;
 import com.tiandu.product.entity.TdAgentProduct;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductAttachment;
+import com.tiandu.product.entity.TdProductPackageItem;
 import com.tiandu.product.entity.TdProductSku;
+import com.tiandu.product.search.TdProductPackageItemSearchCriteria;
 import com.tiandu.product.service.TdAgentProductService;
 import com.tiandu.product.service.TdProductAttachmentService;
+import com.tiandu.product.service.TdProductPackageItemService;
 import com.tiandu.product.service.TdProductService;
 import com.tiandu.product.service.TdProductSkuService;
 import com.tiandu.system.utils.ConfigUtil;
@@ -89,9 +92,11 @@ public class MShoppingcartController extends BaseController {
 	@Autowired
 	private ConfigUtil configUtil;
 	
-	
 	@Autowired
 	private TdUserAddressService tdUserAddressService;
+	
+	@Autowired
+	private TdProductPackageItemService tdProductPackageItemService;
 	/*
 	 * 我的购物车
 	 */
@@ -396,6 +401,7 @@ public class MShoppingcartController extends BaseController {
 		Integer integralexchangerate = configUtil.getIntegralExchangerate(); //积分抵扣金额比例
 		Integer commonproductpointpercent = configUtil.getCommonProductPointPercent(); //普通商品可积分抵扣的比例
 		Integer partproductpointpercent = configUtil.getPartProductPointPercent(); //部分积分兑换商品可积分抵扣的比例
+		Boolean canuserpackage = configUtil.isAgentProductUsePackage();//是否启用700元的单类代理领取商品包
 		ShoppingcartVO cart = new ShoppingcartVO();
 		//判断商品类型，1普通商品，2代理产品，3图片美化
 		if(orderForm.getProductType()==2){
@@ -413,9 +419,33 @@ public class MShoppingcartController extends BaseController {
 					cart.setPtype(2);
 					cart.setAgent(agent);
 					cart.setTotalcount(1);
-					if(agentproduct.getId()==1){//代金券产品
-						//TODO:添加礼品包
-						
+					if(agentproduct.getId().equals(1)||(agentproduct.getId().equals(4)&&canuserpackage)&& null!=orderForm.getProductId()){//代金券产品
+						//添加礼品包
+						TdProduct productpack = tdProductService.findOne(orderForm.getProductId());
+						if(null==productpack|| !productpack.getOnshelf() || !productpack.getStatus().equals(Byte.valueOf("1"))){
+							throw new Exception("下单失败，礼品包不存在或已经下架！");
+						}
+						cart.setProductPackage(productpack);
+						//礼品包详细列表
+						List<TdShoppingcartItem> itemList = new ArrayList<TdShoppingcartItem>();
+						TdProductPackageItemSearchCriteria psc = new TdProductPackageItemSearchCriteria();
+						psc.setFlag(false);
+						psc.setProductId(orderForm.getProductId());
+						List<TdProductPackageItem> packList = tdProductPackageItemService.findBySearchCriteria(psc);
+						if(null!=packList){
+							for(TdProductPackageItem pack : packList){
+								TdShoppingcartItem item = new TdShoppingcartItem();
+								item.setItemType(ConstantsUtils.PRODUCT_KIND_PACKAGE.intValue());
+								item.setPostage(BigDecimal.ZERO);
+								item.setPrice(pack.getPrice());
+								item.setProductId(pack.getProductId());
+								item.setProductSkuId(pack.getSkuId());
+								item.setProductPackageItem(pack);
+								item.setQuantity(pack.getQuantity());								
+								itemList.add(item);
+							}
+						}
+						cart.setItemList(itemList);
 					}
 					//2-分公司
 				}else if(ConstantsUtils.AGENT_GROUPID_BRANCH.equals(agentproduct.getGroupId())){

@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.custom.entity.TdBrancheCompany;
 import com.tiandu.custom.entity.TdCampaign;
+import com.tiandu.custom.entity.TdUser;
+import com.tiandu.custom.search.TdBrancheCompanySearchCriteria;
 import com.tiandu.custom.search.TdCampaignSearchCriteria;
+import com.tiandu.custom.service.TdBrancheCompanyService;
 import com.tiandu.custom.service.TdCampaignService;
 import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.service.TdDistrictService;
@@ -39,6 +43,9 @@ public class CampaignController extends BaseController {
 
 	@Autowired
 	private TdDistrictService tdDistrictService;
+	
+	@Autowired
+	private TdBrancheCompanyService tdBrancheCompanyService;
 
 	@RequestMapping("/list")
 	public String list(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
@@ -48,6 +55,15 @@ public class CampaignController extends BaseController {
 	@RequestMapping("/search")
 	public String search(TdCampaignSearchCriteria sc, HttpServletRequest request, HttpServletResponse response,
 			ModelMap modelMap) {
+		TdUser currentUser = this.getCurrentUser();
+		TdBrancheCompanySearchCriteria bsc = new TdBrancheCompanySearchCriteria();
+		bsc.setFlag(false);
+		bsc.setUid(currentUser.getUid());
+		List<TdBrancheCompany> bclist = tdBrancheCompanyService.findBySearchCriteria(bsc);
+		if(bclist != null && bclist.size() == 1){
+			sc.setCreateBy(currentUser.getUid());
+		}
+		
 		List<TdCampaign> campaignList = tdCampaignService.findBySearchCriteria(sc);
 		modelMap.addAttribute("campaignList", campaignList);
 		modelMap.addAttribute("sc", sc);

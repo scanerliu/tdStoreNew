@@ -37,10 +37,10 @@ public class LevelOneRegionUserCount {
 		String message = "";
 		List<TdDistrict> levelOneDistrict = tdDistrictService.getDistrictByUpid(0);
 		if(levelOneDistrict != null){
+			TdUserSearchCriteria sc = new TdUserSearchCriteria();
+			sc.setFlag(false);
 			for(TdDistrict d : levelOneDistrict){
-				TdUserSearchCriteria sc = new TdUserSearchCriteria();
-				sc.setFlag(false);
-				sc.setUregionId(d.getId());
+				sc.setUprovinceId(d.getId());
 				List<TdUser> userList = tdUserService.findBySearchCriteria(sc);
 				if(userList != null){
 					message += d.getName() + ":" + userList.size() + "人，";
@@ -50,15 +50,15 @@ public class LevelOneRegionUserCount {
 			}
 		}
 		if(!message.equals("")){
-			message = message.substring(0, message.lastIndexOf(","));
+			message = message.substring(0, message.lastIndexOf("，"));
 		}
+		System.err.println(message);
 		return message;
 	}
 	
 	// 发送产生统计省直辖市人数短信
 	public void sendMessage(String message){
-		Map<String, String> smsConfig = ConfigUtil.getInstance().getSMSConfig();
-		String phoneNums = smsConfig.get("customer_statistics_telphone");
+		String phoneNums = ConfigUtil.getInstance().getCustomerStatisticsTelphone();
 		if(phoneNums == null || phoneNums.equals("")){
 			return;
 		}else{
@@ -72,7 +72,10 @@ public class LevelOneRegionUserCount {
 			datas.add(message);
 			MessageSender ms = new MessageSender();
 			ms.init();
-			ms.send(phoneList, "1", datas);
+			boolean isSendSuccess = ms.send(phoneList, "1", datas);
+			if(!isSendSuccess){
+				logger.error("省直辖市会员人数短信发送失败");		
+			}
 		}
 	}
 	

@@ -39,7 +39,7 @@ public class CampaignCount {
 	private TdAgentService tdAgentService;
 	
 	public void countCampain(){
-		Map<String, String> smsConfig = ConfigUtil.getInstance().getSMSConfig();
+		Map<String, String> smsConfig = ConfigUtil.getInstance().getCampaignConfig();
 		String campaignagentnumStr = smsConfig.get("campaignagentnum");
 		String campaigncompanysuppliernumStr = smsConfig.get("campaigncompanysuppliernum");
 		Integer campaignagentnum = 999999999;
@@ -55,13 +55,7 @@ public class CampaignCount {
 		
 		TdUserCampaignCriteria sc = new TdUserCampaignCriteria();
 		sc.setFlag(false);
-		int numRanked = 0; //已经参与排名的人数 
 		List<TdUserCampaign> clist = tdUserCampaignService.findBySearchCriteria(sc);
-		for(TdUserCampaign c : clist){
-			if(c.getStatus().equals(Byte.valueOf("1"))){	
-				numRanked ++;
-			}
-		}
 		
 		for(TdUserCampaign c : clist){
 			if(c.getStatus().equals(Byte.valueOf("2"))){	
@@ -82,8 +76,9 @@ public class CampaignCount {
 				int agentNum = ulist.size(); // 三级代理数量
 				if(enterpriseNum >= campaigncompanysuppliernum && agentNum >= campaignagentnum){
 					c.setStatus(Byte.valueOf("1"));
-					numRanked ++;
-					c.setLevel(numRanked);
+					sc.setStatus(Byte.valueOf("1"));
+					List<TdUserCampaign> tclist = tdUserCampaignService.findBySearchCriteria(sc);
+					c.setLevel(tclist.size() + 1);
 				}
 				tdUserCampaignService.save(c);
 			}

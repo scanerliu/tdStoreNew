@@ -36,7 +36,7 @@ public class TdUserCampaign {
     
     // 地区
     private TdDistrict district;
-
+    
     public Integer getId() {
         return id;
     }
@@ -156,6 +156,6 @@ public class TdUserCampaign {
 	public void setDistrict(TdDistrict district) {
 		this.district = district;
 	}
-    
+
     
 }

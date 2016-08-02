@@ -229,6 +229,9 @@
       <if test="regionId != null" >
        	and  a.region_id = #{regionId,jdbcType=TINYINT}
       </if>
+      <if test="createBy != null" >
+       	and  a.create_by = #{createBy,jdbcType=INTEGER}
+      </if>
       <if test="createTime != null" >
        	and  a.create_time <![CDATA[<=]]> #{createTime,jdbcType=TIMESTAMP} 
       </if>

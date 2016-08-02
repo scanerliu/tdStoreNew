@@ -259,6 +259,9 @@
     <if test="uid != null">
         and c.uid=#{uid,jdbcType=INTEGER}
     </if>
+    <if test="status != null">
+        and c.status=#{status,jdbcType=INTEGER}
+    </if>
     <if test="orderBy != null" >
       	<if test="orderBy ==1">
       		order by  level desc

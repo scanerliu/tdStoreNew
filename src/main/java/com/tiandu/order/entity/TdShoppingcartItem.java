@@ -3,6 +3,7 @@ package com.tiandu.order.entity;
 import java.math.BigDecimal;
 
 import com.tiandu.product.entity.TdProduct;
+import com.tiandu.product.entity.TdProductPackageItem;
 import com.tiandu.product.entity.TdProductSku;
 
 public class TdShoppingcartItem {
@@ -30,6 +31,10 @@ public class TdShoppingcartItem {
      * 管理货品，查询显示
      */
     private TdProductSku productSku;
+    /**
+     * 礼品包，查询显示
+     */
+    private TdProductPackageItem productPackageItem;
     
     /**
      * 购物车操作类型
@@ -124,6 +129,14 @@ public class TdShoppingcartItem {
 
 	public void setOptype(Integer optype) {
 		this.optype = optype;
+	}
+
+	public TdProductPackageItem getProductPackageItem() {
+		return productPackageItem;
+	}
+
+	public void setProductPackageItem(TdProductPackageItem productPackageItem) {
+		this.productPackageItem = productPackageItem;
 	}
     
 }

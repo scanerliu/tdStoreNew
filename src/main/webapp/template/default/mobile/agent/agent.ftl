@@ -20,7 +20,8 @@
     <link rel="stylesheet" href="${app.basePath}/static/touch/css/index.css">
     <!-- js -->
     <#include "/common/common.ftl" />
-    <script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script> 
+    <script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/mobile/core.js"></script> 
     <script type="text/javascript" src="${app.basePath}/static/touch/js/swipe.js"></script> 
     <script type="text/javascript" src="${app.basePath}/static/touch/js/common.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/touch/js/index.js"></script>
@@ -67,9 +68,10 @@ $(document).ready(function(){
         <section class="sec6"><a href="javascript:;" onclick="buyNow();" title="立即加入" id="sub_btn">立即加入</a></section>
         <form id="agentform" method="post" action="">
         	<input type="hidden" name="agentProductId" id="agentProductId" value="${agent.id!''}"/>
-        	<input type="hidden" name="productType" value="2"/>
+        	<input type="hidden" name="productType" id="productType" value="2"/>
         	<input type="hidden" name="productTypeId" id="productTypeId" value="${typeId!''}"/>
         	<input type="hidden" name="regionId" id="regionId" value="${regionId!''}"/>
+        	<input type="hidden" id="isAgentProductUsePackage" value="${system.isAgentProductUsePackage!'false'}"/>
         </form>
     </div>
 </section>
@@ -80,11 +82,20 @@ function buyNow(){
 	var agentProductId = $("#agentProductId").val();
 	var regionId = $("#regionId").val();
 	var productTypeId = $("#productTypeId").val();
+	var isAgentProductUsePackage = $("#isAgentProductUsePackage").val();
+	var productType = $("#productType").val();
 	
 	if(agentProductId>0){
-		var url = basePath+"/mobile/shoppingcart/singleorder";
-		$("#agentform").attr("action",url);
-		$("#agentform").submit();
+		if(agentProductId==1||(agentProductId==4 && isAgentProductUsePackage=="true")){
+			var agent = '{"agentProductId":'+agentProductId+',"regionId":'+regionId+',"productTypeId":'+productTypeId+',"productType":'+productType+'}';
+			setCookie("agentpackage", agent, 30);
+			url = basePath+"/mobile/package/list";
+			window.location.href=url;
+		}else{
+			var url = basePath+"/mobile/shoppingcart/singleorder";
+			$("#agentform").attr("action",url);
+			$("#agentform").submit();
+		}
 	}else{
 		alert("数据有误，请重新操作！");
 	}

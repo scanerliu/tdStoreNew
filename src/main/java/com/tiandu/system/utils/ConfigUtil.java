@@ -246,5 +246,28 @@ public class ConfigUtil {
 	public Integer getImageProcessingPrice(){
 		return getConfig("imageprocessingprice",5);
 	}
+	/**
+	 * 获取会员统计发送手机号码
+	 * @return
+	 */
+	public String getCustomerStatisticsTelphone(){
+		return getConfig("customer_statistics_telphone");
+	}
+	
+	/**
+	 * 获取竞选活动条件配置
+	 * @return
+	 */
+	public Map<String,String> getCampaignConfig(){
+		//三级会员中代理人数条件
+		String campaignagentnum = getConfig("campaignagentnum");
+		//一级下级公司资质供应商数量
+		String campaigncompanysuppliernum = getConfig("campaigncompanysuppliernum");
+		
+		Map<String,String> co = new HashMap<String,String>();
+		co.put("campaignagentnum", campaignagentnum);
+		co.put("campaigncompanysuppliernum", campaigncompanysuppliernum);
+		return co;
+	}
 
 }

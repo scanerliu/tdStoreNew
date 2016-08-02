@@ -22,6 +22,8 @@ public class TdUserSearchCriteria extends SearchCriteria {
 	private Integer uregionId; // 地区id
 	
 	private String jointId; //第三方Id
+	
+	private Integer uprovinceId; // 所属省id
 
 	public String getUname() {
 		return uname;
@@ -118,7 +120,14 @@ public class TdUserSearchCriteria extends SearchCriteria {
 	public void setJointId(String jointId) {
 		this.jointId = jointId;
 	}
-	
-	
 
+	public Integer getUprovinceId() {
+		return uprovinceId;
+	}
+
+	public void setUprovinceId(Integer uprovinceId) {
+		this.uprovinceId = uprovinceId;
+	}
+
+	
 }

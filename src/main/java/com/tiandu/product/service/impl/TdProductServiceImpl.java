@@ -149,12 +149,14 @@ public class TdProductServiceImpl implements TdProductService{
 					json = new JSONObject(opt);
 					String[] keys = json.getNames(json);
 					StringBuffer sk = new StringBuffer();
-					for(String key : keys){
-						String val = (String) json.get(key);
-						sk.append(val);
-						sk.append("_");						
+					if(null!=keys){
+						for(String key : keys){
+							String val = (String) json.get(key);
+							sk.append(val);
+							sk.append("_");						
+						}
+						skuvo.setSpecificationids(sk.substring(0,sk.length()-1));
 					}
-					skuvo.setSpecificationids(sk.substring(0,sk.length()-1));
 					skList.add(skuvo);					
 				} catch (JSONException e) {
 					e.printStackTrace();

@@ -104,6 +104,9 @@
     <if test="uregionId != null" >
         and a.uregion_id=#{uregionId,jdbcType=INTEGER}
     </if>
+    <if test="uprovinceId != null" >
+        and a.uprovince_id=#{uprovinceId,jdbcType=INTEGER}
+    </if>
     <if test="ustatus != null" >
         and a.ustatus=#{ustatus,jdbcType=TINYINT}
     </if>

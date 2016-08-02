@@ -8,6 +8,7 @@ import com.tiandu.custom.entity.TdAgent;
 import com.tiandu.custom.entity.TdBrancheCompany;
 import com.tiandu.order.entity.TdShoppingcartItem;
 import com.tiandu.product.entity.TdAgentProduct;
+import com.tiandu.product.entity.TdProduct;
 
 public class ShoppingcartVO {
 	/**
@@ -63,6 +64,10 @@ public class ShoppingcartVO {
 	 * 代理产品
 	 */
 	private TdAgentProduct agentProduct;
+	/**
+	 * 商品包信息
+	 */
+	private TdProduct productPackage;
 	
 	/**
 	 * 图片订单
@@ -241,6 +246,14 @@ public class ShoppingcartVO {
 
 	public void setImageOrder(ImageOrderVO imageOrder) {
 		this.imageOrder = imageOrder;
+	}
+
+	public TdProduct getProductPackage() {
+		return productPackage;
+	}
+
+	public void setProductPackage(TdProduct productPackage) {
+		this.productPackage = productPackage;
 	}
 	
 	

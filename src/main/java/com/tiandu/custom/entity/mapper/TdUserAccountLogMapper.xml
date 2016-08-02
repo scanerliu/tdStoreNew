@@ -34,6 +34,14 @@
     <if test="uid != null" >
         and uid=#{uid,jdbcType=INTEGER}
     </if>
+    <if test="beginDate != null">
+		and create_time <![CDATA[ >= ]]>
+		#{beginDate,jdbcType=TIMESTAMP}
+	</if>
+	<if test="endDate != null">
+		and create_time <![CDATA[ < ]]>
+		#{endDate,jdbcType=TIMESTAMP}
+	</if>
     order by create_time desc
   </select>
   
