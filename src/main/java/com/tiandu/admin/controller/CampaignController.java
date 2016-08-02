@@ -20,9 +20,7 @@ import com.tiandu.common.controller.BaseController;
 import com.tiandu.custom.entity.TdCampaign;
 import com.tiandu.custom.search.TdCampaignSearchCriteria;
 import com.tiandu.custom.service.TdCampaignService;
-import com.tiandu.custom.service.TdUserService;
 import com.tiandu.district.entity.TdDistrict;
-import com.tiandu.district.search.TdDistrictSearchCriteria;
 import com.tiandu.district.service.TdDistrictService;
 
 /**
@@ -38,9 +36,6 @@ public class CampaignController extends BaseController {
 
 	@Autowired
 	private TdCampaignService tdCampaignService;
-
-	@Autowired
-	private TdUserService tdUserService;
 
 	@Autowired
 	private TdDistrictService tdDistrictService;

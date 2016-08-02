@@ -302,7 +302,7 @@ public class TdUserQRcodeTools {
     	
     	Date currentDate = new Date();
     	
-    	return (currentDate.getTime() - oldDate.getTime() < 7100 * 1000) ? true : false;
+    	return (currentDate.getTime() - oldDate.getTime() < 2591400 * 1000) ? true : false;
     }
     
     

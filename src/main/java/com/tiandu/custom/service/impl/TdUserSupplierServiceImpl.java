@@ -5,9 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tiandu.article.entity.TdArticleTitle;
 import com.tiandu.common.db.DBContextHolder;
-import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserSupplier;
 import com.tiandu.custom.entity.mapper.TdUserSupplierMapper;
 import com.tiandu.custom.search.TdUserSupplierSearchCriteria;

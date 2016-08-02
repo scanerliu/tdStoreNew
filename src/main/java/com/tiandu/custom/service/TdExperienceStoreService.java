@@ -3,7 +3,6 @@ package com.tiandu.custom.service;
 import java.util.List;
 
 import com.tiandu.custom.entity.TdExperienceStore;
-import com.tiandu.custom.entity.TdUserSupplier;
 import com.tiandu.custom.search.TdExperienceStoreSearchCriteria;
 
 /**

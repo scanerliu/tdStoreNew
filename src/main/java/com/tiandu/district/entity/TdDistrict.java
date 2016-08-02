@@ -1,7 +1,5 @@
 package com.tiandu.district.entity;
 
-import java.util.Arrays;
-
 import org.apache.commons.lang.ArrayUtils;
 
 public class TdDistrict {

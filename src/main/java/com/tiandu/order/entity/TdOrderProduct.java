@@ -1,8 +1,6 @@
 package com.tiandu.order.entity;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.tiandu.common.utils.ConstantsUtils;
 

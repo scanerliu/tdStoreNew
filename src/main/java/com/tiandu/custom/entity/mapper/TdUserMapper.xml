@@ -98,6 +98,9 @@
         left join td_user_role rr on rr.uid= a.uid
     </if>
     where 1=1 
+    <if test="jointId != null" >
+        and a.joint_id=#{jointId,jdbcType=VARCHAR}
+    </if>
     <if test="uregionId != null" >
         and a.uregion_id=#{uregionId,jdbcType=INTEGER}
     </if>
