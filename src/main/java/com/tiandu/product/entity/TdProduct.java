@@ -331,7 +331,7 @@ public class TdProduct {
     }
     
     public String getKindStr(){
-    	//商品类型,1-普通商品，2-商品包，3-零元购，4-10元购，5-预售，6-秒杀商品
+    	//商品类型,1-普通商品，2-商品包，3-零元购，4-10元购，5-预售，6-秒杀商品    7-全积分兑换，8-部分积分兑换
     	if(this.getKind().equals(Byte.valueOf("1"))){
     		return "普通商品";
     	}else if(this.getKind().equals(Byte.valueOf("2"))){
@@ -342,8 +342,14 @@ public class TdProduct {
     		return "10元购";
     	}else if(this.getKind().equals(Byte.valueOf("5"))){
     		return "预售";
+    	}else if(this.getKind().equals(Byte.valueOf("6"))){
+    		return "秒杀";
+    	}else if(this.getKind().equals(Byte.valueOf("7"))){
+    		return "全积分兑换";
+    	}else if(this.getKind().equals(Byte.valueOf("8"))){
+    		return "部分积分兑换";
     	}else{
-    		return "秒杀商品";
+    		return "";
     	}
     }
     

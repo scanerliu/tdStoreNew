@@ -219,6 +219,7 @@ function timer()
         <input type="hidden" id="propostage" value="${product.postage!'0'}">
         <input type="hidden" id="productId" value="${product.id!''}">
         <input type="hidden" id="productKind" value="${product.kind!'0'}">
+        <input type="hidden" id="pointpercent" value="${system.integralexchangerate!'0'}">
     </div>
     <div class="detail4">
         <section>
@@ -227,7 +228,7 @@ function timer()
         </section>
         <section>
             <label class="fl">服务</label>
-            <aside class="fl">由<span>${region.name!''}${productType.name!''}代理</span>负责售后服务。</aside>
+            <aside class="fl">由<span>${region.name!''}<#if productType??>${productType.name!''}</#if>代理</span>负责售后服务。</aside>
         </section>
         <section>
             <label class="fl">提示</label>

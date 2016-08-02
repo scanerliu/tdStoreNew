@@ -42,16 +42,7 @@
 		        </td>
 		        <td align="center">${pro.code!''}</td>
 		        <td align="center">
-		        	<#if pro.kind??>
-		        	<#switch pro.kind>
-						  <#case 1>普通商品<#break>
-						  <#case 2>商品包<#break>
-						  <#case 3>零元购<#break>
-						  <#case 4>10元购<#break>
-						  <#case 5>预售<#break>
-						  <#case 6>秒杀<#break>
-		        	</#switch>
-		        	</#if>
+		        	${pro.kindStr!''}
 		        </td>
 		        <td align="center"><img src="${app.basePath}${pro.imageUrl!''}" style="width:100px;height:50px;"></td>
 		        <td align="center"><#if pro.createTime??>${pro.createTime?string('yyyy-MM-dd')}</#if></td>

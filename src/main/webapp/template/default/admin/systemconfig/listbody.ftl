@@ -40,6 +40,15 @@
             <td align="right">图片美化单价:</td><td><input type="hidden" name="configKey" value="imageprocessingprice"/><input type="text" name="imageprocessingprice" id="imageprocessingprice" value="${configMap.imageprocessingprice!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,100]"/>（图片美化单价，如：处理一周商品图片的价格为5元时，此项填5）</td>
         </tr>
         <tr>
+            <td align="right">订单自动收货时间间隔:</td><td><input type="hidden" name="configKey" value="orderreceiptperiod"/><input type="text" name="orderreceiptperiod" id="orderreceiptperiod" value="${configMap.orderreceiptperiod!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,100]"/>（自动收货时间间隔，单位为 天，如：发货7天后，用户没有手动确认收货操作，系统自动更改订单状态为收货，此项填7）</td>
+        </tr>
+        <tr>
+            <td align="right">订单自动完成时间间隔:</td><td><input type="hidden" name="configKey" value="ordercompleteperiod"/><input type="text" name="ordercompleteperiod" id="ordercompleteperiod" value="${configMap.ordercompleteperiod!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,100]"/>（自动完成时间间隔，单位为 天，如：订单确认收货7天后，系统自动更改订单状态为已完成，此项填7）</td>
+        </tr>
+        <tr>
+            <td align="right">物流查询地址:</td><td><input type="hidden" name="configKey" value="logisticweburl"/><input type="text" name="logisticweburl" id="logisticweburl" value="${configMap.logisticweburl!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,100]"/>（首页物流查询链接地址）</td>
+        </tr>
+        <tr>
             <td align="right">700元的单类代理启用商品包:</td><td><label><input type="hidden" name="configKey" value="agentproductusepackage"/><input type="radio" name="agentproductusepackage" value="1" <#if configMap.agentproductusepackage?? && configMap.agentproductusepackage=="1">checked=checked</#if> />启用</label> <input type="radio" name="agentproductusepackage" value="2" <#if configMap.agentproductusepackage?? && configMap.agentproductusepackage=="2">checked=checked</#if>  />禁用</label>（启用此项，购买700元区县单类代理时可以领取一个700元礼包）</td>
         </tr>
         </table>

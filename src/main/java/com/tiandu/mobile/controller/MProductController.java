@@ -173,6 +173,7 @@ public class MProductController extends BaseController {
 		map.addAttribute("product", product);
 		map.addAttribute("productjson", productjson);
 		map.addAttribute("attachmentList", attachmentList);
+		map.addAttribute("system", getSystem());
 		return "/mobile/product/productdetail";
 	}
 	/*

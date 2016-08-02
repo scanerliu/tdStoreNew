@@ -202,4 +202,9 @@ public class MobileController extends BaseController {
 		return "redirect:/mobile/login";
 	}
 	
+	@RequestMapping("/app")
+	public String app(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		return "/mobile/app";
+	}
+	
 }

@@ -898,7 +898,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 			//发送短信通知管理员
 			String phoneNums = configUtil.getComplaintTelphone();
 			if(StringUtils.isNotEmpty(phoneNums)){
-				String message = "投诉订单号："+order.getOrderNo();
+				String message = DateUtil.convertDateTimeToString(now);
 				String[] phones = phoneNums.split(",");
 				List<String> phoneList = new ArrayList<>();
 				for(String phone : phones){
