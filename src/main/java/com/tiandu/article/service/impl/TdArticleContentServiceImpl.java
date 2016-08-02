@@ -5,9 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tiandu.article.entity.TdArticleCategory;
 import com.tiandu.article.entity.TdArticleContent;
-import com.tiandu.article.entity.TdArticleTitle;
 import com.tiandu.article.entity.mapper.TdArticleContentMapper;
 import com.tiandu.article.search.TdArticleContentSearchCriteria;
 import com.tiandu.article.service.TdArticleContentService;

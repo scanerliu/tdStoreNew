@@ -20,7 +20,6 @@ import com.tiandu.article.entity.TdArticleCategory;
 import com.tiandu.article.search.TdArticleCategorySearchCriteria;
 import com.tiandu.article.service.TdArticleCategoryService;
 import com.tiandu.common.controller.BaseController;
-import com.tiandu.district.entity.TdDistrict;
 
 /**
  * 

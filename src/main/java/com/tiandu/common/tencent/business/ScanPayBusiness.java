@@ -1,5 +1,9 @@
 package com.tiandu.common.tencent.business;
 
+import static java.lang.Thread.sleep;
+
+import org.slf4j.LoggerFactory;
+
 import com.tiandu.common.tencent.common.Configure;
 import com.tiandu.common.tencent.common.Log;
 import com.tiandu.common.tencent.common.Signature;
@@ -16,9 +20,6 @@ import com.tiandu.common.tencent.protocol.reverse_protocol.ReverseResData;
 import com.tiandu.common.tencent.service.ReverseService;
 import com.tiandu.common.tencent.service.ScanPayQueryService;
 import com.tiandu.common.tencent.service.ScanPayService;
-import org.slf4j.LoggerFactory;
-
-import static java.lang.Thread.sleep;
 
 /**
  * User: rizenguo

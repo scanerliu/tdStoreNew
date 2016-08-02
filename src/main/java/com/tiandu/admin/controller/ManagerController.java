@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.Gson;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdRole;
@@ -24,10 +23,6 @@ import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.search.TdRoleSearchCriteria;
 import com.tiandu.custom.search.TdUserSearchCriteria;
 import com.tiandu.custom.service.TdRoleService;
-import com.tiandu.custom.service.TdUserService;
-import com.tiandu.menu.entity.TdMenu;
-import com.tiandu.menu.search.TdMenuSearchCriteria;
-import com.tiandu.menu.service.TdMenuService;
 
 @Controller
 @RequestMapping("/admin/manager")

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tiandu.custom.entity.TdPermission;
-import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.entity.mapper.TdPermissionMapper;
 import com.tiandu.custom.search.TdPermissionSearchCriteria;
 import com.tiandu.custom.service.TdPermissionService;

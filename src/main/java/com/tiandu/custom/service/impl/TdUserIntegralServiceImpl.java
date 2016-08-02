@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.tiandu.custom.entity.TdUserIntegral;
 import com.tiandu.custom.entity.TdUserIntegralLog;
-import com.tiandu.custom.entity.TdUserSign;
 import com.tiandu.custom.entity.mapper.TdUserIntegralLogMapper;
 import com.tiandu.custom.entity.mapper.TdUserIntegralMapper;
 import com.tiandu.custom.service.TdUserIntegralService;

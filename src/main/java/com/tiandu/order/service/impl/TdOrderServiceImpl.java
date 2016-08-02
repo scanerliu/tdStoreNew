@@ -27,7 +27,6 @@ import com.tiandu.custom.entity.TdUserIntegral;
 import com.tiandu.custom.entity.TdUserIntegralLog;
 import com.tiandu.custom.search.TdAgentSearchCriteria;
 import com.tiandu.custom.search.TdBrancheCompanySearchCriteria;
-import com.tiandu.custom.search.TdExperienceStoreSearchCriteria;
 import com.tiandu.custom.service.TdAgentService;
 import com.tiandu.custom.service.TdBrancheCompanyService;
 import com.tiandu.custom.service.TdExperienceStoreService;

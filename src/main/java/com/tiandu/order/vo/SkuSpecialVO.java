@@ -1,10 +1,5 @@
 package com.tiandu.order.vo;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import com.tiandu.order.entity.TdShoppingcartItem;
-
 /**
  * 商品属性键值对
  * @author liuxinbing

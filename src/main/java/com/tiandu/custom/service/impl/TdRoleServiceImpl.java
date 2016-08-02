@@ -1,7 +1,6 @@
 package com.tiandu.custom.service.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tiandu.common.db.DBContextHolder;
-import com.tiandu.custom.entity.TdPermission;
 import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.entity.TdRolePermission;
 import com.tiandu.custom.entity.mapper.TdRoleMapper;

@@ -2,9 +2,7 @@ package com.tiandu.custom.entity.mapper;
 
 import java.util.List;
 
-import com.tiandu.custom.entity.TdAgent;
 import com.tiandu.custom.entity.TdUserMessage;
-import com.tiandu.custom.search.TdAgentSearchCriteria;
 import com.tiandu.custom.search.TdUserMessageSearchCriteria;
 
 public interface TdUserMessageMapper {

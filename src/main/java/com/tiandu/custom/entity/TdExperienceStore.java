@@ -2,9 +2,6 @@ package com.tiandu.custom.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
-
-import com.tiandu.product.entity.TdProductType;
 
 public class TdExperienceStore {
 	private Integer id;

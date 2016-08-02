@@ -8,12 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.tiandu.custom.entity.TdUserAccount;
 import com.tiandu.custom.entity.TdUserAccountLog;
-import com.tiandu.custom.entity.TdUserIntegral;
-import com.tiandu.custom.entity.TdUserIntegralLog;
 import com.tiandu.custom.entity.mapper.TdUserAccountLogMapper;
 import com.tiandu.custom.entity.mapper.TdUserAccountMapper;
-import com.tiandu.custom.entity.mapper.TdUserIntegralLogMapper;
-import com.tiandu.custom.entity.mapper.TdUserIntegralMapper;
 import com.tiandu.custom.service.TdUserAccountService;
 
 @Service("tdUserAccountService")

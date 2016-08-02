@@ -2,6 +2,7 @@ package com.tiandu.alipay.sign;
 
 import java.io.UnsupportedEncodingException;
 import java.security.SignatureException;
+
 import org.apache.commons.codec.digest.DigestUtils;
 
 /** 
