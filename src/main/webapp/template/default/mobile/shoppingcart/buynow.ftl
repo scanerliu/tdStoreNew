@@ -170,7 +170,7 @@
 	    <input type="hidden" name="quantity" value="${orderForm.quantity!''}"/>
 	    <input type="hidden" name="productType" value="${orderForm.productType!''}"/>
 	    <input type="hidden" name="agentProductId" value="${orderForm.agentProductId!''}"/>
-	    <input type="hidden" name="addressId" value="${address.id!''}"/>
+	    <input type="hidden" name="addressId" value="<#if address??>${address.id!''}</#if>"/>
 	    <!-- order-detail-pay-end -->
 	</section>
 </form>

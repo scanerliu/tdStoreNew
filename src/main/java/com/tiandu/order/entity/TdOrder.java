@@ -352,6 +352,14 @@ public class TdOrder extends TdBaseEntity{
     			sb.append("新订单");
     		}else if(ConstantsUtils.ORDER_STATUS_CANCEL.equals(this.getOrderStatus())){
     			sb.append("已取消");
+    		}else if(ConstantsUtils.ORDER_STATUS_PAYED.equals(this.getOrderStatus())){
+    			sb.append("已支付");
+    		}else if(ConstantsUtils.ORDER_STATUS_SHIPPMENTED.equals(this.getOrderStatus())){
+    			sb.append("已发货");
+    		}else if(ConstantsUtils.ORDER_STATUS_RECEIPTED.equals(this.getOrderStatus())){
+    			sb.append("已收货");
+    		}else if(ConstantsUtils.ORDER_STATUS_APPLYREFUND.equals(this.getOrderStatus())){
+    			sb.append("申请退款");
     		}else if(ConstantsUtils.ORDER_STATUS_COMPLETE.equals(this.getOrderStatus())){
     			sb.append("已完成");
     		}

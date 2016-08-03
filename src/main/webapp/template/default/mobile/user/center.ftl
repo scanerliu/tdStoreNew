@@ -64,10 +64,12 @@
   	<#if !currentUser.utel??>
 	    <article class="tips">提示：PC上登陆请绑定手机号码</article>
   	</#if>
+  	<#if currentUser.supplierType gt 0>
   	<a class="a_go" href="${app.basePath}/mobile/supply/order" title="去发货">
         <label>去发货</label>
         <i class="icon-next"></i>
     </a>
+    </#if>
     <article class="pc-nav">
       <a href="${app.basePath}/mobile/order/list" title="">
         <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_1.png" alt="">

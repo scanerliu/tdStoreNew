@@ -33,7 +33,7 @@
         <div class="div3"><input type="button" value="立即登录" onclick="login()"></div>
     </form>
     <div class="other_signin">
-        <section class="sec3">还没有账号？<a href="${app.basePath}/mobile/register" title="">立即注册 ></a></section>
+        <!--<section class="sec3">还没有账号？<a href="${app.basePath}/mobile/register" title="">立即注册 ></a></section>-->
     </div>
 </section>
 <script>
