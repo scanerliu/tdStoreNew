@@ -50,20 +50,25 @@ import com.tiandu.custom.entity.TdExperienceStore;
 import com.tiandu.custom.entity.TdMembership;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserAccount;
+import com.tiandu.custom.entity.TdUserAccountLog;
 import com.tiandu.custom.entity.TdUserAddress;
 import com.tiandu.custom.entity.TdUserCampaign;
+import com.tiandu.custom.entity.TdUserIntegralLog;
 import com.tiandu.custom.entity.TdUserMessage;
 import com.tiandu.custom.entity.TdUserSupplier;
 import com.tiandu.custom.search.TdAgentSearchCriteria;
 import com.tiandu.custom.search.TdCampaignSearchCriteria;
+import com.tiandu.custom.search.TdUserAccountLogSearchCriteria;
 import com.tiandu.custom.search.TdUserAddressCriteria;
 import com.tiandu.custom.search.TdUserCampaignCriteria;
+import com.tiandu.custom.search.TdUserIntegralLogSearchCriteria;
 import com.tiandu.custom.search.TdUserSearchCriteria;
 import com.tiandu.custom.search.TdUserSupplierSearchCriteria;
 import com.tiandu.custom.service.TdAgentService;
 import com.tiandu.custom.service.TdCampaignService;
 import com.tiandu.custom.service.TdExperienceStoreService;
 import com.tiandu.custom.service.TdMembershipService;
+import com.tiandu.custom.service.TdUserAccountLogService;
 import com.tiandu.custom.service.TdUserAccountService;
 import com.tiandu.custom.service.TdUserAddressService;
 import com.tiandu.custom.service.TdUserCampaignService;
@@ -183,6 +188,8 @@ public class MUserController extends BaseController {
 	
 	@Autowired
 	private TdUserQRcodeTools tdUserQRcodeTools;
+	@Autowired
+	private TdUserAccountLogService tdUserAccountLogService;
 	
 	// 个人中心
 	@RequestMapping("/center")
@@ -635,6 +642,23 @@ public class MUserController extends BaseController {
 		}
 		map.addAttribute("account",userAccount);
 		return "/mobile/user/account";
+	}
+	/**
+	 * 钱包流水记录
+	 * @param sc
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
+	@RequestMapping("/searchaccount")
+	public String searchaccountlog(TdUserAccountLogSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currUser = this.getCurrentUser();
+		sc.setUid(currUser.getUid());
+		List<TdUserAccountLog> logList = tdUserAccountLogService.findBySearchCriteria(sc);
+	    modelMap.addAttribute("logList", logList) ;
+	    modelMap.addAttribute("sc", sc) ;
+		return "/mobile/user/account_listbody";
 	}
 	
 	@RequestMapping(value="/saveInfo", method = RequestMethod.POST)

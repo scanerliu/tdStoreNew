@@ -206,7 +206,8 @@ function searchCustomerPointLogs(f){
 	var url = basePath+"/admin/customer/customerpointslog";
 	var loadData = "";
 	if(f){
-		loadData = null;
+		var uid = $("#customeruid").val();
+		loadData = {"uid":uid};
 	}else{
 		var tab = $('#dg').tabs('getSelected');
 		form = tab.find("form");
@@ -259,7 +260,8 @@ function searchCustomerAccountLogs(f){
 	var url = basePath+"/admin/customer/customeraccountlog";
 	var loadData = "";
 	if(f){
-		loadData = null;
+		var uid = $("#customeruid").val();
+		loadData = {"uid":uid};
 	}else{
 		var tab = $('#dg').tabs('getSelected');
 		form = tab.find("form");
