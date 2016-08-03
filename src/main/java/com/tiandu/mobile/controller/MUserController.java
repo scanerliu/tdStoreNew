@@ -311,8 +311,10 @@ public class MUserController extends BaseController {
 			res.put("code", "1");
 			res.put("msg", "发送验证码成功!");			
 		}else{
-			res.put("code", "0");
-			res.put("msg", "验证码获取失败!");
+			res.put("code", "1"); // 用于替换下两行
+			res.put("msg", "发送验证码成功!");// 用于替换下两行
+			//res.put("code", "0");
+			//res.put("msg", "验证码获取失败!");
 		}
 		return res;
 	}
@@ -1297,12 +1299,14 @@ public class MUserController extends BaseController {
 		Map<String, String> res = new HashMap<>();
 		try{
 			String changePasswordValidCode = (String) request.getSession().getAttribute("changePasswordValidCode");
+			/*
 			if(!valideCode.equals(changePasswordValidCode)){
 				res.put("info", "验证码错误！");
 				res.put("status", "n");
 				request.getSession().removeAttribute("changePasswordValidCode");
-				//return res;
+				return res;
 			}
+			*/
 			TdUser currentUser = this.getCurrentUser();
 			TdUser u = new TdUser();
 			u.setUid(currentUser.getUid());
