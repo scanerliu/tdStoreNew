@@ -727,8 +727,10 @@ public class MUserController extends BaseController {
 		res.put("msg", "个人信息修改失败！");
 		TdUser currentUser = this.getCurrentUser();
 		String avatar = user.getUavatar();
-		avatar = avatar.replaceFirst("/", "");
-		avatar = avatar.substring(avatar.indexOf("/"));
+		if(!avatar.equals("")){
+			avatar = avatar.replaceFirst("/", "");
+			avatar = avatar.substring(avatar.indexOf("/"));			
+		}
 		currentUser.setUavatar(avatar);
 		currentUser.setUnick(user.getUnick());
 		currentUser.setUgenter(user.getUgenter());
@@ -1377,28 +1379,35 @@ public class MUserController extends BaseController {
 				oneIdsStr += "["+ user.getUid() +"]";
 			}
 		}
-		sc.setParentIdsStr(oneIdsStr);
-		List<TdUser> downTwoUserList = tdUserService.findBySearchCriteria(sc);
-		if(downTwoUserList != null){
-			for(TdUser user : downTwoUserList){
-				parentIdsStr += "["+ user.getUid() +"]";
-				twoIdsStr += "["+ user.getUid() +"]";
-			}
+		if(!oneIdsStr.equals("")){
+			sc.setParentIdsStr(oneIdsStr);
+			List<TdUser> downTwoUserList = tdUserService.findBySearchCriteria(sc);
+			if(downTwoUserList != null){
+				for(TdUser user : downTwoUserList){
+					parentIdsStr += "["+ user.getUid() +"]";
+					twoIdsStr += "["+ user.getUid() +"]";
+				}
+			}			
 		}
-		sc.setParentIdsStr(twoIdsStr);
-		List<TdUser> downThreeUserList = tdUserService.findBySearchCriteria(sc);
-		if(downThreeUserList != null){
-			for(TdUser user : downThreeUserList){
-				threeIdsStr += "["+ user.getUid() +"]";
-			}
+		
+		if(!twoIdsStr.equals("")){
+			sc.setParentIdsStr(twoIdsStr);
+			List<TdUser> downThreeUserList = tdUserService.findBySearchCriteria(sc);
+			if(downThreeUserList != null){
+				for(TdUser user : downThreeUserList){
+					threeIdsStr += "["+ user.getUid() +"]";
+				}
+			}			
 		}
 		
 		sc.setParentIdsStr(parentIdsStr);
 		sc.setPageNo(pageNo);
 		sc.setFlag(true);
 		sc.setPageSize(3);
-		
-		List<TdUser> downUserList = tdUserService.findBySearchCriteria(sc); // 下一二三级分页会员
+		List<TdUser> downUserList = new ArrayList<>();
+		if(!parentIdsStr.equals("")){
+			downUserList = tdUserService.findBySearchCriteria(sc); // 下一二三级分页会员			
+		}
 		
 		// 生成json数据
 		JSONObject jsonData = new JSONObject();
