@@ -8,6 +8,9 @@ public class TdUserAccountLogSearchCriteria extends SearchCriteria {
 
 	private Integer uid; //用户id
 	
+	private Byte type; //操作类型 1-后台调整，2-分润收入，3-订单退货退款，4-用户提现
+	private Integer filterType = 0 ; //时间端  1-三天内，2-一周内
+	
 	private String username;
 	
 	private Date beginDate;
@@ -55,8 +58,21 @@ public class TdUserAccountLogSearchCriteria extends SearchCriteria {
 	public void setIsAsc(Boolean isAsc) {
 		this.isAsc = isAsc;
 	}
+
+	public Byte getType() {
+		return type;
+	}
+
+	public void setType(Byte type) {
+		this.type = type;
+	}
+
+	public Integer getFilterType() {
+		return filterType;
+	}
+
+	public void setFilterType(Integer filterType) {
+		this.filterType = filterType;
+	}
 	
-	
-	
-    
 }

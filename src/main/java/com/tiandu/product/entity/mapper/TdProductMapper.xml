@@ -408,7 +408,7 @@
     	and p.end_time <![CDATA[ >=]]> #{endTime,jdbcType=TIMESTAMP}
     </if>
     <if test="kind != null">
-    	and kind = #{kind,jdbcType=TINYINT}
+    	and p.kind = #{kind,jdbcType=TINYINT}
     </if>
     <if test="isNormalProduct != null and isNormalProduct == true">
     	and p.kind != 2
@@ -503,10 +503,10 @@
 	    )    	
     </if>
     <if test="kind != null">
-    	and kind = #{kind,jdbcType=TINYINT}
+    	and p.kind = #{kind,jdbcType=TINYINT}
     </if>
     <if test="kind == null">
-    	and kind != 2
+    	and p.kind != 2
     </if>
     <if test="orderBy != null">
     	order by ${orderBy}

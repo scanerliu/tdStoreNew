@@ -81,7 +81,7 @@
         <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_3.png" alt="">
         <span>我的积分</span>
       </a>
-      <a href="我的流水.html" title="">
+      <a href="${app.basePath}/mobile/user/profit" title="">
         <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_5.png" alt="">
         <span>我的流水</span>
       </a>

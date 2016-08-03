@@ -25,7 +25,6 @@
 	</div>
 	<input type="hidden" id="isFromProductPackage" value="<#if isFromProductPackage??>yes<#else>no</#if>">
 	<form id="searchform">
-	<input type="hidden" value="${sc.kind!''}" name="kind">
 	<table width="100%" cellspacing="0" class="search_form">
 		<tbody>
 			<tr>
@@ -35,7 +34,7 @@
 						<input type="text" value="" size="12" class="date" id="time_start" name="time_start">
 						-<input type="text" value="" size="12" class="date" id="time_end" name="time_end">
 						&nbsp;&nbsp;-->
-						<select name="status" class="J_cate_select mr10">
+						<select name="kind" class="J_cate_select mr10">
 							<option value="">-商品类型-</option>
 							<option value="1">普通商品</option>
 							<option value="3">0元购</option>

@@ -660,6 +660,36 @@ public class MUserController extends BaseController {
 	    modelMap.addAttribute("sc", sc) ;
 		return "/mobile/user/account_listbody";
 	}
+	/**
+	 * 用户收益
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping(value = "/profit")
+	public String userprofit(HttpServletRequest request, HttpServletResponse response, ModelMap map)
+	{
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		return "/mobile/user/profit";
+	}
+	/**
+	 * 用户收益记录
+	 * @param sc
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
+	@RequestMapping("/searchprofit")
+	public String searchprofit(TdUserAccountLogSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currUser = this.getCurrentUser();
+		sc.setUid(currUser.getUid());
+		sc.setType(TdUserAccountLog.USERACCOUNTLOG_TYPE_PROFIT_INCOME);
+		List<TdUserAccountLog> logList = tdUserAccountLogService.findBySearchCriteria(sc);
+		modelMap.addAttribute("logList", logList) ;
+		modelMap.addAttribute("sc", sc) ;
+		return "/mobile/user/profit_listbody";
+	}
 	
 	@RequestMapping(value="/saveInfo", method = RequestMethod.POST)
 	@ResponseBody
