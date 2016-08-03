@@ -724,6 +724,7 @@ public class MUserController extends BaseController {
 	@ResponseBody
 	public Map<String, String> saveInfo(TdUser user, HttpServletRequest request, HttpServletResponse response) {
 		Map<String,String> res = new HashMap<String,String>();
+		res.put("code", "0");
 		res.put("msg", "个人信息修改失败！");
 		TdUser currentUser = this.getCurrentUser();
 		String avatar = user.getUavatar();
@@ -737,7 +738,8 @@ public class MUserController extends BaseController {
 		currentUser.setUbirthday(user.getUbirthday());
 		currentUser.setUtel(user.getUtel());
 		if(tdUserService.saveUserInfo(currentUser) == 1){
-			res.put("msg", "个人信息修改成功！");			
+			res.put("msg", "个人信息修改成功！");
+			res.put("code", "1");
 		}
 		return res;
 	}
