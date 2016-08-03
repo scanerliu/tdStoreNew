@@ -141,8 +141,6 @@ public class PaymentChannelAlipay implements PaymentChannel {
         try {
             orderNo = new String(request.getParameter(OUT_TRADE_NO_PARA)
                     .getBytes(ISO_ENCODING), AlipayConfig.CHARSET);
-//            orderNo = orderNo == null ? "" : 
-//                orderNo.substring(0, orderNo.length() - 6);
             trade_no = new String(request.getParameter(ORDER_NO_TB_PARA)
                     .getBytes(ISO_ENCODING), AlipayConfig.CHARSET);
             trade_status = new String(request.getParameter(ORDER_STATUS_PARA)
