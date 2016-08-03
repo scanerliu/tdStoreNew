@@ -85,6 +85,10 @@ public class TdUser {
 	 * 账户钱包信息
 	 */
 	private TdUserAccount userAccount;
+	/**
+	 * 账号等级，显示时候使用
+	 */
+	private TdMembership membership;
 
     public Integer getUid() {
         return uid;
@@ -332,6 +336,14 @@ public class TdUser {
 
 	public void setUserAccount(TdUserAccount userAccount) {
 		this.userAccount = userAccount;
+	}
+
+	public TdMembership getMembership() {
+		return membership;
+	}
+
+	public void setMembership(TdMembership membership) {
+		this.membership = membership;
 	}
 
 	public Boolean isLocked(){

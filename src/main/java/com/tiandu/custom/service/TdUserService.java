@@ -88,5 +88,12 @@ public interface TdUserService {
 	 *	体验店申请审核 
 	 */
 	public int saveVerifyExperienceStoreApply(TdExperienceStore experienceStore, Byte status);
+	
+	/**
+	 * 保存注册用户
+	 * @param user
+	 * @return
+	 */
+	public int saveRegisterUser(TdUser user);
 		
 }

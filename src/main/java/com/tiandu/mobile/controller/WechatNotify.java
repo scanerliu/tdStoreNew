@@ -245,7 +245,7 @@ public class WechatNotify {
 		password = WebUtils.generatePassword(user.getUname(), password);
 		user.setUpassword(password);
 		user.setJointId(opendI);
-		user.setUverification(Byte.valueOf("1"));
+		user.setUverification(Byte.valueOf("2"));//未验证
 		user.setUstatus(Byte.valueOf("1"));
 		user.setUtype(Byte.valueOf("2"));//普通会员
 		user.setUparentId(SpreadId);
@@ -253,22 +253,8 @@ public class WechatNotify {
 		user.setUpdateBy(1);
 		user.setUpdateTime(currentDate);
 		user.setSupplierType(Byte.valueOf("0"));
-		tdUserSerivce.insert(user);
-		TdUserIntegral integral = new TdUserIntegral();
-		integral.setIntegral(0);
-		integral.setTotalIntegral(0);
-		integral.setUid(user.getUid());
-		integral.setUpdateTime(user.getUpdateTime());
-		integral.setUpdateBy(user.getUpdateBy());
-		tdUserIntegralService.insert(integral);
-		//保存钱包信息
-		TdUserAccount account = new TdUserAccount();
-		account.setAmount(BigDecimal.ZERO);
-		account.setStatus(TdUserAccount.ACCOUNT_STATUS_ACTIVE);
-		account.setUid(user.getUid());
-		account.setUpdateBy(user.getUpdateBy());
-		account.setUpdateTime(user.getUpdateTime());
-		tdUserAccountService.insert(account);
+		user.setMembershipId(1);//会员等级
+		tdUserSerivce.saveRegisterUser(user);
 		return user;
 	}
 	
