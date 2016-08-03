@@ -100,7 +100,7 @@ public class MobileSupplyController extends BaseController{
 		if(null!=orderId && orderId>0){
 			order = tdOrderService.findDetail(orderId);
 		}
-		if(null==order || !order.getUserId().equals(currUser.getUid())){
+		if(null==order || !order.getSupplierId().equals(currUser.getUid())){
 		    return "redirect:404";
 		}
 		map.addAttribute("order", order) ;
@@ -137,7 +137,7 @@ public class MobileSupplyController extends BaseController{
 		}
 		TdOrder order = tdOrderService.findDetail(orderId);
 		
-		if(null==order || !order.getUserId().equals(user.getUid())){
+		if(null==order || !order.getSupplierId().equals(user.getUid())){
 		    return "redirect:404";
 		}
 		

@@ -245,6 +245,7 @@
     <if test="uid != null" >
        and  c.uid = #{uid,jdbcType=INTEGER}
     </if>
+    order by c.create_time desc
   </select>
   
   <delete id="deleteByProductId" parameterType="java.lang.Integer" >

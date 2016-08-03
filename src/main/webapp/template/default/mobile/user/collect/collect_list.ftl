@@ -19,13 +19,15 @@ $(document).ready(function(){
     	<#list collectList as col>
         <li>
             <article>
+            	<a href="${app.basePath}/mobile/product/item${col.itemId?c}">
                 <img src="<#if col.product??>${app.basePath}${col.product.imageUrl!''}</#if>" alt="<#if col.product??>${col.product.name!''}</#if>"/>
 
                 <div class="right-content">
                     <h3><#if col.product??>${col.product.name!''}</#if></h3>
-                    <span>店铺名称：今年的秋天的旗舰店</span>
+                    <span></span>
                     <p>￥<#if col.product?? && col.product.price??>${col.product.price?string('0.00')}</#if></p>
                 </div>
+                </a>
                 <div class="dele" onclick="delCollect(${col.id?c});">删除</div>
             </article>
 

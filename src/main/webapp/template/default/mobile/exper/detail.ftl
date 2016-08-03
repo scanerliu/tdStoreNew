@@ -93,8 +93,13 @@
             <article class="art3">
                 <p class="p1">代理类别</p>
                 <p class="p2">
-                    <a href="#" title="" class="">鞋子</a>
-                    <a href="#" title="" class="">裤子</a>
+                	<#if experexce.storeTypeNames??> 
+		                <#list experexce.storeTypeNames?split(",") as type>
+		                    <#if type !="">
+		                        <a href="javascript" title="${type!''}" class="">${type!''}</a>
+		                    </#if>
+		                </#list>
+		            </#if>
                 </p>
             </article>
         </section>
