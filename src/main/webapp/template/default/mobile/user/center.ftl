@@ -45,7 +45,7 @@
   <!-- header_top -->
   <header class="pc-head">
     <div class="head-img">
-      <img src="${currentUser.uavatar!''}" alt="暂无头像">
+      <img src="${app.basePath}${currentUser.uavatar!''}" alt="暂无头像">
     </div>
     <div class="user-name">
       <p class="p1">${currentUser.unick!''}</p>

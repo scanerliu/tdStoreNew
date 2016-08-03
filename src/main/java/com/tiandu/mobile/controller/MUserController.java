@@ -643,7 +643,10 @@ public class MUserController extends BaseController {
 		Map<String,String> res = new HashMap<String,String>();
 		res.put("msg", "个人信息修改失败！");
 		TdUser currentUser = this.getCurrentUser();
-		currentUser.setUavatar(user.getUavatar());
+		String avatar = user.getUavatar();
+		avatar = avatar.replaceFirst("/", "");
+		avatar = avatar.substring(avatar.indexOf("/"));
+		currentUser.setUavatar(avatar);
 		currentUser.setUnick(user.getUnick());
 		currentUser.setUgenter(user.getUgenter());
 		currentUser.setUbirthday(user.getUbirthday());
@@ -1172,6 +1175,17 @@ public class MUserController extends BaseController {
 			userSupplier.setCreateTime(new Date());
 			userSupplier.setUpdateTime(new Date());
 			userSupplier.setUpdateBy(currentUser.getUid());
+			String imgs[] = userSupplier.getImages().split(":");
+			String images = "";
+			for(int i = 0; i < imgs.length; i ++){
+				imgs[i] = imgs[i].replaceFirst("/", "");
+				imgs[i] = imgs[i].substring(imgs[i].indexOf("/"));
+				images = images + imgs[i];
+				if(i < imgs.length - 1){
+					images = images + ":";
+				}
+			}
+			userSupplier.setImages(images);
 			if(userSupplier.getId() == null){
 				tdUserSupplierService.save(userSupplier);				
 			}else{

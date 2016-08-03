@@ -107,7 +107,10 @@ public class ArticleTitleController extends BaseController {
 						tat.setTitle(articleTitle.getTitle());
 						tat.setKeyword(articleTitle.getKeyword());
 						tat.setSummary(articleTitle.getSummary());
-						tat.setImageUrl(articleTitle.getImageUrl());
+						String imgurl = articleTitle.getImageUrl();
+						imgurl = imgurl.replaceFirst("/", "");
+						imgurl = imgurl.substring(imgurl.indexOf("/")); 
+						tat.setImageUrl(imgurl);
 						tat.setStatus(articleTitle.getStatus());
 						tat.setSort(articleTitle.getSort());
 						tat.setHotRecommend(articleTitle.getHotRecommend());

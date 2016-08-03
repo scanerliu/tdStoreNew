@@ -24,7 +24,7 @@
     		<#if imgList??>
     			<#list imgList as img>
     				<#if img_index != 0 && img_index%3 == 0><br/></#if>	    			
-	    			<img width='200' height='200' src="${img!''}"/>
+	    			<img width='200' height='200' src="${app.basePath}${img!''}"/>
 				</#list>
 			</#if>
         </td>
