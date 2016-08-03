@@ -292,6 +292,31 @@ public class MUserController extends BaseController {
 		return res;
 	}
 	
+	@RequestMapping(value="/getChangePhoneNumValidCode", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> getChangePhoneNumValidCode(HttpServletRequest request, String phone) {
+		Map<String,String> res = new HashMap<String,String>();
+		Random random = new Random();
+		String smscode = String.format("%04d", random.nextInt(9999));
+		request.getSession().setAttribute("changePasswordValidCode", smscode);
+		List<String> phoneNums =new ArrayList<>();
+		phoneNums.add(phone);
+		List<String> datas =new ArrayList<>();
+		datas.add(smscode);
+		datas.add("1");
+		MessageSender ms = new MessageSender();
+		ms.init();
+		boolean isSendSuccess = ms.send(phoneNums, "1", datas);
+		if(isSendSuccess){
+			res.put("code", "1");
+			res.put("msg", "发送验证码成功!");			
+		}else{
+			res.put("code", "0");
+			res.put("msg", "验证码获取失败!");
+		}
+		return res;
+	}
+	
 	
 	/*
 	 * 我的购物车
