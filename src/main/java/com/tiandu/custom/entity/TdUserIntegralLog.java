@@ -118,6 +118,8 @@ public class TdUserIntegralLog {
     			sb.append("积分兑换礼品");
     		}else if(this.getType().equals(USERINTEGRALLOG_TYPE_DEDUCTIBLE_AMOUNT)){
     			sb.append("抵扣订单金额");
+    		}else if(this.getType().equals(USERINTEGRALLOG_TYPE_REGISTER)){
+    			sb.append("注册赠送积分");
     		}
     		
     	}
