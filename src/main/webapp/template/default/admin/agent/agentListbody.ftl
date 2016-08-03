@@ -26,7 +26,7 @@
         <td align="center">${agent.user.uname!''}</td>
         <td align="center">${agent.levelStr!''}</td>
         <td align="center">${agent.district.name!''}</td>
-        <td align="center">${agent.productType.name!''}</td>
+        <td align="center"><#if agent.productType??>${agent.productType.name!''}</#if></td>
         <td align="center">
             <a class="J_showdialog" href="javascript:;" onclick="delAgent(${agent.id?c})">删除</a>
         </td>

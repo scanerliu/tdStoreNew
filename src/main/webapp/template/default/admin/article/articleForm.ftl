@@ -38,7 +38,7 @@
         	<input type="file" id="file_upload"/>
         	<div id="showImg">
         		<#if tdArticleTitle.imageUrl??>
-        			<img width='200' height='200' src='${tdArticleTitle.imageUrl!''}'/>
+        			<img width='200' height='200' src='${app.basePath}${tdArticleTitle.imageUrl!''}'/>
 				</#if>
         	</div>
         </td>

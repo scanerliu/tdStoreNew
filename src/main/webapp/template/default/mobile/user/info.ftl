@@ -102,7 +102,7 @@
 		<li class="li01">
 			<font>个人头像</font>
 			<a id="avatar-change" href="javascript:;" title="修改头像">
-				<img alt="暂无头像" id="uavatarShow" src="${currentUser.uavatar!''}"/>
+				<img alt="暂无头像" id="uavatarShow" src="${app.basePath}${currentUser.uavatar!''}"/>
 				<div id="file_upload"><div>
 				<input type="hidden" id="uavatar" name="uavatar" value="${currentUser.uavatar!''}">
 			</a>

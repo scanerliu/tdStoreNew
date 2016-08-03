@@ -36,7 +36,7 @@
 						<#list ppiList as ppi>
 							<div style="float:left;margin-left:10px;" id="ppiDiv" onclick="removeSkuId(this)">
 								<div id="productImage">
-									<img width="100px" height="100px" src="${ppi.productImage!''}">
+									<img width="100px" height="100px" src="${app.basePath}${ppi.productImage!''}">
 								</div>
 								<div>
 									商品名称：<label id="productName">${ppi.productName!''}</label><br>
