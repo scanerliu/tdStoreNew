@@ -232,6 +232,9 @@
 	    <if test="id != null" >
 	        and s.id=#{id,jdbcType=INTEGER}
 	    </if>
+	    <if test="isAddProductPackage == true" >
+	        and p.kind = 1 
+	    </if>
 	    <if test="productName != null">
 	        and p.name like CONCAT('%','${productName}','%' )
 	    </if>
@@ -246,6 +249,9 @@
 	    where 1=1 
 	    <if test="id != null" >
 	        and s.id=#{id,jdbcType=INTEGER}
+	    </if>
+	    <if test="isAddProductPackage == true" >
+	        and p.kind = 1 
 	    </if>
 	    <if test="productName != null">
 	        and p.name like CONCAT('%','${productName}','%' )

@@ -275,6 +275,7 @@ public class ProductPackageController extends BaseController{
 	
 	@RequestMapping("/skuSearch")
 	public String skuSearch(TdProductSkuCriteria sc, HttpServletRequest request, ModelMap modelMap){
+		sc.setAddProductPackage(true);
 		List<TdProductSku> skuList = tdProductSkuService.findBySearchCriteria(sc);
 		modelMap.addAttribute("skuList", skuList);
 		modelMap.addAttribute("sc", sc);
