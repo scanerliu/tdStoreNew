@@ -32,4 +32,7 @@ public interface TdProductTypeService {
 	List<TdProductAttribute> findNotProducrAttribute(Integer typeId);
 	
 	
+	// 查找第三分类
+	List<TdProductType> findThirdType(TdProductTypeCriteria sc);
+	
 }

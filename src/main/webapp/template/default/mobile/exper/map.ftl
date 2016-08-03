@@ -36,11 +36,10 @@
 	<div id="map" style="height:100%;width:100%"></div>
     <script type="text/javascript">
       // 百度地图API功能
+      <#if experexce.lng?? && experexce.lat??>
       var map = new BMap.Map("map");
       var point = new BMap.Point(${experexce.lng!''},${experexce.lat!''});
       map.centerAndZoom(point,14);
-    //  var marker = new BMap.Marker(point);  // 创建标注
-	//  map.addOverlay(marker); 
 
       var geolocation = new BMap.Geolocation();
       geolocation.getCurrentPosition(function(r){
@@ -57,16 +56,10 @@
           //alert('failed'+this.getStatus());
         }        
       },{enableHighAccuracy: true})
-      
-//   var opts = {
-//  	 width : 200,     // 信息窗口宽度
-//   	 height: 100,     // 信息窗口高度
-//  	 title : "体验代购店" , // 信息窗口标题
-//  }
-// 	var infoWindow = new BMap.InfoWindow("地址：${experexce.regionFullName!''}${experexce.address!''}", opts);  // 创建信息窗口对象 
-//	 	marker.addEventListener("click", function(){          
-// 		map.openInfoWindow(infoWindow,point); //开启信息窗口
-// 	});
+      <#else>
+	      alert("当前店铺未添加具体坐标，无法查看地图");
+	      window.history.go(-1);
+      </#if>
       
 </script>
 <!-- Center End -->
