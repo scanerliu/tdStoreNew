@@ -39,7 +39,8 @@ public class TdUserIntegralServiceImpl implements TdUserIntegralService {
 		int pointcount = point.getIntegral()+log.getIntegral();
 		log.setPreintegral(point.getIntegral());
 		log.setUid(point.getUid());
-		record.setIntegral(pointcount);		
+		record.setIntegral(pointcount);	
+		record.setTotalIntegral(point.getTotalIntegral()+log.getIntegral());
 		tdUserIntegralMapper.updateByPrimaryKey(record);
 		tdUserIntegralLogMapper.insert(log);
 		return true;

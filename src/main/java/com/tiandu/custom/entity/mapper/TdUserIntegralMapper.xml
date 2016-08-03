@@ -22,12 +22,9 @@
     where uid = #{uid,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.tiandu.custom.entity.TdUserIntegral" >
-    <selectKey resultType="java.lang.Integer" keyProperty="uid" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into td_user_integral (total_integral, integral, update_time, 
+    insert into td_user_integral (uid,total_integral, integral, update_time, 
       update_by)
-    values (#{totalIntegral,jdbcType=INTEGER}, #{integral,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
+    values (#{uid,jdbcType=INTEGER},#{totalIntegral,jdbcType=INTEGER}, #{integral,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{updateBy,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.tiandu.custom.entity.TdUserIntegral" >

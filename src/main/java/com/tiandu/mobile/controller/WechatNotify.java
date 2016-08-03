@@ -254,6 +254,7 @@ public class WechatNotify {
 		user.setUpdateTime(currentDate);
 		user.setSupplierType(Byte.valueOf("0"));
 		user.setMembershipId(1);//会员等级
+		user.setUgenter(Byte.valueOf("3"));//性别-保密
 		tdUserSerivce.saveRegisterUser(user);
 		return user;
 	}

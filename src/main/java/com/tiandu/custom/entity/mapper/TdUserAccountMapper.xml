@@ -22,9 +22,6 @@
     where uid = #{uid,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.tiandu.custom.entity.TdUserAccount" >
-    <selectKey resultType="java.lang.Integer" keyProperty="uid" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into td_user_account (uid, amount, status, update_time, 
       update_by)
     values (#{uid,jdbcType=INTEGER},#{amount,jdbcType=DECIMAL}, #{status,jdbcType=TINYINT}, #{updateTime,jdbcType=TIMESTAMP},
