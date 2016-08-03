@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +34,9 @@ import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.complaint.entity.TdComplaint;
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.custom.entity.TdUserAccount;
+import com.tiandu.custom.entity.TdUserAccountLog;
+import com.tiandu.custom.service.TdUserAccountService;
 import com.tiandu.express.entity.TdExpress;
 import com.tiandu.express.search.TdExpressSearchCriteria;
 import com.tiandu.express.service.TdExpressService;
@@ -74,6 +78,9 @@ public class MOrderController extends BaseController {
 	
 	@Autowired
 	private TdOrderSkuService tdOrderSkuService;
+	
+	@Autowired
+	private TdUserAccountService tdUserAccountService;
 	
 	@RequestMapping("/list")
 	public String list(TdOrderSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
@@ -281,6 +288,10 @@ public class MOrderController extends BaseController {
 	 */
 	@RequestMapping("/dopay{orderId}")
 	public String dopay(@PathVariable Integer orderId,HttpServletRequest req,ModelMap map){
+		TdUser user = this.getCurrentUser();
+		if(null == user){
+			return "redirect:404";
+		}
 		
 		String ua = req.getHeader("User-Agent");
 		if(WebUtils.checkAgentIsMobile(ua)){
@@ -325,9 +336,20 @@ public class MOrderController extends BaseController {
 			// 支付宝支付
 			PaymentChannelAlipay paymentChannelAlipay = new PaymentChannelAlipay();
 			payForm = paymentChannelAlipay.getPayFormData(req);
+		}else if(ConstantsUtils.ORDER_PAYMENT_ACCOUNT.equals(pay)){
+			// 钱包余额支付
+			TdUserAccount account = tdUserAccountService.findByUid(user.getUid());
+			// 钱包余额小于支付金额
+			if(null == account || order.getPayAmount().compareTo(account.getAmount()) < 0){
+				return "/mobile/pay_failed";
+			}
+			orderAccountPay(order,account);
+			map.addAttribute("order", order);
+			return "/mobile/pay_success";
+			
 		}else if(ConstantsUtils.ORDER_PAYMENT_WEIXIN.equals(pay)){
 			
-			TdUser user = this.getCurrentUser();
+			
 			
 			String openId = user.getJointId();
 			if(null == openId || openId.contains("sys")){
@@ -460,7 +482,6 @@ public class MOrderController extends BaseController {
 		
 		return "/mobile/pay_form";
 	}
-	
 	
 	@RequestMapping(value = "/pay/notify_alipay")
     public void payNotifyAlipay(ModelMap map, HttpServletRequest req,
@@ -615,4 +636,35 @@ public class MOrderController extends BaseController {
 			br.close();
 		}
     }
+    
+    
+    
+    /**
+     * 
+     * @author Max
+     * 余额付
+     * 
+     */
+    private void orderAccountPay(TdOrder order, TdUserAccount account) {
+		if(null ==order || null == account){
+			return ;
+		}
+		
+		BigDecimal payAmount = order.getPayAmount();
+		BigDecimal amount = account.getAmount();
+		BigDecimal decimal = new BigDecimal(0.00);
+		
+		account.setAmount(amount.subtract(payAmount));
+		
+		// 记录
+		TdUserAccountLog log = new TdUserAccountLog();
+		log.setUpamount(decimal.subtract(payAmount));
+		log.setCreateTime(new Date());
+		log.setType((byte)5);
+		log.setNote("订单:"+order.getOrderNo()+"支付");
+		
+		tdUserAccountService.addAmount(account, log);
+		
+		tdOrderService.AfterPaySuccess(order);
+	}
 }
