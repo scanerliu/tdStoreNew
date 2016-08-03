@@ -7,11 +7,11 @@
     	<table class="tabcontent" width="100%" cellspacing="0">
         <tr>
             <td width="150" align="right">账号:</td>
-            <td><img src="${customer.uavatar!''}" alt="头像地址"/> ${customer.uname}</td>
+            <td>${customer.uname}</td>
         </tr>
         <tr>
             <td width="150" align="right">等级:</td>
-            <td>${customer.membershipId!''}</td>
+            <td><#if customer.membership??>${customer.membership.name!''}<#else>${customer.membershipId!''}</#if></td>
         </tr>
         <tr>
             <td align="right">昵称:</td>

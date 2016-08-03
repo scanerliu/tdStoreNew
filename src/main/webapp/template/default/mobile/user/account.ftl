@@ -19,8 +19,10 @@
 <link href="${app.basePath}/static/touch/css/main.css" rel="stylesheet" type="text/css" />
 <link href="${app.basePath}/static/touch/css/x_pc.css" rel="stylesheet" type="text/css" />
 <!-- js -->
-<script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="${app.basePath}/static/touch/js/common.js"></script>
+<script src="${app.basePath}/static/js/jquery-1.12.3.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="${app.basePath}/static/js/mobile/common.js"></script>
+<script type="text/javascript" src="${app.basePath}/static/js/mobile/core.js"></script>
+<script src="${app.basePath}/static/js/mobile/user/account.js" type="text/javascript"></script>
 </head>
 <body class="body_gray">
 
@@ -42,30 +44,23 @@
     </article><!-- top-balance end -->
     <article class="points-detail">
       <section>
-        <div class="div1">所有明细</div>
-        <div>获得金额</div>
-        <div>使用金额</div>
+        <div class="div1">时间</div>
+        <div>说明</div>
+        <div>金额</div>
       </section>
-      <ul>
-        <li>
-          <div class="left">2015-01-04</div>
-          <div class="middle">会员分润</div>
-          <div class="right income">+80.00</div>
-        </li>
-        <li>
-          <div class="left">2015-01-04</div>
-          <div class="middle">零钱提现</div>
-          <div class="right pay">-100.00</div>
-        </li>
-        <li>
-          <div class="left">2015-01-04</div>
-          <div class="middle">会员分润</div>
-          <div class="right income">+8000.00</div>
-        </li>
+      <ul id="results">
       </ul>
     </article>
   </section>
   <!-- Center End -->
-
+<form id="searchForm" autocomplete="false">
+		<input type="hidden" name="pageNo" id="pageNo" value="0"/>
+</form>
+<script type="text/javascript">
+	$(function(){
+	    searchAccountLogs(true);
+	});
+	
+</script>
 </body>
 </html>

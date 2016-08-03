@@ -238,6 +238,11 @@ public class MShoppingcartController extends BaseController {
 	@RequestMapping(value = "/confirmorder")
 	public String confirmorder(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap,Integer addressId) {
 		TdUser currUser = this.getCurrentUser();
+		if(TdUser.USTATUS_ACTIVE.equals(currUser.getUverification())){//未验证的用户不能购买商品
+			String errmsg = "用户未验证，请先到个人信息中绑定手机号码和设置地区完成验证才能购买商品！";
+			modelMap.addAttribute("errmsg", errmsg) ;
+			return  "/mobile/error";
+		}
 		//获取购物车
 		ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid());
 		
@@ -275,6 +280,11 @@ public class MShoppingcartController extends BaseController {
 			orderForm.setUsePoints(false);
 		}
 		TdUser currUser = this.getCurrentUser();
+		if(TdUser.USTATUS_ACTIVE.equals(currUser.getUverification())){//未验证的用户不能购买商品
+			String errmsg = "用户未验证，请先到个人信息中绑定手机号码和设置地区完成验证才能购买商品！";
+			modelMap.addAttribute("errmsg", errmsg) ;
+			return  "/mobile/error";
+		}
 		//获取购物车
 		ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid());
 		
@@ -311,6 +321,11 @@ public class MShoppingcartController extends BaseController {
 	@RequestMapping("/buynow")
 	public String buynow(OrderForm orderForm, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap ,Integer addressId) {
 		TdUser currUser = this.getCurrentUser();
+		if(TdUser.USTATUS_ACTIVE.equals(currUser.getUverification())){//未验证的用户不能购买商品
+			String errmsg = "用户未验证，请先到个人信息中绑定手机号码和设置地区完成验证才能购买商品！";
+			modelMap.addAttribute("errmsg", errmsg) ;
+			return  "/mobile/error";
+		}
 		//生成购物车
 		ShoppingcartVO shoppingcart;	
 		try {
@@ -369,6 +384,11 @@ public class MShoppingcartController extends BaseController {
 		}
 		TdJointOrder order = new TdJointOrder();
 		TdUser currUser = this.getCurrentUser();
+		if(TdUser.USTATUS_ACTIVE.equals(currUser.getUverification())){//未验证的用户不能购买商品
+			String errmsg = "用户未验证，请先到个人信息中绑定手机号码和设置地区完成验证才能购买商品！";
+			modelMap.addAttribute("errmsg", errmsg) ;
+			return  "/mobile/error";
+		}
 		try {
 			//获取购物车
 			ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid(), orderForm);

@@ -19,6 +19,10 @@ public class TdUserIntegralLog {
 	 * 抵扣订单金额
 	 */
 	public static final Byte USERINTEGRALLOG_TYPE_DEDUCTIBLE_AMOUNT = 4;
+	/**
+	 * 注册赠送积分
+	 */
+	public static final Byte USERINTEGRALLOG_TYPE_REGISTER = 5;
 	
     private Integer id;
 

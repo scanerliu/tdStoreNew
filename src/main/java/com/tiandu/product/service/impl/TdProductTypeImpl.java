@@ -200,4 +200,37 @@ public class TdProductTypeImpl implements TdProductTypeService{
 		return productAttrList;
 	}
 
+	@Override
+	public List<TdProductType> findThirdType(TdProductTypeCriteria sc) {
+		sc.setFlag(false);
+		sc.setParentId(0);
+		List<TdProductType> productList = this.findBySearchCriteria(sc);
+		
+		List<TdProductType> thirdTypeList = new ArrayList<>();
+		
+		if(null != productList && productList.size() > 0)
+		{
+			for (TdProductType tdProductType : productList) 
+			{
+				// 查找二级分类
+				sc.setParentId(tdProductType.getId());
+				List<TdProductType> secondList = this.findBySearchCriteria(sc);
+				if(null != secondList && secondList.size() > 0)
+				{
+					for (TdProductType productType : secondList) 
+					{
+						// 查找三级分类
+						sc.setParentId(productType.getId());
+						List<TdProductType> thirdList = this.findBySearchCriteria(sc);
+						if(null != thirdList && thirdList.size() > 0)
+						{
+							thirdTypeList.addAll(thirdList);
+						}
+					}
+				}
+			}
+		}
+		return thirdTypeList;
+	}
+
 }

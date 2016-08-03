@@ -1,10 +1,12 @@
 package com.tiandu.custom.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tiandu.common.utils.DateUtil;
 import com.tiandu.custom.entity.TdUserAccountLog;
 import com.tiandu.custom.entity.mapper.TdUserAccountLogMapper;
 import com.tiandu.custom.search.TdUserAccountLogSearchCriteria;
@@ -33,8 +35,24 @@ public class TdUserAccountLogServiceImpl implements TdUserAccountLogService {
 
 	@Override
 	public List<TdUserAccountLog> findBySearchCriteria(TdUserAccountLogSearchCriteria sc) {
-		Integer count = tdUserAccountLogMapper.countByCriteria(sc);
-		sc.setTotalCount(count);
+		Date now = new Date();
+		switch(sc.getFilterType()){
+			case 1://三天内的记录
+				Date starttime = DateUtil.getNewDate(now, -3);
+				sc.setBeginDate(starttime);
+				break;
+				
+			case 2://一周以内的记录
+				Date newstarttime = DateUtil.getNewDate(now, -7);
+				sc.setBeginDate(newstarttime);
+				break;
+			default :
+				break;			
+		}
+		if(sc.isFlag()){
+			Integer count = tdUserAccountLogMapper.countByCriteria(sc);
+			sc.setTotalCount(count);
+		}
 		return tdUserAccountLogMapper.findBySearchCriteria(sc);
 	}
 

@@ -42,7 +42,7 @@
 
 <!-- header_top -->
 <div class="top_heater">
-    <a href="javascript:history.go(-1);" title="" class="hleft hback"></a>
+    <a href="javascript:history.go(-1);" title="返回" class="hleft hback"></a>
     <span>体验店申请</span>
 </div>
 <!-- header_top end -->
@@ -72,9 +72,12 @@
         </div>
         <section class="sec7">
             <label for="" class="fl">商品分类</label>
-            <select name="" id="">
-                <option value="">鞋子</option>
-                <option value="">鞋子</option>
+            <select name="typeId" >
+            	<#if typeList??>
+            	<#list typeList as type>
+                <option value="${type.id?c}">${type.name!''}</option>
+                </#list>
+                </#if>
             </select>
         </section>
         <input type="button" onclick="addAgent();" value="立即申请">
@@ -93,7 +96,7 @@ $(function(){
 				'onUploadSuccess' : function(file, data, response) {
 					var result = eval("("+data+")");
 					$("#showing").append("<a href='javascript:;' id='img"+num+"' class='aimg'><img  src='"+basePath+result.savedFile+"' /><i onclick='removeImg("+num+")'></i></a>");
-					$("#showing").append("<input id='input"+num+"' type='hidden' name='storeImages' value='"+basePath+result.savedFile+"'>");
+					$("#showing").append("<input id='input"+num+"' type='hidden' name='storeImages' value='"+result.savedFile+"'>");
 					num++;
 					console.debug(num);
 		        },

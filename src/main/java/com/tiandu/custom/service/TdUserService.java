@@ -90,5 +90,12 @@ public interface TdUserService {
 	public int saveVerifyExperienceStoreApply(TdExperienceStore experienceStore, Byte status);
 	
 	public int getTotalCount(TdUserSearchCriteria sc);
+	
+	/**
+	 * 保存注册用户
+	 * @param user
+	 * @return
+	 */
+	public int saveRegisterUser(TdUser user);
 		
 }

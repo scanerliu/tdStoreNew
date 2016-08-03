@@ -34,6 +34,7 @@ import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.search.TdDistrictSearchCriteria;
 import com.tiandu.district.service.TdDistrictService;
 import com.tiandu.product.entity.TdAgentProduct;
+import com.tiandu.product.entity.TdProductType;
 import com.tiandu.product.search.TdAgentProductSearchCriteria;
 import com.tiandu.product.search.TdProductTypeCriteria;
 import com.tiandu.product.service.TdAgentProductService;
@@ -112,6 +113,11 @@ public class MobileAgentController extends BaseController{
 		}
 		if(agent.getLevel() == 4)
 		{
+			TdProductTypeCriteria sc = new TdProductTypeCriteria();
+			sc.setStatus((byte)1);
+			sc.setOrderBy("2");
+			map.addAttribute("typeList", tdProductTypeService.findThirdType(sc));
+			
 			return "/mobile/agent/agentform";
 		}
 		return "/mobile/agent/typelist";
@@ -162,7 +168,7 @@ public class MobileAgentController extends BaseController{
 	@RequestMapping(value= "/addagent", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String,Object> agentAdd(TdExperienceStore experience,
-				Integer provinceId,Integer cityId,
+				Integer provinceId,Integer cityId,Integer typeId,
 				HttpServletRequest req,ModelMap map)
 	{
 		Map<String,Object> res = new HashMap<>();
@@ -178,9 +184,14 @@ public class MobileAgentController extends BaseController{
 			res.put("msg", "参数错误");
 			return res;
 		}
+		// 判断为选择三级地区，如选择了二级地区，则以二级地区为体验店地区
 		if(null == experience.getRegionId()){
-			res.put("msg", "请正确选择地区");
-			return res;
+			if(null == cityId){
+				res.put("msg", "请正确选择地区");
+				return res;
+			}else{
+				experience.setRegionId(cityId);
+			}
 		}
 		if(null == experience.getAddress() || "".equals(experience.getAddress().trim())){
 			res.put("msg", "请输入信息地址");
@@ -190,6 +201,11 @@ public class MobileAgentController extends BaseController{
 			res.put("msg", "请正确输入手机号");
 			return res;
 		}
+		if(null == typeId){
+			res.put("msg", "请选择代理类型");
+			return res;
+		}
+		TdProductType type = tdProductTypeService.findOne(typeId);
 		
 		experience.setUid(user.getUid());
 		TdDistrict province = tdDistrictService.findOne(provinceId);
@@ -214,6 +230,8 @@ public class MobileAgentController extends BaseController{
 		experience.setStatus((byte)1);
 		experience.setCreateTime(new Date());
 		experience.setSort(1);
+		experience.setStoreTypeIds("["+typeId+"]");
+		experience.setStoreTypeNames("["+type.getName()+"]");
 		
 		tdExperienceStoreService.save(experience);
 		res.put("code", 1);

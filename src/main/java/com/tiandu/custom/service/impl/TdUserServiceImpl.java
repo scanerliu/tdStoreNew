@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdExperienceStore;
+import com.tiandu.custom.entity.TdMembership;
 import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserAccount;
@@ -29,6 +30,7 @@ import com.tiandu.custom.search.TdUserMessageSearchCriteria;
 import com.tiandu.custom.search.TdUserSearchCriteria;
 import com.tiandu.custom.search.TdUserSignSearchCriteria;
 import com.tiandu.custom.service.TdExperienceStoreService;
+import com.tiandu.custom.service.TdMembershipService;
 import com.tiandu.custom.service.TdUserAccountService;
 import com.tiandu.custom.service.TdUserIntegralLogService;
 import com.tiandu.custom.service.TdUserIntegralService;
@@ -72,6 +74,9 @@ public class TdUserServiceImpl implements TdUserService {
 	@Autowired
 	TdExperienceStoreService tdExperienceStoreService;
 	
+	@Autowired
+	TdMembershipService tdMembershipService;
+	
 	public int insert(TdUser u) {
 		return userMapper.insert(u);
 	}
@@ -87,6 +92,9 @@ public class TdUserServiceImpl implements TdUserService {
 		//查询注册地区
 		TdDistrict region = tdDistrictService.findOneFull(user.getUregionId());
 		user.setRegion(region);
+		//查询用户等级信息
+		TdMembership membership = tdMembershipService.findOne(user.getMembershipId());
+		user.setMembership(membership);
 		return user;
 	}
 
@@ -266,7 +274,7 @@ public class TdUserServiceImpl implements TdUserService {
 		userIntegral.setTotalIntegral(userIntegral.getTotalIntegral() + signIntegral);
 		userIntegral.setIntegral(userIntegral.getIntegral() + signIntegral);
 		userIntegral.setUpdateTime(new Date());
-		userIntegral.setUpdateBy(0); // 系统修改积分设为0
+		userIntegral.setUpdateBy(1); // 系统修改积分设为1
 		tdUserIntegralService.save(userIntegral);
 		// 添加积分日志
 		TdUserIntegralLog userIntegralLog = new TdUserIntegralLog();
@@ -322,5 +330,46 @@ public class TdUserServiceImpl implements TdUserService {
 		return userMapper.countByCriteria(sc);
 	}
 	
+	@Override
+	public int saveRegisterUser(TdUser user) {
+		this.insert(user);
+		//保存会员积分信息
+		TdUserIntegral integral = new TdUserIntegral();
+		integral.setIntegral(0);
+		integral.setTotalIntegral(0);
+		integral.setUid(user.getUid());
+		integral.setUpdateTime(user.getUpdateTime());
+		integral.setUpdateBy(user.getUpdateBy());
+		tdUserIntegralService.insert(integral);
+		//保存钱包信息
+		TdUserAccount account = new TdUserAccount();
+		account.setAmount(BigDecimal.ZERO);
+		account.setStatus(TdUserAccount.ACCOUNT_STATUS_ACTIVE);
+		account.setUid(user.getUid());
+		account.setUpdateBy(user.getUpdateBy());
+		account.setUpdateTime(user.getUpdateTime());
+		tdUserAccountService.insert(account);
+		//注册赠送积分
+		// 查询签到积分
+		String registerdeliveryintegral = tdSystemConfigService.getConfigMap().get("registerdeliveryintegral");
+		if(StringUtils.isNotEmpty(registerdeliveryintegral)){
+			Integer inte = Integer.valueOf(registerdeliveryintegral);
+			// 修改积分	
+			TdUserIntegral userIntegral = new TdUserIntegral();
+			userIntegral.setUid(user.getUid());
+			userIntegral.setUpdateTime(user.getUpdateTime());
+			userIntegral.setUpdateBy(1); // 系统修改积分设为1
+			// 添加积分日志
+			TdUserIntegralLog userIntegralLog = new TdUserIntegralLog();
+			userIntegralLog.setUid(userIntegral.getUid());
+			userIntegralLog.setType(TdUserIntegralLog.USERINTEGRALLOG_TYPE_REGISTER);
+			userIntegralLog.setIntegral(inte);
+			userIntegralLog.setCreateTime(user.getUpdateTime());
+			userIntegralLog.setNote("注册赠送积分");
+			userIntegralLog.setRelation("");
+			tdUserIntegralService.addIntegral(userIntegral, userIntegralLog);
+		}
+		return 0;
+	}
 	
 }

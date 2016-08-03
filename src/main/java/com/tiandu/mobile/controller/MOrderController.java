@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +34,9 @@ import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.complaint.entity.TdComplaint;
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.custom.entity.TdUserAccount;
+import com.tiandu.custom.entity.TdUserAccountLog;
+import com.tiandu.custom.service.TdUserAccountService;
 import com.tiandu.express.entity.TdExpress;
 import com.tiandu.express.search.TdExpressSearchCriteria;
 import com.tiandu.express.service.TdExpressService;
@@ -74,6 +78,9 @@ public class MOrderController extends BaseController {
 	
 	@Autowired
 	private TdOrderSkuService tdOrderSkuService;
+	
+	@Autowired
+	private TdUserAccountService tdUserAccountService;
 	
 	@RequestMapping("/list")
 	public String list(TdOrderSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
@@ -274,13 +281,33 @@ public class MOrderController extends BaseController {
 		return map;
 	}
 	
+	@RequestMapping("/gopay{orderId}")
+	public String gopay(@PathVariable Integer orderId,Byte paymentId,HttpServletRequest req,ModelMap map)
+	{
+		if(null == orderId || null == paymentId){
+			return "redirect:404";
+		}
+		TdOrder order = tdOrderService.findOne(orderId);
+		if(null == order){
+			return "redirect:404";
+		}
+		
+		order.setPaymentId(paymentId);
+		tdOrderService.save(order);
+		return "redirect:/mobile/order/dopay"+orderId+"?type=agent";
+	}
+	
 	/**
 	 * 立即支付
 	 * @author Max
 	 * 
 	 */
 	@RequestMapping("/dopay{orderId}")
-	public String dopay(@PathVariable Integer orderId,HttpServletRequest req,ModelMap map){
+	public String dopay(@PathVariable Integer orderId,String type,HttpServletRequest req,ModelMap map){
+		TdUser user = this.getCurrentUser();
+		if(null == user){
+			return "redirect:404";
+		}
 		
 		String ua = req.getHeader("User-Agent");
 		if(WebUtils.checkAgentIsMobile(ua)){
@@ -295,9 +322,17 @@ public class MOrderController extends BaseController {
 		if(null == order){
 			return "redirect:404";
 		}
-		
 		// 系统配置
 		map.addAttribute("system", getSystem());
+		
+		if(null == type){
+			if(ConstantsUtils.ORDER_KIND_AGENTPRODUCT.equals(order.getOrderType()) || ConstantsUtils.ORDER_KIND_IMAGEPRODUCT.equals(order.getOrderType()))
+			{
+				map.addAttribute("order", order);
+				return "/mobile/paylist";
+			}
+		}
+		
 		
 		// 支付时间验证，订单生成24小时内
 		Date cur = new Date();
@@ -325,9 +360,20 @@ public class MOrderController extends BaseController {
 			// 支付宝支付
 			PaymentChannelAlipay paymentChannelAlipay = new PaymentChannelAlipay();
 			payForm = paymentChannelAlipay.getPayFormData(req);
+		}else if(ConstantsUtils.ORDER_PAYMENT_ACCOUNT.equals(pay)){
+			// 钱包余额支付
+			TdUserAccount account = tdUserAccountService.findByUid(user.getUid());
+			// 钱包余额小于支付金额
+			if(null == account || order.getPayAmount().compareTo(account.getAmount()) < 0){
+				return "/mobile/pay_failed";
+			}
+			orderAccountPay(order,account);
+			map.addAttribute("order", order);
+			return "/mobile/pay_success";
+			
 		}else if(ConstantsUtils.ORDER_PAYMENT_WEIXIN.equals(pay)){
 			
-			TdUser user = this.getCurrentUser();
+			
 			
 			String openId = user.getJointId();
 			if(null == openId || openId.contains("sys")){
@@ -448,7 +494,10 @@ public class MOrderController extends BaseController {
 					map.addAttribute("paySign", returnsign);
 					
 					return "/mobile/pay_wx";
+				}else{
+					return "/mobile/pay_failed";
 				}
+				
 			}
 			catch (IOException e)
 			{
@@ -460,7 +509,6 @@ public class MOrderController extends BaseController {
 		
 		return "/mobile/pay_form";
 	}
-	
 	
 	@RequestMapping(value = "/pay/notify_alipay")
     public void payNotifyAlipay(ModelMap map, HttpServletRequest req,
@@ -474,6 +522,7 @@ public class MOrderController extends BaseController {
             HttpServletResponse resp) {
         Map<String, String> params = new HashMap<String, String>();
         Map<String, String[]> requestParams = req.getParameterMap();
+        
         for (Iterator<String> iter = requestParams.keySet().iterator(); iter
                 .hasNext();) {
             String name = iter.next();
@@ -492,19 +541,21 @@ public class MOrderController extends BaseController {
             }
             params.put(name, valueStr);
         }
-
         // 系统配置
         map.addAttribute("system", getSystem());
         
         // 获取支付宝的返回参数
         String orderNo = "";
         String trade_status = "";
+        String trade_no = null;
         try {
             // 商户订单号
             orderNo = new String(req.getParameter(Constants.KEY_OUT_TRADE_NO)
                     .getBytes("ISO-8859-1"), AlipayConfig.CHARSET);
             // 交易状态
             trade_status = new String(req.getParameter("trade_status")
+                    .getBytes("ISO-8859-1"), AlipayConfig.CHARSET);
+            trade_no = new String(req.getParameter("trade_no")
                     .getBytes("ISO-8859-1"), AlipayConfig.CHARSET);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -529,7 +580,7 @@ public class MOrderController extends BaseController {
             if ("TRADE_SUCCESS".equals(trade_status)) {
 
                 // 订单支付成功
-                tdOrderService.AfterPaySuccess(order);
+                tdOrderService.AfterPaySuccess(order,params.toString());
                 // 触屏
             	if(WebUtils.checkAgentIsMobile(ua)){
                     return "/mobile/pay_success";
@@ -557,11 +608,13 @@ public class MOrderController extends BaseController {
 		String result_code = null;
 //		String noncestr = null;
 		String out_trade_no = null;
+		StringBuffer respText = new StringBuffer();
 
 		try {
 			while ((line = br.readLine()) != null) {
 				System.out.print("Max: notify" + line + "\n");
-
+				
+				respText.append(line);
 				if (line.contains("<return_code>")) {
 					return_code = line.replaceAll("<return_code><\\!\\[CDATA\\[", "") .replaceAll("\\]\\]></return_code>", "");
 				} else if (line.contains("<out_trade_no>")) {
@@ -583,7 +636,7 @@ public class MOrderController extends BaseController {
 
 				if (null != order)
 				{
-					 tdOrderService.AfterPaySuccess(order);
+					 tdOrderService.AfterPaySuccess(order,respText.toString());
 				}
 				
 				String content = "<xml>\n"
@@ -615,4 +668,35 @@ public class MOrderController extends BaseController {
 			br.close();
 		}
     }
+    
+    
+    
+    /**
+     * 
+     * @author Max
+     * 余额付
+     * 
+     */
+    private void orderAccountPay(TdOrder order, TdUserAccount account) {
+		if(null ==order || null == account){
+			return ;
+		}
+		
+		BigDecimal payAmount = order.getPayAmount();
+		BigDecimal amount = account.getAmount();
+		BigDecimal decimal = new BigDecimal(0.00);
+		
+		account.setAmount(amount.subtract(payAmount));
+		
+		// 记录
+		TdUserAccountLog log = new TdUserAccountLog();
+		log.setUpamount(decimal.subtract(payAmount));
+		log.setCreateTime(new Date());
+		log.setType((byte)5);
+		log.setNote("订单:"+order.getOrderNo()+"支付");
+		
+		tdUserAccountService.addAmount(account, log);
+		
+		tdOrderService.AfterPaySuccess(order,"");
+	}
 }
