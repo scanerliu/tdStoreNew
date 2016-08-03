@@ -3,20 +3,16 @@
 	<#list logList as item>
 		<section>
           <div class="list-info">
-            <label>商品名称：</label>
-            <span>钻石项链1</span>
-          </div>
-          <div class="list-info">
             <label>订单号：</label>
-            <span>045010152454101</span>
+            <span>${item.profit.orderNo!''}</span>
           </div>
           <div class="list-info">
             <label>买家名称：</label>
-            <span>小丶夜猫</span>
+            <span>${item.profit.buyUserName!''}</span>
           </div>
           <div class="list-info">
             <label>总金额：</label>
-            <span>200万</span>
+            <span>${item.profit.totalAmount!''}</span>
           </div>
           <div class="list-info">
             <label>我的收益：</label>

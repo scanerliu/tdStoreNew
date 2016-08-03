@@ -2,6 +2,7 @@ package com.tiandu.mobile.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -26,7 +27,11 @@ import com.tiandu.common.tencent.entity.TextMessage;
 import com.tiandu.common.utils.DecriptUtils;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.custom.entity.TdUserAccount;
+import com.tiandu.custom.entity.TdUserIntegral;
 import com.tiandu.custom.search.TdUserSearchCriteria;
+import com.tiandu.custom.service.TdUserAccountService;
+import com.tiandu.custom.service.TdUserIntegralService;
 import com.tiandu.custom.service.TdUserService;
 
 @Controller
@@ -53,6 +58,12 @@ public class WechatNotify {
 	
 	@Autowired
 	private TdUserService tdUserSerivce;
+	
+	@Autowired
+	private TdUserIntegralService tdUserIntegralService;
+	
+	@Autowired
+	private TdUserAccountService tdUserAccountService;
 	
 	/**
 	 * 验证
@@ -239,10 +250,25 @@ public class WechatNotify {
 		user.setUtype(Byte.valueOf("2"));//普通会员
 		user.setUparentId(SpreadId);
 		user.setCreateTime(currentDate);
-		user.setUpdateBy(0);
+		user.setUpdateBy(1);
 		user.setUpdateTime(currentDate);
 		user.setSupplierType(Byte.valueOf("0"));
 		tdUserSerivce.insert(user);
+		TdUserIntegral integral = new TdUserIntegral();
+		integral.setIntegral(0);
+		integral.setTotalIntegral(0);
+		integral.setUid(user.getUid());
+		integral.setUpdateTime(user.getUpdateTime());
+		integral.setUpdateBy(user.getUpdateBy());
+		tdUserIntegralService.insert(integral);
+		//保存钱包信息
+		TdUserAccount account = new TdUserAccount();
+		account.setAmount(BigDecimal.ZERO);
+		account.setStatus(TdUserAccount.ACCOUNT_STATUS_ACTIVE);
+		account.setUid(user.getUid());
+		account.setUpdateBy(user.getUpdateBy());
+		account.setUpdateTime(user.getUpdateTime());
+		tdUserAccountService.insert(account);
 		return user;
 	}
 	

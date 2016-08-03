@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.common.utils.DateUtil;
 import com.tiandu.common.utils.MessageSender;
@@ -34,6 +35,7 @@ import com.tiandu.custom.service.TdUserAccountService;
 import com.tiandu.custom.service.TdUserAddressService;
 import com.tiandu.custom.service.TdUserIntegralService;
 import com.tiandu.custom.service.TdUserService;
+import com.tiandu.custom.vo.ProfitInfo;
 import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.service.TdDistrictService;
 import com.tiandu.order.entity.TdJointOrder;
@@ -199,6 +201,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 			return result;
 		}
 		shipment.setType(ConstantsUtils.ORDERSHIPMENT_TYPE_SHIP);
+		shipment.setSupplyId(order.getSupplierId());
 		tdOrderShipmentMapper.insert(shipment);
 		List<TdOrderShipmentItem> itemList = new ArrayList<TdOrderShipmentItem>();
 		for(TdOrderSku sku : skuList){
@@ -439,16 +442,17 @@ public class TdOrderServiceImpl implements TdOrderService{
 		if(orderForm.getUsePoints()){
 			order.setUsedPoint(shoppingcart.getTotalPointsUsed());
 			order.setPointAmount(shoppingcart.getTotalPointAmount());
+			order.setPayAmount(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount()));
 		}else{
 			order.setUsedPoint(0);
 			order.setPointAmount(BigDecimal.ZERO);
+			order.setPayAmount(shoppingcart.getTotalAmount());
 		}
 		order.setPostage(shoppingcart.getTotalPostage());
 		order.setPayStatus(ConstantsUtils.ORDER_PAY_STATUS_UNPAY);
 		order.setPaymentId(orderForm.getPaymentId());
 		order.setProductAmount(shoppingcart.getTotalProductAmount());
 		order.setRefundAmount(BigDecimal.ZERO);
-		order.setPayAmount(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount()));
 		order.setBenefitAmount(BigDecimal.ZERO);
 		order.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_UNSHIPPED);
 		order.setTotalAmount(shoppingcart.getTotalAmount());
@@ -628,16 +632,17 @@ public class TdOrderServiceImpl implements TdOrderService{
 		if(orderForm.getUsePoints()){
 			order.setUsedPoint(shoppingcart.getTotalPointsUsed());
 			order.setPointAmount(shoppingcart.getTotalPointAmount());
+			order.setPayAmount(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount()));
 		}else{
 			order.setUsedPoint(0);
 			order.setPointAmount(BigDecimal.ZERO);
+			order.setPayAmount(shoppingcart.getTotalAmount());
 		}
 		order.setPostage(shoppingcart.getTotalPostage());
 		order.setPayStatus(ConstantsUtils.ORDER_PAY_STATUS_UNPAY);
 		order.setPaymentId(orderForm.getPaymentId());
 		order.setProductAmount(shoppingcart.getTotalProductAmount());
 		order.setRefundAmount(BigDecimal.ZERO);
-		order.setPayAmount(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount()));
 		order.setBenefitAmount(BigDecimal.ZERO);
 		order.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_UNSHIPPED);
 		order.setTotalAmount(shoppingcart.getTotalAmount());
@@ -740,16 +745,17 @@ public class TdOrderServiceImpl implements TdOrderService{
 		if(orderForm.getUsePoints()){
 			order.setUsedPoint(shoppingcart.getTotalPointsUsed());
 			order.setPointAmount(shoppingcart.getTotalPointAmount());
+			order.setPayAmount(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount()));
 		}else{
 			order.setUsedPoint(0);
 			order.setPointAmount(BigDecimal.ZERO);
+			order.setPayAmount(shoppingcart.getTotalAmount());
 		}
 		order.setPostage(shoppingcart.getTotalPostage());
 		order.setPayStatus(ConstantsUtils.ORDER_PAY_STATUS_UNPAY);
 		order.setPaymentId(orderForm.getPaymentId());
 		order.setProductAmount(shoppingcart.getTotalProductAmount());
 		order.setRefundAmount(BigDecimal.ZERO);
-		order.setPayAmount(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount()));
 		order.setBenefitAmount(BigDecimal.ZERO);
 		order.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_UNSHIPPED);
 		order.setTotalAmount(shoppingcart.getTotalAmount());
@@ -1129,7 +1135,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 						List<TdBenefit> benefitList = tdBenefitService.findBySearchCriteria(sc);
 						
 						//单类代理分润
-						BigDecimal agentBenefitAmount = displayAgentBenefit(amount, order, orderProduct, benefitList, 3, now);
+						BigDecimal agentBenefitAmount = displayAgentBenefit(amount, order, orderUser, orderProduct, benefitList, 3, now);
 						totalBenefitAmount = totalBenefitAmount.add(agentBenefitAmount);
 						
 						//分公司分润
@@ -1209,7 +1215,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 			if(level==1){//分公司第一级为平台
 				String note = "";
 				TdUserAccount account = tdUserAccountService.findOne(1);
-				BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+				BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 				totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 			}else if(level==2 && null!=district && null!=district.getRegionProvinceId()){//省直辖市市分公司
 				TdBrancheCompanySearchCriteria bsc = new TdBrancheCompanySearchCriteria();
@@ -1221,12 +1227,12 @@ public class TdOrderServiceImpl implements TdOrderService{
 					String note = "";
 					TdBrancheCompany branch = branchList.get(0);
 					TdUserAccount account = tdUserAccountService.findOne(branch.getUid());
-					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+					BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 				}else{//未找到分公司，分润转给平台
 					String note = "未找到"+district.getRegionProvinceName()+" 分公司,分润划归平台。";
 					TdUserAccount account = tdUserAccountService.findOne(1);
-					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+					BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 				}
 			}else if(level==3 && null!=district){//地区分公司
@@ -1239,18 +1245,18 @@ public class TdOrderServiceImpl implements TdOrderService{
 					String note = "";
 					TdBrancheCompany branch = branchList.get(0);
 					TdUserAccount account = tdUserAccountService.findOne(branch.getUid());
-					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+					BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 				}else{//未找到分公司，分润转给平台
 					String note = "未找到"+district.getName()+" 分公司,分润划归平台。";
 					TdUserAccount account = tdUserAccountService.findOne(1);
-					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);	
+					BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);	
 					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 				}					
 			}else{
 				String note = "未找到地区id"+orderUser.getUregionId()+" 的相关分公司,分润划归平台。";
 				TdUserAccount account = tdUserAccountService.findOne(1);
-				BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+				BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 				totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 			}
 		}
@@ -1285,12 +1291,12 @@ public class TdOrderServiceImpl implements TdOrderService{
 			}else if(null==product||null==product.getTypeId()){
 				String note = "全国单代分润：未找到商品信息,商品id="+ordersku.getProductId()+",分润划归平台。";
 				TdUserAccount account = tdUserAccountService.findOne(1);
-				BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+				BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 				totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 			}else if(null==district){
 				String note = "全国单代分润：未找到会员注册地址,商品id="+ordersku.getProductId()+",分润划归平台。";
 				TdUserAccount account = tdUserAccountService.findOne(1);
-				BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+				BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 				totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 			}else{
 				BigDecimal benefitAmount = saveCommonProductAgentBenefit(amount, order, orderUser, product, benefit, district, now);
@@ -1318,7 +1324,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 			TdUserAccount account = tdUserAccountService.findOne(1);
 			//分润
 			String note = "商品没有分类，故没有"+benefit.getLevel()+"级分销代理 ,分润划归归平台";
-			BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+			BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 			totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 		}else{
 			if(benefit.getLevel()==1){//全国单代分润
@@ -1329,20 +1335,20 @@ public class TdOrderServiceImpl implements TdOrderService{
 						TdUserAccount account = buser.getUserAccount();
 						//分润
 						String note = "";
-						BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+						BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 						totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 					}else{//未找到代理，分润转给平台
 						TdUserAccount account = tdUserAccountService.findOne(1);
 						//分润
 						String note = "未找到全国代理  ，当前分类id="+product.getTypeId()+" ,分润划归归平台";
-						BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+						BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 						totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 					}
 				}else{//全国单代分润不存在
 					TdUserAccount account = tdUserAccountService.findOne(1);
 					//分润
 					String note = "未找到全国代理  ，当前分类id="+product.getTypeId()+" ,分润划归归平台";
-					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+					BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 				}
 			}else if(benefit.getLevel()==2){//省市单代分润
@@ -1355,27 +1361,27 @@ public class TdOrderServiceImpl implements TdOrderService{
 							TdUserAccount account = buser.getUserAccount();
 							//分润
 							String note = "";
-							BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+							BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 							totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 						}else{//未找到代理，分润转给平台
 							TdUserAccount account = tdUserAccountService.findOne(1);
 							//分润
 							String note = "未找到省市代理  ，当前分类id="+product.getTypeId()+" ,分润划归归平台";
-							BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+							BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 							totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 						}
 					}else{//省市代理分润不存在
 						TdUserAccount account = tdUserAccountService.findOne(1);
 						//分润
 						String note = "未找到省市代理  ，当前分类id="+product.getTypeId()+" ,分润划归归平台";
-						BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+						BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 						totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 					}
 				}else{//地区不存在
 					TdUserAccount account = tdUserAccountService.findOne(1);
 					//分润
 					String note = "未找到省市代理   ，分润划归归平台";
-					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+					BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 				}
 			}else if(benefit.getLevel()==3){//地区单代分润
@@ -1386,20 +1392,20 @@ public class TdOrderServiceImpl implements TdOrderService{
 						TdUserAccount account = buser.getUserAccount();
 						//分润
 						String note = "";
-						BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+						BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 						totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 					}else{//未找到代理，分润转给平台
 						TdUserAccount account = tdUserAccountService.findOne(1);
 						//分润
 						String note = "未找到省市代理  ，当前分类id="+product.getTypeId()+" ,分润划归归平台";
-						BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+						BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 						totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 					}
 				}else{//省市代理分润不存在
 					TdUserAccount account = tdUserAccountService.findOne(1);
 					//分润
 					String note = "未找到省市代理  ，当前分类id="+product.getTypeId()+" ,分润划归归平台";
-					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+					BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 				}
 			}else if(benefit.getLevel()==4){//体验点分润：体验店发展的会员购买体验店拥有类目的商品是才参与分润
@@ -1412,27 +1418,27 @@ public class TdOrderServiceImpl implements TdOrderService{
 							TdUserAccount account = buser.getUserAccount();
 							//分润
 							String note = "";
-							BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+							BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 							totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 						}else{//未找到代理，分润转给平台
 							TdUserAccount account = tdUserAccountService.findOne(1);
 							//分润
 							String note = "未找到体验店账号,分润划归归平台";
-							BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+							BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 							totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 						}
 					}else{
 						TdUserAccount account = tdUserAccountService.findOne(1);
 						//分润
 						String note = "没有体验店,分润划归归平台";
-						BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+						BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 						totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 					}
 				}else{
 					TdUserAccount account = tdUserAccountService.findOne(1);
 					//分润
 					String note = "没有体验店,分润划归归平台";
-					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+					BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 				}
 			}
@@ -1450,7 +1456,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 	 * @param size
 	 * @param now
 	 */
-	private BigDecimal displayAgentBenefit(BigDecimal amount, TdOrder order, TdOrderProduct orderProduct, List<TdBenefit> benefitList, int size, Date now) {
+	private BigDecimal displayAgentBenefit(BigDecimal amount, TdOrder order, TdUser orderUser, TdOrderProduct orderProduct, List<TdBenefit> benefitList, int size, Date now) {
 		BigDecimal totalBenefitAmount = BigDecimal.ZERO;//已分润金额
 		TdDistrict district = null;
 		if(orderProduct.getRegionId()>0){
@@ -1469,11 +1475,11 @@ public class TdOrderServiceImpl implements TdOrderService{
 				TdUserAccount account = tdUserAccountService.findOne(1);
 				//分润
 				String note = "代理产品没有分类，故没有"+level+"级分销 ,分润划归归平台";
-				BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+				BigDecimal benefitAmount = saveBenefit(account, orderUser, amount, order, benefit, now, note);
 				totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 			}else{
 				//代理分润
-				BigDecimal benefitAmount = saveAgentBenefit(amount, order, orderProduct, benefit, district, now);
+				BigDecimal benefitAmount = saveAgentBenefit(amount, order, orderUser, orderProduct, benefit, district, now);
 				totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 			}
 		}
@@ -1489,7 +1495,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 	 * @param district
 	 * @param now
 	 */
-	private BigDecimal saveAgentBenefit(BigDecimal amount, TdOrder order, TdOrderProduct orderProduct,TdBenefit benefit, TdDistrict district, Date now){
+	private BigDecimal saveAgentBenefit(BigDecimal amount, TdOrder order, TdUser orderUser, TdOrderProduct orderProduct,TdBenefit benefit, TdDistrict district, Date now){
 		BigDecimal totalBenefitAmount = BigDecimal.ZERO;//已分润金额
 		if(orderProduct.getLevel()>=benefit.getLevel()){//购买产品级别比分润级别大和相等时，返回
 			return totalBenefitAmount;
@@ -1502,18 +1508,18 @@ public class TdOrderServiceImpl implements TdOrderService{
 						TdUserAccount account = buser.getUserAccount();
 						//分润
 						String note = "";
-						saveBenefit(account, amount, order, benefit, now, note);
+						saveBenefit(account, orderUser, amount, order, benefit, now, note);
 					}else{//未找到代理，分润转给平台
 						TdUserAccount account = tdUserAccountService.findOne(1);
 						//分润
 						String note = "未找到全国代理  ，当前分类id="+orderProduct.getProductTypeId()+" ,分润划归归平台";
-						saveBenefit(account, amount, order, benefit, now, note);
+						saveBenefit(account, orderUser, amount, order, benefit, now, note);
 					}
 				}else{//全国单代分润不存在
 					TdUserAccount account = tdUserAccountService.findOne(1);
 					//分润
 					String note = "未找到全国代理  ，当前分类id="+orderProduct.getProductTypeId()+" ,分润划归归平台";
-					saveBenefit(account, amount, order, benefit, now, note);
+					saveBenefit(account, orderUser, amount, order, benefit, now, note);
 				}
 			}else if(benefit.getLevel()==2){//省市单代分润
 				TdDistrict region = district.getRegionProvince();
@@ -1525,24 +1531,24 @@ public class TdOrderServiceImpl implements TdOrderService{
 							TdUserAccount account = buser.getUserAccount();
 							//分润
 							String note = "";
-							saveBenefit(account, amount, order, benefit, now, note);
+							saveBenefit(account, orderUser, amount, order, benefit, now, note);
 						}else{//未找到代理，分润转给平台
 							TdUserAccount account = tdUserAccountService.findOne(1);
 							//分润
 							String note = "未找到省市代理  ，当前分类id="+orderProduct.getProductTypeId()+" ,分润划归归平台";
-							saveBenefit(account, amount, order, benefit, now, note);
+							saveBenefit(account, orderUser, amount, order, benefit, now, note);
 						}
 					}else{//省市代理分润不存在
 						TdUserAccount account = tdUserAccountService.findOne(1);
 						//分润
 						String note = "未找到省市代理  ，当前分类id="+orderProduct.getProductTypeId()+" ,分润划归归平台";
-						saveBenefit(account, amount, order, benefit, now, note);
+						saveBenefit(account, orderUser, amount, order, benefit, now, note);
 					}
 				}else{//地区不存在
 					TdUserAccount account = tdUserAccountService.findOne(1);
 					//分润
 					String note = "未找到省市代理   ，分润划归归平台";
-					saveBenefit(account, amount, order, benefit, now, note);
+					saveBenefit(account, orderUser, amount, order, benefit, now, note);
 				}
 			}
 		}
@@ -1571,7 +1577,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 			if(i==3 && size==4){//自己购买分润
 				String note = "";
 				TdUserAccount account = user.getUserAccount();
-				BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+				BigDecimal benefitAmount = saveBenefit(account, user, amount, order, benefit, now, note);
 				totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 			}else{
 				//三级分销用户
@@ -1582,21 +1588,21 @@ public class TdOrderServiceImpl implements TdOrderService{
 						TdUserAccount account = buser.getUserAccount();
 						//分润
 						String note = "";
-						BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+						BigDecimal benefitAmount = saveBenefit(account, user, amount, order, benefit, now, note);
 						totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 					}else{//未找到分公司，分润转给平台
 						userId = 0;
 						TdUserAccount account = tdUserAccountService.findOne(1);
 						//分润
 						String note = "未找到"+level+"级分销  ，当前用户userid="+user.getUid()+" ,分润划归归平台";
-						BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+						BigDecimal benefitAmount = saveBenefit(account, user, amount, order, benefit, now, note);
 						totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 					}
 				}else{//上级分销用户id 不存在
 					TdUserAccount account = tdUserAccountService.findOne(1);
 					//分润
 					String note = "未找到"+level+"级分销  ,当前用户userid="+user.getUid()+" ,分润划归归平台";
-					BigDecimal benefitAmount = saveBenefit(account, amount, order, benefit, now, note);
+					BigDecimal benefitAmount = saveBenefit(account, user, amount, order, benefit, now, note);
 					totalBenefitAmount = totalBenefitAmount.add(benefitAmount);
 				}
 			}
@@ -1630,7 +1636,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 	 * @param benefit
 	 * @param now
 	 */
-	private BigDecimal saveBenefit(TdUserAccount account, BigDecimal amount, TdOrder order, TdBenefit benefit, Date now, String note){
+	private BigDecimal saveBenefit(TdUserAccount account, TdUser orderUser, BigDecimal amount, TdOrder order, TdBenefit benefit, Date now, String note){
 		BigDecimal benefitAmount = amount.multiply(new BigDecimal(benefit.getPercent())).divide(new BigDecimal(100));
 		account.setUpdateBy(1);
 		account.setUpdateTime(now);
@@ -1641,6 +1647,16 @@ public class TdOrderServiceImpl implements TdOrderService{
 		alog.setType(TdUserAccountLog.USERACCOUNTLOG_TYPE_PROFIT_INCOME);
     	alog.setCreateTime(now);
     	alog.setNote("订单分润收入，订单编号："+order.getOrderNo()+" "+note);
+    	//关联对象
+    	ProfitInfo profit = new ProfitInfo();
+    	profit.setBuyUserName(orderUser.getUnick());
+    	profit.setOrderNo(order.getOrderNo());
+    	profit.setProductName("");
+    	profit.setProfit(benefitAmount.toString());
+    	profit.setTotalAmount(order.getTotalAmount().toString());
+    	Gson json = new Gson();
+    	String relation = json.toJson(profit);
+    	alog.setRelation(relation);
 		tdUserAccountService.addAmount(account, alog);	
 		return benefitAmount;
 	}

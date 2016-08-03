@@ -3,6 +3,12 @@ package com.tiandu.custom.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.tiandu.custom.vo.ProfitInfo;
+
 public class TdUserAccountLog {
 	/**
 	 * 后台调整
@@ -40,6 +46,10 @@ public class TdUserAccountLog {
     private String username;
     
     private BigDecimal totalUpamount;
+    /**
+     * 收益明细，由relation字段转换而来，展示时候用
+     */
+    private ProfitInfo profit;
 
     public Integer getId() {
         return id;
@@ -123,6 +133,26 @@ public class TdUserAccountLog {
 
 	public void setTotalUpamount(BigDecimal totalUpamount) {
 		this.totalUpamount = totalUpamount;
+	}
+
+	public ProfitInfo getProfit() {
+		if(null!=this.profit){
+			return profit;
+		}
+		if(null!=this.getRelation() && StringUtils.isNotEmpty(this.getRelation())){
+			try {
+				Gson json = new Gson();
+				ProfitInfo prof = json.fromJson(this.getRelation(), ProfitInfo.class);
+				this.profit = prof;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return profit;
+	}
+
+	public void setProfit(ProfitInfo profit) {
+		this.profit = profit;
 	}
 
 	/**
