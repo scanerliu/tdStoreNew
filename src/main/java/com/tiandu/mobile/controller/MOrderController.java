@@ -281,13 +281,29 @@ public class MOrderController extends BaseController {
 		return map;
 	}
 	
+	@RequestMapping("/gopay{orderId}")
+	public String gopay(@PathVariable Integer orderId,Byte paymentId,HttpServletRequest req,ModelMap map)
+	{
+		if(null == orderId || null == paymentId){
+			return "redirect:404";
+		}
+		TdOrder order = tdOrderService.findOne(orderId);
+		if(null == order){
+			return "redirect:404";
+		}
+		
+		order.setPaymentId(paymentId);
+		tdOrderService.save(order);
+		return "redirect:/mobile/order/dopay"+orderId+"?type=agent";
+	}
+	
 	/**
 	 * 立即支付
 	 * @author Max
 	 * 
 	 */
 	@RequestMapping("/dopay{orderId}")
-	public String dopay(@PathVariable Integer orderId,HttpServletRequest req,ModelMap map){
+	public String dopay(@PathVariable Integer orderId,String type,HttpServletRequest req,ModelMap map){
 		TdUser user = this.getCurrentUser();
 		if(null == user){
 			return "redirect:404";
@@ -306,9 +322,17 @@ public class MOrderController extends BaseController {
 		if(null == order){
 			return "redirect:404";
 		}
-		
 		// 系统配置
 		map.addAttribute("system", getSystem());
+		
+		if(null == type){
+			if(ConstantsUtils.ORDER_KIND_AGENTPRODUCT.equals(order.getOrderType()) || ConstantsUtils.ORDER_KIND_IMAGEPRODUCT.equals(order.getOrderType()))
+			{
+				map.addAttribute("order", order);
+				return "/mobile/paylist";
+			}
+		}
+		
 		
 		// 支付时间验证，订单生成24小时内
 		Date cur = new Date();
@@ -470,7 +494,10 @@ public class MOrderController extends BaseController {
 					map.addAttribute("paySign", returnsign);
 					
 					return "/mobile/pay_wx";
+				}else{
+					return "/mobile/pay_failed";
 				}
+				
 			}
 			catch (IOException e)
 			{
@@ -495,6 +522,7 @@ public class MOrderController extends BaseController {
             HttpServletResponse resp) {
         Map<String, String> params = new HashMap<String, String>();
         Map<String, String[]> requestParams = req.getParameterMap();
+        
         for (Iterator<String> iter = requestParams.keySet().iterator(); iter
                 .hasNext();) {
             String name = iter.next();
@@ -513,19 +541,21 @@ public class MOrderController extends BaseController {
             }
             params.put(name, valueStr);
         }
-
         // 系统配置
         map.addAttribute("system", getSystem());
         
         // 获取支付宝的返回参数
         String orderNo = "";
         String trade_status = "";
+        String trade_no = null;
         try {
             // 商户订单号
             orderNo = new String(req.getParameter(Constants.KEY_OUT_TRADE_NO)
                     .getBytes("ISO-8859-1"), AlipayConfig.CHARSET);
             // 交易状态
             trade_status = new String(req.getParameter("trade_status")
+                    .getBytes("ISO-8859-1"), AlipayConfig.CHARSET);
+            trade_no = new String(req.getParameter("trade_no")
                     .getBytes("ISO-8859-1"), AlipayConfig.CHARSET);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -550,7 +580,7 @@ public class MOrderController extends BaseController {
             if ("TRADE_SUCCESS".equals(trade_status)) {
 
                 // 订单支付成功
-                tdOrderService.AfterPaySuccess(order);
+                tdOrderService.AfterPaySuccess(order,params.toString());
                 // 触屏
             	if(WebUtils.checkAgentIsMobile(ua)){
                     return "/mobile/pay_success";
@@ -578,11 +608,13 @@ public class MOrderController extends BaseController {
 		String result_code = null;
 //		String noncestr = null;
 		String out_trade_no = null;
+		StringBuffer respText = new StringBuffer();
 
 		try {
 			while ((line = br.readLine()) != null) {
 				System.out.print("Max: notify" + line + "\n");
-
+				
+				respText.append(line);
 				if (line.contains("<return_code>")) {
 					return_code = line.replaceAll("<return_code><\\!\\[CDATA\\[", "") .replaceAll("\\]\\]></return_code>", "");
 				} else if (line.contains("<out_trade_no>")) {
@@ -604,7 +636,7 @@ public class MOrderController extends BaseController {
 
 				if (null != order)
 				{
-					 tdOrderService.AfterPaySuccess(order);
+					 tdOrderService.AfterPaySuccess(order,respText.toString());
 				}
 				
 				String content = "<xml>\n"
@@ -665,6 +697,6 @@ public class MOrderController extends BaseController {
 		
 		tdUserAccountService.addAmount(account, log);
 		
-		tdOrderService.AfterPaySuccess(order);
+		tdOrderService.AfterPaySuccess(order,"");
 	}
 }

@@ -33,7 +33,7 @@ public interface TdOrderService {
 	 *
 	 * @param tdOrder
 	 */
-	void AfterPaySuccess(TdOrder tdOrder);
+	void AfterPaySuccess(TdOrder tdOrder,String response);
 	
 	/**
 	 * 订单发货操作

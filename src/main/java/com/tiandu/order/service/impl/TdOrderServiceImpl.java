@@ -42,6 +42,7 @@ import com.tiandu.order.entity.TdJointOrder;
 import com.tiandu.order.entity.TdOrder;
 import com.tiandu.order.entity.TdOrderAddress;
 import com.tiandu.order.entity.TdOrderLog;
+import com.tiandu.order.entity.TdOrderPay;
 import com.tiandu.order.entity.TdOrderProduct;
 import com.tiandu.order.entity.TdOrderShipment;
 import com.tiandu.order.entity.TdOrderShipmentItem;
@@ -56,6 +57,7 @@ import com.tiandu.order.entity.mapper.TdOrderShipmentItemMapper;
 import com.tiandu.order.entity.mapper.TdOrderShipmentMapper;
 import com.tiandu.order.entity.mapper.TdOrderSkuMapper;
 import com.tiandu.order.search.TdOrderSearchCriteria;
+import com.tiandu.order.service.TdOrderPayService;
 import com.tiandu.order.service.TdOrderService;
 import com.tiandu.order.vo.OperResult;
 import com.tiandu.order.vo.OrderForm;
@@ -122,6 +124,9 @@ public class TdOrderServiceImpl implements TdOrderService{
 	private TdProductService tdProductService;
 	@Autowired
 	private TdProductSkuService tdProductSkuService;
+	
+	@Autowired
+	private TdOrderPayService tdOrderPayService;
 	
 	@Autowired
 	private ConfigUtil configUtil;
@@ -1667,7 +1672,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 	}
 
 	@Override
-	public void AfterPaySuccess(TdOrder order) {
+	public void AfterPaySuccess(TdOrder order,String response) {
 		if(null == order){
 			return;
 		}
@@ -1676,6 +1681,17 @@ public class TdOrderServiceImpl implements TdOrderService{
 		orderPay.setPayAmount(order.getPayAmount());
 		orderPay.setPaymentId(order.getPaymentId());
 		orderPay.setCreateBy(order.getUserId());
+		orderPay.setCreateTime(new Date());
+		orderPay.setOrderId(order.getOrderId());
+		
+		TdOrderPay pay = new TdOrderPay();
+		pay.setCreateTime(new Date());
+		pay.setOrderNo(order.getOrderNo());
+		pay.setPayamount(order.getPayAmount());
+		pay.setPaymentType(order.getPaymentId());
+		pay.setResponse(response);
+		pay.setStatus((byte)1);
+		tdOrderPayService.save(pay);
 		
 		this.payOrder(order, orderPay);
 		
