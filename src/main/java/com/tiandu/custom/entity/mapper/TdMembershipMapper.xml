@@ -112,7 +112,8 @@
     from td_membership
     where 1=1 
     <if test="status != null" >
-        and s.status=#{status,jdbcType=TINYINT}
+        and status=#{status,jdbcType=TINYINT}
     </if>
+    order by level desc
   </select>
 </mapper>

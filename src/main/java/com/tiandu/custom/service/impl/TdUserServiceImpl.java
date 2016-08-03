@@ -316,6 +316,11 @@ public class TdUserServiceImpl implements TdUserService {
 		estore.setStatus(status);
 		return tdExperienceStoreService.save(estore);
 	}
+
+	@Override
+	public int getTotalCount(TdUserSearchCriteria sc) {
+		return userMapper.countByCriteria(sc);
+	}
 	
 	
 }

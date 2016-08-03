@@ -71,6 +71,8 @@ public class TdUser {
     private Date qrcodeUpdate;
     
     private Set<TdRole> roleSet = new HashSet<TdRole>();
+    
+    private Integer downThreeUserNum;
     /**
 	 * 后台保存角色使用
 	 */
@@ -357,7 +359,17 @@ public class TdUser {
 		return sdf.format(this.getUbirthday());
 	}
 	
-    /**
+	
+	
+    public Integer getDownThreeUserNum() {
+		return downThreeUserNum;
+	}
+
+	public void setDownThreeUserNum(Integer downThreeUserNum) {
+		this.downThreeUserNum = downThreeUserNum;
+	}
+
+	/**
      * 获取用户状态文字说明
      * @return
      */

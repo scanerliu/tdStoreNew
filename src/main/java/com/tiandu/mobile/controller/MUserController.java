@@ -382,6 +382,10 @@ public class MUserController extends BaseController {
 				}
 			}
 		}
+		// 为没有地区的会员默认初始化为北京
+		if(reginIds.size() == 0){
+			reginIds.add(1);
+		}
 		if(reginIds.size() > 0){
 			modelMap.addAttribute("levelCount", reginIds.size());
 			reginIds.add(0);

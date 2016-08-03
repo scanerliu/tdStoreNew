@@ -88,5 +88,7 @@ public interface TdUserService {
 	 *	体验店申请审核 
 	 */
 	public int saveVerifyExperienceStoreApply(TdExperienceStore experienceStore, Byte status);
+	
+	public int getTotalCount(TdUserSearchCriteria sc);
 		
 }
