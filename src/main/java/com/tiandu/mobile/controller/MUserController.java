@@ -1312,6 +1312,7 @@ public class MUserController extends BaseController {
 			u.setUid(currentUser.getUid());
 			u.setUtel(user.getUtel());
 			u.setUregionId(user.getUregionId());
+			u.setUverification(Byte.valueOf("1"));
 			tdUserService.saveUserInfo(u);
 		} catch(Exception e){
 			res.put("status", "n");
