@@ -40,10 +40,12 @@ import com.tiandu.custom.service.TdUserAccountService;
 import com.tiandu.express.entity.TdExpress;
 import com.tiandu.express.search.TdExpressSearchCriteria;
 import com.tiandu.express.service.TdExpressService;
+import com.tiandu.order.entity.TdJointOrder;
 import com.tiandu.order.entity.TdOrder;
 import com.tiandu.order.entity.TdOrderShipment;
 import com.tiandu.order.search.TdOrderSearchCriteria;
 import com.tiandu.order.search.TdOrderShipmentSearchCriteria;
+import com.tiandu.order.service.TdJointOrderService;
 import com.tiandu.order.service.TdOrderLogService;
 import com.tiandu.order.service.TdOrderService;
 import com.tiandu.order.service.TdOrderShipmentService;
@@ -81,6 +83,9 @@ public class MOrderController extends BaseController {
 	
 	@Autowired
 	private TdUserAccountService tdUserAccountService;
+	
+	@Autowired
+	private TdJointOrderService tdJointOrderService;
 	
 	@RequestMapping("/list")
 	public String list(TdOrderSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
@@ -298,6 +303,74 @@ public class MOrderController extends BaseController {
 	}
 	
 	/**
+	 * 联合订单支付
+	 * @author Max
+	 *
+	 * @param orderId
+	 * @param req
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping("/jointdopay{orderId}")
+	public String jointOrderPay(@PathVariable Integer orderId,HttpServletRequest req,ModelMap map)
+	{
+		TdUser user = this.getCurrentUser();
+		if(null == user){
+			return "redirect:404";
+		}
+		
+		String ua = req.getHeader("User-Agent");
+		if(WebUtils.checkAgentIsMobile(ua)){
+			req.setAttribute("type", "m");
+		}
+		
+		if(null == orderId){
+			return "redirect:404";
+		}
+		
+		TdJointOrder torder = tdJointOrderService.findOne(orderId);
+		if(null == torder){
+			return "redirect:404";
+		}
+		
+		
+		String payForm = "";
+		Byte pay = torder.getPaymentId();
+		if(ConstantsUtils.ORDER_PAYMENT_ALIPAY.equals(pay)){
+			// 支付宝支付
+			// 支付金额
+			req.setAttribute("totalAmount", torder.getAmount().toString());
+			// 订单编号
+			req.setAttribute("orderNo", torder.getJno());
+			PaymentChannelAlipay paymentChannelAlipay = new PaymentChannelAlipay();
+			map.addAttribute("payForm", paymentChannelAlipay.getPayFormData(req));
+			
+			return "/mobile/pay_form";
+		}else if(ConstantsUtils.ORDER_PAYMENT_ACCOUNT.equals(pay)){
+			// 钱包余额支付
+			TdUserAccount account = tdUserAccountService.findByUid(user.getUid());
+			// 钱包余额小于支付金额
+			if(null == account || torder.getAmount().compareTo(account.getAmount()) < 0){
+				return "/mobile/pay_failed";
+			}
+			jointOrderAccountPay(torder,account);
+			map.addAttribute("order", torder);
+			
+			return "/mobile/pay_success";
+		}else if(ConstantsUtils.ORDER_PAYMENT_WEIXIN.equals(pay)){
+			
+			String openId = user.getJointId();
+			if(null == openId || openId.contains("sys")){
+				return "redirect:404";
+			}
+			// 微信支付
+			wxPay(orderId, openId,"jointOrder", req,  map);
+		}
+		return "/mobile/pay_failed";
+		
+	}
+	
+	/**
 	 * 立即支付
 	 * @author Max
 	 * 
@@ -348,18 +421,20 @@ public class MOrderController extends BaseController {
 			return "redirect:404";
 		}
 		
-		// 支付金额
-		req.setAttribute("totalAmount", order.getPayAmount().toString());
-		// 订单编号
-		req.setAttribute("orderNo", order.getOrderNo());
 		
-		String payForm = "";
 		Byte pay = order.getPaymentId();
 		
 		if(ConstantsUtils.ORDER_PAYMENT_ALIPAY.equals(pay)){
 			// 支付宝支付
+			// 支付金额
+			req.setAttribute("totalAmount", order.getPayAmount().toString());
+			// 订单编号
+			req.setAttribute("orderNo", order.getOrderNo());
 			PaymentChannelAlipay paymentChannelAlipay = new PaymentChannelAlipay();
-			payForm = paymentChannelAlipay.getPayFormData(req);
+			
+			map.addAttribute("payForm", paymentChannelAlipay.getPayFormData(req));
+			
+			return "/mobile/pay_form";
 		}else if(ConstantsUtils.ORDER_PAYMENT_ACCOUNT.equals(pay)){
 			// 钱包余额支付
 			TdUserAccount account = tdUserAccountService.findByUid(user.getUid());
@@ -373,141 +448,162 @@ public class MOrderController extends BaseController {
 			
 		}else if(ConstantsUtils.ORDER_PAYMENT_WEIXIN.equals(pay)){
 			
-			
-			
 			String openId = user.getJointId();
 			if(null == openId || openId.contains("sys")){
 				return "redirect:404";
 			}
 			// 微信支付
-			//统一支付接口
-			String noncestr = RandomStringGenerator.getRandomStringByLength(32);
-			ModelMap signMap = new ModelMap();
-			signMap.addAttribute("appid", Configure.getAppid());
-			signMap.addAttribute("attach", "订单支付");
-			signMap.addAttribute("body", "支付订单" + order.getOrderNo());
-			signMap.addAttribute("mch_id", Configure.getMchid());
-			signMap.addAttribute("nonce_str",noncestr);
-			signMap.addAttribute("notify_url", "http://120.76.217.106/tdStore/order/wx_notify");
-			signMap.addAttribute("openid", openId);
-			signMap.addAttribute("out_trade_no", order.getOrderNo());
-			signMap.addAttribute("spbill_create_ip", "120.76.217.106");
-			signMap.addAttribute("total_fee", Math.round(order.getPayAmount().doubleValue()*100));
-			signMap.addAttribute("trade_type", "JSAPI");
+			wxPay(orderId, openId,"order", req,  map);
+		}
+		return "/mobile/pay_failed";
+	}
+	
+	public String wxPay(Integer orderId,String openId,String type,HttpServletRequest req,ModelMap map){
+		//统一支付接口
+		
+		String body = "";
+		String out_trade_no = "";
+		Long total_fee = null;
+		
+		if("order".equalsIgnoreCase(type)){
+			// 订单支付
+			TdOrder order = tdOrderService.findOne(orderId);
+			 
+			body = "支付订单" + order.getOrderNo();
+			out_trade_no = order.getOrderNo();
+			total_fee = Math.round(order.getPayAmount().doubleValue()*100);
+		}
+		else if("jointOrder".equalsIgnoreCase(type)){
+			// 联合订单支付
+			TdJointOrder order = tdJointOrderService.findOne(orderId);
+			
+			body = "支付订单"+order.getJno();
+			out_trade_no = order.getJno();
+			total_fee = Math.round(order.getAmount().doubleValue()*100);
+		}
+		
+		String noncestr = RandomStringGenerator.getRandomStringByLength(32);
+		ModelMap signMap = new ModelMap();
+		signMap.addAttribute("appid", Configure.getAppid());
+		signMap.addAttribute("attach", "订单支付");
+		signMap.addAttribute("body", body);
+		signMap.addAttribute("mch_id", Configure.getMchid());
+		signMap.addAttribute("nonce_str",noncestr);
+		signMap.addAttribute("notify_url", "http://120.76.217.106/tdStore/order/wx_notify");
+		signMap.addAttribute("openid", openId);
+		signMap.addAttribute("out_trade_no", out_trade_no);
+		signMap.addAttribute("spbill_create_ip", "120.76.217.106");
+		signMap.addAttribute("total_fee", total_fee);
+		signMap.addAttribute("trade_type", "JSAPI");
 
-			String mysign = Signature.getSign(signMap);
+		String mysign = Signature.getSign(signMap);
 
-			String content = "<xml>\n" 
-					+ "<appid>"+ Configure.getAppid()+ "</appid>\n"
-					+ "<attach>订单支付</attach>\n"
-					+ "<body>支付订单"+ order.getOrderNo()+ "</body>\n"
-					+ "<mch_id>"+ Configure.getMchid()+ "</mch_id>\n"
-					+ "<nonce_str>"+ noncestr+ "</nonce_str>\n"
-					+ "<notify_url>http://120.76.217.106/tdStore/order/wx_notify</notify_url>\n"
-					+ "<openid>" + openId + "</openid>\n" 
-					+ "<out_trade_no>" + order.getOrderNo() + "</out_trade_no>\n"
-					+ "<spbill_create_ip>120.76.217.106</spbill_create_ip>\n"
-					+ "<total_fee>" + Math.round(order.getPayAmount().doubleValue()*100)+ "</total_fee>\n" 
-					+ "<trade_type>JSAPI</trade_type>\n"
-					+ "<sign>" + mysign + "</sign>\n"
-					+ "</xml>\n";
-	    	
-	    	System.err.println("Max:xml-----"+content);
-	    	
-	    	String return_code = null;
-			String prepay_id = null;
-			String result_code = null;
-			String line = null;
-			HttpsURLConnection urlCon = null;
-			try
+		String content = "<xml>\n" 
+				+ "<appid>"+ Configure.getAppid()+ "</appid>\n"
+				+ "<attach>订单支付</attach>\n"
+				+ "<body>"+ body+ "</body>\n"
+				+ "<mch_id>"+ Configure.getMchid()+ "</mch_id>\n"
+				+ "<nonce_str>"+ noncestr+ "</nonce_str>\n"
+				+ "<notify_url>http://120.76.217.106/tdStore/order/wx_notify</notify_url>\n"
+				+ "<openid>" + openId + "</openid>\n" 
+				+ "<out_trade_no>" + out_trade_no + "</out_trade_no>\n"
+				+ "<spbill_create_ip>120.76.217.106</spbill_create_ip>\n"
+				+ "<total_fee>" + total_fee+ "</total_fee>\n" 
+				+ "<trade_type>JSAPI</trade_type>\n"
+				+ "<sign>" + mysign + "</sign>\n"
+				+ "</xml>\n";
+    	
+    	System.err.println("Max:xml-----"+content);
+    	
+    	String return_code = null;
+		String prepay_id = null;
+		String result_code = null;
+		String line = null;
+		HttpsURLConnection urlCon = null;
+		try
+		{
+			urlCon = (HttpsURLConnection) (new URL("https://api.mch.weixin.qq.com/pay/unifiedorder")).openConnection();
+			urlCon.setDoInput(true);
+			urlCon.setDoOutput(true);
+			urlCon.setRequestMethod("POST");
+			urlCon.setRequestProperty("Content-Length",String.valueOf(content.getBytes().length));
+			urlCon.setUseCaches(false);
+			urlCon.getOutputStream().write(content.getBytes("utf-8"));
+			urlCon.getOutputStream().flush();
+			urlCon.getOutputStream().close();
+			BufferedReader in = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
+
+			while ((line = in.readLine()) != null)
 			{
-				urlCon = (HttpsURLConnection) (new URL("https://api.mch.weixin.qq.com/pay/unifiedorder")).openConnection();
-				urlCon.setDoInput(true);
-				urlCon.setDoOutput(true);
-				urlCon.setRequestMethod("POST");
-				urlCon.setRequestProperty("Content-Length",String.valueOf(content.getBytes().length));
-				urlCon.setUseCaches(false);
-				urlCon.getOutputStream().write(content.getBytes("utf-8"));
-				urlCon.getOutputStream().flush();
-				urlCon.getOutputStream().close();
-				BufferedReader in = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
-
-				while ((line = in.readLine()) != null)
+				System.out.println(": rline: " + line);
+				if (line.contains("<return_code>"))
 				{
-					System.out.println(": rline: " + line);
-					if (line.contains("<return_code>"))
-					{
-						return_code = line.replaceAll(
-								"<xml><return_code><\\!\\[CDATA\\[", "")
-								.replaceAll("\\]\\]></return_code>", "");
-					} 
-					else if (line.contains("<prepay_id>")) 
-					{
-						prepay_id = line.replaceAll("<prepay_id><\\!\\[CDATA\\[",
-								"").replaceAll("\\]\\]></prepay_id>", "");
-					}
-					else if (line.contains("<result_code>"))
-					{
-						result_code = line.replaceAll(
-								"<result_code><\\!\\[CDATA\\[", "").replaceAll(
-										"\\]\\]></result_code>", "");
-					}
-				}
-
-				System.out.println("Max: return_code: " + return_code + "\n");
-				System.out.println("Max: prepay_id: " + prepay_id + "\n");
-				System.out.println("Max: result_code: " + result_code + "\n");
-
-				if ("SUCCESS".equalsIgnoreCase(return_code)
-						&& "SUCCESS".equalsIgnoreCase(result_code)
-						&& null != prepay_id)
+					return_code = line.replaceAll(
+							"<xml><return_code><\\!\\[CDATA\\[", "")
+							.replaceAll("\\]\\]></return_code>", "");
+				} 
+				else if (line.contains("<prepay_id>")) 
 				{
-					noncestr = RandomStringGenerator.getRandomStringByLength(32);
-
-					String timeStamp = String.valueOf(System.currentTimeMillis() / 1000);
-					String packageString = "prepay_id=" + prepay_id;
-					String signType = "MD5";
-					ModelMap returnsignmap = new ModelMap();
-					returnsignmap.addAttribute("appId", Configure.getAppid());
-					returnsignmap.addAttribute("timeStamp", timeStamp);
-					returnsignmap.addAttribute("nonceStr", noncestr);
-					returnsignmap.addAttribute("package", packageString);
-					returnsignmap.addAttribute("signType", signType);
-
-					
-					String returnsign = Signature.getSign(returnsignmap);
-					content = "<xml>\n" + 
-					"<appid>" + Configure.getAppid() + "</appid>\n" + 
-					"<nonceStr>" + noncestr + "</nonceStr>\n" + 
-					"<package>" + packageString + "</package>\n" + 
-					"<signType>" + signType + "</signType>\n" + 
-					"<signType>" + returnsign + "</signType>\n" + 
-					"<timeStamp>" + timeStamp + "</timeStamp>\n" +
-					"</xml>\n";
-
-					System.out.print("Max: returnPayData xml=" + content);
-					map.addAttribute("appId", Configure.getAppid());
-					map.addAttribute("timeStamp", timeStamp);
-					map.addAttribute("nonceStr", noncestr);
-					map.addAttribute("package", packageString);
-					map.addAttribute("signType", signType);
-					map.addAttribute("paySign", returnsign);
-					
-					return "/mobile/pay_wx";
-				}else{
-					return "/mobile/pay_failed";
+					prepay_id = line.replaceAll("<prepay_id><\\!\\[CDATA\\[",
+							"").replaceAll("\\]\\]></prepay_id>", "");
 				}
-				
+				else if (line.contains("<result_code>"))
+				{
+					result_code = line.replaceAll(
+							"<result_code><\\!\\[CDATA\\[", "").replaceAll(
+									"\\]\\]></result_code>", "");
+				}
 			}
-			catch (IOException e)
+
+			System.out.println("Max: return_code: " + return_code + "\n");
+			System.out.println("Max: prepay_id: " + prepay_id + "\n");
+			System.out.println("Max: result_code: " + result_code + "\n");
+
+			if ("SUCCESS".equalsIgnoreCase(return_code)
+					&& "SUCCESS".equalsIgnoreCase(result_code)
+					&& null != prepay_id)
 			{
-				return "redirect:404";
+				noncestr = RandomStringGenerator.getRandomStringByLength(32);
+
+				String timeStamp = String.valueOf(System.currentTimeMillis() / 1000);
+				String packageString = "prepay_id=" + prepay_id;
+				String signType = "MD5";
+				ModelMap returnsignmap = new ModelMap();
+				returnsignmap.addAttribute("appId", Configure.getAppid());
+				returnsignmap.addAttribute("timeStamp", timeStamp);
+				returnsignmap.addAttribute("nonceStr", noncestr);
+				returnsignmap.addAttribute("package", packageString);
+				returnsignmap.addAttribute("signType", signType);
+
+				
+				String returnsign = Signature.getSign(returnsignmap);
+				content = "<xml>\n" + 
+				"<appid>" + Configure.getAppid() + "</appid>\n" + 
+				"<nonceStr>" + noncestr + "</nonceStr>\n" + 
+				"<package>" + packageString + "</package>\n" + 
+				"<signType>" + signType + "</signType>\n" + 
+				"<signType>" + returnsign + "</signType>\n" + 
+				"<timeStamp>" + timeStamp + "</timeStamp>\n" +
+				"</xml>\n";
+
+				System.out.print("Max: returnPayData xml=" + content);
+				map.addAttribute("appId", Configure.getAppid());
+				map.addAttribute("timeStamp", timeStamp);
+				map.addAttribute("nonceStr", noncestr);
+				map.addAttribute("package", packageString);
+				map.addAttribute("signType", signType);
+				map.addAttribute("paySign", returnsign);
+				
+				return "/mobile/pay_wx";
+			}else{
+				return "/mobile/pay_failed";
 			}
 			
 		}
-		map.addAttribute("payForm", payForm);
-		
-		return "/mobile/pay_form";
+		catch (IOException e)
+		{
+			return "redirect:404";
+		}
 	}
 	
 	@RequestMapping(value = "/pay/notify_alipay")
@@ -564,29 +660,56 @@ public class MOrderController extends BaseController {
         // 计算得出通知验证结果
         boolean verify_result = AlipayNotify.verify(params);
 
-        TdOrder order = tdOrderService.findByOrderNo(orderNo);
         String ua = req.getHeader("User-Agent");
-        if (order == null) {
-            // 订单不存在
-        	// 触屏
+        // 判断支付类型，含J为联合订单支付
+        if(orderNo.contains("J")){
+        	TdJointOrder jointOrder = tdJointOrderService.findByJno(orderNo);
         	
-    		if(WebUtils.checkAgentIsMobile(ua)){
-    			return "/mobile/pay_failed";
-    		}
-            return "/client/order_pay_failed";
-        }
-        map.put("order", order);
-        if (verify_result) {// 验证成功
-            if ("TRADE_SUCCESS".equals(trade_status)) {
-
-                // 订单支付成功
-                tdOrderService.AfterPaySuccess(order,params.toString());
-                // 触屏
-            	if(WebUtils.checkAgentIsMobile(ua)){
-                    return "/mobile/pay_success";
-                }
-                return "/client/order_pay_success";
-            }
+        	if (jointOrder == null) {
+        		// 订单不存在
+        		// 触屏
+        		if(WebUtils.checkAgentIsMobile(ua)){
+        			return "/mobile/pay_failed";
+        		}
+        		return "/client/order_pay_failed";
+        	}
+        	map.put("order", jointOrder);
+        	if (verify_result) {// 验证成功
+        		if ("TRADE_SUCCESS".equals(trade_status)) {
+        			
+        			// 订单支付成功
+        			tdOrderService.AfterJointPaySuccess(jointOrder,params.toString());
+        			// 触屏
+        			if(WebUtils.checkAgentIsMobile(ua)){
+        				return "/mobile/pay_success";
+        			}
+        			return "/client/order_pay_success";
+        		}
+        	}
+        }else{
+        	TdOrder order = tdOrderService.findByOrderNo(orderNo);
+        	if (order == null) {
+        		// 订单不存在
+        		// 触屏
+        		
+        		if(WebUtils.checkAgentIsMobile(ua)){
+        			return "/mobile/pay_failed";
+        		}
+        		return "/client/order_pay_failed";
+        	}
+        	map.put("order", order);
+        	if (verify_result) {// 验证成功
+        		if ("TRADE_SUCCESS".equals(trade_status)) {
+        			
+        			// 订单支付成功
+        			tdOrderService.AfterPaySuccess(order,params.toString());
+        			// 触屏
+        			if(WebUtils.checkAgentIsMobile(ua)){
+        				return "/mobile/pay_success";
+        			}
+        			return "/client/order_pay_success";
+        		}
+        	}
         }
 
         // 验证失败或者支付失败
@@ -698,5 +821,46 @@ public class MOrderController extends BaseController {
 		tdUserAccountService.addAmount(account, log);
 		
 		tdOrderService.AfterPaySuccess(order,"");
+	}
+    
+    
+    /**
+     * 
+     * @author Max
+     * 联合订单余额后续
+     * 
+     */
+    private void jointOrderAccountPay(TdJointOrder torder, TdUserAccount account) {
+    	if(null ==torder || null == account){
+			return ;
+		}
+    	
+    	TdOrderSearchCriteria sc = new TdOrderSearchCriteria();
+    	sc.setFlag(false);
+    	sc.setJointId(torder.getId());
+    	List<TdOrder> orderList = tdOrderService.findBySearchCriteria(sc);
+    	
+    	BigDecimal payAmount = torder.getAmount();
+		BigDecimal amount = account.getAmount();
+		BigDecimal decimal = new BigDecimal(0.00);
+		
+		account.setAmount(amount.subtract(payAmount));
+		
+		// 记录
+		TdUserAccountLog log = new TdUserAccountLog();
+		log.setUpamount(decimal.subtract(payAmount));
+		log.setCreateTime(new Date());
+		log.setType((byte)5);
+		log.setNote("订单支付");
+		
+		tdUserAccountService.addAmount(account, log);
+    	
+    	if(null != orderList && orderList.size() > 0)
+    	{
+    		for (TdOrder tdOrder : orderList) {
+    			tdOrderService.AfterPaySuccess(tdOrder,"");
+    		}
+    	}
+		
 	}
 }

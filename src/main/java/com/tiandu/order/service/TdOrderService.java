@@ -36,6 +36,15 @@ public interface TdOrderService {
 	void AfterPaySuccess(TdOrder tdOrder,String response);
 	
 	/**
+	 * 
+	 * @author Max
+	 *
+	 * 联合订单支付后续
+	 * 
+	 */
+	void AfterJointPaySuccess(TdJointOrder tdOrder,String response);
+	
+	/**
 	 * 订单发货操作
 	 * @param order
 	 * @param shipment

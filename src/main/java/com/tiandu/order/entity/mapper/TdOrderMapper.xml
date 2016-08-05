@@ -155,6 +155,9 @@
     <if test="supplierId != null" >
         and o.supplier_id=#{supplierId,jdbcType=INTEGER}
     </if>
+    <if test="jointId != null" >
+        and o.joint_id=#{jointId,jdbcType=INTEGER}
+    </if>
     <if test="shippmentTime != null" >
         and o.update_time <![CDATA[ < ]]> #{shippmentTime,jdbcType=TIMESTAMP}
     </if>

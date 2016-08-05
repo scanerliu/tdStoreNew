@@ -25,6 +25,8 @@ public class TdOrderSearchCriteria extends SearchCriteria {
     private Integer fliterType; //查询分类0-全部订单，1-待付款，2-代发货，3-待收货，4-待评价
     private Integer supplierId; // 供应商ID
     
+    private Integer jointId; // 联合订单ID
+    
 	public String getOrderNo() {
 		return orderNo;
 	}
@@ -119,6 +121,14 @@ public class TdOrderSearchCriteria extends SearchCriteria {
 
 	public void setReceiptTime(Date receiptTime) {
 		this.receiptTime = receiptTime;
+	}
+
+	public Integer getJointId() {
+		return jointId;
+	}
+
+	public void setJointId(Integer jointId) {
+		this.jointId = jointId;
 	}
     
     
