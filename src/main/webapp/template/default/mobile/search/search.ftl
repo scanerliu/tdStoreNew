@@ -56,12 +56,13 @@
             <aside class="as2">
                 <p class="p_title">热门搜索</p>
                 <p class="p2">
-                    <a href="#" title="">艾灸养生</a>
-                    <a href="#" title="">艾灸养生</a>
-                    <a href="#" title="">艾灸养生</a>
-                    <a href="#" title="">艾灸养生</a>
-                    <a href="#" title="">艾灸养生</a>
-                    <a href="#" title="">艾灸养生</a>
+                	<#if system.hotsearchword??>
+                	<#list system.hotsearchword?split(",") as key>
+                    	<#if key!="">
+                    	<a href="${app.basePath}/mobile/search/list?keyword=${key!''}" title="${key!''}">${key!''}</a>
+                    	</#if>
+                    </#list>
+                	</#if>
                 </p>
         </section>
     </div>
