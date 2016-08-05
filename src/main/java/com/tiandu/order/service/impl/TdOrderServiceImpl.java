@@ -225,6 +225,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 			uporder.setUpdateBy(shipment.getUpdateBy());
 			uporder.setUpdateTime(shipment.getUpdateTime());
 			uporder.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_SHIPPED);
+			uporder.setOrderStatus(ConstantsUtils.ORDER_STATUS_SHIPPMENTED);
 			tdOrderMapper.updateByPrimaryKeySelective(uporder);
 		}
 		//订单操作日志
@@ -881,7 +882,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 				shipment.setItemList(itemList);
 				tdOrderShipmentItemMapper.insertOrderShipmentItems(shipment);
 			}
-			order.setOrderStatus((byte)5); // 订单状态改为申请退货
+			order.setOrderStatus(ConstantsUtils.ORDER_STATUS_APPLYREFUND); // 订单状态改为申请退货
 			this.save(order);
 			
 			result.setFlag(true);
@@ -965,6 +966,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 		uporder.setUpdateBy(user.getUid());
 		uporder.setUpdateTime(now);
 		uporder.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_RECEIPT);
+		uporder.setOrderStatus(ConstantsUtils.ORDER_STATUS_RECEIPTED);
 		tdOrderMapper.updateByPrimaryKeySelective(uporder);
 		
 		//订单操作日志

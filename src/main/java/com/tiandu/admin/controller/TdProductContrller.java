@@ -204,7 +204,6 @@ public class TdProductContrller extends BaseController{
 				tdProduct.setDefaultSkuId(0);
 				tdProduct.setSpecification(true);
 				tdProduct.setUpdateBy(user.getUid());
-				tdProduct.setUid(user.getUid());
 			}
 			tdProduct.setUpdateTime(new Date());
 			
@@ -220,6 +219,8 @@ public class TdProductContrller extends BaseController{
 			}
 			if(isUpdate){
 				tdProductSkuService.deleteByProductId(tdProduct.getId());
+			}else{
+				tdProduct.setUid(1);//添加供应商为平台系统
 			}
 			tdProductService.save(tdProduct);
 			

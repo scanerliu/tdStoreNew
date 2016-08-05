@@ -48,12 +48,18 @@
 			<p class="right">
 				<label>交易状态：</label>
 				<span>
-					<#if order.payStatus==1 && order.shipmentStatus==2>
+					<#if order.orderStatus==1>
+						待支付
+					<#elseif order.orderStatus==2>
 			      		待发货
-			    	<#elseif order.payStatus==1 && order.shipmentStatus==1>
+			    	<#elseif order.orderStatus==3>
 			      		待收货
-			    	<#elseif order.payStatus==2>
-			      		待支付
+			    	<#elseif order.orderStatus==4>
+			      		交易完成
+			      	<#elseif order.orderStatus==5>
+			      		申请退款
+			      	<#elseif order.orderStatus==6>
+			      		交易完成
 			    	</#if>
 				</span>
 			</p>
