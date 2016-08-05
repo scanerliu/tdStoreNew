@@ -89,7 +89,7 @@ function saveProduct(){
 }
 
 function deleteProduct(id){
-	$.messager.confirm('消息提醒', '删除后讲不可恢复，确定要继续删除吗?', function(r){
+	$.messager.confirm('消息提醒', '删除后不可恢复，确定要继续删除吗?', function(r){
 		if (r){
 			var url = basePath+"/admin/product/delete";
 			var loadData={"id":id};
