@@ -32,7 +32,7 @@
 
   <!-- Center Start -->
   <section class="container evaluate-success">
-    <img class="icon-success" src="${app.basePath}/static/touchimages/f-fail.png" alt="">
+    <img class="icon-success" src="${app.basePath}/static/touch/images/f-fail.png" alt="">
     <div class="div1">对不起！付款失败</div>
     <div class="div2"></div>
     <a class="btn-share" href="${app.basePath}/mobile/order/list" title="点击返回">点击返回</a>

@@ -388,12 +388,18 @@ public class TdOrderServiceImpl implements TdOrderService{
 			orderForm.setUserAddress(address);
 		}
 		
-		torder.setAmount(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount()));
+		System.err.println(shoppingcart.getTotalAmount());
+		System.err.println(shoppingcart.getTotalPointAmount());
 		torder.setPaymentId(orderForm.getPaymentId());
 		torder.setStatus(ConstantsUtils.ORDER_PAY_STATUS_UNPAY);
 		torder.setCreateTime(now);
 		torder.setUpdateTime(now);
 		torder.setJno(WebUtils.generateJointOrderNo());
+		if(orderForm.getUsePoints()){
+			torder.setAmount(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount()));
+		}else{
+			torder.setAmount(shoppingcart.getTotalAmount());
+		}
 		// 先保存才有ID
 		tdJointOrderMapper.insert(torder);
 		
@@ -408,20 +414,20 @@ public class TdOrderServiceImpl implements TdOrderService{
 			//普通订单
 			if(shoppingcart.getPtype()==1){
 				TdOrder order = this.insertOrder(currUser, orderForm, shoppingcart, torder, now);
-				torder.setJno(order.getOrderNo());
+//				torder.setJno(order.getOrderNo());
 			
 			}else if(shoppingcart.getPtype()==2){//单代订单
 				TdOrder order = this.insertAgentOrder(currUser, orderForm, shoppingcart, torder, now);
-				torder.setJno(order.getOrderNo());
+//				torder.setJno(order.getOrderNo());
 			}else if(shoppingcart.getPtype()==3){//分公司订单
 				TdOrder order = this.insertBrachOrder(currUser, orderForm, shoppingcart, torder, now);
-				torder.setJno(order.getOrderNo());
+//				torder.setJno(order.getOrderNo());
 			}else if(shoppingcart.getPtype()==4){//图片美化订单
 				TdOrder order = this.insertImageOrder(currUser, orderForm, shoppingcart, torder, now);
-				torder.setJno(order.getOrderNo());
+//				torder.setJno(order.getOrderNo());
 			}
 			
-			tdJointOrderMapper.updateByPrimaryKey(torder);
+//			tdJointOrderMapper.updateByPrimaryKey(torder);
 		}		
 		return torder;
 	}

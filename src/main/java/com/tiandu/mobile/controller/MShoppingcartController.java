@@ -300,7 +300,7 @@ public class MShoppingcartController extends BaseController {
 		if(order!=null && StringUtils.isNotEmpty(order.getJno())){
 			//下单成功调整支付页面
 			modelMap.addAttribute("order", order) ;
-		    return "/mobile/shoppingcart/orderpay";
+			return "redirect:/mobile/order/jointdopay"+order.getId();
 			
 		}else{
 			//下单失败

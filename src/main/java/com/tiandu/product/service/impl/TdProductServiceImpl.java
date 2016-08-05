@@ -1,6 +1,7 @@
 package com.tiandu.product.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductAttribute;
 import com.tiandu.product.entity.TdProductAttributeOption;
@@ -180,6 +182,35 @@ public class TdProductServiceImpl implements TdProductService{
 		Integer count = tdProductMapper.countByCriteria(sc);
 		sc.setTotalCount(count);
 		return sc.getTotalPageCount();
+	}
+
+	@Override
+	public void seckillProduct() {
+		TdProductCriteria sc = new TdProductCriteria();
+		sc.setSeckillEnd(new Date());
+		sc.setOnshelf(true);
+		sc.setFlag(false);
+		
+		// 秒杀
+		sc.setKind(ConstantsUtils.PRODUCT_KIND_SECKILL);
+		List<TdProduct> seckillList = this.findBySearchCriteria(sc);
+		if(null != seckillList && seckillList.size() > 0){
+			for (TdProduct tdProduct : seckillList) {
+				tdProduct.setOnshelf(false);
+				tdProductMapper.updateByPrimaryKey(tdProduct);
+			}
+		}
+		
+		// 预售
+		sc.setKind(ConstantsUtils.PRODUCT_KIND_PRESALE);
+		List<TdProduct> presaleList = this.findBySearchCriteria(sc);
+		if(null != presaleList && presaleList.size() > 0){
+			for (TdProduct tdProduct : presaleList) {
+				tdProduct.setOnshelf(false);
+				tdProductMapper.updateByPrimaryKey(tdProduct);
+			}
+		}
+		
 	}
 	
 	

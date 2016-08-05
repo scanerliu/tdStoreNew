@@ -332,9 +332,9 @@ public class MOrderController extends BaseController {
 		if(null == torder){
 			return "redirect:404";
 		}
+		// 系统配置
+		map.addAttribute("system", getSystem());
 		
-		
-		String payForm = "";
 		Byte pay = torder.getPaymentId();
 		if(ConstantsUtils.ORDER_PAYMENT_ALIPAY.equals(pay)){
 			// 支付宝支付
@@ -458,12 +458,24 @@ public class MOrderController extends BaseController {
 		return "/mobile/pay_failed";
 	}
 	
+	/**
+	 * 
+	 * @author Max
+	 * 微信支付
+	 * 
+	 * @param orderId  支付ID
+	 * @param openId 
+	 * @param type 支付类型
+	 * @param req
+	 * @param map
+	 * @return
+	 */
 	public String wxPay(Integer orderId,String openId,String type,HttpServletRequest req,ModelMap map){
 		//统一支付接口
 		
 		String body = "";
 		String out_trade_no = "";
-		Long total_fee = null;
+		int total_fee = 0;
 		
 		if("order".equalsIgnoreCase(type)){
 			// 订单支付
@@ -471,7 +483,7 @@ public class MOrderController extends BaseController {
 			 
 			body = "支付订单" + order.getOrderNo();
 			out_trade_no = order.getOrderNo();
-			total_fee = Math.round(order.getPayAmount().doubleValue()*100);
+			total_fee = (int) Math.round(order.getPayAmount().doubleValue()*100);
 		}
 		else if("jointOrder".equalsIgnoreCase(type)){
 			// 联合订单支付
@@ -479,7 +491,7 @@ public class MOrderController extends BaseController {
 			
 			body = "支付订单"+order.getJno();
 			out_trade_no = order.getJno();
-			total_fee = Math.round(order.getAmount().doubleValue()*100);
+			total_fee = (int) Math.round(order.getAmount().doubleValue()*100);
 		}
 		
 		String noncestr = RandomStringGenerator.getRandomStringByLength(32);
@@ -643,7 +655,7 @@ public class MOrderController extends BaseController {
         // 获取支付宝的返回参数
         String orderNo = "";
         String trade_status = "";
-        String trade_no = null;
+//        String trade_no = null;
         try {
             // 商户订单号
             orderNo = new String(req.getParameter(Constants.KEY_OUT_TRADE_NO)
@@ -651,8 +663,8 @@ public class MOrderController extends BaseController {
             // 交易状态
             trade_status = new String(req.getParameter("trade_status")
                     .getBytes("ISO-8859-1"), AlipayConfig.CHARSET);
-            trade_no = new String(req.getParameter("trade_no")
-                    .getBytes("ISO-8859-1"), AlipayConfig.CHARSET);
+//            trade_no = new String(req.getParameter("trade_no")
+//                    .getBytes("ISO-8859-1"), AlipayConfig.CHARSET);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
