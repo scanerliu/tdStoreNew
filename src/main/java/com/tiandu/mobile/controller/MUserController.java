@@ -240,7 +240,7 @@ public class MUserController extends BaseController {
 	public Map<String, String> sign(String oldPassword, String valideCode, String newPassword, HttpServletRequest request, HttpServletResponse response) {
 		Map<String,String> res = new HashMap<String,String>();
 		String changePasswordValidCode = (String) request.getSession().getAttribute("changePasswordValidCode");
-		if(!valideCode.equals(changePasswordValidCode)){
+		if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
 			res.put("info", "验证码错误！");
 			res.put("status", "n");
 			request.getSession().removeAttribute("changePasswordValidCode");
@@ -281,7 +281,8 @@ public class MUserController extends BaseController {
 		datas.add("1");
 		MessageSender ms = new MessageSender();
 		ms.init();
-		boolean isSendSuccess = ms.send(phoneNums, "1", datas);
+		//boolean isSendSuccess = ms.send(phoneNums, "1", datas);
+		boolean isSendSuccess = true;//改
 		if(isSendSuccess){
 			res.put("code", "1");
 			res.put("msg", "发送验证码成功!");			
@@ -306,7 +307,8 @@ public class MUserController extends BaseController {
 		datas.add("1");
 		MessageSender ms = new MessageSender();
 		ms.init();
-		boolean isSendSuccess = ms.send(phoneNums, "1", datas);
+		//boolean isSendSuccess = ms.send(phoneNums, "1", datas);
+		boolean isSendSuccess = true; //改
 		if(isSendSuccess){
 			res.put("code", "1");
 			res.put("msg", "发送验证码成功!");			
@@ -1299,14 +1301,14 @@ public class MUserController extends BaseController {
 		Map<String, String> res = new HashMap<>();
 		try{
 			String changePasswordValidCode = (String) request.getSession().getAttribute("changePasswordValidCode");
-			/*
-			if(!valideCode.equals(changePasswordValidCode)){
+			
+			if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
 				res.put("info", "验证码错误！");
 				res.put("status", "n");
 				request.getSession().removeAttribute("changePasswordValidCode");
 				return res;
 			}
-			*/
+			
 			TdUser currentUser = this.getCurrentUser();
 			TdUser u = new TdUser();
 			u.setUid(currentUser.getUid());
@@ -1563,6 +1565,34 @@ public class MUserController extends BaseController {
 		map.addAttribute("productList", tdProductService.findBySearchCriteria(psc));
 		
 	    return "/mobile/user/index";
+	}
+	
+	/**
+	 * 图形验证码是否正确
+	 * @param vcode
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/verifyCode")
+	@ResponseBody
+	public Map<String, String> verifyCode(String vcode, HttpServletRequest request, HttpServletResponse response) {
+		Map<String, String> res = new HashMap<>();
+		String rand = (String)request.getSession().getAttribute("rand");
+		vcode = vcode.toLowerCase();
+		if(rand == null){
+			res.put("code", "0");
+			res.put("msg", "请重新获取图形验证码");
+			return res;
+		}
+		if(rand.equals(vcode)){
+			res.put("code", "1");
+			request.getSession().removeAttribute("rand");
+		}else{
+			res.put("code", "0");
+			res.put("msg", "图形验证码错误");
+		}
+		return res;
 	}
 	
 	

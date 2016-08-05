@@ -54,21 +54,44 @@ function commonCallback(data){
 }
 
 //验证码
-var wait=60;
+var wait=30;
+var isWait = false; //验证码请求等待
 function waitSeconds(o) {
     if (wait == 0) {
     	// 为获取验证按钮绑定获取验证码事件
 		$("#getChangeUserPasswordValidCode").bind("click", function(){
-			var url = basePath+"/mobile/user/getChangeUserPasswordValidCode";
-			alert("发送");
-			//$.post(url, commonCallback, "text");
+			var vurl = basePath+"/mobile/user/verifyCode";
+			var vcode =	$("#verifyCode").val();
+			if(vcode == ""){
+				alert("请输入图形验证码");
+				return;
+			}
+			var vdata = {'vcode': vcode};
+			$.post(vurl, vdata, function(data){
+				var jdata = eval('('+data+')');
+				if(jdata.code == 0){
+					alert(jdata.msg);
+					return;
+				}else{
+					isWait = true;
+					waitSeconds($("#getChangeUserPasswordValidCode"));
+					var url = basePath+"/mobile/user/getChangeUserPasswordValidCode";
+					$.post(url, function(pdata){
+						var result = eval("("+pdata+")");
+						alert('消息提醒'+result.msg);
+						isWait = false;
+					}, "text");
+				}
+			}, "text");
 		});
 		// 为获取验证按钮绑定等待60秒事件
 		$("#getChangeUserPasswordValidCode").bind("click", function(){
-			waitSeconds($("#getChangeUserPasswordValidCode"));
+			if(isWait){
+				waitSeconds($("#getChangeUserPasswordValidCode"));			
+			}
 		});
     	o.text("获取验证码");
-        wait = 60;
+        wait = 30;
     } else {
     	$('#getChangeUserPasswordValidCode').unbind("click");
         o.text("重新发送(" + wait + ")");
@@ -81,27 +104,61 @@ function waitSeconds(o) {
 
 
 //验证码
-var pwait=60;
+var pwait=30;
+var pisWait = false;
 function waitSecondsForPhoneNum(o) {
     if (pwait == 0) {
     	// 为获取验证按钮绑定获取验证码事件
 		$("#getChangePhoneNumValidCode").bind("click", function(){
-			var url = basePath+"/mobile/user/getChangePhoneNumValidCode";
-			alert("发送");
-			//$.post(url, commonCallback, "text");
+			var vurl = basePath+"/mobile/user/verifyCode";
+			var vcode =	$("#verifyCode").val();
+			if(vcode == ""){
+				alert("请输入图形验证码");
+				return;
+			}
+			var vdata = {'vcode': vcode};
+			$.post(vurl, vdata, function(data){
+				var jdata = eval('('+data+')');
+				if(jdata.code == 0){
+					alert(jdata.msg);
+					return;
+				}else{
+					var phone = $("#utel").val();
+					if(phone == ""){
+						alert("请输入手机号码。");
+						return;
+					}else if(!(/^1[3|4|5|7|8]\d{9}$/.test(phone))){ 
+						alert("手机号码有误，请重填");
+						return;
+					}else{
+						pisWait = true;
+						waitSecondsForPhoneNum($("#getChangePhoneNumValidCode"));
+						var url = basePath+"/mobile/user/getChangePhoneNumValidCode";
+						var loadData = {'phone': phone};
+						$.post(url, loadData, function(pdata){
+							var result = eval("("+pdata+")");
+							alert('消息提醒'+result.msg);
+							pisWait = false;
+						}, "text");			
+					}
+				}
+			}, "text");
+			
 		});
 		// 为获取验证按钮绑定等待60秒事件
 		$("#getChangePhoneNumValidCode").bind("click", function(){
-			waitSeconds($("#getChangePhoneNumValidCode"));
+			if(pisWait){
+				waitSecondsForPhoneNum($("#getChangePhoneNumValidCode"));
+			}
 		});
     	o.text("获取验证码");
-        pwait = 60;
+        pwait = 30;
     } else {
     	$('#getChangePhoneNumValidCode').unbind("click");
-        o.text("重新发送(" + wait + ")");
+        o.text("重新发送(" + pwait + ")");
         pwait--;
         setTimeout(function() {
-        	waitSeconds(o)
+        	waitSecondsForPhoneNum(o)
         }, 1000);
     }
 }
