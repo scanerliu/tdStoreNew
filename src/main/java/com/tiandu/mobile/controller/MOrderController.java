@@ -444,7 +444,7 @@ public class MOrderController extends BaseController {
 			// 钱包余额支付
 			TdUserAccount account = tdUserAccountService.findByUid(user.getUid());
 			// 钱包余额小于支付金额
-			if(null == account || order.getPayAmount().compareTo(account.getAmount()) < 0){
+			if(null == account || order.getPayAmount().compareTo(account.getAmount()) > 0){
 				return "/mobile/pay_failed";
 			}
 			orderAccountPay(order,account);
@@ -830,14 +830,13 @@ public class MOrderController extends BaseController {
 		BigDecimal payAmount = order.getPayAmount();
 		BigDecimal amount = account.getAmount();
 		BigDecimal decimal = new BigDecimal(0.00);
-		
-		account.setAmount(amount.subtract(payAmount));
+	
 		
 		// 记录
 		TdUserAccountLog log = new TdUserAccountLog();
-		log.setUpamount(decimal.subtract(payAmount));
+		log.setUpamount(BigDecimal.ZERO.subtract(payAmount));//支付转换为负数，账号金额支出减少
+		log.setType(TdUserAccountLog.USERACCOUNTLOG_TYPE_ORDER_PAY);
 		log.setCreateTime(new Date());
-		log.setType((byte)5);
 		log.setNote("订单:"+order.getOrderNo()+"支付");
 		
 		tdUserAccountService.addAmount(account, log);

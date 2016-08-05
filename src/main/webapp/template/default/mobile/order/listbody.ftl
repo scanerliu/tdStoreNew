@@ -5,13 +5,19 @@
 	    <div class="top">
 	      <p class="p1">订单号：<span>${order.orderNo!''}</span></p>
 	      <p class="p2">交易状态：<span>
-	      <#if order.payStatus==1 && order.shipmentStatus==2>
-	      		待发货
-	      <#elseif order.payStatus==1 && order.shipmentStatus==1>
-	      		待收货
-	      <#elseif order.payStatus==2>
-	      		待支付
-	      </#if>
+	      			<#if order.orderStatus==1>
+						待支付
+					<#elseif order.orderStatus==2>
+			      		待发货
+			    	<#elseif order.orderStatus==3>
+			      		待收货
+			    	<#elseif order.orderStatus==4>
+			      		交易完成
+			      	<#elseif order.orderStatus==5>
+			      		申请退款
+			      	<#elseif order.orderStatus==6>
+			      		交易完成
+			    	</#if>
 	      </span></p>
 	    </div>
 	    <#if order?? && order.productList?? && (order.productList?size > 0)>
@@ -63,7 +69,7 @@
 	    <div class="btn-group">
 	      <#if order.payStatus==2><a href="${app.basePath}/mobile/order/dopay${order.orderId!'0'}" class="active" title="">立即付款</a></#if>
 	      <#if order.payStatus==1&& order.shipmentStatus==1><a class="active" href="javascript:;" onclick="receiptOrder(${order.orderId!'0'})" title="">确认收货</a></#if>
-	      <#if order.orderStatus==3 && order.commented==false><a class="active" href="${app.basePath}/mobile/user/comment/${order.orderId!'0'}" title="去评价">去评价</a></#if>
+	      <#if order.orderStatus==4 && order.commented==false><a class="active" href="${app.basePath}/mobile/user/comment/${order.orderId!'0'}" title="去评价">去评价</a></#if>
 	      <a href="${app.basePath}/mobile/order/detail${order.orderId!'0'}" title="">查看订单</a>
 	    </div>
 	  </section>

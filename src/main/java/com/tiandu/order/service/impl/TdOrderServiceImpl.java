@@ -503,6 +503,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 			sku.setProductName(item.getProduct().getName());
 			sku.setProductSkuCode(item.getProductSku().getSkuCode());
 			sku.setQuantity(item.getQuantity());
+			sku.setBackQuantity(0);
 			tdOrderSkuMapper.insert(sku);
 			//更新货品库存
 			tdProductSkuService.updateStock(item.getProductSkuId(),-item.getQuantity());
@@ -969,8 +970,8 @@ public class TdOrderServiceImpl implements TdOrderService{
 			return result;
 		}
 		//已收货的订单的不能进行收货操作
-		if(ConstantsUtils.ORDER_PAY_STATUS_UNPAY.equals(order.getPayStatus())){
-			result.setFailMsg("未支付的订单的不能进行收货操作！");
+		if(ConstantsUtils.ORDER_SHIPMENT_STATUS_RECEIPT.equals(order.getShipmentStatus())){
+			result.setFailMsg("已收货的订单的不能进行收货操作！");
 			return result;
 		}
 		
@@ -1184,7 +1185,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 				sc.setTypeId(8);
 				List<TdBenefit> benefitList = tdBenefitService.findBySearchCriteria(sc);
 				
-				List<TdOrderSku> orderSkuList = order.getSkuList();
+				List<TdOrderSku> orderSkuList = tdOrderSkuMapper.findByOrderId(order.getOrderId());
 				if(null!=orderSkuList && orderSkuList.size()>0){
 					//单类代理分润
 					for(TdOrderSku ordersku : orderSkuList){

@@ -1031,12 +1031,12 @@ strong {font-weight: normal;}
 .change-password .get-code label {
 	float: left;
 	margin-left: .2rem;
-	width: 1.2rem;
+	width: 1.7rem;
 }
 .change-password .get-code input[type="text"] {
 	float: left;
 	margin-left: .2rem;
-	width: 2.5rem;
+	width: 2rem;
 	height: .8rem;
 	font-size: .28rem;
 	background: none;

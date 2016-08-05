@@ -72,7 +72,7 @@ public class LevelOneRegionUserCount {
 			datas.add(message);
 			MessageSender ms = new MessageSender();
 			ms.init();
-			boolean isSendSuccess = ms.send(phoneList, "1", datas);
+			boolean isSendSuccess = ms.send(phoneList, "106246", datas);
 			if(!isSendSuccess){
 				logger.error("省直辖市会员人数短信发送失败");		
 			}

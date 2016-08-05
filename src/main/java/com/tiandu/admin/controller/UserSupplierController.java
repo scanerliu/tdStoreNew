@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserSupplier;
 import com.tiandu.custom.search.TdUserSupplierSearchCriteria;
 import com.tiandu.custom.service.TdUserService;
@@ -122,6 +123,11 @@ public class UserSupplierController extends BaseController {
 		TdUserSupplier tus = tdUserSupplierService.findOne(id);
 		if(isPass){
 			tus.setStatus(Byte.valueOf("2"));
+			//修改用户供应商类型
+			Integer userid = tus.getUid();
+			TdUser suser = tdUserService.findOne(userid);
+			suser.setSupplierType(tus.getSupplierType());
+			tdUserService.saveCustomer(suser);
 		}else{
 			tus.setStatus(Byte.valueOf("3"));
 		}
