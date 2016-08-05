@@ -281,8 +281,7 @@ public class MUserController extends BaseController {
 		datas.add("1");
 		MessageSender ms = new MessageSender();
 		ms.init();
-		//boolean isSendSuccess = ms.send(phoneNums, "1", datas);
-		boolean isSendSuccess = true;//改
+		boolean isSendSuccess = ms.send(phoneNums, "1", datas);
 		if(isSendSuccess){
 			res.put("code", "1");
 			res.put("msg", "发送验证码成功!");			
@@ -307,8 +306,7 @@ public class MUserController extends BaseController {
 		datas.add("1");
 		MessageSender ms = new MessageSender();
 		ms.init();
-		//boolean isSendSuccess = ms.send(phoneNums, "1", datas);
-		boolean isSendSuccess = true; //改
+		boolean isSendSuccess = ms.send(phoneNums, "1", datas);
 		if(isSendSuccess){
 			res.put("code", "1");
 			res.put("msg", "发送验证码成功!");			
