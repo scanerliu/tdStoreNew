@@ -21,8 +21,8 @@
 		    <tr>
 		        <th width="150">上架状态：</th>
 		        <td>
-			        <input type="radio" name="onshelf" value="true" <#if !tdProduct?? || (tdProduct.onshelf?? && tdProduct.onshelf)>checked</#if>>${tdProduct.getOnshelfStr()!''}
-			        <input type="radio" name="onshelf" value="false" <#if tdProduct?? && tdProduct.onshelf?? && !tdProduct.onshelf>checked</#if>>${tdProduct.getOnshelfStr()!''}
+			        <input type="radio" name="onshelf" value="true" <#if !tdProduct?? || (tdProduct.onshelf?? && tdProduct.onshelf)>checked</#if>>上架
+			        <input type="radio" name="onshelf" value="false" <#if tdProduct?? && tdProduct.onshelf?? && !tdProduct.onshelf>checked</#if>>下架
 		        </td>
 		    </tr>
 		    <tr>

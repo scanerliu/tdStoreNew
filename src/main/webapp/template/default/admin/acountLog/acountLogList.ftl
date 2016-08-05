@@ -14,7 +14,7 @@
 						<div class="explain_col">
 							账户余额：<label style="color:red;">￥${amount?c}元</label>
 							&nbsp;&nbsp;&nbsp;&nbsp;
-							下单时间：
+							变更时间：
 							<input type="text" value="" style="width:100px;" size="12" class="easyui-datebox" id="beginDate" name="beginDate">
 							-<input type="text" value="" style="width:100px;" size="12" class="easyui-datebox" id="endDate" name="endDate">
 							<input type="button" value="搜索" class="btn" name="search" onclick="searchAcountLog(true)">

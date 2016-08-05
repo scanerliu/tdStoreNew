@@ -125,6 +125,10 @@ public class ConstantsUtils {
 	 */
 	public static final Byte ORDER_STATUS_COMPLETE = 6;
 	/**
+	 * 订单状态：7订单异常
+	 */
+	public static final Byte ORDER_STATUS_EXCEPTION = 7;
+	/**
 	 * 订单支付状态： 1 已支付
 	 */
 	public static final Byte ORDER_PAY_STATUS_PAYED = 1;

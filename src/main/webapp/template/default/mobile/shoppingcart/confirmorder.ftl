@@ -146,7 +146,7 @@
 	    </ul>
 	    <input type="hidden" id="totalAmount" value="${shoppingcart.totalAmount!''}"/>
 	    <input type="hidden" id="totalPointAmount" value="${shoppingcart.totalPointAmount!'0'}"/>
-	    <input type="hidden" name="addressId" value="${address.id!''}"/>
+	    <input type="hidden" name="addressId" value="<#if address??>${address.id!''}</#if>"/>
 	    <!-- order-detail-pay-end -->
 	</section>
 </form>

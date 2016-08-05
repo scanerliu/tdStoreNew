@@ -1014,6 +1014,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 		uporder.setUpdateTime(now);
 		uporder.setOrderStatus(ConstantsUtils.ORDER_STATUS_PAYED);
 		uporder.setPayStatus(ConstantsUtils.ORDER_PAY_STATUS_PAYED);
+		uporder.setOrderStatus(ConstantsUtils.ORDER_STATUS_PAYED);
 		uporder.setPayAmount(order.getUnPayAmount());
 		uporder.setPaymentId(orderPay.getPaymentId());
 		tdOrderMapper.updateByPrimaryKeySelective(uporder);
@@ -1036,6 +1037,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 			log2.setCreateBy(orderPay.getCreateBy());
 			log2.setCreateTime(now);
 			log2.setOperType(ConstantsUtils.ORDER_LOG_TYPE_AGENT);
+			Boolean addagent = false;
 			if(null!=orderProduct){
 				TdAgentProduct agentProduct = tdAgentProductService.findOne(orderProduct.getItemId());
 				if(null!=agentProduct){
@@ -1058,6 +1060,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 									agent.setRegionId(orderProduct.getRegionId());
 									agent.setUpdateDate(now);
 									tdAgentService.save(agent);
+									addagent = true;
 									log2.setNote("订单生成代理操作成功。");
 								}
 							}else{
@@ -1069,6 +1072,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 								agent.setRegionId(orderProduct.getRegionId());
 								agent.setUpdateDate(now);
 								tdAgentService.save(agent);
+								addagent = true;
 								log2.setNote("订单生成代理操作成功。");
 							}							
 						}
@@ -1091,6 +1095,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 									branch.setUpdateTime(now);
 									branch.setUpdateBy(1);
 									tdBrancheCompanyService.save(branch);
+									addagent = true;
 									log2.setNote("订单生成分公司操作成功。");
 								}
 							}else{
@@ -1102,6 +1107,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 								branch.setUpdateBy(1);
 								branch.setStatus(Byte.valueOf("1"));
 								tdBrancheCompanyService.save(branch);
+								addagent = true;
 								log2.setNote("订单生成分公司操作成功。");
 							}							
 						}
@@ -1110,7 +1116,9 @@ public class TdOrderServiceImpl implements TdOrderService{
 					log2.setNote("订单生成代理操作失败：代理产品未找到!");
 				}
 				//分润开始
-				benefitOrder(order);
+				if(addagent){//生成代理成功才才分润
+					benefitOrder(order);
+				}
 			}else{
 				log2.setNote("订单生成代理操作失败：订单详情未找到!");
 			}			

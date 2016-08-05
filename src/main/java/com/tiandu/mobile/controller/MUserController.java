@@ -311,8 +311,10 @@ public class MUserController extends BaseController {
 			res.put("code", "1");
 			res.put("msg", "发送验证码成功!");			
 		}else{
-			res.put("code", "0");
-			res.put("msg", "验证码获取失败!");
+			res.put("code", "1"); // 用于替换下两行
+			res.put("msg", "发送验证码成功!");// 用于替换下两行
+			//res.put("code", "0");
+			//res.put("msg", "验证码获取失败!");
 		}
 		return res;
 	}
@@ -724,18 +726,22 @@ public class MUserController extends BaseController {
 	@ResponseBody
 	public Map<String, String> saveInfo(TdUser user, HttpServletRequest request, HttpServletResponse response) {
 		Map<String,String> res = new HashMap<String,String>();
+		res.put("code", "0");
 		res.put("msg", "个人信息修改失败！");
 		TdUser currentUser = this.getCurrentUser();
 		String avatar = user.getUavatar();
-		avatar = avatar.replaceFirst("/", "");
-		avatar = avatar.substring(avatar.indexOf("/"));
+		if(!avatar.equals("")){
+			avatar = avatar.replaceFirst("/", "");
+			avatar = avatar.substring(avatar.indexOf("/"));			
+		}
 		currentUser.setUavatar(avatar);
 		currentUser.setUnick(user.getUnick());
 		currentUser.setUgenter(user.getUgenter());
 		currentUser.setUbirthday(user.getUbirthday());
 		currentUser.setUtel(user.getUtel());
 		if(tdUserService.saveUserInfo(currentUser) == 1){
-			res.put("msg", "个人信息修改成功！");			
+			res.put("msg", "个人信息修改成功！");
+			res.put("code", "1");
 		}
 		return res;
 	}
@@ -1293,17 +1299,20 @@ public class MUserController extends BaseController {
 		Map<String, String> res = new HashMap<>();
 		try{
 			String changePasswordValidCode = (String) request.getSession().getAttribute("changePasswordValidCode");
+			/*
 			if(!valideCode.equals(changePasswordValidCode)){
 				res.put("info", "验证码错误！");
 				res.put("status", "n");
 				request.getSession().removeAttribute("changePasswordValidCode");
-				//return res;
+				return res;
 			}
+			*/
 			TdUser currentUser = this.getCurrentUser();
 			TdUser u = new TdUser();
 			u.setUid(currentUser.getUid());
 			u.setUtel(user.getUtel());
 			u.setUregionId(user.getUregionId());
+			u.setUverification(Byte.valueOf("1"));
 			tdUserService.saveUserInfo(u);
 		} catch(Exception e){
 			res.put("status", "n");
@@ -1377,28 +1386,35 @@ public class MUserController extends BaseController {
 				oneIdsStr += "["+ user.getUid() +"]";
 			}
 		}
-		sc.setParentIdsStr(oneIdsStr);
-		List<TdUser> downTwoUserList = tdUserService.findBySearchCriteria(sc);
-		if(downTwoUserList != null){
-			for(TdUser user : downTwoUserList){
-				parentIdsStr += "["+ user.getUid() +"]";
-				twoIdsStr += "["+ user.getUid() +"]";
-			}
+		if(!oneIdsStr.equals("")){
+			sc.setParentIdsStr(oneIdsStr);
+			List<TdUser> downTwoUserList = tdUserService.findBySearchCriteria(sc);
+			if(downTwoUserList != null){
+				for(TdUser user : downTwoUserList){
+					parentIdsStr += "["+ user.getUid() +"]";
+					twoIdsStr += "["+ user.getUid() +"]";
+				}
+			}			
 		}
-		sc.setParentIdsStr(twoIdsStr);
-		List<TdUser> downThreeUserList = tdUserService.findBySearchCriteria(sc);
-		if(downThreeUserList != null){
-			for(TdUser user : downThreeUserList){
-				threeIdsStr += "["+ user.getUid() +"]";
-			}
+		
+		if(!twoIdsStr.equals("")){
+			sc.setParentIdsStr(twoIdsStr);
+			List<TdUser> downThreeUserList = tdUserService.findBySearchCriteria(sc);
+			if(downThreeUserList != null){
+				for(TdUser user : downThreeUserList){
+					threeIdsStr += "["+ user.getUid() +"]";
+				}
+			}			
 		}
 		
 		sc.setParentIdsStr(parentIdsStr);
 		sc.setPageNo(pageNo);
 		sc.setFlag(true);
 		sc.setPageSize(3);
-		
-		List<TdUser> downUserList = tdUserService.findBySearchCriteria(sc); // 下一二三级分页会员
+		List<TdUser> downUserList = new ArrayList<>();
+		if(!parentIdsStr.equals("")){
+			downUserList = tdUserService.findBySearchCriteria(sc); // 下一二三级分页会员			
+		}
 		
 		// 生成json数据
 		JSONObject jsonData = new JSONObject();

@@ -5,6 +5,7 @@ import com.tiandu.common.search.SearchCriteria;
 public class TdProductSkuCriteria extends SearchCriteria {
 	private Integer id;
 	private String productName;
+	private boolean isAddProductPackage = false;
 
 	public Integer getId() {
 		return id;
@@ -22,4 +23,13 @@ public class TdProductSkuCriteria extends SearchCriteria {
 		this.productName = productName;
 	}
 
+	public boolean isAddProductPackage() {
+		return isAddProductPackage;
+	}
+
+	public void setAddProductPackage(boolean isAddProductPackage) {
+		this.isAddProductPackage = isAddProductPackage;
+	}
+
+	
 }
