@@ -566,7 +566,11 @@ public class TdOrderServiceImpl implements TdOrderService{
 			computershoppingcart(scart, integralexchangerate, commonproductpointpercent, partproductpointpercent);
 			//计算获得积分
 			if(shoppingcart.getGainPoints()>0){
-				Integer point = scart.getTotalAmount().subtract(scart.getTotalPointAmount()).divide(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount())).multiply(new BigDecimal(shoppingcart.getGainPoints())).setScale(0, BigDecimal.ROUND_FLOOR).intValue();
+				BigDecimal samount = scart.getTotalAmount().subtract(scart.getTotalPointAmount());
+				BigDecimal totalmount = shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount());
+				BigDecimal pamount = samount.divide(totalmount);
+				pamount = pamount.multiply(new BigDecimal(shoppingcart.getGainPoints()));
+				Integer point = pamount.setScale(0, BigDecimal.ROUND_FLOOR).intValue();
 				scart.setGainPoints(point);
 			}else{
 				scart.setGainPoints(0);
@@ -609,7 +613,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 					pointAmount =  amount.multiply(new BigDecimal(partproductpointpercent)).divide(new BigDecimal(100));
 					cart.setTotalPartPointAmount(pointAmount.add(cart.getTotalPartPointAmount()));
 				}else if(commonproductpointpercent>0 && integralexchangerate>0){
-					pointAmount =  amount.multiply(new BigDecimal(commonproductpointpercent)).divide(new BigDecimal(100));
+					pointAmount =  amount.multiply(new BigDecimal(commonproductpointpercent)).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_FLOOR);
 					cart.setTotalCommonPointAmount(pointAmount.add(cart.getTotalCommonPointAmount()));
 				}
 			}
