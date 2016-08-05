@@ -54,6 +54,7 @@
 				<ref bean="cronTrigger" />
 				<ref bean="userLevelCronTrigger" />
 				<ref bean="orderReciptTrigger" />
+				<ref bean="seckillProductTrigger" />
 			</list>
 		</property>
 	</bean>
@@ -86,6 +87,21 @@
 	<bean id="orderCompleteTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="orderCompleteJobDetail"/>
 		<property name="cronExpression" value="0 0 6 ? * *"/>
+	</bean>
+	
+	<!-- 预售秒杀到时间自动下架 -->
+	<bean name="seckillProductJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.tiandu.quartz.SeckillProductScheduledJob" />
+		<property name="jobDataMap">
+			<map>
+				<entry key="tdProductService" value-ref="tdProductService"/>
+			</map>
+		</property>
+		<property name="durability" value="true"/>
+	</bean>
+	<bean id="seckillProductTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="seckillProductJobDetail"/>
+		<property name="cronExpression" value="0 * * ? * *"/>
 	</bean>
 
 </beans>

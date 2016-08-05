@@ -64,7 +64,7 @@
   	<#if !currentUser.utel??>
 	    <article class="tips">提示：PC上登陆请绑定手机号码</article>
   	</#if>
-  	<#if currentUser.supplierType gt 0>
+  	<#if currentUser.supplierType?? && currentUser.supplierType gt 0>
   	<a class="a_go" href="${app.basePath}/mobile/supply/order" title="去发货">
         <label>去发货</label>
         <i class="icon-next"></i>

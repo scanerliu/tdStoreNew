@@ -388,14 +388,23 @@ public class TdOrderServiceImpl implements TdOrderService{
 			TdUserAddress address = tdUserAddressService.findOne(orderForm.getAddressId());
 			orderForm.setUserAddress(address);
 		}
-		if(shoppingcart.getCombiningOrder()){//拆单
-			torder.setJno(WebUtils.generateJointOrderNo());
+		
+		System.err.println(shoppingcart.getTotalAmount());
+		System.err.println(shoppingcart.getTotalPointAmount());
+		torder.setPaymentId(orderForm.getPaymentId());
+		torder.setStatus(ConstantsUtils.ORDER_PAY_STATUS_UNPAY);
+		torder.setCreateTime(now);
+		torder.setUpdateTime(now);
+		torder.setJno(WebUtils.generateJointOrderNo());
+		if(orderForm.getUsePoints()){
 			torder.setAmount(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount()));
-			torder.setPaymentId(orderForm.getPaymentId());
-			torder.setStatus(ConstantsUtils.ORDER_PAY_STATUS_UNPAY);
-			torder.setCreateTime(now);
-			torder.setUpdateTime(now);
-			tdJointOrderMapper.insert(torder);
+		}else{
+			torder.setAmount(shoppingcart.getTotalAmount());
+		}
+		// 先保存才有ID
+		tdJointOrderMapper.insert(torder);
+		
+		if(shoppingcart.getCombiningOrder()){//拆单
 			//拆分购物车
 			List<ShoppingcartVO> cartList = this.splitShoppingcart(shoppingcart);
 			//分别生成订单
@@ -403,24 +412,23 @@ public class TdOrderServiceImpl implements TdOrderService{
 				this.insertOrder(currUser, orderForm, cart, torder, now);
 			}
 		}else{
-			torder.setId(0);
 			//普通订单
 			if(shoppingcart.getPtype()==1){
 				TdOrder order = this.insertOrder(currUser, orderForm, shoppingcart, torder, now);
-				torder.setJno(order.getOrderNo());
+//				torder.setJno(order.getOrderNo());
 			
 			}else if(shoppingcart.getPtype()==2){//单代订单
 				TdOrder order = this.insertAgentOrder(currUser, orderForm, shoppingcart, torder, now);
-				torder.setJno(order.getOrderNo());
+//				torder.setJno(order.getOrderNo());
 			}else if(shoppingcart.getPtype()==3){//分公司订单
 				TdOrder order = this.insertBrachOrder(currUser, orderForm, shoppingcart, torder, now);
-				torder.setJno(order.getOrderNo());
+//				torder.setJno(order.getOrderNo());
 			}else if(shoppingcart.getPtype()==4){//图片美化订单
 				TdOrder order = this.insertImageOrder(currUser, orderForm, shoppingcart, torder, now);
-				torder.setJno(order.getOrderNo());
+//				torder.setJno(order.getOrderNo());
 			}
 			
-			torder.setPaymentId(orderForm.getPaymentId());
+//			tdJointOrderMapper.updateByPrimaryKey(torder);
 		}		
 		return torder;
 	}
@@ -1013,6 +1021,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 		uporder.setOrderId(order.getOrderId());
 		uporder.setUpdateBy(orderPay.getCreateBy());
 		uporder.setUpdateTime(now);
+		uporder.setOrderStatus(ConstantsUtils.ORDER_STATUS_PAYED);
 		uporder.setPayStatus(ConstantsUtils.ORDER_PAY_STATUS_PAYED);
 		uporder.setOrderStatus(ConstantsUtils.ORDER_STATUS_PAYED);
 		uporder.setPayAmount(order.getUnPayAmount());
@@ -1707,6 +1716,20 @@ public class TdOrderServiceImpl implements TdOrderService{
 		this.payOrder(order, orderPay);
 		
 	}
+	
+	@Override
+	public void AfterJointPaySuccess(TdJointOrder tdOrder, String response) {
+		TdOrderSearchCriteria sc = new TdOrderSearchCriteria();
+    	sc.setFlag(false);
+    	sc.setJointId(tdOrder.getId());
+    	List<TdOrder> orderList = this.findBySearchCriteria(sc);
+    	
+    	if(null != orderList && orderList.size() > 0){
+    		for (TdOrder order : orderList) {
+				this.AfterPaySuccess(order, response);
+			}
+    	}
+	}
 
 	@Override
 	public void receiptOrderBySystemJob() {
@@ -1750,7 +1773,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 		}
 		
 	}
-	
+
 	
 	
 }

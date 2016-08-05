@@ -14,4 +14,6 @@ public interface TdJointOrderMapper {
     int updateByPrimaryKeySelective(TdJointOrder record);
 
     int updateByPrimaryKey(TdJointOrder record);
+    
+    TdJointOrder findByJno(String jno);
 }

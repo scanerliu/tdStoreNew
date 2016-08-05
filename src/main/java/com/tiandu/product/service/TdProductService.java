@@ -47,4 +47,11 @@ public interface TdProductService {
 	 */
 	public String fromProductSkutoProductJsonString(List<TdProductSku> skuList);
 	
+	/**
+	 * 预售秒杀
+	 * @author Max
+	 *
+	 */
+	public void seckillProduct();
+	
 }

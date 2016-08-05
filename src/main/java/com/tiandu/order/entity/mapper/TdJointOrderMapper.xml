@@ -19,6 +19,14 @@
     from td_joint_order
     where id = #{id,jdbcType=INTEGER}
   </select>
+  
+  <select id="findByJno" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_joint_order
+    where jno = #{jno,jdbcType=VARCHAR}
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from td_joint_order
     where id = #{id,jdbcType=INTEGER}

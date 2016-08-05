@@ -407,6 +407,9 @@
     <if test="endTime != null">
     	and p.end_time <![CDATA[ >=]]> #{endTime,jdbcType=TIMESTAMP}
     </if>
+    <if test="seckillEnd != null">
+    	and p.end_time <![CDATA[ <=]]> #{seckillEnd,jdbcType=TIMESTAMP}
+    </if>
     <if test="kind != null">
     	and p.kind = #{kind,jdbcType=TINYINT}
     </if>
@@ -481,6 +484,9 @@
     </if>
     <if test="endTime != null">
     	and p.end_time <![CDATA[ >=]]> #{endTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="seckillEnd != null">
+    	and p.end_time <![CDATA[ <=]]> #{seckillEnd,jdbcType=TIMESTAMP}
     </if>
     <if test="typeId != null">
     	and p.type_id = #{typeId,jdbcType=INTEGER}
