@@ -26,6 +26,10 @@ public class TdUserAccountLog {
 	 * 用户提现
 	 */
 	public static final Byte USERACCOUNTLOG_TYPE_WITHDRAWALS = 4;
+	/**
+	 * 订单支付
+	 */
+	public static final Byte USERACCOUNTLOG_TYPE_ORDER_PAY = 5;
 	
     private Integer id;
 
@@ -170,6 +174,8 @@ public class TdUserAccountLog {
     			sb.append("订单退款");
     		}else if(this.getType().equals(USERACCOUNTLOG_TYPE_WITHDRAWALS)){
     			sb.append("提现");
+    		}else if(this.getType().equals(USERACCOUNTLOG_TYPE_ORDER_PAY)){
+    			sb.append("订单支付");
     		}
     		
     	}

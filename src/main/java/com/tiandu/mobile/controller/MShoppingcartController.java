@@ -606,6 +606,9 @@ public class MShoppingcartController extends BaseController {
 		if(null!=itemList && itemList.size()>0){
 			Set<Integer> suppliers = new HashSet<Integer>(); 
 			for(TdShoppingcartItem item : itemList){
+				if(null==item.getProductSku()||null==item.getProduct()){
+					tdShoppingcartItemService.removeFromShoppingcart(item.getUid(), item.getId());
+				}
 				//累加每个商品的运费
 				BigDecimal postage = BigDecimal.ZERO;
 				if(null!=item.getProduct() && null!=item.getProduct().getPostage()){
