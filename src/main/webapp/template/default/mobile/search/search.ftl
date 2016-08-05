@@ -1,4 +1,5 @@
 <#import "/common/app.ftl" as app>
+<#include "/common/common.ftl" />
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,18 +21,14 @@
     <!-- js -->
     <script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script> 
     <script type="text/javascript" src="${app.basePath}/static/touch/js/common.js"></script>
-    
+    <script type="text/javascript" src="${app.basePath}/static/js/mobile/core.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/mobile/search/search.js"></script>
 </head>
 
 <script>
-    window.onload=function(){
-        
-    }
-    
-function searchkey(){
-	var key = $("#keywords").val();
-	window.location.href ="${app.basePath}/mobile/search/list?keyword="+key
-}
+   $(function(){
+	    getCookieValue();
+	}); 
 </script>
 
 <body class="">
@@ -53,13 +50,7 @@ function searchkey(){
         <section class="sec2">
             <aside class="as1">
                 <p class="p_title">搜索历史</p>
-                <p class="p2">
-                    <a href="产品列表.html" title="">艾灸养生</a>
-                    <a href="#" title="">艾灸养生</a>
-                    <a href="#" title="">艾灸养生</a>
-                    <a href="#" title="">艾灸养生</a>
-                    <a href="#" title="">艾灸养生</a>
-                    <a href="#" title="">艾灸养生</a>
+                <p class="p2" id="key1">
                 </p>
             </aside>
             <aside class="as2">

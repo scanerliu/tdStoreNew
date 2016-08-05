@@ -35,7 +35,7 @@
 <div class="index_header">
     <div class="fl"><img src="${app.basePath}/static/touch/images/logo.png" alt="LOGO"></div>
     <a href="${app.basePath}/mobile/search" title="搜索" class="fl">搜索我的宝贝</a>
-    <a href="javascript:;" title="" class="fr">分享</a>
+    <a href="javascript:;" title="分享" class="fr">分享</a>
 </div>
 <!-- 头部-结束 -->
 

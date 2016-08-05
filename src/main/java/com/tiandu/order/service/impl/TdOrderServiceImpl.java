@@ -69,6 +69,7 @@ import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.service.TdAgentProductService;
 import com.tiandu.product.service.TdProductService;
 import com.tiandu.product.service.TdProductSkuService;
+import com.tiandu.product.service.TdProductStatService;
 import com.tiandu.system.entity.TdBenefit;
 import com.tiandu.system.search.TdBenefitSearchCriteria;
 import com.tiandu.system.service.TdBenefitService;
@@ -127,6 +128,9 @@ public class TdOrderServiceImpl implements TdOrderService{
 	
 	@Autowired
 	private TdOrderPayService tdOrderPayService;
+	
+	@Autowired
+	private TdProductStatService tdProductStatService;
 	
 	@Autowired
 	private ConfigUtil configUtil;
@@ -502,6 +506,9 @@ public class TdOrderServiceImpl implements TdOrderService{
 			tdOrderSkuMapper.insert(sku);
 			//更新货品库存
 			tdProductSkuService.updateStock(item.getProductSkuId(),-item.getQuantity());
+			
+			// 更新销量
+			tdProductStatService.updateByCount(item.getProductId(), item.getQuantity());
 		}
 		//扣除抵扣积分
 		if(order.getUsedPoint()>0){
