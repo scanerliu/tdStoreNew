@@ -364,7 +364,12 @@ public class MOrderController extends BaseController {
 				return "redirect:404";
 			}
 			// 微信支付
-			wxPay(orderId, openId,"jointOrder", req,  map);
+			Boolean wxPay = wxPay(orderId, openId,"jointOrder", req,  map);
+			if(null == wxPay){
+				return "redirect:404";
+			}else if(wxPay){
+				return "/mobile/pay_wx";
+			}
 		}
 		return "/mobile/pay_failed";
 		
@@ -453,7 +458,12 @@ public class MOrderController extends BaseController {
 				return "redirect:404";
 			}
 			// 微信支付
-			wxPay(orderId, openId,"order", req,  map);
+			Boolean wxPay = wxPay(orderId, openId,"order", req,  map);
+			if(null == wxPay){
+				return "redirect:404";
+			}else if(wxPay){
+				return "/mobile/pay_wx";
+			}
 		}
 		return "/mobile/pay_failed";
 	}
@@ -470,7 +480,7 @@ public class MOrderController extends BaseController {
 	 * @param map
 	 * @return
 	 */
-	public String wxPay(Integer orderId,String openId,String type,HttpServletRequest req,ModelMap map){
+	public Boolean wxPay(Integer orderId,String openId,String type,HttpServletRequest req,ModelMap map){
 		//统一支付接口
 		
 		String body = "";
@@ -598,7 +608,7 @@ public class MOrderController extends BaseController {
 				"<timeStamp>" + timeStamp + "</timeStamp>\n" +
 				"</xml>\n";
 
-				System.out.print("Max: returnPayData xml=" + content);
+				System.err.print("Max: returnPayData xml=" + content);
 				map.addAttribute("appId", Configure.getAppid());
 				map.addAttribute("timeStamp", timeStamp);
 				map.addAttribute("nonceStr", noncestr);
@@ -606,15 +616,15 @@ public class MOrderController extends BaseController {
 				map.addAttribute("signType", signType);
 				map.addAttribute("paySign", returnsign);
 				
-				return "/mobile/pay_wx";
+				return true;
 			}else{
-				return "/mobile/pay_failed";
+				return false;
 			}
 			
 		}
 		catch (IOException e)
 		{
-			return "redirect:404";
+			return null;
 		}
 	}
 	

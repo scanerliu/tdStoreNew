@@ -12,4 +12,7 @@ public interface TdProductStatService {
 	
 	Integer deleteByPrimaryKey(Integer productId);
 	
+	// 更新销量
+	Integer updateByCount(Integer id,Integer quantity);
+	
 }

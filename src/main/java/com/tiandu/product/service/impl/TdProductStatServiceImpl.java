@@ -38,5 +38,15 @@ public class TdProductStatServiceImpl implements TdProductStatService{
 	public Integer updateByPrimaryKey(TdProductStat record) {
 		return tdProductStatMapper.updateByPrimaryKey(record);
 	}
+
+	@Override
+	public Integer updateByCount(Integer id, Integer quantity) {
+		TdProductStat stat = this.findOne(id);
+		if(null != stat){
+			stat.setBuyCount(stat.getBuyCount()+quantity);
+			stat.setBuyTimes(stat.getBuyTimes()+1);
+		}
+		return this.updateByPrimaryKey(stat);
+	}
 	
 }

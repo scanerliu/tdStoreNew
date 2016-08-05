@@ -1,8 +1,12 @@
 package com.tiandu.mobile.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,21 +32,24 @@ public class MobileSearchController extends BaseController{
 	private TdProductService tdProductService;
 	
 	@RequestMapping("/search")
-	public String toSearch(HttpServletRequest req,ModelMap map)
+	public String toSearch(HttpServletRequest req,HttpServletResponse resp,ModelMap map)
 	{
 		// 系统配置
 		map.addAttribute("system", getSystem());
+		
+	
 		return "/mobile/search/search";
 	}
 	
 	
 	
 	@RequestMapping("/search/list")
-	public String searchList(String keyword,HttpServletRequest req,ModelMap map)
+	public String searchList(String keyword,HttpServletRequest req,HttpServletResponse response,ModelMap map) throws Exception
 	{
 		// 系统配置
 		map.addAttribute("system", getSystem());
 		map.addAttribute("keyword", keyword);
+		
 		return "/mobile/search/list";
 	}
 	

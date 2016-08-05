@@ -310,12 +310,13 @@
 	});
 </script>
 <script>
-
+var psize = 0;
 	$(function(){
+		psize =$("#speSize").val();
 		<#if tdProduct??>
 			makeTable(${tableJsonData}, "skuAssemble");
 			<#if specifiactionNum??>
-				editText("skuAssemble", ${specifiactionNum});	
+				//editText("skuAssemble", ${specifiactionNum});	
 			</#if>
 		</#if>
 		
@@ -360,7 +361,6 @@
 		});
 	});
 
-
 function removeImg(id)
 {
 	
@@ -385,11 +385,16 @@ function makeTable(data, divId){
 		content = content + "<th>"+data.tableHead[i]+"</th>";
 	}
 	content = content + "</tr></thead><tbody>";
+	
 	// 添加表体
 	for(var i = 0; i < data.tableContent.length; i ++){
 		content = content + "<tr id='"+ data.tableContent[i].trId +"'>";
 		for(var j = 0; j < data.tableContent[i].trData.length; j ++){
-			content = content + "<td>"+data.tableContent[i].trData[j]+"</td>";
+			if(j < psize){
+				content = content + "<td>"+data.tableContent[i].trData[j]+"</td>";
+			}else{
+				content = content + "<td><input type='text' value="+data.tableContent[i].trData[j]+">"+"</td>";				
+			}
 		}
 		content = content + "</tr>";
 	}
@@ -421,9 +426,17 @@ function getTableData(divId){
 			var oneRow =  rowData.eq(i).find("td");
 			for(var j = 0; j < headData.length; j ++){
 				if(j == headData.length - 1){
-					tableData = tableData + "'" + oneRow.eq(j).text() + "'";
+					if(j < psize){
+						tableData = tableData + "'" + oneRow.eq(j).text() + "'";						
+					}else{
+						tableData = tableData + "'" + $(oneRow.eq(j)).find("input").val() + "'";
+					}
 				}else{
-					tableData = tableData + "'" + oneRow.eq(j).text() + "',";
+					if(j < psize){
+						tableData = tableData + "'" + oneRow.eq(j).text() + "',";
+					}else{
+						tableData = tableData + "'" + $(oneRow.eq(j)).find("input").val() + "',";	
+					}
 				}
 			}
 			tableData = tableData + "]}";
@@ -433,9 +446,18 @@ function getTableData(divId){
 			var oneRow =  rowData.eq(i).find("td");
 			for(var j = 0; j < headData.length; j ++){
 				if(j == headData.length - 1){
-					tableData = tableData + "'" + oneRow.eq(j).text() + "'";
+					if(j < psize){
+						tableData = tableData + "'" + oneRow.eq(j).text() + "'";						
+					}else{
+						tableData = tableData + "'" + $(oneRow.eq(j)).find("input").val() + "'";
+					}
 				}else{
-					tableData = tableData + "'" + oneRow.eq(j).text() + "',";
+					if(j < psize){
+						tableData = tableData + "'" + oneRow.eq(j).text() + "',";
+					}else{
+						tableData = tableData + "'" + $(oneRow.eq(j)).find("input").val() + "',";	
+					}
+					
 				}
 			}
 			tableData = tableData + "]},";
@@ -443,6 +465,7 @@ function getTableData(divId){
 	}
 	tableData = tableData + "]}";
 	//alert(tableData);
+	console.log(tableData);
 	return tableData;
 }
 
@@ -599,9 +622,9 @@ function flushTable(){
 			var newStr = "";
 			var speStrArray = r.split("_");
 			for(var k = 0; k < speStrArray.length; k ++){
-				newStr = newStr + "<td>"+ speStrArray[k] +"</td>"
+				newStr = newStr + "<td>"+ speStrArray[k] +"</td>";
 			}
-			newStr = newStr + "<td></td><td></td><td></td><td></td><td></td><td></td><td></td>";
+			newStr = newStr + "<td><input type='text' value=''></td><td><input type='text' value=''></td><td><input type='text' value=''></td><td><input type='text' value=''></td><td><input type='text' value=''></td><td><input type='text' value=''></td><td><input type='text' value=''></td>";
 			newTableStr = newTableStr + "<tr id="+ r +">" + newStr + "</tr>";
 		}
 	}
@@ -689,5 +712,9 @@ function tableHeadCallback(data){
 	}
 	editText("skuAssemble", ssize);
 }
- 
 </script>
+<style type="text/css">
+	#skuAssemble table tbody tr td input{
+		width: 60px;
+	}
+</style>
