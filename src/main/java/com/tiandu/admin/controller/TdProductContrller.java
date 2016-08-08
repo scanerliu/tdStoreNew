@@ -577,6 +577,7 @@ public class TdProductContrller extends BaseController{
 		productTypeList.add(productType);
 		initTypeWithSpecifiaction(productTypeList);
 		map.addAttribute("attrList", productTypeList.get(0).getTdProductAttributeList());
+		
 		return "/admin/product/type/hpgg";
 	}
 	

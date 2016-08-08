@@ -9,3 +9,8 @@
 		</#if>
 	</#list>
 </#if>
+<script>
+	$(document).ready(function(){
+		psize =$("#speSize").val();
+	});
+</script>
