@@ -569,15 +569,16 @@ public class TdOrderServiceImpl implements TdOrderService{
 				}
 			}
 			scart.setItemList(itemList);
+			scart.setSupplierId(supplierId);
 			//重新计算新购物车
 			computershoppingcart(scart, integralexchangerate, commonproductpointpercent, partproductpointpercent);
 			//计算获得积分
 			if(shoppingcart.getGainPoints()>0){
 				BigDecimal samount = scart.getTotalAmount().subtract(scart.getTotalPointAmount());
 				BigDecimal totalmount = shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount());
-				BigDecimal pamount = samount.divide(totalmount);
-				pamount = pamount.multiply(new BigDecimal(shoppingcart.getGainPoints()));
-				Integer point = pamount.setScale(0, BigDecimal.ROUND_FLOOR).intValue();
+				BigDecimal pamount = samount.divide(totalmount,2, BigDecimal.ROUND_FLOOR);
+				BigDecimal bamount = pamount.multiply(new BigDecimal(shoppingcart.getGainPoints()));
+				Integer point = bamount.setScale(0, BigDecimal.ROUND_FLOOR).intValue();
 				scart.setGainPoints(point);
 			}else{
 				scart.setGainPoints(0);
@@ -617,7 +618,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 				//计算可以积分抵扣金额
 				BigDecimal pointAmount =BigDecimal.ZERO;
 				if(ConstantsUtils.PRODUCT_KIND_PART_POINT_EXCHANGE.equals(item.getProduct().getKind()) && partproductpointpercent>0 && integralexchangerate>0){
-					pointAmount =  amount.multiply(new BigDecimal(partproductpointpercent)).divide(new BigDecimal(100));
+					pointAmount =  amount.multiply(new BigDecimal(partproductpointpercent)).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_FLOOR);
 					cart.setTotalPartPointAmount(pointAmount.add(cart.getTotalPartPointAmount()));
 				}else if(commonproductpointpercent>0 && integralexchangerate>0){
 					pointAmount =  amount.multiply(new BigDecimal(commonproductpointpercent)).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_FLOOR);
