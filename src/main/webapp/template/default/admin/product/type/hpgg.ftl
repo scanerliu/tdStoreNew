@@ -11,6 +11,6 @@
 </#if>
 <script>
 	$(document).ready(function(){
-		psize =$("#speSize").val();
+		psize =${psize!0};
 	});
 </script>

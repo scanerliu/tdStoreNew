@@ -313,7 +313,6 @@
 var psize = 0;
 	$(function(){
 		psize =$("#speSize").val();
-		alert(psize);
 		<#if tdProduct??>
 			makeTable(${tableJsonData}, "skuAssemble");
 			<#if specifiactionNum??>
