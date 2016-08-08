@@ -58,6 +58,12 @@ function saveProduct(){
 				return;
 			}
 		}
+		var hph = trdata[specnum];
+		if(hph.indexOf("_") > -1 || hph.indexOf(",") > -1){
+			alert("货品号不能含有英文逗号或下划线");
+			return;
+		}
+		
 		for(var j = specnum + 1; j < trdata.length-1; j ++){
 			if(!price_partten.test(trdata[j])){
 				$.messager.alert('消息提醒','货品价格格式错误!');
