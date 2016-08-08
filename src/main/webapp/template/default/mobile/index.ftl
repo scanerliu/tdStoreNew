@@ -18,15 +18,18 @@
     <link rel="stylesheet" href="${app.basePath}/static/touch/css/main.css" type="text/css" />
     <link rel="stylesheet" href="${app.basePath}/static/touch/css/swipe.css" />
     <link rel="stylesheet" href="${app.basePath}/static/touch/css/index.css">
+    <link rel="stylesheet" href="${app.basePath}/static/touch/css/x_pc.css">
     <!-- js -->
     <script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script> 
     <script type="text/javascript" src="${app.basePath}/static/touch/js/swipe.js"></script> 
+    <script type="text/javascript" src="${app.basePath}/static/touch/js/index.js"></script> 
     <script type="text/javascript" src="${app.basePath}/static/touch/js/common.js"></script>
 </head>
 
 <script>
     window.onload=function(){
         // news_lab2();
+        value_over1();
     }
 </script>
 
@@ -35,10 +38,21 @@
 <div class="index_header">
     <div class="fl"><img src="${app.basePath}/static/touch/images/logo.png" alt="LOGO"></div>
     <a href="${app.basePath}/mobile/search" title="搜索" class="fl">搜索我的宝贝</a>
-    <a href="javascript:;" title="分享" class="fr">分享</a>
+    <a href="javascript:;" title="分享" id="avalue_btn" class="fr">分享</a>
 </div>
 <!-- 头部-结束 -->
-
+  <div class="value_over1" id="value_over1">
+    <section class="sec1 bdsharebuttonbox">
+		  <a href="javascript:;" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    	  <a href="javascript:;" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+		  <a href="javascript:;" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+		  <a href="javascript:;" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    </section>
+    <menu>取消分享</menu>
+  </div>
+  
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"32"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+<!-- -->
 <div class="my_banner1">
 <!-- ****广告轮播**** -->
 <div class="addWrap">

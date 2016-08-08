@@ -20,12 +20,15 @@ function subAgent()
 	var disLevel = $("#disLevel").val();
 	var level = $("#level").val();
 	var agentId = $("#agentid").val();
+	var groupId = $("#groupId").val();
 	
-	// 分类ID为空，
-	if(undefined == typeId || typeId == "")
-	{
-		alert("请选择代理类别");
-		return ;
+	if(groupId != 2){
+		// 分类ID为空，
+		if(undefined == typeId || typeId == "")
+		{
+			alert("请选择代理类别");
+			return ;
+		}
 	}
 	if(null == agentId || null == level)
 	{

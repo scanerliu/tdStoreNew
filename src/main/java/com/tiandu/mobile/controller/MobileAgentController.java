@@ -107,10 +107,10 @@ public class MobileAgentController extends BaseController{
 		
 		map.addAttribute("agent", agent);
 		
-		if("分公司".equals(agent.getGroupIdStr()))
-		{
-			return "/mobile/agent/company";
-		}
+//		if("分公司".equals(agent.getGroupIdStr()))
+//		{
+//			return "/mobile/agent/company";
+//		}
 		if(agent.getLevel() == 4)
 		{
 			TdProductTypeCriteria sc = new TdProductTypeCriteria();
@@ -255,15 +255,22 @@ public class MobileAgentController extends BaseController{
 		// 系统配置
 		map.addAttribute("system", getSystem());
 
-		// 查找所有分类
-		TdProductTypeCriteria tsc = new TdProductTypeCriteria();
-		tsc.setStatus((byte)1);
-		tsc.setOrderBy("2");
-		map.addAttribute("typeList", tdProductTypeService.findAll(tsc));
-		
 		TdAgentProduct agent = tdAgentProductService.findOne(agentId);
 		
 		map.addAttribute("agent", agent);
+
+		if(agent==null){
+			return "redirect:404";
+		}
+		
+		if(agent.getGroupId() ==1){
+			// 查找所有分类
+			TdProductTypeCriteria tsc = new TdProductTypeCriteria();
+			tsc.setStatus((byte)1);
+			tsc.setOrderBy("2");
+			map.addAttribute("typeList", tdProductTypeService.findAll(tsc));
+		}
+		
 		
 		TdDistrict district = new TdDistrict();
 		

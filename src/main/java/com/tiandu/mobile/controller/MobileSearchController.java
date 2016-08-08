@@ -36,8 +36,7 @@ public class MobileSearchController extends BaseController{
 	{
 		// 系统配置
 		map.addAttribute("system", getSystem());
-		
-	
+
 		return "/mobile/search/search";
 	}
 	

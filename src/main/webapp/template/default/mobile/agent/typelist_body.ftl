@@ -111,6 +111,7 @@
 	            <input type="hidden" name="regionId" id="regionId"  value="<#if district??>${district.id!'0'}</#if>"/>
 	            <input type="hidden" name="disLevel" id="disLevel"  value="<#if district??>${district.level!''}</#if>"/>
 	            <input type="hidden" name="level" id="level" value="${agent.level!''}">
+	            <input type="hidden" name="groupId" id="groupId" value="${agent.groupId!'0'}">
 	            <aside class="god_btn"><input type="button" onclick="subAgent()"  value="确定选择" /></aside>
             </form>
         </section>

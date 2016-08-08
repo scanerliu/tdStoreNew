@@ -2695,7 +2695,66 @@
 	background:#333;
 }
 /* 评价完成-结束 */
+/** 分享  */
+.value_over1{
+	position:fixed;
+	bottom:0;
+	left:0;
+	display:none;
+	width:100%;
+	z-index: 999;
+}
+.value_over1 .sec1{
+	height:1.5rem;
+	border-top:1px solid #ddd;
+	background-color: white;
+}
+.value_over1 .sec1 a{
+	display:block;
+	float:left;
+	margin-top:0.4rem;
+	width:23%;
+	height:1.0rem;
+	text-align:center;
+}
+.value_over1 .sec1 a:nth-child(1){
+	background:url(../images/qq.png) no-repeat center 0;
+	background-size:0.7rem;
+}
+.value_over1 .sec1 a:nth-child(2){
+	background:url(../images/v2.png) no-repeat center 0;
+	background-size:0.7rem;
+}
+.value_over1 .sec1 a:nth-child(3){
+	background:url(../images/v3.png) no-repeat center 0;
+	background-size:0.7rem;
+}
+.value_over1 .sec1 a:nth-child(4){
+	background:url(../images/v5.png) no-repeat center 0;
+	background-size:0.7rem;
+}
+.value_over1 .sec1 a:nth-child(5){
+	background:url(../images/v6.png) no-repeat center 0;
+	background-size:0.7rem;
+}
+.value_over1 .sec1 a p{
+	margin-top:0.86rem;
+	height:0.24rem;
+	line-height:0.24rem;
+	font-size:0.24rem;
+	color:#666;
+}
+.value_over1 menu{
+	height:0.8rem;
+	 line-height:0.8rem;
+	text-align:center;
+	font-size:0.26rem;
+	color:#fff;
+	background:#333;
+}
 
+
+/** END */
 /* 搜索页 */
 .find_page .sec1{
 	padding:0.2rem;

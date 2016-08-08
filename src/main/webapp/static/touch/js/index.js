@@ -262,6 +262,19 @@ function value_over(){
 		value_over.style.display='none';
 	}
 }
+function value_over1(){
+	var avalue_btn=document.getElementById('avalue_btn');
+	var value_over=document.getElementById('value_over1');
+	var oMenu=value_over.getElementsByTagName('menu')[0];
+	avalue_btn.onclick=function(){
+		value_over.style.display='block';
+	}
+	oMenu.onclick=function(){
+		value_over.style.display='none';
+	}
+}
+
+
 function acare(){
     var onOFF=true;
     var acare=document.getElementById('acare');

@@ -187,6 +187,12 @@ function changekind(k){
 		case "6":
 			showSeckill();
 			break;
+		case "7":
+			hideSeckill()
+			break;
+		case "8":
+			hideSeckill()
+			break;
 	default:
 		break;
 	}

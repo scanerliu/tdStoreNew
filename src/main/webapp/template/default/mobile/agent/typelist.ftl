@@ -13,7 +13,7 @@
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <meta content="telephone=no" name="format-detection">
-    <title>成为代理-分类列表</title>
+    <title>成为代理-选择列表</title>
     <!-- css -->
     <link rel="stylesheet" href="${app.basePath}/static/touch/css/common.css" type="text/css" />
     <link rel="stylesheet" href="${app.basePath}/static/touch/css/main.css" type="text/css" />
