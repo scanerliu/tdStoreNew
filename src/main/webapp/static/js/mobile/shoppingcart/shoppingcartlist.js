@@ -117,6 +117,12 @@ function nextOrder(){
 }
 //下订单
 function genernateOrder(){
+	var addressId = $("#addressId").val();
+	var needShipment = $("#needShipment").val();
+	if(addressId==""&& needShipment=="true"){
+		alert("请填写收货地址！");
+		return ;
+	}
 	var url = basePath+"/mobile/shoppingcart/order";
 	$("#confirmorder").attr("action",url);
 	$("#confirmorder").submit();
@@ -124,6 +130,12 @@ function genernateOrder(){
 //立即下单->下订单
 function genernateOrder2(){
 	var url = basePath+"/mobile/shoppingcart/singleorder";
+	var addressId = $("#addressId").val();
+	var needShipment = $("#needShipment").val();
+	if(addressId==""&& needShipment=="true"){
+		alert("请填写收货地址！");
+		return ;
+	}
 	$("#confirmorder").attr("action",url);
 	$("#confirmorder").submit();
 }

@@ -146,7 +146,8 @@
 	    </ul>
 	    <input type="hidden" id="totalAmount" value="${shoppingcart.totalAmount!''}"/>
 	    <input type="hidden" id="totalPointAmount" value="${shoppingcart.totalPointAmount!'0'}"/>
-	    <input type="hidden" name="addressId" value="<#if address??>${address.id!''}</#if>"/>
+	    <input type="hidden" id="needShipment" value="${shoppingcart.needShipment?c}"/>
+	    <input type="hidden" name="addressId" id="addressId" value="<#if address??>${address.id!''}</#if>"/>
 	    <!-- order-detail-pay-end -->
 	</section>
 </form>
@@ -154,9 +155,9 @@
 	<footer>
 	    <div class="gopay" onclick="genernateOrder()">
 	        <span class="totalprice">总计：<font color="red" id="totalAmountdv">￥${shoppingcart.totalAmount!''}</font></span>
-	        <a href="javascript:;" onclick="genernateOrder()" class="a-pay" title="">提交订单</a>
+	        <a href="javascript:;" class="a-pay" title="">提交订单</a>
 	    </div>
-	    <span class="footclear" onclick="genernateOrder()"></span>
+	    <span class="footclear"></span>
 	</footer>
 	<!-- Footer End -->
 <script>

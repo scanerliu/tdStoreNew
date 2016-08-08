@@ -31,9 +31,11 @@ $(document).ready(function(){
         var check = document.getElementById("isCheck");
         if(check.checked){
             $("#sub_btn").css("background","#f23030");
-            $("#sub_btn").attr("href","${app.basePath}/mobile/agent/dopay?id="+${agent.id?c});
+            //$("#sub_btn").attr("href","${app.basePath}/mobile/agent/dopay?id="+${agent.id?c});
+            $("#sub_btn").on("click",buynow);
         }else{
-            $("#sub_btn").attr("href","javascript:;");
+            //$("#sub_btn").attr("href","javascript:;");
+            $("#sub_btn").off("click");
             $("#sub_btn").css("background","#999999");
         }
      });
@@ -62,11 +64,40 @@ $(document).ready(function(){
         <section class="sec4">￥<span><#if agent.salesPrice??>${agent.salesPrice?string('0.00')}</#if></span></section>
         </#if>
         <section class="sec5"><input type="checkbox" checked="checked" id="isCheck">我已阅读并同意<a href="${app.basePath}/mobile/agent/article" title="《创客联盟代理条款》">《创客联盟代理条款》</a></section>
-        <section class="sec6"><a href="${app.basePath}/mobile/agent/dopay?id=${agent.id?c}" title="立即加入" id="sub_btn">立即加入</a></section>
-        
+        <section class="sec6"><a href="javascript:;" onclick="buyNow();" title="立即加入" id="sub_btn">立即加入</a></section>
+        <form id="agentform" method="post" action="">
+        	<input type="hidden" name="agentProductId" id="agentProductId" value="${agent.id!''}"/>
+        	<input type="hidden" name="productType" id="productType" value="2"/>
+        	<input type="hidden" name="regionId" id="regionId" value="${regionId!''}"/>
+        </form>
     </div>
 </section>
 <!-- Center end -->
-
+<!-- Center end -->
+<script>
+//立即购买
+function buyNow(){
+	var agentProductId = $("#agentProductId").val();
+	var regionId = $("#regionId").val();
+	var productTypeId = $("#productTypeId").val();
+	var isAgentProductUsePackage = $("#isAgentProductUsePackage").val();
+	var productType = $("#productType").val();
+	
+	if(agentProductId>0){
+		if(agentProductId==1||(agentProductId==4 && isAgentProductUsePackage=="true")){
+			var agent = '{"agentProductId":'+agentProductId+',"regionId":'+regionId+',"productTypeId":'+productTypeId+',"productType":'+productType+'}';
+			setCookie("agentpackage", agent, 30);
+			url = basePath+"/mobile/package/list";
+			window.location.href=url;
+		}else{
+			var url = basePath+"/mobile/shoppingcart/singleorder";
+			$("#agentform").attr("action",url);
+			$("#agentform").submit();
+		}
+	}else{
+		alert("数据有误，请重新操作！");
+	}
+}
+</script>
 </body>
 </html>

@@ -288,6 +288,13 @@ public class MShoppingcartController extends BaseController {
 		//获取购物车
 		ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid());
 		
+		if(null==shoppingcart.getItemList() || shoppingcart.getItemList().size()==0)
+		{//订单没有商品
+			String errmsg = "订单没有商品！";
+			modelMap.addAttribute("errmsg", errmsg) ;
+			return  "/mobile/error";
+		}
+		
 		TdJointOrder order = new TdJointOrder();
 		try {
 			order = tdOrderService.saveOrderFull(currUser, orderForm, shoppingcart);
@@ -392,6 +399,17 @@ public class MShoppingcartController extends BaseController {
 		try {
 			//获取购物车
 			ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid(), orderForm);
+			if(null==orderForm.getAddressId() && shoppingcart.getNeedShipment()){//未填写发货地址
+				String errmsg = "未填写收货地址！";
+				modelMap.addAttribute("errmsg", errmsg) ;
+				return  "/mobile/error";
+			}
+			if((orderForm.getProductType().equals(2)&& null==orderForm.getAgentProductId() )||(!orderForm.getProductType().equals(2)&&null==orderForm.getProductId()))
+			{//订单没有商品
+				String errmsg = "订单没有商品！";
+				modelMap.addAttribute("errmsg", errmsg) ;
+				return  "/mobile/error";
+			}
 		
 			order = tdOrderService.saveOrderFull(currUser, orderForm, shoppingcart);
 		} catch (Exception e) {
@@ -466,6 +484,7 @@ public class MShoppingcartController extends BaseController {
 							}
 						}
 						cart.setItemList(itemList);
+						cart.setNeedShipment(true);//需要发货
 					}
 					//2-分公司
 				}else if(ConstantsUtils.AGENT_GROUPID_BRANCH.equals(agentproduct.getGroupId())){
@@ -535,7 +554,7 @@ public class MShoppingcartController extends BaseController {
 			}else{
 				throw new Exception("下单失败，商品不存在或已经下架！");
 			}
-			
+			cart.setNeedShipment(true);//需要发货
 			//重新计算
 			List<TdShoppingcartItem> itemList = new ArrayList<TdShoppingcartItem>();
 			itemList.add(item);
@@ -597,6 +616,7 @@ public class MShoppingcartController extends BaseController {
 		Integer partproductpointpercent = configUtil.getPartProductPointPercent(); //部分积分兑换商品可积分抵扣的比例
 		ShoppingcartVO cart = new ShoppingcartVO();
 		cart.setPtype(1);
+		cart.setNeedShipment(true);//需要发货
 		//重新计算
 		TdShoppingcartSearchCriteria sc = new TdShoppingcartSearchCriteria();
 		sc.setFlag(false);

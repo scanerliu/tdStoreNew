@@ -170,17 +170,18 @@
 	    <input type="hidden" name="quantity" value="${orderForm.quantity!''}"/>
 	    <input type="hidden" name="productType" value="${orderForm.productType!''}"/>
 	    <input type="hidden" name="agentProductId" value="${orderForm.agentProductId!''}"/>
-	    <input type="hidden" name="addressId" value="<#if address??>${address.id!''}</#if>"/>
+	    <input type="hidden" id="needShipment" value="${shoppingcart.needShipment?c}"/>
+	    <input type="hidden" name="addressId" id="addressId" value="<#if address??>${address.id!''}</#if>"/>
 	    <!-- order-detail-pay-end -->
 	</section>
 </form>
 	<!-- Footer Start -->
 	<footer>
-	    <div class="gopay">
+	    <div class="gopay" onclick="genernateOrder2()">
 	        <span class="totalprice">总计：<font color="red" id="totalAmountdv">￥${shoppingcart.totalAmount!''}</font></span>
-	        <a href="javascript:;" onclick="genernateOrder2()" class="a-pay" title="">提交订单</a>
+	        <a href="javascript:;" class="a-pay" title="">提交订单</a>
 	    </div>
-	    <span class="footclear" onclick="genernateOrder2()"></span>
+	    <span class="footclear"></span>
 	</footer>
 	<!-- Footer End -->
 <script>

@@ -45,7 +45,11 @@
   <!-- header_top -->
   <header class="pc-head">
     <div class="head-img">
+      <#if currentUser.uavatar??>
       <img src="${app.basePath}${currentUser.uavatar!''}" alt="暂无头像">
+      <#else>
+      <img src="${app.basePath}/static/default/mobile/images/defaultavtar.png" alt="暂无头像">
+      </#if>
     </div>
     <div class="user-name">
       <p class="p1">${currentUser.unick!''}</p>

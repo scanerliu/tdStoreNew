@@ -95,6 +95,11 @@ public class ShoppingcartVO {
      * 获得赠送总积分
      */
     private Integer gainPoints = 0;
+    
+    /**
+     * 需要发货
+     */
+    private Boolean needShipment = false;
 	
 	public Integer getTotalcount() {
 		return totalcount;
@@ -255,6 +260,13 @@ public class ShoppingcartVO {
 	public void setProductPackage(TdProduct productPackage) {
 		this.productPackage = productPackage;
 	}
-	
+
+	public Boolean getNeedShipment() {
+		return needShipment;
+	}
+
+	public void setNeedShipment(Boolean needShipment) {
+		this.needShipment = needShipment;
+	}
 	
 }
