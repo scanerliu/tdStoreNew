@@ -1309,6 +1309,12 @@ public class MUserController extends BaseController {
 			
 			TdUser currentUser = this.getCurrentUser();
 			//检查手机号码是否重复
+			TdUser puser = tdUserService.findByUtel(user.getUtel());
+			if(null != puser && !puser.getUid().equals(currentUser.getUid())){
+				res.put("status", "n");
+				res.put("info", "保存失败:手机号码已被使用！");
+				return res;
+			}
 			
 			TdUser u = new TdUser();
 			u.setUid(currentUser.getUid());
