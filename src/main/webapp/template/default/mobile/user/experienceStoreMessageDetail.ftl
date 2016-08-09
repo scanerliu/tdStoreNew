@@ -61,9 +61,9 @@
             <label for="" class="fl">商品分类</label>
             <label style="display:block;float:right;">${experienceStore.storeTypeNames!''}</label>
         </section>
-        <#if experienceStore.status?? && experienceStore.status == 1>
+        <#if experienceStore.status?? && experienceStore.status == 2>
 	        <div class="store_sec8">
-	            <a href="#" title="同意申请" onclick="verifyApply('${experienceStore.id}', '2')" class="fl">同意申请</a>
+	            <a href="#" title="同意申请" onclick="verifyApply('${experienceStore.id}', '1')" class="fl">同意申请</a>
 	            <a href="#" title="拒绝申请" onclick="verifyApply('${experienceStore.id}', '3')"class="fr">拒绝申请</a>
 	        </div>                
         <#else>

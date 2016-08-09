@@ -185,9 +185,9 @@ public class TdExperienceStore {
 	}
 
 	public String getStatusStr() {
-		if (this.getStatus().equals(Byte.valueOf("1"))) {
+		if (this.getStatus().equals(Byte.valueOf("2"))) {
 			return "未审核";
-		} else if (this.getStatus().equals(Byte.valueOf("2"))) {
+		} else if (this.getStatus().equals(Byte.valueOf("1"))) {
 			return "已通过";
 		} else {
 			return "未通过";

@@ -27,9 +27,11 @@ import com.tiandu.common.controller.BaseController;
 import com.tiandu.custom.entity.TdAgent;
 import com.tiandu.custom.entity.TdExperienceStore;
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.custom.entity.TdUserMessage;
 import com.tiandu.custom.search.TdAgentSearchCriteria;
 import com.tiandu.custom.service.TdAgentService;
 import com.tiandu.custom.service.TdExperienceStoreService;
+import com.tiandu.custom.service.TdUserMessageService;
 import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.search.TdDistrictSearchCriteria;
 import com.tiandu.district.service.TdDistrictService;
@@ -75,6 +77,9 @@ public class MobileAgentController extends BaseController{
 	
 	@Autowired
 	private TdDistrictService tdDistrictService;
+	
+	@Autowired
+	private TdUserMessageService tdUserMessageService;
 	
 	@Autowired
 	private ConfigUtil configUtil;
@@ -189,8 +194,6 @@ public class MobileAgentController extends BaseController{
 			if(null == cityId){
 				res.put("msg", "请正确选择地区");
 				return res;
-			}else{
-				experience.setRegionId(cityId);
 			}
 		}
 		if(null == experience.getAddress() || "".equals(experience.getAddress().trim())){
@@ -210,30 +213,51 @@ public class MobileAgentController extends BaseController{
 		experience.setUid(user.getUid());
 		TdDistrict province = tdDistrictService.findOne(provinceId);
 		TdDistrict city = tdDistrictService.findOne(cityId);
-		TdDistrict district = tdDistrictService.findOne(experience.getRegionId());
-		
 		StringBuffer str = new StringBuffer();
 		if(null != province){
 			str.append(province.getName());
+			str.append(" ");
 		}
 		if(null != city){
 			str.append(city.getName());
+			str.append(" ");
 		}
-		if(null != district){
-			str.append(district.getName());
+		if(province.gentralCity()){
+			experience.setRegionId(cityId);
+		}else{
+			TdDistrict district = tdDistrictService.findOne(experience.getRegionId());
+			if(null != district){
+				str.append(district.getName());
+			}
 		}
+		
 //		if(null != experience.getAddress()){
 //			str.append(experience.getAddress());
 //		}
 		// 详细地址
+		Date now = new Date();
 		experience.setRegionFullName(str.toString());
-		experience.setStatus((byte)1);
-		experience.setCreateTime(new Date());
+		experience.setStatus((byte)2);
+		experience.setCreateTime(now);
 		experience.setSort(1);
 		experience.setStoreTypeIds("["+typeId+"]");
 		experience.setStoreTypeNames("["+type.getName()+"]");
 		
 		tdExperienceStoreService.save(experience);
+		//发送站内信
+		//查找地区单类代理
+		TdAgent agent = tdAgentService.findByTypeIdAndRegionId(typeId, experience.getRegionId());
+		if(null!=agent){
+			TdUserMessage userMessage = new TdUserMessage();
+			userMessage.setTitle("体验店申请消息");
+			userMessage.setCreateTime(now);
+			userMessage.setRelateId(experience.getId());
+			userMessage.setStatus(Byte.valueOf("1"));
+			userMessage.setUid(agent.getUid());
+			userMessage.setMsgType(Byte.valueOf("3"));
+			userMessage.setId(null);
+			tdUserMessageService.save(userMessage);	
+		}
 		res.put("code", 1);
 		
 		return res;

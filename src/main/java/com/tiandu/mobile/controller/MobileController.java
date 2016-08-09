@@ -214,12 +214,12 @@ public class MobileController extends BaseController {
 		try{
 			String changePasswordValidCode = (String) request.getSession().getAttribute("changePasswordValidCode");
 			
-			if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
+			/*if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
 				request.getSession().removeAttribute("changePasswordValidCode");
 				String errmsg = "验证码错误！";
 				modelMap.addAttribute("errmsg", errmsg) ;
 				return  "/mobile/error";
-			}
+			}*/
 			
 			if(StringUtils.isBlank(utel)){
 				String errmsg = "手机号码不能为空！";
