@@ -97,5 +97,11 @@ public interface TdUserService {
 	 * @return
 	 */
 	public int saveRegisterUser(TdUser user);
+	/**
+	 * 按手机号码查找用户
+	 * @param utel
+	 * @return
+	 */
+	public TdUser findByUtel(String utel);
 		
 }

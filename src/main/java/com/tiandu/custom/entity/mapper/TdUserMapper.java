@@ -30,4 +30,6 @@ public interface TdUserMapper {
     public int saveUserStatus(TdUser record);
     
     public TdUser selectDetailByPrimaryKey(Integer uid);
+
+	public List<TdUser> selectByUtel(String utel);
 }

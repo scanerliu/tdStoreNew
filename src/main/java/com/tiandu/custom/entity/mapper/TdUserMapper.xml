@@ -81,6 +81,11 @@
     WHERE u.uname = #{uname,jdbcType=VARCHAR} and u.ustatus=1
   </select>
   
+  <select id="selectByUtel" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <include refid="Base_Role_Column_List" />
+    WHERE u.utel = #{utel,jdbcType=VARCHAR}
+  </select>
+  
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.custom.search.TdUserSearchCriteria" >
     select 
     <include refid="Base_Column_List" />

@@ -221,6 +221,17 @@ public class TdUserServiceImpl implements TdUserService {
 	public TdUser selectByUname(String uname) {
 		return userMapper.selectByUname(uname);
 	}
+	
+	
+
+	@Override
+	public TdUser findByUtel(String utel) {
+		List<TdUser> userList = userMapper.selectByUtel(utel);
+		if(null!=userList && userList.size()>0){
+			return userList.get(0);
+		}
+		return null;
+	}
 
 	@Override
 	public List<TdUser> findBySearchCriteria(TdUserSearchCriteria sc) {

@@ -1,4 +1,4 @@
-package com.tiandu.mobile.controller;
+package com.tiandu.client.controller;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -109,8 +109,8 @@ import com.tiandu.product.service.TdProductTypeService;
  *
  */
 @Controller
-@RequestMapping("/mobile/user")
-public class MUserController extends BaseController {
+@RequestMapping("/user")
+public class CUserController extends BaseController {
 	
 	private final Logger logger = Logger.getLogger(getClass());
 	
@@ -197,14 +197,14 @@ public class MUserController extends BaseController {
 		TdUser currentUser = this.getCurrentUser();
 		if(null==currentUser)
 		{
-			return "redirect:/mobile/login";
+			return "redirect:/client/login";
 		}
 		modelMap.addAttribute("currentUser", currentUser);
 		TdMembership membership = tdMembershipService.findOne(currentUser.getMembershipId());
 		modelMap.addAttribute("membership", membership);
 		// 系统配置
 		modelMap.addAttribute("system", getSystem());
-	    return "/mobile/user/center";
+	    return "/client/user/center";
 	}
 	
 	// 用户签到
@@ -317,19 +317,6 @@ public class MUserController extends BaseController {
 			//res.put("msg", "验证码获取失败!");
 		}
 		return res;
-	}
-	
-	
-	/*
-	 * 我的购物车
-	 */
-	@RequestMapping("/list")
-	public String list(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		TdUser currUser = this.getCurrentUser();
-		//获取购物车
-		ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid());
-		modelMap.addAttribute("shoppingcart", shoppingcart) ;
-	    return "/mobile/shoppingcart/list";
 	}
 	
 	/*
@@ -672,7 +659,7 @@ public class MUserController extends BaseController {
 			tdUserAccountService.insert(userAccount);
 		}
 		map.addAttribute("account",userAccount);
-		return "/mobile/user/account";
+		return "/client/user/account";
 	}
 	/**
 	 * 钱包流水记录
@@ -689,7 +676,7 @@ public class MUserController extends BaseController {
 		List<TdUserAccountLog> logList = tdUserAccountLogService.findBySearchCriteria(sc);
 	    modelMap.addAttribute("logList", logList) ;
 	    modelMap.addAttribute("sc", sc) ;
-		return "/mobile/user/account_listbody";
+		return "/client/user/account_listbody";
 	}
 	/**
 	 * 用户收益
@@ -701,7 +688,7 @@ public class MUserController extends BaseController {
 	{
 		// 系统配置
 		map.addAttribute("system", getSystem());
-		return "/mobile/user/profit";
+		return "/client/user/profit";
 	}
 	/**
 	 * 用户收益记录
@@ -719,7 +706,7 @@ public class MUserController extends BaseController {
 		List<TdUserAccountLog> logList = tdUserAccountLogService.findBySearchCriteria(sc);
 		modelMap.addAttribute("logList", logList) ;
 		modelMap.addAttribute("sc", sc) ;
-		return "/mobile/user/profit_listbody";
+		return "/client/user/profit_listbody";
 	}
 	
 	@RequestMapping(value="/saveInfo", method = RequestMethod.POST)
@@ -744,105 +731,6 @@ public class MUserController extends BaseController {
 			res.put("code", "1");
 		}
 		return res;
-	}
-	
-	
-	
-	
-	@RequestMapping(value="/add", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String,String> add(TdShoppingcartItem item, HttpServletRequest request, HttpServletResponse response) {
-		Map<String,String> res = new HashMap<String,String>(); 
-		if(null!=item && null!=item.getId() && null!=item.getOptype()){
-			try {
-				TdUser currUser = this.getCurrentUser();
-				item.setUid(currUser.getUid());
-				tdShoppingcartItemService.addShoppingcartItemNum(item);
-				//获取购物车
-				ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid());
-				
-				res.put("code", "1");
-				res.put("totalAmount", shoppingcart.getTotalAmount().toString());
-				res.put("totalPostage", shoppingcart.getTotalPostage().toString());
-				return res;
-			}catch (Exception e) {
-				logger.error("购物车增减失败错误信息:"+e);
-				res.put("code", "0");
-				return res;
-			}
-		}else{
-			res.put("code", "0");
-			return res;
-		}
-	}
-	@RequestMapping(value="/change", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String,String> change(TdShoppingcartItem item, HttpServletRequest request, HttpServletResponse response) {
-		Map<String,String> res = new HashMap<String,String>(); 
-		if(null!=item){
-			try {
-				TdUser currUser = this.getCurrentUser();
-				item.setUid(currUser.getUid());
-				tdShoppingcartItemService.updateShoppingcartItem(item);
-				//重新计算
-				//获取购物车
-				ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid());
-				
-				res.put("code", "1");
-				res.put("totalAmount", shoppingcart.getTotalAmount().toString());
-				res.put("totalPostage", shoppingcart.getTotalPostage().toString());
-				return res;
-			}catch (Exception e) {
-				logger.error("购物车更新失败错误信息:"+e);
-				res.put("code", "0");
-				return res;
-			}
-		}else{
-			res.put("code", "0");
-			return res;
-		}
-	}
-	@RequestMapping(value="/remove", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String,String> remove(String ids, HttpServletRequest request, HttpServletResponse response) {
-		Map<String,String> res = new HashMap<String,String>(); 
-		if(StringUtils.isNotEmpty(ids)){
-			try {
-				TdUser currUser = this.getCurrentUser();
-				tdShoppingcartItemService.removeItemsFromShoppingcart(currUser.getUid(), ids);
-				res.put("code", "1");
-				return res;
-			}catch (Exception e) {
-				logger.error("购物车删除失败错误信息:"+e);
-				res.put("code", "0");
-				return res;
-			}
-		}else{
-			res.put("code", "0");
-			return res;
-		}
-	}
-	
-	private ShoppingcartVO getShoppingcart(Integer uid){
-		ShoppingcartVO cart = new ShoppingcartVO();
-		//重新计算
-		TdShoppingcartSearchCriteria sc = new TdShoppingcartSearchCriteria();
-		sc.setFlag(false);
-		sc.setUid(uid);
-		List<TdShoppingcartItem> itemList = tdShoppingcartItemService.findBySearchCriteria(sc);
-		cart.setItemList(itemList);
-		if(null!=itemList && itemList.size()>0){
-			for(TdShoppingcartItem item : itemList){
-				//累加每个商品的运费
-				BigDecimal postage = (null!=item.getPostage())?item.getPostage():BigDecimal.ZERO;
-				cart.setTotalPostage(postage.add(cart.getTotalPostage()));
-				//累加单个商品总金额（价格*数量）
-				BigDecimal quantity = new BigDecimal(item.getQuantity());
-				BigDecimal amount = item.getPrice().multiply(quantity);
-				cart.setTotalAmount(amount.add(cart.getTotalAmount()).add(postage));
-			}
-		}
-		return cart;
 	}
 	
 	/*
@@ -885,7 +773,7 @@ public class MUserController extends BaseController {
 				}
 			}
 		}
-		return "/mobile/user/recommendPeople";		
+		return "/client/user/recommendPeople";		
 	}
 	
 	/*
@@ -899,7 +787,7 @@ public class MUserController extends BaseController {
 		}else{
 			modelMap.addAttribute("isSupplier", true);
 		}
-		return "/mobile/user/productManage";	
+		return "/client/user/productManage";	
 	}
 	
 	/*
@@ -907,7 +795,7 @@ public class MUserController extends BaseController {
 	 */
 	@RequestMapping("/lookMyProduct")
 	public String lookMyProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		return "/mobile/user/myProduct";	
+		return "/client/user/myProduct";	
 	}
 	
 	/*
@@ -937,7 +825,7 @@ public class MUserController extends BaseController {
 		}else{
 			modelMap.addAttribute("sc", sc);
 		}
-		return "/mobile/user/myProductTemplate";	
+		return "/client/user/myProductTemplate";	
 	}
 	
 	/*
@@ -945,7 +833,7 @@ public class MUserController extends BaseController {
 	 */
 	@RequestMapping("/lookSupplierProduct")
 	public String lookSupplierProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		return "/mobile/user/SupplierProduct";	
+		return "/client/user/SupplierProduct";	
 	}
 	
 	/*
@@ -955,7 +843,7 @@ public class MUserController extends BaseController {
 	public String joinElection(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser currentUser = this.getCurrentUser();
 		modelMap.addAttribute("currentUser", currentUser);
-		return "/mobile/user/electionMaterial";	
+		return "/client/user/electionMaterial";	
 	}
 	
 	/*
@@ -973,7 +861,7 @@ public class MUserController extends BaseController {
 		}else{
 			modelMap.addAttribute("sc", sc);
 		}
-		return "/mobile/user/myProductTemplate";	
+		return "/client/user/myProductTemplate";	
 	}
 	
 	/*
@@ -1202,7 +1090,7 @@ public class MUserController extends BaseController {
 	public String downThreeUserList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		modelMap.addAttribute("isTheFirstTime", "yes");
 		modelMap.addAttribute("pageNo", "1");
-		return "/mobile/user/downUserList";	
+		return "/client/user/downUserList";	
 	}
 	
 	/*
@@ -1223,7 +1111,7 @@ public class MUserController extends BaseController {
 			String[] imgList = userSupplierList.get(0).getImages().split(":");
 			modelMap.addAttribute("imgList", imgList);
 		}
-		return "/mobile/user/supplierApply";	
+		return "/client/user/supplierApply";	
 	}
 	
 	/*
@@ -1239,7 +1127,7 @@ public class MUserController extends BaseController {
 		TwoDimensionCode tdc = new TwoDimensionCode();
 		tdc.encoderQRCode(spreadUrl, spreadImgPath, "png");
 		modelMap.addAttribute("spreadImg", "static/imgs/spread" + imgName);
-		return "/mobile/user/mySpread";
+		return "/client/user/mySpread";
 	}
 	
 	@RequestMapping(value = "/mySpread/qrcode")
@@ -1308,8 +1196,6 @@ public class MUserController extends BaseController {
 			}
 			
 			TdUser currentUser = this.getCurrentUser();
-			//检查手机号码是否重复
-			
 			TdUser u = new TdUser();
 			u.setUid(currentUser.getUid());
 			u.setUtel(user.getUtel());
@@ -1354,7 +1240,7 @@ public class MUserController extends BaseController {
 			}
 		}
 		modelMap.addAttribute("attributeList", attributeList);
-		return "/mobile/user/productAttributeTemplate";	
+		return "/client/user/productAttributeTemplate";	
 	}
 	
 	/*
@@ -1367,7 +1253,7 @@ public class MUserController extends BaseController {
 		List<TdProductType> productTypeList = tdProductTypeService.findAll(tsc);
 		modelMap.addAttribute("productTypeList", productTypeList);
 		modelMap.addAttribute("isFreeProduct", isFreeProduct);
-		return "/mobile/user/addProduct";	
+		return "/client/user/addProduct";	
 	}
 	
 	@RequestMapping(value="/getDownUsers", method = RequestMethod.POST)
@@ -1503,7 +1389,7 @@ public class MUserController extends BaseController {
 			}
 		}
 		
-		return "/mobile/user/districtSelectTemplate";	
+		return "/client/user/districtSelectTemplate";	
 	}
 	
 	/**
@@ -1564,7 +1450,7 @@ public class MUserController extends BaseController {
 		psc.setUid(user.getUid());
 		map.addAttribute("productList", tdProductService.findBySearchCriteria(psc));
 		
-	    return "/mobile/user/index";
+	    return "/client/user/index";
 	}
 	
 	/**

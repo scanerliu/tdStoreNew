@@ -63,6 +63,7 @@
 				/admin/login=anon
 				/index/getVerifyCodeImage=anon
 				/main**=authc
+				/user/verifyCode=anon
 				/user/**=authc
 				/mobile/shoppingcart/**=user
 				/mobile/order/**=user
