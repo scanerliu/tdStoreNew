@@ -23,6 +23,8 @@ public class TdExperienceStoreSearchCriteria extends SearchCriteria {
 	private Integer cityId;	//市id
 	
 	private Integer productTypeId; //商品分类id
+	
+	private Integer uid; //用户id
 
 	public Integer getId() {
 		return id;
@@ -96,5 +98,12 @@ public class TdExperienceStoreSearchCriteria extends SearchCriteria {
 		this.productTypeId = productTypeId;
 	}
 
+	public Integer getUid() {
+		return uid;
+	}
+
+	public void setUid(Integer uid) {
+		this.uid = uid;
+	}
 
 }

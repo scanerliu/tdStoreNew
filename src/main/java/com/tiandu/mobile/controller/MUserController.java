@@ -851,16 +851,37 @@ public class MUserController extends BaseController {
 	@RequestMapping(value="/verifyExperienceStoreApply", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String,String> verifyExperienceStoreApply(TdExperienceStore estore, Byte status, HttpServletRequest request, HttpServletResponse response) {
-		Map<String,String> res = new HashMap<String,String>(); 
-		estore.setStatus(status);
-		int affectedNum = tdUserService.saveVerifyExperienceStoreApply(estore, status);
-		if(affectedNum == 1){
-			res.put("code", "1");
-			res.put("msg", "审核成功！");
-		}else{
+		Map<String,String> res = new HashMap<String,String>();
+		TdExperienceStore pestore =  tdExperienceStoreService.findOne(estore.getId());
+		if(null==pestore){
 			res.put("code", "0");
 			res.put("msg", "审核失败！");
+			return res;
 		}
+//		estore.setStatus(status);
+//		int affectedNum = tdUserService.saveVerifyExperienceStoreApply(estore, status);
+		Date now = new Date();
+		pestore.setStatus(status);
+		pestore.setUpdateTime(now);
+		pestore.setUpdateBy(this.getCurrentUser().getUid());
+		tdExperienceStoreService.save(pestore);
+		res.put("code", "1");
+		res.put("msg", "审核成功！");
+		//发送站内信
+		TdUserMessage userMessage = new TdUserMessage();
+		userMessage.setTitle("体验店申请消息");
+		userMessage.setCreateTime(now);
+		userMessage.setRelateId(0);
+		userMessage.setStatus(Byte.valueOf("1"));
+		userMessage.setUid(pestore.getUid());
+		userMessage.setMsgType(Byte.valueOf("1"));
+		if(Byte.valueOf("1").equals(status)){
+			userMessage.setContent("恭喜您！您申请的的体验店已经通过审核。");
+		}else{
+			userMessage.setContent("很遗憾！您申请的的体验店审核不通过。");
+		}
+		userMessage.setId(null);
+		tdUserMessageService.save(userMessage);	
 		return res;
 	}
 	

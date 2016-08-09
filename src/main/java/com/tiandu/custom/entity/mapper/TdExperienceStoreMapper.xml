@@ -246,6 +246,9 @@
     <if test="searchName != null">
         and u.uname like CONCAT('%','${searchName}','%' )
     </if>
+     <if test="uid != null">
+        and s.uid =  #{uid,jdbcType=INTEGER}
+    </if>
   </select>
   
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.custom.search.TdExperienceStoreSearchCriteria" >
@@ -273,6 +276,9 @@
     </if>
     <if test="regionId != null">
         and s.region_id =  #{regionId,jdbcType=INTEGER}
+    </if>
+    <if test="uid != null">
+        and s.uid =  #{uid,jdbcType=INTEGER}
     </if>
     order by sort asc
   </select>

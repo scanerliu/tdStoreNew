@@ -28,6 +28,7 @@ import com.tiandu.custom.entity.TdUserIntegral;
 import com.tiandu.custom.entity.TdUserIntegralLog;
 import com.tiandu.custom.search.TdAgentSearchCriteria;
 import com.tiandu.custom.search.TdBrancheCompanySearchCriteria;
+import com.tiandu.custom.search.TdExperienceStoreSearchCriteria;
 import com.tiandu.custom.service.TdAgentService;
 import com.tiandu.custom.service.TdBrancheCompanyService;
 import com.tiandu.custom.service.TdExperienceStoreService;
@@ -1448,7 +1449,19 @@ public class TdOrderServiceImpl implements TdOrderService{
 			}else if(benefit.getLevel()==4){//体验点分润：体验店发展的会员购买体验店拥有类目的商品是才参与分润
 				if(orderUser.getUparentId()!=0){
 					//查找体验店
-					TdExperienceStore store = tdExperienceStoreService.findByUid(orderUser.getUparentId());
+					TdExperienceStore store = null;
+					TdExperienceStoreSearchCriteria esc = new TdExperienceStoreSearchCriteria();
+					esc.setUid(orderUser.getUparentId());
+					esc.setStatus(Byte.valueOf("1"));
+					List<TdExperienceStore> storeList = tdExperienceStoreService.findBySearchCriteria(esc);
+					if(null!=storeList && storeList.size()>0){
+						for(TdExperienceStore tstore : storeList){
+							if(tstore.isProductTypeStore(product.getTypeId())){//体验店存在，且代理分类符合。状态正常的参与分润
+								store = tstore;
+								break;
+							}
+						}
+					}
 					if(null!=store && Byte.valueOf("1").equals(store.getStatus()) && store.isProductTypeStore(product.getTypeId())){//体验店存在，且代理分类符合。状态正常的参与分润
 						TdUser buser = tdUserService.findOneWithAccount(orderUser.getUparentId());
 						if(null!=buser && null!=buser.getUserAccount()){

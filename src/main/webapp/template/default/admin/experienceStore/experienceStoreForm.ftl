@@ -1,6 +1,6 @@
 <#import "/common/app.ftl" as app>
 <script src="${app.basePath}/static/js/easyui/easyui-lang-zh_CN.js" type="text/javascript"></script>
-<div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="returnList()"><em>返回列表</em></a><#if tdExperienceStore.status == 1>&nbsp;&nbsp;&nbsp;<input type="button" class="btn" value="通过" onclick="goCheck(${tdExperienceStore.id!''}, true)">&nbsp;&nbsp;&nbsp;<input type="button" class="btn" value="拒绝" onclick="goCheck(${tdExperienceStore.id!''}, false)"></#if>&#12288;</div></div>
+<div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="returnList()"><em>返回列表</em></a><#if tdExperienceStore.status == 2>&nbsp;&nbsp;&nbsp;<input type="button" class="btn" value="通过" onclick="goCheck(${tdExperienceStore.id!''}, true)">&nbsp;&nbsp;&nbsp;<input type="button" class="btn" value="拒绝" onclick="goCheck(${tdExperienceStore.id!''}, false)"></#if>&#12288;</div></div>
 
 <div class="pad_lr_10">
 <form id="userSupplierForm" action="${app.basePath}/admin/experiencestore/save" class="easyui-form" method="post" data-options="novalidate:true">

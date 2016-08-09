@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.custom.entity.TdExperienceStore;
+import com.tiandu.custom.entity.TdUserMessage;
 import com.tiandu.custom.search.TdExperienceStoreSearchCriteria;
 import com.tiandu.custom.service.TdExperienceStoreService;
+import com.tiandu.custom.service.TdUserMessageService;
 import com.tiandu.custom.service.TdUserService;
 
 /**
@@ -39,6 +41,9 @@ public class ExperienceStoreController extends BaseController {
 	
 	@Autowired
 	private TdUserService tdUserService;
+	
+	@Autowired
+	private TdUserMessageService tdUserMessageService;
 
 	@RequestMapping("/list")
 	public String list(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
@@ -86,9 +91,10 @@ public class ExperienceStoreController extends BaseController {
 		Map<String,String> res = new HashMap<String,String>(); 
 		if(null!=experienceStore){
 			try {
+				Date now = new Date();
 				TdExperienceStore tes = tdExperienceStoreService.findOne(experienceStore.getId());
 				tes.setUpdateBy(this.getCurrentUser().getUid());
-				tes.setUpdateTime(new Date());
+				tes.setUpdateTime(now);
 				tes.setStatus(experienceStore.getStatus());
 				tdExperienceStoreService.save(tes);
 				res.put("msg", "供应商资质审核成功。");
@@ -118,15 +124,32 @@ public class ExperienceStoreController extends BaseController {
 			logger.error("由于审核Id为空，体验店审核失败。");
 			return res;
 		}
+		Date now = new Date();
 		TdExperienceStore tes = tdExperienceStoreService.findOne(id);
 		if(isPass){
-			tes.setStatus(Byte.valueOf("2"));
+			tes.setStatus(Byte.valueOf("1"));
 		}else{
 			tes.setStatus(Byte.valueOf("3"));
 		}
-		tes.setUpdateTime(new Date());
+		tes.setUpdateTime(now);
 		tes.setUpdateBy(this.getCurrentUser().getUid());
 		tdExperienceStoreService.save(tes);
+		//发送站内信
+		TdUserMessage userMessage = new TdUserMessage();
+		userMessage.setTitle("体验店申请消息");
+		userMessage.setCreateTime(now);
+		userMessage.setRelateId(0);
+		userMessage.setStatus(Byte.valueOf("1"));
+		userMessage.setUid(tes.getUid());
+		userMessage.setMsgType(Byte.valueOf("1"));
+		if(Byte.valueOf("1").equals(tes.getStatus())){
+			userMessage.setContent("恭喜您！您申请的的体验店已经通过审核。");
+		}else{
+			userMessage.setContent("很遗憾！您申请的的体验店审核不通过。");
+		}
+		userMessage.setId(null);
+		tdUserMessageService.save(userMessage);	
+		
 		res.put("code", "1");
 		res.put("msg", "体验店审核成功。");
 		return res;
