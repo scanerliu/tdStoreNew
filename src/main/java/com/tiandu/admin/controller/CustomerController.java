@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -132,6 +133,26 @@ public class CustomerController extends BaseController {
 	public Map<String,String> save(TdUser customer, HttpServletRequest request, HttpServletResponse response) {
 		Map<String,String> res = new HashMap<String,String>(); 
 		if(null!=customer){
+			//检查手机号码是否重复
+			if(StringUtils.isNotBlank(customer.getUtel())){
+				TdUser puser = tdUserService.findByUtel(customer.getUtel());
+				if(null!=puser && !puser.getUid().equals(customer.getUid())){
+					res.put("code", "0");
+					res.put("errmsg", "保存失败：手机号码已经存在了");
+					return res;
+				}
+			}
+			//检查用户名
+			if(StringUtils.isNotBlank(customer.getUname())){
+				TdUser puser = tdUserService.selectByUname(customer.getUname());
+				if(null!=puser && !puser.getUid().equals(customer.getUid())){
+					res.put("code", "0");
+					res.put("errmsg", "保存失败：账号已经存在了");
+					return res;
+				}
+			}
+			
+			
 			Date now = new Date();
 			try {
 				TdUser currManager = this.getCurrentUser();
