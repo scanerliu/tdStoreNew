@@ -47,6 +47,7 @@ public class WechatNotify {
 	private final static String TOKEN				= "2rattfOUOHUWQkqRGxY8aBzk3jfi4MDJ";
 	
 	private final static String EVENTYPE_SUBSCRIBE	= "subscribe";
+	private final static String EVENTYPE_CLICK		= "click";
 //	private final static String MSGTYPE_TEXT		= "text";
 	private final static String MSGTYPE_EVENT		= "event";
 	
@@ -111,6 +112,10 @@ public class WechatNotify {
 			if (EVENTYPE_SUBSCRIBE.equals(event))//关注微信号
 			{
 				SubScribe(map,response);
+			}
+			else if(EVENTYPE_CLICK.equals(event))
+			{
+				
 			}
 		}
 		else//其他事件或者消息

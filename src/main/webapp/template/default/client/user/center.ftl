@@ -1,229 +1,342 @@
 <#import "/common/app.ftl" as app> 
-<#include "/common/common.ftl" />
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="Content-Language" content="zh-CN">
-<title>个人中心</title>
-<meta name="keywords" content="${system.webkeywords!''}">
-<meta name="description" content="${system.webdescription!''}">
-<meta name="copyright" content="${system.webcopyright!''}" />
-<link rel="shortcut icon" href="${app.basePath}/static/default/images/icon.ico" />
-<meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1">
-<meta content="yes" name="apple-mobile-web-app-capable">
-<meta content="black" name="apple-mobile-web-app-status-bar-style">
-<meta content="telephone=no" name="format-detection">
-<!-- css -->
-<link href="${app.basePath}/static/touch/css/common.css" rel="stylesheet" type="text/css" />
-<link href="${app.basePath}/static/touch/css/main.css" rel="stylesheet" type="text/css" />
-<link href="${app.basePath}/static/touch/css/x_pc.css" rel="stylesheet" type="text/css" />
-<!-- js -->
-<script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="${app.basePath}/static/touch/js/common.js"></script>
-<script type="text/javascript" src="${app.basePath}/static/js/mobile/user/user.js"></script>
+    <meta charset="UTF-8">
+    <meta name="description" content="中国创客联盟"/>
+    <meta name="keywords" content="中国创客联盟"/>
+    <meta name="author" content="中国创客联盟"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <title>个人中心首页</title>
+    <!-- 网站图标 -->
+    <link rel="shortcut icon" href="images/icon.ico"/>
+    <!-- css -->
+    <link rel="stylesheet" href="${app.basePath}/static/default/client/css/site.css" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="${app.basePath}/static/default/client/css/personal-center-common.css">
+    <link rel="stylesheet" type="text/css" href="${app.basePath}/static/default/client/css/f_personal_center.css">
+    <link rel="stylesheet" type="text/css" href="${app.basePath}/static/default/client/css/lhead.css">
+	<#include "/common/common.ftl" />
+    <!-- js -->
+    <script type="text/javascript" src="${app.basePath}/static/js/jquery-1.12.3.min.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/client/html5.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/client/user/user.js"></script>
+    <!--通用js-->
+    <script type="text/javascript" src="${app.basePath}/static/js/client/common.js"></script>
 </head>
-<body class="body_gray">
+<body>
+<h1 style="display:none;"></h1>
+<!-- Header Start -->
+<div class="personal-top">
+    <div class="top">
+        <h1 class="left">您好!欢迎来到创客联盟，<label><@shiro.principal/> <a href="${app.basePath}/logout" title="">退出</a></label> <label>消息<a href="${app.basePath}/user/messageList" class="orange" title="">6</a></label></h1>
+        <div class="right">
+            <a href="${app.basePath}/" title="">创客联盟首页</a>|
+            <a href="${app.basePath}/user/index" title="">我的店铺</a>|
+            <a class="shopp-car" href="${app.basePath}/shoppingcart/list" title="">购物车(<span>3</span>)</a>|
+            <a href="${app.basePath}/user/center" title="">会员中心</a>|
+            <a href="${app.basePath}/mobile/index" title="">手机创客</a>|
+            <a class="help" href="${app.basePath}/helpcenter" title="帮助中心">帮助中心</a>
+        </div>
+    </div>
+</div>
+<!-- Header End -->
 
-  <!-- pop-ups -->
-  <article class="pop-ups">
-    <section class="pop-one">
-      <img src="${app.basePath}/static/default/mobile/x-img/icon_pop_success.png" alt="">
-      <div>签到成功，恭喜您！</div>
-      <div>本次获得<span id="gettedIntegral">0</span>积分</div>
-    </section>
-  </article>
-  <script type="text/javascript">
-    $(document).ready(function(){
-    	$(document).click(function(){
-			$('.pop-ups').hide();
-		});
-    });
-  </script>
-  <!-- pop-ups end -->
-
-  <!-- header_top -->
-  <header class="pc-head">
-    <div class="head-img">
-      <#if currentUser.uavatar??>
-      <img src="${app.basePath}${currentUser.uavatar!''}" alt="暂无头像">
-      <#else>
-      <img src="${app.basePath}/static/default/mobile/images/defaultavtar.png" alt="暂无头像">
-      </#if>
-    </div>
-    <div class="user-name">
-      <p class="p1">${currentUser.unick!''}</p>
-      <p class="p2">${currentUser.uname!''}</p>
-    </div>
-    <div class="right-icon">
-      <a class="icon-news" href="${app.basePath}/mobile/user/messageList" title=""></a>
-      <div class="clear"></div>
-      <div class="vip-level"><#if membership??>${membership.name!''}</#if></div>
-    </div>
-    <a class="btn-sign-in" href="javascript:sign('${currentUser.uid?c}');" title="">签到</a>
-  </header>
-  <!-- header_top end -->
-  <!-- order_detail_title -->
-  <section class="container person-center">
-  	<#if !currentUser.utel??>
-	    <article class="tips">提示：PC上登陆请绑定手机号码</article>
-  	</#if>
-  	<#if currentUser.supplierType?? && currentUser.supplierType gt 0>
-  	<a class="a_go" href="${app.basePath}/mobile/supply/order" title="去发货">
-        <label>去发货</label>
-        <i class="icon-next"></i>
-    </a>
-    </#if>
-    <article class="pc-nav">
-      <a href="${app.basePath}/mobile/order/list" title="">
-        <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_1.png" alt="">
-        <span>我的订单</span>
-      </a>
-      <a href="${app.basePath}/mobile/user/account" title="">
-        <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_2.png" alt="">
-        <span>我的钱包</span>
-      </a>
-      <a href="${app.basePath}/mobile/user/point/list" title="">
-        <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_3.png" alt="">
-        <span>我的积分</span>
-      </a>
-      <a href="${app.basePath}/mobile/user/profit" title="">
-        <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_5.png" alt="">
-        <span>我的流水</span>
-      </a>
-      <a href="${app.basePath}/mobile/order/refundlist" title="">
-            <img src="${app.basePath}/static/default/mobile/x-img/pic_pc_index_nan_4.png" alt="">
-            <span>我的退款</span>
+<!-- 顶部导航 -->
+<div class="personal-top-nav">
+    <div class="top-nav">
+        <!-- LOGO尺寸 295*104 -->
+        <a class="personal-logo" href="${app.basePath}/">
+            <img src="${app.basePath}/static/default/client/images/index_logo_2.png" alt="中国创客联盟"/>
         </a>
-    </article><!-- pc-nav end -->
-    <article class="pc-menu">
-      <a href="${app.basePath}/mobile/user/info" title="个人信息">
-        <i class="icon bg_icon_1"></i>
-        <label>个人信息</label>
-        <i class="icon-next"></i>
-      </a>
-      <a href="${app.basePath}/mobile/user/changePassword" title="修改密码">
-        <i class="icon bg_icon_2"></i>
-        <label>修改密码</label>
-        <i class="icon-next"></i>
-      </a>
-      <a href="${app.basePath}/mobile/user/recommendPeople" title="推荐人">
-        <i class="icon bg_icon_3"></i>
-        <label>推荐人</label>
-        <i class="icon-next"></i>
-      </a>
-      <a href="${app.basePath}/mobile/user/downUserList" title="联盟创客">
-        <i class="icon bg_icon_4"></i>
-        <label>联盟创客</label>
-        <i class="icon-next"></i>
-      </a>
-      <a href="${app.basePath}/mobile/user/mySpread" title="我的推广">
-        <i class="icon bg_icon_5"></i>
-        <label>我的推广</label>
-        <i class="icon-next"></i>
-      </a>
-      <a href="${app.basePath}/mobile/user/index" title="我的店铺">
-        <i class="icon bg_icon_6"></i>
-        <label>我的店铺</label>
-        <i class="icon-next"></i>
-      </a>
-      <a href="${app.basePath}/mobile/agent/list" title="">
-        <i class="icon bg_icon_7"></i>
-        <label>成为代理</label>
-        <i class="icon-next"></i>
-      </a>
-      <a href="${app.basePath}/mobile/user/productComment" title="我的评价">
-        <i class="icon bg_icon_8"></i>
-        <label>我的评价</label>
-        <i class="icon-next"></i>
-      </a>
-      <a href="${app.basePath}/mobile/user/collect/list" title="我的收藏">
-        <i class="icon bg_icon_9"></i>
-        <label>我的收藏</label>
-        <i class="icon-next"></i>
-      </a>
-      <a href="${app.basePath}/mobile/user/productManage" title="商品管理">
-        <i class="icon bg_icon_8"></i>
-        <label>商品管理</label>
-        <i class="icon-next"></i>
-      </a>
-      <a href="javascript:goCampaign();" title="参加竞选">
-        <i class="icon bg_icon_10"></i>
-        <label>参加竞选</label>
-        <i class="icon-next"></i>
-      </a>
-      <a href="${app.basePath}/mobile/app" title="">
-        <i class="icon bg_icon_11"></i>
-        <label>下载app</label>
-        <i class="icon-next"></i>
-      </a>
-      <a href="${app.basePath}/mobile/user/supplierApply" title="供应商资质认证">
-        <i class="icon bg_icon_12"></i>
-        <label>供应商资质认证</label>
-        <i class="icon-next"></i>
-      </a>
-      <a href="${app.basePath}/mobile/experience/list" title="附近门店">
-        <i class="icon bg_icon_13"></i>
-        <label>附近门店</label>
-        <i class="icon-next"></i>
-      </a>
-    </article><!-- pc-menu end -->
-  </section>
-  <a class="btn-sign-out" href="${app.basePath}/mobile/logout" title="">退出登录</a>
+        <!-- 导航 -->
+        <ul>
+            <li><a class="nav1" href="${app.basePath}/" title="">首页</a></li>
+            <li class="li2">
+                <a class="nav1" href="#" title="">账户设置 <span>V</span></a>
+                <div class="drop-down">
+                    <p>
+                        <label>安全设置</label>
+                        <a href="#">修改登录密码</a>
+                    </p>
 
-  <div class="clear" style="width:100%;height:1rem;"></div>
+                    <p>
+                        <label>个人资料</label>
+                        <a href="#">个人信息设置</a>
+                        <a href="#">收货地址管理</a>
+                    </p>
+                </div>
+            </li>
+            <li><a class="nav1" href="#" title="">消息</a></li>
+        </ul>
+        <!-- 搜索框 -->
+        <div class="search-box">
+            <input type="text" placeholder="请输入关键字搜索"/>
+            <a href="#"></a>
+        </div>
+    </div>
+</div>
+<!-- 顶部导航 END -->
+<div class="clear"></div>
 
-  <!-- footer -->
-  <footer class="common-footer">
-    <a href="${app.basePath}/mobile" title="首页">
-      <i class="icon">
-        <img class="icon-1" src="${app.basePath}/static/default/mobile/x-img/bg_icon_14.png" alt="">
-        <img class="icon-2" src="${app.basePath}/static/default/mobile/x-img/bg_icon_14_1.png" alt="">
-      </i>
-      <span>首页</span>
-    </a>
-    <a href="${app.basePath}/mobile/productType/list" title="分类">
-      <i class="icon">
-        <img class="icon-1" src="${app.basePath}/static/default/mobile/x-img/bg_icon_15.png" alt="">
-        <img class="icon-2" src="${app.basePath}/static/default/mobile/x-img/bg_icon_15_1.png" alt="">
-      </i>
-      <span>分类</span>
-    </a>
-    <a href="${app.basePath}/mobile/shoppingcart/list" title="购物车">
-      <i class="icon">
-        <img class="icon-1" src="${app.basePath}/static/default/mobile/x-img/bg_icon_16.png" alt="">
-        <img class="icon-2" src="${app.basePath}/static/default/mobile/x-img/bg_icon_16_1.png" alt="">
-      </i>
-      <span>购物车</span>
-    </a>
-    <a class="active" href="${app.basePath}/mobile/user/center" title="">
-      <i class="icon">
-        <img class="icon-1" src="${app.basePath}/static/default/mobile/x-img/bg_icon_17.png" alt="个人中心">
-        <img class="icon-2" src="${app.basePath}/static/default/mobile/x-img/bg_icon_17_1.png" alt="个人中心">
-      </i>
-      <span>我的</span>
-    </a>
-  </footer>
-  <script type="text/javascript">
-    $(function(){
-      $('.common-footer a').click(function(){
-        $(this).addClass('active').siblings().removeClass('active');
-      })
-    });
-  </script>
-  <script>
-  	function goCampaign(){
-    	var url = basePath+"/mobile/user/hasJoinedCampaing";
-		$.post(url, function(data){
-			var jsonData = eval('('+data+')');
-			if(jsonData.code == "0"){
-				window.location.href=basePath+"/mobile/user/joinElection";
-			}else if(jsonData.code == "1"){
-				alert(jsonData.msg);
-			}
-		}, "text");
-    }
-  </script>
-  <!-- footer end -->
+<!-- Center Start -->
+<div class="index-main">
+    <div class="personal-center">
+        <!-- 左侧导航 -->
+        <div class="left-menu">
+            <ul>
+                <li class="li1">订单中心</li>
+                <li><a href="#" title="">我的订单</a></li>
+                <li><a href="#" title="">评价商品</a></li>
+                <li><a href="#" title="">我的收藏</a></li>
+                <li><a href="#" title="">浏览历史</a></li>
+            </ul>
+            <ul>
+                <li class="li1">我的资产</li>
+                <li><a href="#" title="">我的银卡</a></li>
+                <li><a href="#" title="">我的金卡</a></li>
+                <li><a href="#" title="">我是股东</a></li>
+            </ul>
+            <ul>
+                <li class="li1">售后服务</li>
+                <li><a href="#" title="">投诉建议</a></li>
+                <li><a href="#" title="">退款维权</a></li>
+            </ul>
+        </div>
+
+        <!-- 右侧内容 -->
+        <div class="right-content">
+            <!-- 个人信息 -->
+            <div class="personal-info">
+                <div class="head-img">
+                	<#if currentUser.uavatar??>
+			        <img src="${app.basePath}${currentUser.uavatar!''}" alt="暂无头像">
+			        <#else>
+			        <img src="${app.basePath}/static/default/mobile/images/defaultavtar.png" alt="暂无头像">
+			        </#if>
+                </div>
+                <div class="user-name">
+                    <div class="div1">
+                        <label>Sweet</label>
+                        <label class="grade"><em><#if membership??>${membership.name!''}</#if></em>会员</label>
+                    </div>
+                    <div class="bank-card">
+                        <a href="javascript:void(0);" class="clickcard" title="" onclick="tipshide($(this));">打卡签到</a>
+
+                    </div>
+
+                    <script>
+                        $(function(){
+
+                        });
+                    </script>
+                    <div class="div3">
+                        <div>账户安全</div>
+                        <div class="div2"><p></p></div>
+                        <div>较低</div>
+                    </div>
+                </div>
+                <div class="myinfo">
+                    <div class="ininfo">
+                        <strong class="p1">钱包余额</strong>
+                        <span class="p2"><strong class="orange">${currentUser.userAccount.amount!'0'}</strong>元</span>
+                    </div>
+                    <div class="ininfo">
+                        <strong class="p1">我的积分</strong>
+                        <span class="p3"><strong id="uintegral">${integral.integral!'0'}</strong>分</span>
+                    </div>
+
+                    <div class="t-nav">
+                        <a href="#" title="">
+                            <img src="${app.basePath}/static/default/client/images/icon_pc_nav_1.png" alt=""/>
+
+                            <p>待付款<span>0</span></p>
+                        </a>
+                        <a href="#" title="">
+                            <img src="${app.basePath}/static/default/client/images/icon_pc_nav_2.png" alt=""/>
+
+                            <p>待收货<span>0</span></p>
+                        </a>
+                        <a href="#" title="">
+                            <img src="${app.basePath}/static/default/client/images/icon_pc_nav_3.png" alt=""/>
+                            <p>待评价<span>0</span></p>
+                        </a>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- 我的订单 -->
+            <div class="my-orders">
+                <div class="top-line">
+                    <p class="p1">我的订单</p>
+
+                    <p>待付款<span>5</span></p>
+
+                    <p>待发货<span>3</span></p>
+
+                    <p>待评价<span>0</span></p>
+                    <a href="#">查看全部订单</a>
+                </div>
+                <ul class="ul1">
+                    <li class="li1">
+                        <a class="img" href="#">
+                            <img src="images/2.jpg" alt=""/>
+                        </a>
+                        <a class="img" href="#">
+                            <img src="images/3.jpg" alt=""/>
+                        </a>
+                    </li>
+                    <li class="li2">2015-12-12 已发货</li>
+                    <li class="li3">
+                        <span class="span1">查看物流 v</span>
+
+                        <div class="wu-l">
+                            <img class="uarrow" src="images/icon_pc_uarrow_1.png" alt=""/>
+
+                            <div class="lists">
+                                <div class="p1">中国邮政：9640024911621</div>
+                                <div class="p2 active">
+                                    <sup>·</sup>
+
+                                    <p>
+                                        <span>离开【长沙】，下一站【成都中心】</span>
+                                        <span>2016-02-02 05:43:57</span>
+                                    </p>
+                                </div>
+                                <div class="p2">
+                                    <sup>·</sup>
+
+                                    <p>
+                                        <span>到达【长沙邮区中心局邮件处理中心】</span>
+                                        <span>2016-02-02 01:14:00</span>
+                                    </p>
+                                </div>
+                                <div class="p2 p3">
+                                    <sup>·</sup>
+
+                                    <p>以上为最新跟踪信息，<a href="#">查看全部</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="li4">
+                        <a href="#">确认收货</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="li1">
+                        <a class="img" href="#">
+                            <img src="images/3.jpg" alt=""/>
+                        </a>
+                        <a class="img" href="#">
+                            <img src="images/4.jpg" alt=""/>
+                        </a>
+                    </li>
+                    <li class="li2">2015-12-12 已签收</li>
+                    <li class="li3">
+                        <span class="span1">查看物流 v</span>
+
+                        <div class="wu-l">
+                            <img class="uarrow" src="images/icon_pc_uarrow_1.png" alt=""/>
+
+                            <div class="lists">
+                                <div class="p1">中国邮政：9640024911621</div>
+                                <div class="p2 active">
+                                    <sup>·</sup>
+
+                                    <p>
+                                        <span>离开【长沙】，下一站【成都中心】</span>
+                                        <span>2016-02-02 05:43:57</span>
+                                    </p>
+                                </div>
+                                <div class="p2">
+                                    <sup>·</sup>
+
+                                    <p>
+                                        <span>到达【长沙邮区中心局邮件处理中心】</span>
+                                        <span>2016-02-02 01:14:00</span>
+                                    </p>
+                                </div>
+                                <div class="p2 p3">
+                                    <sup>·</sup>
+
+                                    <p>以上为最新跟踪信息，<a href="#">查看全部</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="li4">
+                        <a href="#">去评价</a>
+                    </li>
+                </ul>
+                <div class="noorder">
+                    <i></i><label class="lbltips">这里都是空空的，快去挑选合适的商品吧！</label>
+                </div>
+            </div>
+
+            <!--猜您喜欢-->
+            <div class="guess-like">
+                <div class="title">
+                    <strong>猜你喜欢</strong>
+                </div>
+                <div class="pro-list">
+                    <ul>
+                        <li>
+                            <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
+                            <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
+                <span class="price">
+                    ￥<label>119.00</label>
+
+                </span>
+                        </li>
+                        <li>
+                            <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
+                            <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
+                <span class="price">
+                    ￥<label>119.00</label>
+                </span>
+                        </li>
+                        <li>
+                            <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
+                            <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
+                <span class="price">
+                    ￥<label>119.00</label>
+                </span>
+                        </li>
+                        <li>
+                            <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
+                            <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
+                <span class="price">
+                    ￥<label>119.00</label>
+                </span>
+                        </li>
+                        <li>
+                            <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
+                            <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
+                <span class="price">
+                    ￥<label>119.00</label>
+                </span>
+                        </li>
+                        <li>
+                            <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
+                            <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
+                <span class="price">
+                    ￥<label>119.00</label>
+                </span>
+                        </li>
+
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- 右侧内容 END -->
+
+    </div>
+    <div class="clear"></div>
+</div>
+<!-- Center End -->
+<#include "../common/foot.ftl">
 </body>
 </html>

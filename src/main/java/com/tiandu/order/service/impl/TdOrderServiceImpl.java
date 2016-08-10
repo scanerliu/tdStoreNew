@@ -67,6 +67,7 @@ import com.tiandu.order.vo.OrderRefund;
 import com.tiandu.order.vo.ShoppingcartVO;
 import com.tiandu.product.entity.TdAgentProduct;
 import com.tiandu.product.entity.TdProduct;
+import com.tiandu.product.entity.TdProductSku;
 import com.tiandu.product.service.TdAgentProductService;
 import com.tiandu.product.service.TdProductService;
 import com.tiandu.product.service.TdProductSkuService;
@@ -1787,6 +1788,71 @@ public class TdOrderServiceImpl implements TdOrderService{
 		sc.setFlag(false);
 //		sc.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_RECEIPT);
 		sc.setOrderStatus(ConstantsUtils.ORDER_STATUS_RECEIPTED);
+		sc.setReceiptTime(receiptTime);
+		sc.setGetProductSku(true);
+		List<TdOrder> orderList = tdOrderMapper.findBySearchCriteria(sc);
+		if(null!=orderList){
+			TdUser user = tdUserService.findOne(1);//系统账号
+			for(TdOrder order : orderList){
+				this.completeOrder(order, user);
+			}
+		}
+		
+	}
+	
+	
+
+	@Override
+	public OperResult cancelOrder(TdOrder order, TdUser user) {
+		OperResult result = new OperResult();
+		//未支付订单才能取消
+		if(!ConstantsUtils.ORDER_STATUS_NEW.equals(order.getOrderStatus())){
+			result.setFailMsg("订单的不能进行取消操作！");
+			return result;
+		}
+		//开始操作
+		Date now  = new Date();
+		TdOrder uporder = new TdOrder();
+		uporder.setOrderId(order.getOrderId());
+		uporder.setUpdateBy(user.getUid());
+		uporder.setUpdateTime(now);
+		uporder.setOrderStatus(ConstantsUtils.ORDER_STATUS_CANCEL);
+		tdOrderMapper.updateByPrimaryKeySelective(uporder);
+		
+		//订单操作日志
+		TdOrderLog log = new TdOrderLog();
+		log.setOrderId(order.getOrderId());
+		log.setCreateBy(user.getUid());
+		log.setCreateTime(now);
+		log.setOperType(ConstantsUtils.ORDER_LOG_TYPE_CANCEL);
+		log.setNote("订单进行取消操作");
+		tdOrderLogMapper.insert(log);
+		
+		//返回货品库存
+		if(ConstantsUtils.ORDER_KIND_COMMON.equals(order.getOrderType())){
+			List<TdOrderSku> orderSkuList = tdOrderSkuMapper.findByOrderId(order.getOrderId());
+			if(null!=orderSkuList && orderSkuList.size()>0){
+				for(TdOrderSku ordersku : orderSkuList){
+					tdProductSkuService.updateStock(ordersku.getProductSkuId(), ordersku.getQuantity());//更新库存
+				}
+			}
+		}
+		
+		
+		result.setFlag(true);
+		return result;
+	}
+
+	@Override
+	public void cancelOrderBySystemJob() {
+		Date now = new Date();
+		Integer ordercancelperiod = configUtil.getOrderCancelPeriod()*60;
+		Date receiptTime = DateUtil.getNewTime(now, -ordercancelperiod);//获取n天前的时间
+		
+		TdOrderSearchCriteria sc = new TdOrderSearchCriteria();
+		sc.setFlag(false);
+//		sc.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_RECEIPT);
+		sc.setOrderStatus(ConstantsUtils.ORDER_STATUS_NEW);
 		sc.setReceiptTime(receiptTime);
 		sc.setGetProductSku(true);
 		List<TdOrder> orderList = tdOrderMapper.findBySearchCriteria(sc);

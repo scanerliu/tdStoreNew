@@ -53,6 +53,7 @@ import com.tiandu.custom.entity.TdUserAccount;
 import com.tiandu.custom.entity.TdUserAccountLog;
 import com.tiandu.custom.entity.TdUserAddress;
 import com.tiandu.custom.entity.TdUserCampaign;
+import com.tiandu.custom.entity.TdUserIntegral;
 import com.tiandu.custom.entity.TdUserIntegralLog;
 import com.tiandu.custom.entity.TdUserMessage;
 import com.tiandu.custom.entity.TdUserSupplier;
@@ -72,6 +73,7 @@ import com.tiandu.custom.service.TdUserAccountLogService;
 import com.tiandu.custom.service.TdUserAccountService;
 import com.tiandu.custom.service.TdUserAddressService;
 import com.tiandu.custom.service.TdUserCampaignService;
+import com.tiandu.custom.service.TdUserIntegralService;
 import com.tiandu.custom.service.TdUserMessageService;
 import com.tiandu.custom.service.TdUserSignService;
 import com.tiandu.custom.service.TdUserSupplierService;
@@ -169,6 +171,9 @@ public class CUserController extends BaseController {
 	TdUserAccountService tdUserAccountService;
 	
 	@Autowired
+	TdUserIntegralService tdUserIntegralService;
+	
+	@Autowired
 	TdCampaignService tdCampaignService;
 	
 	@Autowired
@@ -197,24 +202,34 @@ public class CUserController extends BaseController {
 		TdUser currentUser = this.getCurrentUser();
 		if(null==currentUser)
 		{
-			return "redirect:/client/login";
+			return "redirect:/login";
 		}
-		modelMap.addAttribute("currentUser", currentUser);
+		
+		//会员等级
 		TdMembership membership = tdMembershipService.findOne(currentUser.getMembershipId());
 		modelMap.addAttribute("membership", membership);
+		//会员账号信息
+		TdUserAccount account = tdUserAccountService.findByUid(currentUser.getUid());
+		currentUser.setUserAccount(account);
+		//会员积分信息
+		TdUserIntegral integral = tdUserIntegralService.findOne(currentUser.getUid());
+		modelMap.addAttribute("integral", integral);
+		
+		modelMap.addAttribute("currentUser", currentUser);
 		// 系统配置
-		modelMap.addAttribute("system", getSystem());
+//		modelMap.addAttribute("system", getSystem());
 	    return "/client/user/center";
 	}
 	
 	// 用户签到
 	@RequestMapping(value="/sign", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, String> sign(Integer uid, HttpServletRequest request, HttpServletResponse response) {
+	public Map<String, String> sign(HttpServletRequest request, HttpServletResponse response) {
+		TdUser currentUser = this.getCurrentUser();
 		Map<String,String> res = new HashMap<String,String>(); 
 		Map<String, String> signBackData;
 		try {
-			signBackData = tdUserService.saveSign(uid);
+			signBackData = tdUserService.saveSign(currentUser.getUid());
 		} catch (ParseException e) {
 			logger.error("签到失败!");
 			res.put("code", "0");

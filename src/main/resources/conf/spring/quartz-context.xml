@@ -89,6 +89,21 @@
 		<property name="cronExpression" value="0 0 6 ? * *"/>
 	</bean>
 	
+	<!-- 未支付订单超时自动取消定时任务 -->
+	<bean name="orderCancelJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.tiandu.quartz.OrderCancelScheduledJob" />
+		<property name="jobDataMap">
+			<map>
+				<entry key="tdOrderService" value-ref="tdOrderService"/>
+			</map>
+		</property>
+		<property name="durability" value="true"/>
+	</bean>
+	<bean id="orderCancleTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="orderCancelJobDetail"/>
+		<property name="cronExpression" value="0 0 /1 ? * *"/>
+	</bean>
+	
 	<!-- 预售秒杀到时间自动下架 -->
 	<bean name="seckillProductJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
 		<property name="jobClass" value="com.tiandu.quartz.SeckillProductScheduledJob" />

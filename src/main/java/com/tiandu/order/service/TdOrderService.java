@@ -130,4 +130,17 @@ public interface TdOrderService {
 	 * @return
 	 */
 	public void benefitOrder(TdOrder order) throws RuntimeException;
+
+	/**
+	 * 系统自动取消未支付订单任务
+	 */
+	public void cancelOrderBySystemJob();
+	
+	/**
+	 * 订单手动取消操作
+	 * @param order
+	 * @param user
+	 * @return
+	 */
+	public OperResult cancelOrder(TdOrder order, TdUser user);
 }

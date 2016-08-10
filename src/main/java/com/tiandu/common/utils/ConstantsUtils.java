@@ -203,6 +203,10 @@ public class ConstantsUtils {
 	 * 订单操作日志类型： 7订单分润
 	 */
 	public static final Byte ORDER_LOG_TYPE_BENEFIT = 7;
+	/**
+	 * 订单操作日志类型： 8订单取消
+	 */
+	public static final Byte ORDER_LOG_TYPE_CANCEL = 8;
 	
 	/***************************订单支付方式**************************/
 	/**

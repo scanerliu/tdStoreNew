@@ -269,7 +269,7 @@ public class TdUserServiceImpl implements TdUserService {
 		List<TdUserSign> userSignList = tdUserSignService.findBySearchCriteria(sc);
 		if(userSignList != null && userSignList.size() > 0){
 			res.put("code", "0");
-			res.put("msg", "已签到");
+			res.put("msg", "您已经签过到了");
 			return res;
 		}
 		// 去签名
@@ -279,8 +279,8 @@ public class TdUserServiceImpl implements TdUserService {
 		tdUserSignService.save(userSign);
 		// 查询签到积分
 		Integer signIntegral = Integer.parseInt(tdSystemConfigService.getConfigMap().get("signdeliveryintegral"));
-		// 修改积分	
-		TdUserIntegral userIntegral = tdUserIntegralService.findOne(uid);
+		// 修改积分
+		/*TdUserIntegral userIntegral = tdUserIntegralService.findOne(uid);
 		int integralBeforeUpdate = userIntegral.getTotalIntegral();
 		userIntegral.setTotalIntegral(userIntegral.getTotalIntegral() + signIntegral);
 		userIntegral.setIntegral(userIntegral.getIntegral() + signIntegral);
@@ -296,7 +296,19 @@ public class TdUserServiceImpl implements TdUserService {
 		userIntegralLog.setCreateTime(new Date());
 		userIntegralLog.setNote("系统修改签到积分");
 		userIntegralLog.setRelation(null);
-		tdUserIntegralLogService.save(userIntegralLog);
+		tdUserIntegralLogService.save(userIntegralLog);*/
+		Date now = new Date();
+		TdUserIntegral userIntegral = tdUserIntegralService.findOne(uid);
+		userIntegral.setUpdateBy(uid);
+		userIntegral.setUpdateTime(now);
+		
+		TdUserIntegralLog integralLog = new TdUserIntegralLog();
+    	integralLog.setType(TdUserIntegralLog.USERINTEGRALLOG_TYPE_SIGN);
+    	integralLog.setUid(uid);
+    	integralLog.setIntegral(signIntegral);
+    	integralLog.setNote("用户签到赠送积分");
+    	integralLog.setCreateTime(now);
+    	tdUserIntegralService.addIntegral(userIntegral, integralLog);
 		res.put("code", "1");
 		res.put("signIntegral", signIntegral.toString());
 		return res;

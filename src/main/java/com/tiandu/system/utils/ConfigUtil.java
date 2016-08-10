@@ -274,6 +274,13 @@ public class ConfigUtil {
 	public Integer getOrderCompletePeriod(){
 		return getConfig("ordercompleteperiod",7);
 	}
+	/**
+	 * 获取订单自动取消时间（小时）
+	 * @return
+	 */
+	public Integer getOrderCancelPeriod(){
+		return getConfig("ordercancelperiod",3);
+	}
 	
 	/**
 	 * 获取竞选活动条件配置

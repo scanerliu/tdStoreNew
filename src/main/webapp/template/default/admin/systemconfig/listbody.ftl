@@ -46,6 +46,9 @@
             <td align="right">订单自动完成时间间隔:</td><td><input type="hidden" name="configKey" value="ordercompleteperiod"/><input type="text" name="ordercompleteperiod" id="ordercompleteperiod" value="${configMap.ordercompleteperiod!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,100]"/>（自动完成时间间隔，单位为 天，如：订单确认收货7天后，系统自动更改订单状态为已完成，此项填7）</td>
         </tr>
         <tr>
+            <td align="right">订单自动取消时间间隔:</td><td><input type="hidden" name="configKey" value="ordercancelperiod"/><input type="text" name="ordercancelperiod" id="ordercancelperiod" value="${configMap.ordercancelperiod!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,1000]"/>（未支付订单自动取消时间间隔，单位为 小时，如：此项填3，下单3小时后仍未支付，系统自动取消该订单，）</td>
+        </tr>
+        <tr>
             <td align="right">物流查询地址:</td><td><input type="hidden" name="configKey" value="logisticweburl"/><input type="text" name="logisticweburl" id="logisticweburl" value="${configMap.logisticweburl!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="numrange[1,100]"/>（首页物流查询链接地址）</td>
         </tr>
         <tr>

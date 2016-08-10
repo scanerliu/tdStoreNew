@@ -1,0 +1,76 @@
+* {
+  padding: 0;
+  margin: 0; }
+
+body {
+  margin: 0;
+  padding: 0;
+  color: #666;
+  background: #fff;
+  font-family: "microsoft yahei", Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  line-height: 18px; }
+
+img, a img {
+  border: none; }
+
+a {
+  color: #666;
+  text-decoration: none;
+  cursor: pointer; }
+  a :hover {
+    cursor: pointer; }
+
+div, ul, dl, dd, dt, li, td, tr, table, p, span, h1, h2, h3, h4, h5, h6, form {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  word-wrap: break-word;
+  border: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+  table th, table td {
+    text-align: left; }
+
+textarea {
+  resize: none; }
+
+.disappear {
+  display: none; }
+
+section {
+  width: 100%; }
+
+div {
+  margin: 0 auto; }
+
+header, footer, nav, section, article, menu, aside {
+  display: block;
+  position: relative; }
+
+.wrapper {
+  width: 1200px;
+  display: block; }
+
+.w100 {
+  width: 100%;
+  display: block; }
+
+.clear {
+  clear: both; }
+
+.fr {
+  float: right; }
+
+.fl {
+  float: left; }
+
+.tc {
+  text-align: center; }
+
+.key {
+  display: none; }
+
+/*# sourceMappingURL=site.css.map */

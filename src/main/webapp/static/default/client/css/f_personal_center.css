@@ -1,0 +1,1437 @@
+@charset "UTF-8";
+/*CSS Document*/
+
+/* 通用 */
+.w100{width:100%;}
+.w80{width:80px;}
+.w89{width:89px;}
+.w90{width:90px;}
+.w95{width:95px;}
+.w108{width:108px;}
+.w110{width:110px;}
+.w116{width:116px;}
+.w118{width:118px;}
+.w120{width:120px;}
+.w154{width:154px;}
+.w169{width:169px;}
+.w240{width:240px;}
+.w270{width:270px;}
+.w340{width:340px;}
+.w370{width:370px;}
+.w540{width:540px;}
+.w590{width:590px;}
+.w910{width:910px;}
+.w1200{width:1200px;}
+.h50{height:50px;}
+.h60{height:60px;}
+.h80{height:80px;}
+.lh80{line-height:80px;}
+.h180{height:180px;}
+.lh180{line-height:180px;}
+.h820{height:820px;}
+.fl{float:left;}
+.fr{float:right;}
+.mt20{margin-top:20px;}
+.mt30{margin-top:30px;}
+.mt40{margin-top:40px;}
+.txtl{text-align:left;}
+.txtc{text-align:center;}
+.txtr{text-align:right;}
+.color_red{color:#ff9900;}
+.color_black{color:#3b3b3b;}
+.borl{border-left:1px solid #ddd;}
+.bg_white{background:#fff;}
+/* 通用-结束 */
+
+
+/* 页码 */
+.goods-page-nums {
+    display: inline-block;
+    width: 100%;
+    color: #999;
+}
+.goods-page-nums a {
+    padding: 0 10px;
+    height: 30px;
+    line-height: 28px;
+    font-size: 12px;
+    color: #999;
+    text-align: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: inline-block;
+}
+.goods-page-nums input {
+    width: 46px;
+    height:30px;
+    line-height:30px;
+    font-size: 12px;
+    text-align: center;
+    vertical-align:middle;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.goods-page-nums a:hover {
+    color: #fff;
+    background-color: #ff9900;
+}
+.goods-page-nums a.current {
+    color: #fff;
+    background-color: #ff9900;
+}
+.goods-page-nums a.btn-sure {
+    margin-left: 5px;
+    margin-right: 0;
+    height: 30px;
+    line-height: 30px;
+}
+/* 页码-结束 */
+
+
+/*面包屑导航*/
+.personal-crumb {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    font-size: 12px;
+    color: #999;
+}
+
+.personal-crumb a {
+    color: #999;
+}
+
+.personal-crumb a:hover {
+    color: #ff9900;
+}
+
+/*面包屑导航 END*/
+
+/*查看物流*/
+.view-logistics {
+    padding: 20px;
+    width: 1160px;
+    min-height: 460px;
+    background-color: #fff;
+}
+
+/*物流信息*/
+.view-logistics .logistic-info {
+    margin-top: 20px;
+    width: 100%;
+    background-color: #fbfbfb;
+    border: 1px solid #ddd;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.view-logistics .logistic-info .order-number {
+    padding: 20px;
+    width: 1120px;
+    border-bottom: 1px solid #ddd;
+}
+
+.view-logistics .logistic-info .order-number div {
+    font-size: 12px;
+    line-height: 30px;
+}
+
+.view-logistics .logistic-info .order-number div label {
+    display: inline-block;
+    margin-right: 20px;
+    width: 50px;
+    color: #999;
+    text-align: right;
+}
+
+.view-logistics .logistic-info .time-info {
+    padding: 20px;
+    width: 1120px;
+}
+
+.view-logistics .logistic-info .time-info div {
+    font-size: 12px;
+    line-height: 30px;
+}
+
+.view-logistics .logistic-info .time-info div label {
+    margin-right: 15px;
+}
+
+/*查看物流 END*/
+
+/*提交订单*/
+.submit-orders .progress {
+    overflow: hidden;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.submit-orders .progress li {
+    float: left;
+    width: 290px;
+    text-align: center;
+}
+
+.submit-orders .progress .div1 {
+    width: 100%;
+    height: 32px;
+    line-height: 32px;
+    background: url(../images/bg_order_progress_1.png) no-repeat right center;
+}
+
+.submit-orders .progress .div11 {
+    background: url(../images/bg_order_progress_2.png) no-repeat right center;
+}
+
+.submit-orders .progress .completed-1 {
+    color: #fff;
+    background: url(../images/bg_order_progress_completed_1.png) no-repeat right center;
+}
+
+.submit-orders .progress .completed-2 {
+    color: #fff;
+    background: url(../images/bg_order_progress_completed_2.png) no-repeat right center;
+}
+
+.submit-orders .progress .div2 {
+    width: 100%;
+    line-height: 30px;
+    font-size: 12px;
+    color: #999;
+}
+
+.submit-orders .logistic-info .order-number div.h1 span {
+    font-size: 18px;
+    font-weight: 700;
+    color: #3b3b3b;
+}
+
+.submit-orders .logistic-info .bdbt-n {
+    border-bottom: none;
+}
+
+/*商品信息表格*/
+.submit-orders .pro-table {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.submit-orders .pro-table .table {
+    width: 100%;
+    border: 1px solid #ddd;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.submit-orders .pro-table .table .list-top {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    background-color: #f5f5f5;
+}
+
+.submit-orders .pro-table .table .list-top p {
+    float: left;
+    color: #3b3b3b;
+    text-align: center;
+}
+
+.submit-orders .pro-table .table .list-top p.p1 {
+    width: 350px;
+}
+
+.submit-orders .pro-table .table .list-top p.p2 {
+    width: 220px;
+}
+
+.submit-orders .pro-table .table .list-top p.p3 {
+    width: 160px;
+}
+
+.submit-orders .pro-table .table .list-top p.p4 {
+    width: 100px;
+}
+
+.submit-orders .pro-table .table ul {
+    width: 100%;
+    height: 100px;
+    border-bottom: 1px solid #ddd;
+}
+
+.submit-orders .pro-table .table ul.last {
+    border-bottom: none;
+}
+
+.submit-orders .pro-table .table ul li {
+    float: left;
+    text-align: center;
+    border-right: 1px solid #ddd;
+}
+
+.submit-orders .pro-table .table ul li.last {
+    font-weight: 700;
+    border-right: none;
+}
+
+.submit-orders .pro-table .table ul li.li1 {
+    padding: 20px;
+    width: 310px;
+    height: 60px;
+}
+
+.submit-orders .pro-table .table ul .li1 .img {
+    float: left;
+    width: 58px;
+    height: 58px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+}
+
+.submit-orders .pro-table .table ul .li1 .img img {
+    width: 100%;
+    height: 100%;
+}
+
+.submit-orders .pro-table .table ul .li1 .writing {
+    overflow: hidden;
+    float: right;
+    margin: 10px 0;
+    width: 240px;
+    height: 40px;
+    line-height: 20px;
+    text-align: left;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.submit-orders .pro-table .table ul .li1 .writing:hover {
+    color: #ff9900;
+}
+
+.submit-orders .pro-table .table ul li.li2 {
+    width: 220px;
+}
+
+.submit-orders .pro-table .table ul li.li3 {
+    width: 160px;
+}
+
+.submit-orders .pro-table .table ul li.li4 {
+    width: 100px;
+}
+
+.submit-orders .pro-table .table ul li.li2,
+.submit-orders .pro-table .table ul li.li3,
+.submit-orders .pro-table .table ul li.li4 {
+    line-height: 100px;
+}
+
+/*积分*/
+.submit-orders .pro-table .jifen {
+    margin: 20px 0 0 910px;
+    width: 250px;
+}
+
+.submit-orders .pro-table .jifen div {
+    overflow: hidden;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+}
+
+.submit-orders .pro-table .jifen div p.p1 {
+    float: left;
+    width: 45%;
+    color: #3b3b3b;
+    text-align: right;
+}
+
+.submit-orders .pro-table .jifen div p.p2 {
+    float: right;
+    width: 45%;
+    text-align: left;
+}
+
+.submit-orders .pro-table .jifen div.div4 {
+    height: 40px;
+    line-height: 40px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.submit-orders .pro-table .jifen div.div4 .p2 {
+    color: #ff9900;
+}
+
+/*提交订单 END*/
+
+/*付款成功*/
+.view-logistics .pay-info {
+    margin-top: 20px;
+    padding: 20px;
+    width: 100%;
+    background-color: #fbfbfb;
+    border: 1px solid #ddd;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.view-logistics .pay-info p.p1 {
+    width: 100%;
+    line-height: 30px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.view-logistics .pay-info p.p1 span {
+    color: #ff9900;
+}
+
+.view-logistics .pay-info p.p2 {
+    width: 100%;
+    line-height: 30px;
+    font-size: 12px;
+}
+
+/*付款成功 END*/
+
+/*商品出库*/
+.view-logistics .logistic-info .order-number div.wuliu label {
+    visibility: hidden;
+}
+
+.view-logistics .logistic-info .order-number div.wuliu label.lb1 {
+    visibility: visible;
+}
+
+.view-logistics .logistic-info .order-number div.wuliu strong {
+    margin: 0 20px;
+    color: #cfb20f;
+}
+
+.view-logistics .logistic-info .order-number div.wuliu a {
+    padding-right: 20px;
+    background: url(../images/icon_unfold_1.png) no-repeat right center;
+}
+
+.view-logistics .logistic-info .order-number div.wuliu a:hover {
+    color: #ff9900;
+}
+
+.view-logistics .logistic-info .order-number div.wuliu a.pack-up {
+    background: url(../images/icon_pack_up_1.png) no-repeat right center;
+}
+
+.view-logistics .logistic-info .order-number div.wuliu-lists {
+    display: none;
+}
+
+/*.view-logistics .logistic-info .order-number div.wuliu-lists strong {color: #666;}*/
+/*商品出库 END*/
+
+/*个人中心*/
+.personal-center {
+    /*overflow: hidden;*/
+    width: 1200px;
+}
+
+.personal-center .left-menu {
+    float: left;
+    padding: 30px 0 10px;
+    width: 230px;
+    background-color: #fff;
+}
+
+.personal-center .left-menu ul {
+    margin-bottom: 20px;
+    padding: 0 20px 0 60px;
+}
+
+.personal-center .left-menu ul li {
+    overflow: hidden;
+    height: 36px;
+    line-height: 36px;
+}
+
+.personal-center .left-menu ul li.active a {
+    color: #ff9900;
+}
+
+.personal-center .left-menu ul li.li1 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+}
+
+/*右侧内容*/
+.personal-center .right-content {
+    float: right;
+    width: 950px;
+}
+
+/*个人信息*/
+.personal-center .right-content .personal-info {
+    padding: 20px;
+    float: left;
+    width: 100%;
+    background-color: #fff;
+}
+
+.personal-center .right-content .personal-info .head-img {
+    float: left;
+    margin: 10px 15px 10px 0;
+    width: 100px;
+    height: 100px;
+    background-color: #ddd;
+    border-radius: 50%;
+}
+
+.personal-center .right-content .personal-info .head-img img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.personal-center .right-content .personal-info .user-name {
+    float: left;
+    margin: 15px 20px 15px 0;
+    width: 255px;
+    height: 90px;
+}
+
+.personal-center .right-content .personal-info .user-name .div1 {
+    line-height: 30px;
+    color: #ff9900;
+}
+
+.personal-center .right-content .personal-info .user-name .div1 .grade {
+    color: #999;
+    margin-left: 10px;
+}
+
+.personal-center .right-content .personal-info .user-name .div1 .grade em {
+    color: #324edd;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.personal-center .right-content .personal-info .user-name .bank-card {
+    width: 100%;
+    height: 30px;
+}
+
+.personal-center .right-content .personal-info .user-name .bank-card .clickcard {
+    width: 86px;
+    height: 26px;
+    color: #fff;
+    background: #ffc100;
+    text-align: center;
+    line-height: 26px;
+    display: inline-block;
+    border-radius: 4px;
+    float: left;
+    margin-right: 5px;
+}
+
+.personal-center .right-content .personal-info .user-name .bank-card .tips {
+    float: left;
+    color: #ff9900;
+    line-height: 26px;
+    transition: 1s;
+}
+
+.personal-center .right-content .personal-info .user-name .bank-card .clickcard:hover {
+    background: #ff9900;
+}
+
+.personal-center .right-content .personal-info .user-name .div3 {
+    width: 100%;
+    float: left;
+    height: 30px;
+    line-height: 30px;
+}
+
+.personal-center .right-content .personal-info .user-name .div3 div {
+    float: left;
+    font-size: 12px;
+    color: #999;
+}
+
+.personal-center .right-content .personal-info .user-name .div3 div.div2 {
+    position: relative;
+    margin: 9px 5px 9px 8px;
+    width: 52px;
+    height: 12px;
+    background-color: #ddd;
+}
+
+.personal-center .right-content .personal-info .user-name .div3 div.div2 p {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    width: 30%;
+    height: 100%;
+    background-color: #ff9900;
+}
+
+.personal-center .right-content .personal-info .myinfo {
+    float: right;
+}
+
+.personal-center .right-content .personal-info .myinfo .ininfo {
+    float: left;
+    width: 125px;
+    text-align: center;
+    margin-top: 25px;
+}
+
+.personal-center .right-content .personal-info .myinfo .ininfo .p1 {
+    display: inline-block;
+    width: 100%;
+    font-size: 14px;
+    height: 33px;
+    line-height: 33px;
+    color: #333;
+
+}
+
+.personal-center .right-content .personal-info .myinfo .ininfo .p2 {
+    display: inline-block;
+    width: 100%;
+    height: 33px;
+    line-height: 33px;
+    color: #999;
+
+}
+
+.personal-center .right-content .personal-info .myinfo .ininfo .p2 strong {
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.personal-center .right-content .personal-info .myinfo .ininfo .p2 strong font {
+    font-size: 30px;
+}
+
+.personal-center .right-content .personal-info .myinfo .ininfo .p3 {
+    color: #999;
+    display: inline-block;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+}
+
+.personal-center .right-content .personal-info .myinfo .ininfo .p3 strong {
+    font-size: 18px;
+    color: #666;
+}
+
+.personal-center .right-content .personal-info .t-nav {
+    float: left;
+    margin: 15px 0;
+    width: 270px;
+    height: 90px;
+}
+
+.personal-center .right-content .personal-info .t-nav a {
+    float: left;
+    width: 33.33%;
+    height: 100%;
+    text-align: center;
+}
+
+.personal-center .right-content .personal-info .t-nav a img {
+    margin: 0 auto;
+    margin-top: 12px;
+    width: 43px;
+    height: 43px;
+    transition: .5s;
+}
+
+.personal-center .right-content .personal-info .t-nav a:hover img {
+    -webkit-transform: translateY(-4px);
+    -moz-transform: translateY(-4px);
+    -ms-transform: translateY(-4px);
+    -o-transform: translateY(-4px);
+    transform: translateY(-4px);
+}
+
+.personal-center .right-content .personal-info .t-nav a p {
+    line-height: 30px;
+    font-size: 12px;
+}
+
+.personal-center .right-content .personal-info .t-nav a p span {
+    margin-left: 5px;
+    font-weight: 700;
+    color: #ff9900;
+}
+
+.personal-center .right-content .my-orders {
+    float: left;
+    width: 100%;
+    margin-top: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+
+.personal-center .right-content .my-orders .top-line {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+}
+
+.personal-center .right-content .my-orders .top-line p {
+    float: left;
+    margin-right: 15px;
+}
+
+.personal-center .right-content .my-orders .top-line p.p1 {
+    margin-right: 40px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #3b3b3b;
+}
+
+.personal-center .right-content .my-orders .top-line p span {
+    margin-left: 5px;
+    color: #ff9900;
+}
+
+.personal-center .right-content .my-orders .top-line a {
+    float: right;
+    font-size: 12px;
+    color: #999;
+}
+
+.personal-center .right-content .my-orders ul {
+    padding: 20px 0;
+    float: left;
+    width: 100%;
+    border-top: 1px dotted #ddd;
+}
+
+.personal-center .right-content .my-orders ul.ul1 {
+    border-top: none;
+}
+
+.personal-center .right-content .my-orders ul li {
+    float: left;
+    height: 60px;
+    line-height: 60px;
+    font-size: 12px;
+}
+
+.personal-center .right-content .my-orders ul li.li1 {
+    width: 490px;
+}
+
+.personal-center .right-content .my-orders ul li a.img {
+    float: left;
+    margin-right: 10px;
+    width: 60px;
+    height: 60px;
+}
+
+.personal-center .right-content .my-orders ul li a.img img {
+    width: 100%;
+    height: 100%;
+}
+
+.personal-center .right-content .my-orders ul li.li2 {
+    width: 150px;
+}
+
+.personal-center .right-content .my-orders ul li.li3 {
+    position: relative;
+    width: 100px;
+    text-align: center;
+}
+
+.personal-center .right-content .my-orders ul li.li3 .wu-l {
+    display: none;
+    position: absolute;
+    background: #fff;
+    left: -70px;
+    top: 50px;
+    z-index: 2;
+}
+
+.personal-center .right-content .my-orders ul li.li3 .wu-l .uarrow {
+    margin: 0 auto;
+    width: 10px;
+    display: block;
+    height: 5px;
+}
+
+.personal-center .right-content .my-orders ul li.li3 .wu-l .lists {
+    padding: 10px 20px;
+    width: 240px;
+    text-align: left;
+    background-color: #fff;
+    border: 1px solid #ffc100;
+}
+
+.personal-center .right-content .my-orders ul li.li3 .wu-l .lists div {
+    line-height: 20px;
+}
+
+.personal-center .right-content .my-orders ul li.li3 .wu-l .lists div.p1 {
+    margin-bottom: 10px;
+    width: 100%;
+    line-height: 35px;
+    border-bottom: 1px dotted #ddd;
+}
+
+.personal-center .right-content .my-orders ul li.li3 .wu-l .lists div.p2 {
+    overflow: hidden;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.personal-center .right-content .my-orders ul li.li3 .wu-l .lists div.p2 sup {
+    display: block;
+    float: left;
+    margin-right: 5px;
+    width: 5px;
+    font-size: 20px;
+}
+
+.personal-center .right-content .my-orders ul li.li3 .wu-l .lists div.p2 p {
+    float: left;
+    width: 188px;
+}
+
+.personal-center .right-content .my-orders ul li.li3 .wu-l .lists div.p2 p span {
+    display: block;
+}
+
+.personal-center .right-content .my-orders ul li.li3 .wu-l .lists div.p3 {
+    margin-bottom: 0;
+}
+
+.personal-center .right-content .my-orders ul li.li3 .wu-l .lists div.p3 a:hover {
+    color: #ff9900;
+}
+
+.personal-center .right-content .my-orders ul li.li3 .wu-l .lists div.active {
+    color: #ff9900;
+}
+
+.personal-center .right-content .my-orders ul li.li3:hover .span1 {
+    color: #ff9900;
+}
+
+.personal-center .right-content .my-orders ul li.li3:hover .wu-l {
+    display: block;
+}
+
+.personal-center .right-content .my-orders ul li.li4 {
+    float: right;
+    margin: 15px 0;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.personal-center .right-content .my-orders ul li.li4 a {
+    width: 100%;
+    height: 100%;
+    float: left;
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+    background-color: #ff9900;
+}
+
+.personal-center .right-content .my-orders .noorder {
+    width: 100%;
+    height: 190px;
+    float: left;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.personal-center .right-content .my-orders .noorder .lbltips {
+    height: 68px;
+    display: inline-block;
+    line-height: 68px;
+    color: #999;
+    font-size: 14px;
+    padding-left: 90px;
+    background: url("../images/f-icon8.png") left center no-repeat;
+}
+
+/*猜您喜欢*/
+.guess-like {
+    display: inline-block;
+    width: 100%;
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.guess-like .title {
+    float: left;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    margin-bottom: 15px;
+}
+
+.guess-like .title strong {
+    float: left;
+    color: #666;
+    font-size: 16px;
+}
+
+.guess-like .pro-list {
+    float: left;
+    width: 100%;
+}
+
+.guess-like .pro-list ul {
+    float: left;
+    width: 105%;
+}
+
+.guess-like .pro-list ul li {
+    float: left;
+    width: 212px;
+    height: 274px;
+    overflow: hidden;
+    margin-right: 18px;
+    margin-bottom: 18px;
+    border: 1px solid #e7e7e7;
+}
+
+.guess-like .pro-list ul li .img {
+    float: left;
+    width: 210px;
+    height: 210px;
+}
+
+.guess-like .pro-list ul li .img img {
+    float: left;
+    width: 100%;
+    height: 100%;
+}
+
+.guess-like .pro-list ul li .ptitle {
+    color: #666;
+    float: left;
+    width: 100%;
+    padding: 0 4px;
+    font-size: 14px;
+    text-align: center;
+    height: 31px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 31px;
+    background: #f5f5f5;
+}
+
+.guess-like .pro-list ul li .price {
+    float: left;
+    width: 100%;
+    background: #f5f5f5;
+    line-height: 31px;
+    height: 31px;
+    color: #ff9900;
+    font-size: 12px;
+    text-align: center;
+}
+
+.guess-like .pro-list ul li .price label {
+    font-size: 16px;
+}
+
+/*个人中心 END*/
+
+/*评价商品*/
+
+/*评价星星*/
+.score {
+    margin-top: 20px;
+    width: 100%;
+    height: 30px;
+}
+
+.score .left {
+    float: left;
+    width: 60px;
+    line-height: 30px;
+}
+
+.score .reviewsbox {
+    float: left;
+    margin-left: 10px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.reviewsbox a {
+    display: inline-block;
+    margin-left: 3px;
+    margin-top: 5px;
+    width: 20px;
+    height: 20px;
+    background: url(../images/icon_collect_1.png) no-repeat center center;
+    -webkit-background-size: auto 18px;
+    background-size: auto 18px;
+}
+
+.reviewsbox a.sel {
+    background-image: url(../images/icon_collected_1.png);
+}
+
+.reviews-product .reviews-content {
+    overflow: hidden;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.reviews-product .reviews-content .left {
+    float: left;
+    width: 60px;
+}
+
+.reviews-product .reviews-content .right {
+    float: right;
+    padding: 5px;
+    width: 830px;
+    height: 121px;
+    border: 1px solid #ddd;
+}
+
+/*上传图片*/
+.reviews-product .upload-pic {
+    overflow: hidden;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.reviews-product .upload-pic .left {
+    float: left;
+    width: 60px;
+}
+
+.reviews-product .upload-pic a {
+    float: left;
+    margin: 0 5px 0 8px;
+    width: 80px;
+    height: 80px;
+    background: url(../images/icon_file_1.png) no-repeat center center;
+}
+
+.reviews-product .upload-pic a input {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    filter: Alpha(opacity=0); /*IE*/
+}
+
+.reviews-product .upload-pic .img {
+    float: left;
+    margin-right: 5px;
+    width: 78px;
+    height: 78px;
+    border: 1px solid #ddd;
+}
+
+.reviews-product .upload-pic .img img {
+    width: 100%;
+    height: 100%;
+}
+
+.reviews-product .upload-pic span {
+    float: left;
+    margin-top: 60px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    color: #999;
+}
+
+.reviews-product .btn-sub-reviews {
+    margin-left: 68px;
+    margin-top: 20px;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+    text-align: center;
+    background-color: #ff9900;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/*评价商品 END*/
+
+/*确认订单1*/
+.submit-orders .pro-table .jifen {
+    *position: relative;
+    *padding-bottom: 55px;
+}
+
+.submit-orders .pro-table .jifen .btn-receipt-goods {
+    margin: 15px 0 0 120px;
+    *position: absolute;
+    *right: 0;
+    *bottom: 0px;
+    width: 130px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 18px;
+    color: #fff;
+    text-align: center;
+    background-color: #ff9900;
+    border: none;
+    cursor: pointer;
+}
+
+/*确认订单1 END*/
+
+/*提交订单1*/
+.s-a-m {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.s-a-m .title {
+    width: 100%;
+    line-height: 30px;
+    font-weight: 700;
+    color: #3b3b3b;
+}
+
+.s-a-m .list-one {
+    overflow: hidden;
+    margin-top: 15px;
+    width: 100%;
+    height: 82px;
+}
+
+.s-a-m .list-one input[type="radio"] {
+    float: left;
+    margin: 34px 10px;
+    width: 14px;
+    height: 14px;
+}
+
+.s-a-m .list-one .right {
+    float: left;
+    padding: 10px 20px;
+    width: 1084px;
+    border: 1px solid #ddd;
+}
+
+.s-a-m .list-one .right p {
+    overflow: hidden;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+}
+
+.s-a-m .list-one .right p span {
+    margin-right: 20px;
+}
+
+.s-a-m .list-one .right p span.ml {
+    margin-left: 20px;
+    margin-right: 0;
+}
+
+.s-a-m .btn-add-address {
+    margin-left: 34px;
+    margin-top: 15px;
+    width: 228px;
+    height: 38px;
+    line-height: 40px;
+    text-align: center;
+    border: 1px dotted #ddd;
+}
+
+/*选择支付方式*/
+.c-p-m .list-one {
+    height: 54px;
+}
+
+.c-p-m .list-one input[type="radio"] {
+    margin: 20px 10px;
+}
+
+/*提交订单1 END*/
+
+.l_left{
+    width:230px;
+    padding:30px 0 10px;
+    background:#fff;
+}
+.l_left li{
+    padding:0 20px 0 60px;
+    margin-bottom:20px;
+}
+.l_left li p{
+    overflow:hidden;
+    height:36px;
+    line-height:36px;
+}
+.l_left li p.active a{
+    color:#ff9900;
+}
+.l_left li .p1{
+    font-size:16px;
+    font-weight:bold;
+    color:#333;
+}
+.l_right{
+    width:950px;
+}
+.l_right .div1,
+.l_right .div2{
+    overflow:hidden;
+    background:#fff;
+}
+.l_right .div1{
+    height:52px;
+    line-height:52px;
+}
+.l_right .div1 label{
+    margin-right:100px;
+}
+.l_right .div1 span.bprice{
+    font-size:18px;
+    color:#ff9900;
+}
+.l_right .div1 a{
+    color:#206de0;
+}
+.l_right .div2 .div2_title{
+    height:56px;
+    line-height:56px;
+}
+.l_right .div2 .div2_title a{
+    margin-right:30px;
+}
+.l_right .div2 .div2_title a.active{
+    font-size:16px;
+    font-weight:bold;
+    color:#3b3b3b;
+}
+
+
+/* 我的订单（待评价） */
+.search_box_right{
+    margin-top:6px;
+}
+.search_box_right a{
+    display:block;
+    width:50px;
+    height:30px;
+    line-height:30px;
+    text-align:center;
+    color:#3b3b3b;
+    background:#dddddd;
+}
+.search_box_right input{
+    width:200px;
+    height:30px;
+    line-height:30px;
+    padding:0 4px;
+    font-size:12px;
+    color:#999;
+    border:1px solid #ddd;
+}
+
+.need_value{
+    padding:0 20px 30px;
+}
+.need_value .box1{
+    height:54px;
+    line-height:54px;
+}
+.need_value .box1 .div1{
+    width:80px;
+    font-size:16px;
+    font-weight:bold;
+    color:#333;
+}
+.need_value .box1 .div2{
+    overflow:hidden;
+    width:570px;
+}
+.need_value .box1 .div2 a{
+    margin-left:20px;
+    color:#3b3b3b;
+}
+.need_value .box1 .div2 a span{
+    margin-left:2px;
+    color:#ff9900;
+}
+.need_value .box1 .div2 a.active{
+    color:#ff9900;
+}
+.need_value .box2{
+    float: left;
+    width: 100%;
+    overflow:hidden;
+    height:36px;
+    line-height:36px;
+    text-align:center;
+    background:#fff7ec;
+    margin-bottom: 20px;
+}
+.need_value .box3 li{
+    overflow:hidden;
+    margin-top:20px;
+    font-size:12px;
+    border:1px solid #ddd;
+}
+.need_value .box3 li .order_num{
+    height:28px;
+    line-height:28px;
+    background:#fff7ec;
+}
+.need_value .box3 li .order_num input{
+    width:14px;
+    height:14px;
+    margin-left:10px;
+}
+.need_value .box3 li .order_num label{
+    margin-left:20px;
+    color:#999;
+}
+.need_value .box3 li .order_num .lab2{
+    margin-left:40px;
+}
+.need_value .box3 li .goodsorder_detail{
+    overflow:hidden;
+}
+.need_value .box3 li dl{
+    width:100%;
+    height:100px;
+}
+.need_value .box3 li dl dt{
+    width:78px;
+    height:78px;
+    margin:10px 10px;
+    border:1px solid #ddd;
+}
+.need_value .box3 li dl dt a{
+    display:block;
+}
+.need_value .box3 li dl dt img{
+    width:100%;
+    height:100%;
+}
+.need_value .box3 li dl dd{
+    display:block;
+    height:82px;
+    padding-top:18px;
+}
+.need_value .box3 li dl .dd1 p{
+    overflow:hidden;
+}
+.need_value .box3 li dl .dd1 .p1{
+    height:40px;
+    line-height:20px;
+    padding-right:10px;
+    color:#3b3b3b;
+}
+.need_value .box3 li dl .dd1 .p2{
+    height:24px;
+    line-height:24px;
+    color:#999;
+}
+.need_value .box3 li dl .dd4{
+    width:90px;
+}
+.need_value .box3 li dl .dd4 a{
+    margin-bottom:6px;
+    display: block;
+}
+.need_value .box3 .div5{
+    height:100%;
+    text-align:center;
+    border-left:1px solid #ddd;
+}
+.need_value .box3 .div5 .p1{
+    margin-top:18px;
+    font-size:14px;
+    font-weight:bold;
+}
+.need_value .box3 .div5 .p2{
+    color:#3b3b3b;
+}
+.need_value .box3 .div6{
+    height:100%;
+    text-align:center;
+    border-left:1px solid #ddd;
+}
+.need_value .box3 .div6 .p1{
+    margin-top:18px;
+}
+.need_value .box3 .div6 a{
+    margin-top:6px;
+}
+.need_value .box3 .div7{
+    height:100%;
+    text-align:center;
+    border-left:1px solid #ddd;
+}
+.need_value .box3 .div7 .a1{
+    margin-top:18px;
+}
+.need_value .box3 .div7 .a_sure{
+    display:block;
+    width:70px;
+    height:28px;
+    line-height:28px;
+    text-align:center;
+    margin:0 auto;
+    margin-top:18px;
+    color:#fff;
+    border-radius:6px;
+    background:#ff9900;
+}
+.need_value .box3 .div7 a{
+    margin-top:6px;
+}
+.need_value .box4{
+    height:30px;
+    line-height:30px;
+    background:#f5f5f5;
+}
+.need_value .box4 input{
+    margin-left:10px;
+}
+.need_value .box4 a{
+    margin-left:4px;
+    font-size:12px;
+    color:#3b3b3b;
+}
+.need_value .box4 .lab2{
+    margin-left:16px;
+}
+/* 我的订单（待评价）-结束 */
+
+
+
+
+
