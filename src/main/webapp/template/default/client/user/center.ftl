@@ -337,6 +337,10 @@
     <div class="clear"></div>
 </div>
 <!-- Center End -->
+<!-- Footer Start -->
+<footer>
 <#include "../common/foot.ftl">
+</footer>
+<!-- Footer End -->
 </body>
 </html>

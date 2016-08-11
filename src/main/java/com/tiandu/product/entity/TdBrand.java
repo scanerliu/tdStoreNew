@@ -18,6 +18,8 @@ public class TdBrand extends TdBaseEntity{
     private Integer updateBy;
 
     private Date updateTime;
+    
+    private String letter; //首字母大写，展示使用
 
     public Integer getId() {
         return id;
@@ -74,7 +76,16 @@ public class TdBrand extends TdBaseEntity{
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
-    /**
+    
+    public String getLetter() {
+		return letter;
+	}
+
+	public void setLetter(String letter) {
+		this.letter = letter;
+	}
+
+	/**
      * 获取品牌状态文字说明
      * @return
      */

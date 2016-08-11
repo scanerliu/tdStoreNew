@@ -14,7 +14,7 @@ function tipshide(obj){
 			tipobj = $('<label= class="tips">'+result.msg+'</label>');
 		}else if(result.code==1){
 			// 修改弹框积分
-			tipobj = $('<label= class="tips">>签到成功，本次获得'+result.gettedIntegral+'个积分。</label>');
+			tipobj = $('<label= class="tips">签到成功，本次获得'+result.gettedIntegral+'个积分。</label>');
 			var totalintegral = parseInt(result.gettedIntegral)+integralInt;
 			integral.html(totalintegral);			
 		} 

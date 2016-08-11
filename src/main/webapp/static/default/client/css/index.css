@@ -1,0 +1,366 @@
+.all_classify {
+  margin-top: 30px;
+}
+.all_classify ul {
+  overflow: hidden;
+  border: 1px solid #ddd;
+}
+.all_classify ul li {
+  float: left;
+  overflow: hidden;
+  width: 100%;
+  font-size: 12px;
+  border-top: 1px dotted #ddd;
+}
+.all_classify ul li aside {
+  position: relative;
+  overflow: hidden;
+  padding: 0 16px;
+  height: 34px;
+  line-height: 34px;
+}
+.all_classify ul li .as1 {
+  width: 97px;
+  text-align: right;
+  border-right: 1px solid #f1f1f1;
+  background: #f8f8f8;
+}
+.all_classify ul li .as2 {
+  width: 980px;
+}
+.all_classify ul li .as2 a.aword {
+  margin-right: 32px;
+  white-space: nowrap;
+}
+.all_classify ul li .as2 a.aimg {
+  display: block;
+  float: left;
+  width: 104px;
+  height: 52px;
+  border: 1px solid #ddd;
+}
+.all_classify ul li .as2 a.aimg img {
+  width: 100%;
+  height: 100%;
+}
+.all_classify ul li .as2noneh {
+  height: auto;
+}
+.all_classify ul li .amore {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+  color: #999;
+}
+.all_classify ul .li1 {
+  border-top: none;
+}
+.all_classify ul .li1 .art1 a {
+  padding: 4px;
+}
+.all_classify ul .li1 .art1 a.active {
+  color: #fff;
+  background: #ff9900;
+}
+.all_classify ul .li1 .art2 {
+  overflow: hidden;
+  padding: 14px;
+  height: auto;
+}
+.all_classify ul .li1 .art3 {
+  padding-bottom: 20px;
+  text-align: center;
+}
+.all_classify ul .li1 .art3 a {
+  display: inline-block;
+  margin: 0 10px;
+  width: 44px;
+  height: 22px;
+  line-height: 22px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fafafa;
+}
+
+.price {
+  overflow: hidden;
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  background: #fafafa;
+}
+.price aside {
+  overflow: hidden;
+  height: 40px;
+  line-height: 40px;
+}
+.price .as1 a {
+  display: block;
+  width: 80px;
+  text-align: center;
+  padding: 0;
+  border-right: 1px solid #ddd;
+}
+.price .as1 a.active {
+  padding-right: 1px;
+  border-right: none;
+  color: #fff;
+  background: #2399dd;
+}
+.price .as1 .a1 span {
+  display: inline-block;
+  padding-right: 16px;
+  background: url(../images/y100.png) no-repeat 100% center;
+}
+.price .as1 input {
+  padding-left: 20px;
+  margin-left: 10px;
+  margin-top: 8px;
+  width: 30px;
+  height: 24px;
+  line-height: 24px;
+  color: #999;
+  border: 1px solid #ddd;
+  background: #fff url(../images/y99.png) no-repeat 8px center;
+}
+.price .as1 span {
+  margin: 0 0 0 10px;
+}
+.price .as2 {
+  padding-right: 20px;
+  font-size: 12px;
+}
+.price .as2 .aright, .price .as2 .aleft {
+  font-size: 20px;
+  color: #ddd;
+  margin-left: 10px;
+}
+.price .as2 .aright:hover, .price .as2 .aleft:hover {
+  color: #666;
+}
+.price .as2 label {
+  margin-left: 30px;
+  color: #444;
+}
+.price .as2 label input {
+  position: relative;
+  top: 2px;
+  width: 12px;
+  height: 12px;
+  border: 1px solid #ddd;
+}
+.price .as2 .lab1 {
+  margin: 0 20px 0 40px;
+  font-size: 14px;
+  color: #999;
+}
+.price .as2 .lab1 span {
+  margin-right: 8px;
+  color: #f1394f;
+}
+
+.goods_list ul {
+  overflow: hidden;
+  width: 1240px;
+}
+.goods_list ul li {
+  float: left;
+  margin-top: 30px;
+  margin-right: 13px;
+  width: 230px;
+}
+.goods_list ul a {
+  display: block;
+  width: 100%;
+  height: 320px;
+}
+.goods_list ul a img {
+  width: 100%;
+  height: 100%;
+}
+.goods_list ul p {
+  overflow: hidden;
+  width: 100%;
+}
+.goods_list ul .p1 {
+  height: 44px;
+  line-height: 22px;
+  color: #444;
+}
+.goods_list ul p.p2 {
+  margin-top: 6px;
+  height: 20px;
+  line-height: 20px;
+}
+.goods_list ul p.p2 label {
+  margin-right: 20px;
+  font-size: 18px;
+  color: #ff7700;
+}
+.goods_list ul p.p2 span {
+  color: #999;
+  text-decoration: line-through;
+}
+
+.page {
+  width: 100%;
+  text-align: right;
+}
+.page a {
+  display: inline-block;
+  padding: 4px 10px;
+  border: 1px solid #ddd;
+  background: #fafafa;
+}
+.page a.active {
+  padding: 5px 11px;
+  color: #fff;
+  border: none;
+  background: #ff9900;
+}
+
+.youlike {
+  margin-top: 30px;
+}
+.youlike .otitle {
+  height: 60px;
+  line-height: 60px;
+}
+.youlike .otitle label {
+  font-size: 22px;
+  color: #333;
+}
+.youlike .otitle span {
+  padding-left: 24px;
+  font-size: 12px;
+  cursor: pointer;
+  background: url(../images/y98.png) no-repeat 0 center;
+}
+.youlike ul {
+  overflow: hidden;
+  width: 100%;
+  border-left: 1px solid #ddd;
+}
+.youlike ul li {
+  float: left;
+  padding: 20px;
+  width: 199px;
+  border: 1px solid #ddd;
+  border-left: none;
+}
+.youlike ul li a {
+  display: block;
+  width: 100%;
+  height: 180px;
+}
+.youlike ul li a img {
+  width: 100%;
+  height: 100%;
+}
+.youlike ul li p {
+  overflow: hidden;
+  width: 100%;
+  margin-top: 10px;
+}
+.youlike ul li .p1 {
+  height: 40px;
+  line-height: 20px;
+  font-size: 12px;
+}
+.youlike ul li .p2 {
+  font-size: 18px;
+  color: #ff7700;
+}
+
+.gou_lab {
+  position: absolute;
+  top: 30px;
+  left: -120px;
+}
+.gou_lab a {
+  display: block;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  width: 50px;
+  line-height: 26px;
+  text-align: center;
+  font-size: 22px;
+  color: #333;
+  border: 2px solid #2399dd;
+  background: #fff;
+  word-break: break-all;
+}
+.gou_lab a.active {
+  padding: 42px 2px 42px;
+  color: #fff;
+  border: none;
+  background: #2399dd;
+}
+
+.gou ul {
+  display: none;
+  overflow: hidden;
+  width: 1240px;
+}
+.gou ul.active {
+  display: block;
+}
+.gou li {
+  float: left;
+  margin-right: 20px;
+  margin-top: 30px;
+  padding: 20px;
+  width: 242px;
+  border: 1px solid #ddd;
+  background: #fff;
+}
+.gou li a {
+  display: block;
+  width: 100%;
+  height: 230px;
+}
+.gou li a img {
+  width: 100%;
+  height: 100%;
+}
+.gou li p {
+  overflow: hidden;
+  width: 100%;
+}
+.gou li .p1 {
+  margin-top: 10px;
+  height: 44px;
+  line-height: 22px;
+}
+.gou li .p2 {
+  margin-top: 6px;
+  height: 20px;
+  line-height: 20px;
+}
+.gou li .p2 label {
+  margin-right: 20px;
+  font-size: 18px;
+  color: #ff7700;
+}
+.gou li .p2 span {
+  color: #999;
+  text-decoration: line-through;
+}
+.gou li .p3 {
+  padding-left: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background: url(../images/y96.png) no-repeat 0 center;
+}
+.gou li .p3 span {
+  display: inline-block;
+  margin: 0 3px;
+  width: 24px;
+  height: 28px;
+  line-height: 28px;
+  text-align: center;
+  color: #fff;
+  background: #333;
+}
+
+/*# sourceMappingURL=index.css.map */

@@ -417,7 +417,22 @@
     	and p.kind != 2
     </if>
     <if test="typeId != null">
-    	and type_id = #{typeId,jdbcType=INTEGER}
+    	and p.type_id = #{typeId,jdbcType=INTEGER}
+    </if>
+    <if test="brandId != null">
+    	and p.brand_id = #{brandId,jdbcType=INTEGER}
+    </if>
+    <if test="stock != null">
+    	and p.quantum <![CDATA[ >]]> 0
+    </if>
+    <if test="postage != null">
+    	and p.postage = 0
+    </if>
+     <if test="startPrice != null">
+    	and p.price <![CDATA[ >=]]> #{startPrice,jdbcType=DECIMAL}
+    </if>
+    <if test="endPrice != null">
+    	and p.price <![CDATA[ <=]]> #{endPrice,jdbcType=DECIMAL}
     </if>
     <if test="name != null and name!=''">
     	and p.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
@@ -490,6 +505,21 @@
     </if>
     <if test="typeId != null">
     	and p.type_id = #{typeId,jdbcType=INTEGER}
+    </if>
+    <if test="brandId != null">
+    	and p.brand_id = #{brandId,jdbcType=INTEGER}
+    </if>
+    <if test="stock != null">
+    	and p.quantum <![CDATA[ >]]> 0
+    </if>
+    <if test="postage != null">
+    	and p.postage = 0
+    </if>
+    <if test="startPrice != null">
+    	and p.price <![CDATA[ >=]]> #{startPrice,jdbcType=DECIMAL}
+    </if>
+    <if test="endPrice != null">
+    	and p.price <![CDATA[ <=]]> #{endPrice,jdbcType=DECIMAL}
     </if>
     <if test="isNormalProduct != null and isNormalProduct == true">
     	and p.kind != 2

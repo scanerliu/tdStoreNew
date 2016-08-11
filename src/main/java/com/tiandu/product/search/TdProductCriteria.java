@@ -1,5 +1,6 @@
 package com.tiandu.product.search;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +21,8 @@ public class TdProductCriteria extends SearchCriteria {
 	private Boolean isNormalProduct = false;
 	private Set<Integer> orderskuIdSet;
 
-	private Integer typeId;
+	private Integer typeId;//商品类型id
+	private Integer brandId; //商品品牌id
 
 	private List<Integer> productTypeIds;
 
@@ -36,6 +38,11 @@ public class TdProductCriteria extends SearchCriteria {
 	private Date seckillEnd;
 
 	private String keyword;
+	
+	private Integer stock; //库存状态，1-有库存
+	private Integer postage;//邮费状态：1-包邮
+	private BigDecimal startPrice;//开始价格
+	private BigDecimal endPrice;//结束价格
 
 	public String getName() {
 		return name;
@@ -75,6 +82,14 @@ public class TdProductCriteria extends SearchCriteria {
 
 	public void setKind(Byte kind) {
 		this.kind = kind;
+	}
+
+	public Integer getBrandId() {
+		return brandId;
+	}
+
+	public void setBrandId(Integer brandId) {
+		this.brandId = brandId;
 	}
 
 	public Integer getNewRecommend() {
@@ -179,6 +194,38 @@ public class TdProductCriteria extends SearchCriteria {
 
 	public void setSeckillEnd(Date seckillEnd) {
 		this.seckillEnd = seckillEnd;
+	}
+
+	public Integer getStock() {
+		return stock;
+	}
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
+	}
+
+	public Integer getPostage() {
+		return postage;
+	}
+
+	public void setPostage(Integer postage) {
+		this.postage = postage;
+	}
+
+	public BigDecimal getStartPrice() {
+		return startPrice;
+	}
+
+	public void setStartPrice(BigDecimal startPrice) {
+		this.startPrice = startPrice;
+	}
+
+	public BigDecimal getEndPrice() {
+		return endPrice;
+	}
+
+	public void setEndPrice(BigDecimal endPrice) {
+		this.endPrice = endPrice;
 	}
 
 	// 列表页排序 1-综合升序，2-综合降序，3-销量升序，4-销量降序，5-价格升序，6,-价格降序。

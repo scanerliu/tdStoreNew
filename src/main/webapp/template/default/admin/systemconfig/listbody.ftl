@@ -73,6 +73,15 @@
         <tr>
             <td align="right">网站版权信息:</td><td><input type="hidden" name="configKey" value="webcopyright"/><input type="text" name="webcopyright" id="webcopyright" value="${configMap.webcopyright!''}" class="easyui-textbox" style="width:300px;height:30px;"/></td>
         </tr>
+        <tr>
+            <td align="right">公司地址:</td><td><input type="hidden" name="configKey" value="webcompanyaddress"/><input type="text" name="webcompanyaddress" id="webcompanyaddress" value="${configMap.webcompanyaddress!''}" class="easyui-textbox" style="width:300px;height:30px;"/></td>
+        </tr>
+        <tr>
+            <td align="right">公司邮箱:</td><td><input type="hidden" name="configKey" value="webcompanyemail"/><input type="text" name="webcompanyemail" id="webcompanyemail" value="${configMap.webcompanyemail!''}" class="easyui-textbox" style="width:300px;height:30px;"/></td>
+        </tr>
+        <tr>
+            <td align="right">服务热线:</td><td><input type="hidden" name="configKey" value="webhotline"/><input type="text" name="webhotline" id="webhotline" value="${configMap.webhotline!''}" class="easyui-textbox" style="width:300px;height:30px;"/></td>
+        </tr>
         </table>
     </div>
     <div title="短信接口设置" style="overflow:auto;padding:20px;">

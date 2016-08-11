@@ -217,7 +217,7 @@ public class CUserController extends BaseController {
 		
 		modelMap.addAttribute("currentUser", currentUser);
 		// 系统配置
-//		modelMap.addAttribute("system", getSystem());
+		modelMap.addAttribute("system", getSystem());
 	    return "/client/user/center";
 	}
 	

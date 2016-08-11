@@ -226,6 +226,11 @@
         <artifactId>quartz</artifactId>
         <version>${quartz.version}</version>
     </dependency>
+    <dependency>
+    	<groupId>com.belerweb</groupId>
+    	<artifactId>pinyin4j</artifactId>
+    	<version>2.5.1</version>
+    </dependency>
   </dependencies>
   
   <build>

@@ -11,4 +11,9 @@ public interface TdBrandService {
 	public Integer save(TdBrand e);
 	public TdBrand findOne(Integer id);	
 	public List<TdBrand> findBySearchCriteria(TdBrandSearchCriteria sc);
+	/**
+	 * 获取品牌名称首字母大写
+	 * @param brandList
+	 */
+	public void upperFirstLetterList(List<TdBrand> brandList);
 }
