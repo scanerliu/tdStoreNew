@@ -9,6 +9,7 @@
 	background:#fff;
 	margin:0; 
 	padding:0;
+	min-height: 2.5rem;
 }
 .addWrap div a{
 	width: 100%;

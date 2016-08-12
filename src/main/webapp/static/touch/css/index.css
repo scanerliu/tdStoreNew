@@ -18,9 +18,6 @@
 }
 .swiper-slide {
     text-align: center;
-    /*background: #fff;*/
-    
-    /* Center slide text vertically */
     display: -webkit-box;
     display: -ms-flexbox;
     display: -webkit-flex;
@@ -44,12 +41,13 @@
 /* 通用-结束 */
 /* 首页 */
 .index_header{
-	overflow:hidden;
-	padding:0.2rem 0.3rem;
-	margin:0 auto;
-	width:5.8rem;
-	height:0.5rem;
-	background:#f23030;
+	    overflow: hidden;
+    padding: 0.05rem 3%;
+    margin: 0 auto;
+    width: 94%;
+    height: 0.5rem;
+    background: #f23030;
+    position: relative;
 }
 .index_header div{
 	margin-right:0.32rem;
@@ -66,12 +64,16 @@
 	line-height:0.5rem;
 }
 .index_header a:nth-of-type(1){
-	width:4.2rem;
-	text-align:center;
-	border-radius:5px;
-	color:#999;
-	background:#fcd6d6 url(../images/icon1.png) no-repeat  3.5rem center;
-	background-size:0.28rem;
+	position: absolute;
+    top: .05rem;
+    left: 50%;
+    margin-left: -2.1rem;
+    width: 4.2rem;
+    text-align: center;
+    border-radius: 5px;
+    color: #999;
+    background: #fcd6d6 url(../images/icon1.png) no-repeat 3.5rem center;
+    background-size: 0.28rem;
 }
 .index_header a:nth-of-type(2){
 	color:#fff;
@@ -147,8 +149,8 @@
 .clickbtn{
 	overflow:hidden;
 	padding:0 0.3rem 0.2rem;
-	margin-top:0.2rem;
-	height:2.8rem;
+	margin-top:0.1rem;
+	min-height:2.8rem;
 	background:#fff;
 }
 .clickbtn a{
@@ -156,47 +158,47 @@
 	float:left;
 	margin-top:0.2rem;
 	width:25%;
-	height:1.2rem;
 }
 .clickbtn a:nth-child(1){
 	background:url(../images/index1.png) no-repeat center 0;
-	background-size:0.82rem;
+	background-size:1rem;
 }
 .clickbtn a:nth-child(2){
 	background:url(../images/index2.png) no-repeat center 0;
-	background-size:0.82rem;
+	background-size:1rem;
 }
 .clickbtn a:nth-child(3){
 	background:url(../images/index3.png) no-repeat center 0;
-	background-size:0.82rem;
+	background-size:1rem;
 }
 .clickbtn a:nth-child(4){
 	background:url(../images/index4.png) no-repeat center 0;
-	background-size:0.82rem;
+	background-size:1rem;
 }
 .clickbtn a:nth-child(5){
 	background:url(../images/index5.png) no-repeat center 0;
-	background-size:0.82rem;
+	background-size:1rem;
 }
 .clickbtn a:nth-child(6){
 	background:url(../images/index6.png) no-repeat center 0;
-	background-size:0.82rem;
+	background-size:1rem;
 }
 .clickbtn a:nth-child(7){
 	background:url(../images/index7.png) no-repeat center 0;
-	background-size:0.82rem;
+	background-size:1rem;
 }
 .clickbtn a:nth-child(8){
 	background:url(../images/index8.png) no-repeat center 0;
-	background-size:0.82rem;
+	background-size:1rem;
 }
 .clickbtn a p{
-	margin-top:0.9rem;
-	text-align:center;
+	margin-top: 1.1rem;
+    text-align: center;
+    font-size: 0.28rem;
 }
 .index_title{
 	padding:0.2rem 0.3rem;
-	margin-top:0.2rem;
+	margin-top:0.1rem;
 	height:0.3rem;
 	line-height:0.3rem;
 	background:#fff;
@@ -807,19 +809,18 @@
 }
 .classify .cla_left{
 	overflow:auto;
-	width:1.5rem;
+	width:22%;
 }
 .classify .cla_left a{
-	display:block;
-	padding-left:0.06rem;
-	width:1.44rem;
-	height:0.8rem;
-	line-height:0.8rem;
-	text-align:center;
-	font-size:0.28rem;
-	color:#444;
-	border-bottom:1px solid #ddd;
-	background:#fff;
+	    display: block;
+    padding-left: 0.06rem;
+    height: 0.8rem;
+    line-height: 0.8rem;
+    text-align: center;
+    font-size: 0.28rem;
+    color: #444;
+    border-bottom: 1px solid #ddd;
+    background: #fff;
 }
 .classify .cla_left a.active{
 	padding:0;
@@ -931,8 +932,8 @@
 	position:relative;
 	overflow:auto;
 	float:right;
-	padding:0.1rem;
-	width:4.7rem;
+	padding: 1%;
+    width: 76%;
 }
 .classify .cla_right2 ul{
 	display:none;
@@ -957,7 +958,6 @@
 }
 .classify .cla_right2 menu{
 	padding:0 0.2rem;
-	width:4.3rem;
 	height:0.7rem;
 	line-height:0.7rem;
 	font-size:0.26rem;
@@ -969,7 +969,7 @@
 .classify .cla_right2 li.active menu{
 	color:#f23030;
 	border:none;
-	background:#fff url(../images/bottom.png) no-repeat 4.4rem center;
+	background:#fff url(../images/bottom.png) no-repeat 96% center;
 	background-size:0.18rem 0.11rem;
 }
 .classify .cla_right2 li.active aside{
@@ -977,7 +977,7 @@
 }
 .classify .cla_right2 li aside{
 	display:none;
-	width:4.8rem;
+	max-width:10.24rem;
 	padding-bottom:0.1rem;
 	overflow:hidden;
 }
@@ -986,10 +986,13 @@
 	display:block;
 	float:left;
 	margin-top:0.1rem;
-	margin-right:0.1rem;
-	width:1.5rem;
+	margin-right: 4%;
+    width: 48%;
 	height:1.5rem;
 	text-align:center;
+}
+.classify .cla_right2 li aside a:nth-child(2n){
+	margin-right: 0;
 }
 .classify .cla_right2 li .as2 a{
 	background:#fff;
@@ -2441,10 +2444,13 @@
 /* 附近门店-结束 */
 /* my_banner */
 .my_banner1{
-	height:2.5rem;
+	height:auto;
+	min-height:2.5rem;
 }
 .my_banner1 img{
-	height:2.5rem;
+	height:auto;
+	min-height:2.5rem;
+	max-height:5rem;
 }
 .my_banner2{
 	height:3.3rem;
