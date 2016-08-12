@@ -269,15 +269,11 @@ public class TdUserQRcodeTools {
     	{
     		return null;
     	}
-    	else if(user.getQrcodeUpdate() == null)
-    	{
-    		qrcodeUrl = this.getQRcodeUrl(this.validAccessToken(), uId);
-    	}
     	else if(isValidDate(user.getQrcodeUpdate()))
     	{
     		return user.getQrcodeUrl();
     	}
-    	else if(!isValidDate(user.getQrcodeUpdate()))
+    	else
     	{
     		qrcodeUrl = this.getQRcodeUrl(this.validAccessToken(), uId);
     	}
@@ -293,16 +289,22 @@ public class TdUserQRcodeTools {
     	this.getQRCode(QRcodeUrl, pictureSize, response);
     }
     
-    public Boolean isValidDate(Date oldDate)
+    
+    /**
+     * 时间是否有效
+     * @param date
+     * @return
+     */
+    public Boolean isValidDate(Date date)
     {
-    	if(oldDate == null )
+    	if(date == null)
     	{
     		return false;
     	}
     	
     	Date currentDate = new Date();
     	
-    	return (currentDate.getTime() - oldDate.getTime() < 2591400 * 1000) ? true : false;
+    	return (currentDate.getTime() - date.getTime() < 2591400 * 1000) ? true : false;
     }
     
     

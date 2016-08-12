@@ -1,6 +1,8 @@
 package com.tiandu.common.tencent;
 
+import com.tiandu.common.tencent.common.Signature;
 import com.tiandu.common.tencent.common.Util;
+import com.tiandu.common.tencent.entity.SendRedPack;
 
 public class Main {
 
@@ -54,6 +56,9 @@ public class Main {
 
             //Util.log(new Date().getTime());
             //Util.log(System.currentTimeMillis());
+        	SendRedPack sendRedPack = new SendRedPack();
+        	sendRedPack.setSign(Signature.getSign(sendRedPack));
+        	sendRedPack.toXML();
 
         } catch (Exception e){
             Util.log(e.getMessage());

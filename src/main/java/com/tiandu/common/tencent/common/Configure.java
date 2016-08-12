@@ -65,6 +65,12 @@ public class Configure {
 	
 	//8) 统一支付API
 	public static String UNIFIED_ORDER_API = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+	
+	//9) 红包支付API
+	public static String SEND_RED_PACK_API = "https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack";
+	
+	//10)企业付款API
+	public static String ENTERPRISE_TRANSFERS_API = "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers";
 
 	public static boolean isUseThreadToDoReport() {
 		return useThreadToDoReport;
@@ -154,6 +160,22 @@ public class Configure {
 
 	public static void setUNIFIED_ORDER_API(String uNIFIED_ORDER_API) {
 		UNIFIED_ORDER_API = uNIFIED_ORDER_API;
+	}
+
+	public static String getSEND_RED_PACK_API() {
+		return SEND_RED_PACK_API;
+	}
+
+	public static void setSEND_RED_PACK_API(String sEND_RED_PACK_API) {
+		SEND_RED_PACK_API = sEND_RED_PACK_API;
+	}
+
+	public static String getENTERPRISE_TRANSFERS_API() {
+		return ENTERPRISE_TRANSFERS_API;
+	}
+
+	public static void setENTERPRISE_TRANSFERS_API(String eNTERPRISE_TRANSFERS_API) {
+		ENTERPRISE_TRANSFERS_API = eNTERPRISE_TRANSFERS_API;
 	}
 	
 }
