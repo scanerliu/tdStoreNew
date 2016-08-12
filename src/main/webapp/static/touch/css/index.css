@@ -214,7 +214,6 @@
 .bestarea .sec2{
 	overflow:hidden;
 	margin:0 auto;
-	width:6.4rem;
 	height:3.12rem;
 	border-bottom:1px solid #ddd;
 }
@@ -238,23 +237,22 @@
 	overflow:hidden;
 	padding-bottom:0.2rem;
 	margin:0 auto;
-	width:6.4rem;
 	border-top:1px solid #ddd;
 	background:#fff;
 }
 .hot .sec2 a{
 	display:block;
 	float:left;
-	width:3.2rem;
+	width:50%;
 	padding:0.2rem;
 	text-align:center;
 	border-bottom:1px solid #ddd;
-	border-left:1px solid #ddd;
+	border-right:1px solid #ddd;
 	box-sizing:border-box;
 	background-color:#fff;
 }
-.hot .sec2 a:nth-child(2n+1){
-	border-left:none;
+.hot .sec2 a:nth-child(2n){
+	border-right:none;
 }
 .hot .sec2 a img{
 	width:2.8rem;
@@ -832,8 +830,8 @@
 	position:relative;
 	overflow:auto;
 	float:right;
-	padding:0.1rem;
-	width:4.7rem;
+	padding: 1%;
+    width: 76%;
 }
 .classify .cla_right ul{
 	display:none;
@@ -844,11 +842,12 @@
 .classify .cla_right aside.god_btn{
 	position:fixed;
 	bottom:0;
-	left:1.6rem;
+	width:78%;
+	left:22%;
 }
 .classify .cla_right aside.god_btn input{
 	display:block;
-	width:4.7rem;
+	width:100%;
 	height:0.6rem;
 	border-radius:0.05rem;
 	border:none;
@@ -858,19 +857,18 @@
 }
 .classify .cla_right menu{
 	padding:0 0.2rem;
-	width:4.3rem;
 	height:0.7rem;
 	line-height:0.7rem;
 	font-size:0.26rem;
 	color:#333;
 	border-bottom:1px solid #ddd;
-	background:#fff url(../images/right.png) no-repeat 4.4rem center;
+	background:#fff url(../images/right.png) no-repeat 96% center;
 	background-size:0.12rem 0.18rem;
 }
 .classify .cla_right li.active menu{
 	color:#f23030;
 	border:none;
-	background:#fff url(../images/bottom.png) no-repeat 4.4rem center;
+	background:#fff url(../images/bottom.png) no-repeat 96% center;
 	background-size:0.18rem 0.11rem;
 }
 .classify .cla_right li.active aside{
@@ -878,7 +876,7 @@
 }
 .classify .cla_right li aside{
 	display:none;
-	width:4.8rem;
+	max-width:10.24rem;
 	padding-bottom:0.1rem;
 	overflow:hidden;
 }
@@ -887,8 +885,8 @@
 	display:block;
 	float:left;
 	margin-top:0.1rem;
-	margin-right:0.1rem;
-	width:1.5rem;
+	margin-right:4%;
+	width:45%;
 	height:1.5rem;
 	text-align:center;
 }
@@ -963,7 +961,7 @@
 	font-size:0.26rem;
 	color:#333;
 	border-bottom:1px solid #ddd;
-	background:#fff url(../images/right.png) no-repeat 4.4rem center;
+	background:#fff url(../images/right.png) no-repeat 96% center;
 	background-size:0.12rem 0.18rem;
 }
 .classify .cla_right2 li.active menu{
@@ -1328,13 +1326,13 @@
 .gopay .acare{
 	padding-left:0.5rem;
     float: left;
-    width: 1.64rem;
+    width: 20%;
     line-height: .85rem;
     text-align: center;
     font-size:0.3rem;
     color:#666;
     border-top:1px solid #ddd;
-    background:url(../images/detail3.png) no-repeat 0.63rem center;
+    background:url(../images/detail3.png) no-repeat 5% center;
     background-size:0.35rem 0.29rem;
 }
 .gopay .acare2{
@@ -1351,7 +1349,7 @@
 }
 .gopay .ajoin{
     float: left;
-    width: 2.13rem;
+    width: 40%;
     color: #fff;
     line-height: .85rem;
     text-align: center;
@@ -1359,7 +1357,7 @@
 }
 .gopay .apayfor{
     float: left;
-    width: 2.13rem;
+    width: 40%;
     color: #fff;
     line-height: .85rem;
     text-align: center;
@@ -1995,17 +1993,15 @@
 }
 .become_list{
 	overflow:hidden;
-	padding-right:0.2rem;
 	padding-bottom:0.2rem;
 	margin:0 auto;
-	width:6.2rem;
 }
 .become_list a{
 	display:block;
 	float:left;
-	margin-left:0.2rem;
+	margin-left:2%;
 	margin-top:0.2rem;
-	width:2.9rem;
+	width:47%;
 	height:3rem;
 	background:#fff;
 }
@@ -2545,7 +2541,7 @@
 	height:100%;
 }
 .car_goods li .div3{
-	width:3.6rem;
+	width:60%;
 }
 .car_goods li .div3 section{
 	overflow:hidden;

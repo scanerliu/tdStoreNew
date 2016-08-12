@@ -24,7 +24,7 @@
     
     <script src="${app.basePath}/static/js/mobile/agent/agent.js" type="text/javascript"></script>
 </head>
-
+<body class="body_bg">
 <div id="results"></div>
 <script type="text/javascript">
 	$(function(){

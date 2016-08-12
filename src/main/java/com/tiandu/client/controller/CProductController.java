@@ -18,6 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tiandu.article.entity.TdArticleCategory;
+import com.tiandu.article.entity.TdArticleTitle;
+import com.tiandu.article.search.TdArticleCategorySearchCriteria;
+import com.tiandu.article.search.TdArticleTitleSearchCriteria;
+import com.tiandu.article.service.TdArticleCategoryService;
+import com.tiandu.article.service.TdArticleTitleService;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.custom.entity.TdUser;
@@ -99,6 +105,12 @@ public class CProductController extends BaseController {
 	@Autowired
 	private ConfigUtil configUtil;
 	
+	@Autowired
+	private TdArticleTitleService tdArticleTitleService;
+	
+	@Autowired
+	private TdArticleCategoryService tdArticleCategoryService;
+	
 	/*
 	 * 商品列表页
 	 */
@@ -113,6 +125,8 @@ public class CProductController extends BaseController {
 		tdBrandService.upperFirstLetterList(brandList);
 		modelMap.addAttribute("brandList", brandList);
 		modelMap.addAttribute("sc", sc);
+		
+		modelMap.addAttribute("articleList", tdArticleCategoryService.getFooterArticleCategory());
 	    return "/client/product/list";
 	}
 	/*

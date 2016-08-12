@@ -64,7 +64,9 @@ public class MobileUserCommentController extends BaseController{
 	@RequestMapping("/comment/search")
 	public String commentSearch(TdProductCommentCrateria sc,Integer page,HttpServletRequest req,ModelMap map)
 	{
+		TdUser user = getCurrentUser();
 		sc.setPageNo(page);
+		sc.setUid(user.getUid());
 		
 		int count = tdProductCommentService.getTotalPageCount(sc);
 		if(count >= page)

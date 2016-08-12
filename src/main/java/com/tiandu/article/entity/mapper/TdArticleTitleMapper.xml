@@ -189,12 +189,24 @@
     select count(aid)
     from td_article_title
     where 1=1 
+    <if test="cid != null" >
+        and cid =#{cid,jdbcType=INTEGER}
+    </if>
+    <if test="status != null" >
+        and status=#{status,jdbcType=TINYINT}
+    </if>
   </select>
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.article.search.TdArticleTitleSearchCriteria" >
     select 
     <include refid="Base_Column_List" />
     from td_article_title
     where 1=1 
+    <if test="cid != null" >
+        and cid =#{cid,jdbcType=INTEGER}
+    </if>
+    <if test="status != null" >
+        and status=#{status,jdbcType=TINYINT}
+    </if>
     order by sort asc
   </select>
 </mapper>

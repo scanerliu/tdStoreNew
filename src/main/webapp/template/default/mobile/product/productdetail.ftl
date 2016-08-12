@@ -32,11 +32,22 @@
         //ul_li(color_ul);
         //ul_li(size_ul);
         acare();
+			        		$('.img-responsive').each(function(i,ele){
+			        			$(ele).css('width',$(this).width())
+			        		})
     }
 </script>
 <style>
 .ogray{background:#ddd;}
-.swip2 img{height:auto;}
+@media screen and (min-width:320px){
+.swip2 img{height:3rem;}
+}
+@media screen and (min-width:375px){
+.swip2 img{height:3.5rem;}
+}
+@media screen and (min-width:414px){
+.swip2 img{height:3.8rem;}
+}
 </style>
 <body class="body_bg">
   <!-- header_top -->
@@ -46,7 +57,7 @@
 </div>
 <!-- header_top end -->
 
-	    <div class="my_banner1" style="height:4.5rem">
+	    <div class="my_banner1">
 			<!-- ****广告轮播**** -->
 			<div class="addWrap">
 			    <div class="swipe swip2" id="mySwipe">
@@ -59,6 +70,10 @@
 		                <div><a href="javascript:;"><img class="img-responsive" src="${app.basePath}${product.imageUrl!''}" alt="商品图片"/></a></div>
 		        		</#if>
 			        </div>
+			        <script>
+			        	$(function(){
+			        	})
+			        </script>
 			    </div>
 			    <ul id="position">
 			    	<#if attachmentList?? && (attachmentList?size > 0)>

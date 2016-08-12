@@ -76,4 +76,10 @@ public class TdArticleTitleServiceImpl implements TdArticleTitleService {
 		return articleTitleMapper.deleteByPrimaryKey(id);
 	}
 
+	@Override
+	public List<TdArticleTitle> getFooterArticle() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

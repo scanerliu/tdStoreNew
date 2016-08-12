@@ -415,6 +415,7 @@ public class MobileAgentController extends BaseController{
 		{
 			TdArticleTitleSearchCriteria atsc = new TdArticleTitleSearchCriteria();
 			atsc.setCid(articleCatelist.get(0).getCid());
+			atsc.setStatus((byte)1);
 			List<TdArticleTitle> articleList = tdArticleTitleService.findBySearchCriteria(atsc);
 			
 			if(null != articleList && articleList.size() > 0)

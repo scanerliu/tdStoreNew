@@ -229,7 +229,7 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    , p.name as p_name
+    , p.name as p_name,p.image_url as p_img
     , u.uname as com_uname,u.unick as com_unick
     , o.order_no as order_no , o.item_num as order_num, o.product_amount as order_amou, o.postage as order_post
     

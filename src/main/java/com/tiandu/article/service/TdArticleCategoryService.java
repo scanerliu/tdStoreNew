@@ -21,4 +21,7 @@ public interface TdArticleCategoryService {
 	// 出自己以外的所有资讯目录
 	public List<TdArticleCategory> getOtherArticleCategoryAll(Integer cid);
 	public Integer getChildrenCount(Integer cid);
+	
+	// 获取PC底部各类文章
+	public List<TdArticleCategory> getFooterArticleCategory();
 }

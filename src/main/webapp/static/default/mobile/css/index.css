@@ -1266,7 +1266,7 @@
 	line-height:0.8rem;
 	font-size:0.28rem;
 	border-top:1px solid #ddd;
-	background:url(../images/right.png) no-repeat 5.92rem center;
+	background:url(../images/right.png) no-repeat 96% center;
 	background-size:0.18rem 0.28rem;
 }
 .detail5 a:nth-child(1){
@@ -1321,32 +1321,30 @@
 	color:#f23030;
 }
 .gopay .acare{
-	padding-left:0.5rem;
     float: left;
-    width: 1.64rem;
+    width: 30%;
     line-height: .85rem;
     text-align: center;
     font-size:0.3rem;
     color:#666;
     border-top:1px solid #ddd;
-    background:url(../images/detail3.png) no-repeat 0.63rem center;
+    background:url(../images/detail3.png) no-repeat 15% center;
     background-size:0.35rem 0.29rem;
 }
 .gopay .acare2{
-	padding-left:0.5rem;
     float: left;
-    width: 1.64rem;
+    width:30%;
     line-height: .85rem;
     text-align: center;
     font-size:0.3rem;
     color:#f23030;
     border-top:1px solid #ddd;
-    background:url(../images/heart.png) no-repeat 0.63rem center;
+    background:url(../images/heart.png) no-repeat 15% center;
     background-size:0.35rem 0.29rem;
 }
 .gopay .ajoin{
     float: left;
-    width: 2.13rem;
+    width: 35%;
     color: #fff;
     line-height: .85rem;
     text-align: center;
@@ -1354,7 +1352,7 @@
 }
 .gopay .apayfor{
     float: left;
-    width: 2.13rem;
+    width: 35%;
     color: #fff;
     line-height: .85rem;
     text-align: center;
@@ -2400,10 +2398,12 @@
 /* 附近门店-结束 */
 /* my_banner */
 .my_banner1{
-	height:2.5rem;
+	height:auto;
 }
 .my_banner1 img{
-	height:2.5rem;
+	display:block;
+	margin:0 auto;
+	height:auto;
 }
 .my_banner2{
 	height:3.3rem;
@@ -2498,7 +2498,7 @@
 	height:100%;
 }
 .car_goods li .div3{
-	width:3.6rem;
+	width:60%;
 }
 .car_goods li .div3 section{
 	overflow:hidden;

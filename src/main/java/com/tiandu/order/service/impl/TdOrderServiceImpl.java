@@ -395,8 +395,6 @@ public class TdOrderServiceImpl implements TdOrderService{
 			orderForm.setUserAddress(address);
 		}
 		
-		System.err.println(shoppingcart.getTotalAmount());
-		System.err.println(shoppingcart.getTotalPointAmount());
 		torder.setPaymentId(orderForm.getPaymentId());
 		torder.setStatus(ConstantsUtils.ORDER_PAY_STATUS_UNPAY);
 		torder.setCreateTime(now);
@@ -496,6 +494,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 			sku.setOrderId(order.getOrderId());
 			sku.setProductSkuId(item.getProductSkuId());
 			sku.setProductId(item.getProductId());
+			sku.setProductImage(tdProductService.findOne(item.getProductId()).getImageUrl());
 			if(ConstantsUtils.PRODUCT_KIND_ZEROBUY.equals(sku.getItemType())){
 				sku.setPrice(item.getProduct().getPostage());
 			}else{

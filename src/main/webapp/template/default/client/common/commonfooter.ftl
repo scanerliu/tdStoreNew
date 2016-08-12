@@ -29,15 +29,21 @@
 	<div class="w100" style="border-bottom:1px solid #ddd;">
 		<div class="link_div">
 			<ul>
+				<#if articleList??>
+				<#list articleList as at>
 				<li>
-					<p class="p1">物流配送</p>
+					<p class="p1">${at.name!''}</p>
 					<p class="p2">
-						<a href="#" title="" class="">配送查询</a>
-						<a href="#" title="" class="">配送说明</a>
-						<a href="#" title="" class="">配送费用</a>
-						<a href="#" title="" class="">签收与验货</a>
+						<#if at.articleList??>
+						<#list at.articleList as item>
+							<a href="#" title="" class="">${item.title!''}</a>
+						</#list>
+						</#if>
 					</p>
 				</li>
+				</#list>
+				</#if>
+				<#--
 				<li>
 					<p class="p1">支付方式</p>
 					<p class="p2">
@@ -77,6 +83,7 @@
 						<a href="#" title="" class="">联系我们</a>
 					</p>
 				</li>
+				-->
 			</ul>
 		</div>
 	</div>

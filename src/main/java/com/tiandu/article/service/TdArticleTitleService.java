@@ -17,4 +17,7 @@ public interface TdArticleTitleService {
 	public List<TdArticleTitle> findBySearchCriteria(TdArticleTitleSearchCriteria sc);
 	public Integer save(TdArticleTitle tdArticleTitle);
 	public Integer delete(Integer id);
+	
+	// 获取底部文章列表
+	public List<TdArticleTitle> getFooterArticle();
 }

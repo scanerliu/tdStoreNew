@@ -1,5 +1,6 @@
 package com.tiandu.article.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,9 @@ import org.springframework.stereotype.Service;
 import com.tiandu.article.entity.TdArticleCategory;
 import com.tiandu.article.entity.mapper.TdArticleCategoryMapper;
 import com.tiandu.article.search.TdArticleCategorySearchCriteria;
+import com.tiandu.article.search.TdArticleTitleSearchCriteria;
 import com.tiandu.article.service.TdArticleCategoryService;
+import com.tiandu.article.service.TdArticleTitleService;
 import com.tiandu.common.db.DBContextHolder;
 import com.tiandu.custom.service.TdUserService;
 
@@ -25,6 +28,9 @@ public class TdArticleCategoryServiceImpl implements TdArticleCategoryService {
 	
 	@Autowired
 	TdUserService tdUserService;
+	
+	@Autowired
+	TdArticleTitleService tdArticleService;
 	
 	@Override
 	public int insert(TdArticleCategory u) {
@@ -93,6 +99,38 @@ public class TdArticleCategoryServiceImpl implements TdArticleCategoryService {
 		sc.setFlag(false);
 		sc.setParentId(cid);
 		return articleCategoryMapper.countByCriteria(sc);
+	}
+
+	@Override
+	public List<TdArticleCategory> getFooterArticleCategory() {
+		List<TdArticleCategory> articleList = new ArrayList<>();
+		
+		TdArticleCategorySearchCriteria sc = new TdArticleCategorySearchCriteria();
+		sc.setName("帮助中心");
+		sc.setFlag(false);
+		
+		// 查找帮助中心
+		List<TdArticleCategory> articleCatelist = this.findBySearchCriteria(sc);
+		if(null != articleCatelist && articleCatelist.size() > 0){
+			
+			// 查找帮助中心下级分类
+			TdArticleCategorySearchCriteria subsc = new TdArticleCategorySearchCriteria();
+			subsc.setParentId(articleCatelist.get(0).getCid());
+			subsc.setFlag(false);
+			articleList = this.findBySearchCriteria(subsc);
+			
+			if(null != articleList && articleList.size() > 0){
+				for (TdArticleCategory tdArticleCategory : articleList) {
+					TdArticleTitleSearchCriteria asc =new TdArticleTitleSearchCriteria();
+					asc.setCid(tdArticleCategory.getCid());
+					asc.setFlag(false);
+					asc.setStatus((byte)1);
+					tdArticleCategory.setArticleList(tdArticleService.findBySearchCriteria(asc));
+				}
+			}
+			
+		}
+		return articleList;
 	}
 
 }

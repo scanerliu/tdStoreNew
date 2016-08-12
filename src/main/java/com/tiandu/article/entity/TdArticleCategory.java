@@ -1,6 +1,7 @@
 package com.tiandu.article.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import com.tiandu.custom.entity.TdUser;
 
@@ -24,6 +25,8 @@ public class TdArticleCategory {
 	private Integer updateBy;
 
 	private TdUser updatePerson;
+	
+	private List<TdArticleTitle> articleList;
 
 	public Integer getCid() {
 		return cid;
@@ -114,4 +117,14 @@ public class TdArticleCategory {
 		this.updatePerson = updatePerson;
 	}
 
+	public List<TdArticleTitle> getArticleList() {
+		return articleList;
+	}
+
+	public void setArticleList(List<TdArticleTitle> articleList) {
+		this.articleList = articleList;
+	}
+
+	
+	
 }
