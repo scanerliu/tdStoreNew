@@ -71,6 +71,11 @@ public class TdShoppingcartItemServiceImpl implements TdShoppingcartItemService{
 	public List<TdShoppingcartItem> findBySearchCriteria(TdShoppingcartSearchCriteria sc) {
 		return tdShoppingcartItemMapper.findBySearchCriteria(sc);
 	}
+	
+	@Override
+	public Integer countByCriteria(TdShoppingcartSearchCriteria sc) {
+		return tdShoppingcartItemMapper.countByCriteria(sc);
+	}
 
 	@Override
 	public int updateShoppingcartItem(TdShoppingcartItem item) {

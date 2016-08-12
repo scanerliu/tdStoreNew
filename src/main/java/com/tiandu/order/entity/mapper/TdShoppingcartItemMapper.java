@@ -41,4 +41,11 @@ public interface TdShoppingcartItemMapper {
 	 * @return
 	 */
 	public int deleteByUid(Integer uid);
+
+	/**
+	 * 获取购物车商品数量
+	 * @param sc 
+	 * @return
+	 */
+	public Integer countByCriteria(TdShoppingcartSearchCriteria sc);
 }

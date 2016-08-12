@@ -1,0 +1,157 @@
+@charset "UTF-8";
+/*CSS Document*/
+
+/*CSS Reset*/
+html,body,div,h1,h2,h3,h4,h5,p,ul,ol,li,dl,dt,dd,input {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+em,i {font-style: normal;}
+h1,h2,h3,h4,h5,strong,b {font-weight: normal;}
+body {
+	width: 100%;
+	min-height: 100%;
+	font-family:"Microsoft YaHei", Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #666;
+}
+div {margin: 0 auto;}
+a {
+	display: inline-block;
+	color: #666;
+	text-decoration: none;
+	cursor: pointer;
+}
+img {display: block;border: none;}
+input,select {vertical-align: middle;}
+input,select,textarea {
+	margin: 0;
+	font-family: "Microsoft YaHei";
+	color: #666;
+	outline: none;
+}
+textarea {resize: none;}
+
+.clear {
+	overflow: hidden;
+	visibility: hidden;
+	clear: both;
+	margin: 0;
+	padding: 0;
+	height: 0;
+	line-height: 0;
+	font-size: 0;
+}
+/*登录*/
+.login-top{width:1200px; height: 130px;}
+.login-top img{margin-top:30px; margin-left: 100px;}
+.login-banner{width: 100%; height:460px;background: #0266d7;}
+.login-banner .login{width: 1200px; height: 160px;}
+.login-banner .login img{width: 600px; height: 460px; margin-left: 100px; float: left !important; _margin-left:0px;}
+.login-banner .login .login-form{width: 340px; height: 338px; background: #fff; float: right; margin-top: 60px; margin-right: 100px;}
+.login-banner .login .login-form .form_div1{color:#333; width:300px;height: 30px; margin-top: 20px;}
+.login-banner .login .login-form .form_div1 .p1{font-size: 22px; float: left; line-height: 30px;}
+.login-banner .login .login-form .form_div1 .p2{font-size: 16px; color:#ff8800;float: right; background: url("../images/zj_icon_register.png") no-repeat left center; padding-left:25px; line-height: 30px; }
+.login-banner .login .login-form .ipt1{width: 245px; height: 43px; border: 1px solid #ccc; margin:20px 20px 0px 20px; background: url("../images/zj_icon_user.png") no-repeat 12px; padding-left: 55px; line-height: 43px;}
+.login-banner .login .login-form .ipt2{width: 245px; height: 43px; border: 1px solid #ccc; margin:20px 20px 0px 20px; background: url("../images/zj_icon_password.png") no-repeat 12px; padding-left: 55px;line-height: 43px; }
+.login-banner .login .login-form .form_div2{color:#333; width:300px;height: 30px; margin-top: 15px; line-height: 30px;}
+.login-banner .login .login-form .form_div2 p{float: left;}
+.login-banner .login .login-form .form_div2 a{float: right; color:#999;}
+.login-banner .login .login-form .form_btn{width: 300px; height: 45px; background:#ff8800;color: #fff; font-size: 18px; text-align: center; line-height: 45px; border: none; margin: 12px 20px;}
+.login-banner .login .login-form .login_way{ width:300px;height: 30px;margin-top: 5px;}
+.login-banner .login .login-form .login_way a{color: #666; font-size: 14px; }
+.login-banner .login .login-form .login_way .a1{background: url("../images/zj_logo_wx.png") no-repeat left; padding-left: 25px;}
+.login-banner .login .login-form .login_way .a2{background: url("../images/zj_logo_qq.png") no-repeat left; padding-left: 25px; margin-left: 10px;}
+/*注册*/
+.login-top{width:1200px; height: 130px;}
+.login-top img{margin-top:30px; margin-left: 100px;}
+.login-banner{width: 100%; height:460px;background: #0266d7;}
+.login-banner .register{width: 1200px; height: 160px;}
+.login-banner .register img{width: 600px; height: 460px; margin-left: 100px; float: left !important; _margin-left:0px;}
+.login-banner .register .login-form{width: 340px; height: 623px; background: #fff; float: right; box-shadow: 0px 0px 10px #b5b4b4; position: relative; top:-80px; right: 100px;}
+.login-banner .register .login-form .form_div1{color:#333; width:300px;height: 30px; margin-top: 20px;}
+.login-banner .register .login-form .form_div1 .p1{font-size: 22px; float: left; line-height: 30px;}
+.login-banner .register .login-form .form_div1 .p2{font-size: 16px; color:#ff8800;float: right; background: url("../images/zj_icon_register.png") no-repeat left center; padding-left:25px; line-height: 30px; }
+.login-banner .register .login-form .ipt1{width: 245px; height: 43px; border: 1px solid #ccc; margin:20px 20px 0px 20px; background: url("../images/zj_icon_user.png") no-repeat 12px; padding-left: 55px; line-height: 43px;}
+.login-banner .register .login-form .ipt_yzm{width: 114px; height: 45px; background: #555; color: #fff; text-align: center; line-height: 45px; font-size: 15px; position: absolute; top:135px; right: 20px;*top:138px}
+.login-banner .register .login-form .ipt2{width: 131px; height: 43px; border: 1px solid #ccc; margin:20px 20px 0px 20px; background: url("../images/zj_icon_phone.png") no-repeat 12px; padding-left: 55px;line-height: 43px;}
+.login-banner .register .login-form .ipt3{width: 245px; height: 43px; border: 1px solid #ccc; margin:20px 20px 0px 20px; background: url("../images/zj_icon_yzm.png") no-repeat 12px; padding-left: 55px;line-height: 43px; }
+.login-banner .register .login-form .ipt4{width: 245px; height: 43px; border: 1px solid #ccc; margin:20px 20px 0px 20px; background: url("../images/zj_icon_yqm.png") no-repeat 12px; padding-left: 55px;line-height: 43px; }
+.login-banner .register .login-form .ipt5{width: 245px; height: 43px; border: 1px solid #ccc; margin:20px 20px 0px 20px; background: url("../images/zj_icon_add.png") no-repeat 12px; padding-left: 55px;line-height: 43px; }
+.login-banner .register .login-form .ipt5 select{border:none; width: 75px; text-align: center; color: #999;}
+.login-banner .register .login-form .ipt6{width: 245px; height: 43px; border: 1px solid #ccc; margin:20px 20px 0px 20px; background: url("../images/zj_icon_password.png") no-repeat 12px; padding-left: 55px;line-height: 43px; }
+.login-banner .register .login-form .form_div2{color:#333; width:300px;height: 30px; margin-top: 15px; line-height: 30px;}
+.login-banner .register .login-form .form_div2 p{float: left; color: #666;}
+.login-banner .register .login-form .form_div2 a{color:#333; }
+.login-banner .register .login-form .form_btn{width: 300px; height: 45px; background:#ff8800;color: #fff; font-size: 18px; text-align: center; line-height: 45px; border: none; margin: 12px 20px;}
+.login-banner .register .login-form .login_way{ width:300px;height: 30px;margin-top: 5px;}
+.login-banner .register .login-form .login_way a{color: #666; font-size: 14px; }
+.login-banner .register .login-form .login_way .a1{background: url("../images/zj_logo_wx.png") no-repeat left; padding-left: 25px;}
+.login-banner .register .login-form .login_way .a2{background: url("../images/zj_logo_qq.png") no-repeat left; padding-left: 25px; margin-left: 10px;}
+/*注册服务条款*/
+.service_tk{width: 840px; height: 520px;border-radius: 15px; position: relative;}
+.service_tk .service_head{width: 840px; height:80px; background:#ff9900;border-top-left-radius:15px;border-top-right-radius:15px;  }
+.service_tk .service_head p{color: #fff; font-size: 25px; line-height: 80px; margin-left: 30px;}
+.service_tk .service_contant{width: 800px; height:400px; overflow:auto; margin-top: 20px;}
+.service_tk .service_contant p{ line-height: 26px; color: #666; padding-right: 20px;}
+
+/*登录底部*/
+.login_footer{width: 100%;height: 100px; text-align: center; font-size: 12px;  color: #999; margin-top: 40px;}
+.login_footer p{line-height: 30px;}
+.login_footer p a{padding: 0 16px;}
+
+/*找回密码*/
+.forgetpw{width: 600px; height: 480px; border-radius: 15px; position: relative;background: #fff; display: none; }
+.forgetpw .forget_head{width: 600px; height: 80px; background:#ff9900;border-top-left-radius:15px;border-top-right-radius:15px; }
+.forgetpw .forget_head p { display:block; width: 200px;float: left; line-height: 80px;  font-size: 18px; text-align: center; color: #fff;}
+.forgetpw .forget_head p span{float: right; font-size: 14px;}
+.forgetpw .forget_head1{width: 600px; height: 14px; background: url("../images/zj_pw1.png") no-repeat; position: relative; top: -8px;}
+.forgetpw .ipt1{width: 245px; height: 43px; border: 1px solid #ccc; margin:20px 20px 0px 20px; background: url("../images/zj_icon_user.png") no-repeat 12px; padding-left: 55px; line-height: 43px;}
+.forgetpw .ipt_yzm{width: 114px; height: 45px; background: #555; color: #fff; text-align: center; line-height: 45px; font-size: 15px; position: absolute; top:135px; right: 20px;*top:138px}
+.forgetpw .pw_phone{width:570px; height: auto; position:relative; }
+.forgetpw .pw_phone .ipt1{width: 245px; height: 43px; border: 1px solid #ccc; margin:20px 20px 0px 20px; background: url("../images/zj_icon_user.png") no-repeat 12px; padding-left: 55px; line-height: 43px; float: left;}
+.forgetpw .pw_phone .ipt3{width: 245px; height: 43px; border: 1px solid #ccc; margin:20px 20px 0px 20px; background: url("../images/zj_icon_password.png") no-repeat 12px; padding-left: 55px; line-height: 43px; float: left;}
+.forgetpw .pw_phone .ipt2{width: 131px; height: 43px; border: 1px solid #ccc; margin:20px 20px 0px 20px; background: url("../images/zj_icon_yzm.png") no-repeat 12px; padding-left: 55px;line-height: 43px;float: left;}
+.forgetpw .pw_phone .ipt_yzm{width: 114px; height: 45px; background: #555; color: #fff; text-align: center; line-height: 45px; font-size: 15px; position: absolute; top:85px; left:207px;}
+.forgetpw .pw_phone .tips_err{color:#ff9900;float: left; margin-top: 30px;background: url("../images/zj_tips_err.png") no-repeat left center; padding-left: 25px;}
+.forgetpw .pw_phone .tips_rig{color:#ff9900;float: left; margin-top: 32px; margin-left:114px; background: url("../images/zj_tips_rig.png") no-repeat left center; padding-left: 25px;}
+.forgetpw .pw_phone .form_btn{width: 140px; height: 45px; background:#ff8800;color: #fff; font-size: 18px; text-align: center; line-height: 45px; border: none; margin: 35px 20px;}
+.forgetpw .pw_phone .tips_bottom{width: 530px; height: 100px; border-top: 1px solid #e7e7e7; margin-top: 20px;}
+.pw_close{position: absolute; top:-40px; right: -40px;}
+.forgetpw .pw_phone .pw_succ{text-align: center; width: 570px; height: 200px; margin-top: 40px;}
+.forgetpw .pw_phone .pw_succ a{color:#ff9900; width: 90px; height: 30px; border: 2px solid #ff9900; border-radius:14px; line-height: 30px; text-align: center; margin-top: 30px; }
+
+
+.dialog {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	display: none;
+	min-width: 1200px;
+	z-index: 4;
+	background: url("../images/f_black50.png") repeat; }
+.dialog .service_tk {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	z-index: 5;
+	margin-top: -260px;
+	margin-left: -420px;
+	width: 840px;
+	height: 520px;
+	border-radius: 15px;
+	background: #fff; }
+.dialog .pop-one1 {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	z-index: 5;
+	margin-top: -240px;
+	margin-left: -300px;
+	border-radius: 15px;
+	width: 600px;
+	height: 480px;
+}

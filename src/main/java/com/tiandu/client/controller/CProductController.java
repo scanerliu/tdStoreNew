@@ -31,6 +31,7 @@ import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductAttachment;
 import com.tiandu.product.entity.TdProductDescription;
 import com.tiandu.product.entity.TdProductSku;
+import com.tiandu.product.entity.TdProductStat;
 import com.tiandu.product.entity.TdProductType;
 import com.tiandu.product.entity.TdProductTypeAttribute;
 import com.tiandu.product.search.TdBrandSearchCriteria;
@@ -128,6 +129,38 @@ public class CProductController extends BaseController {
 		map.addAttribute("sc", sc);
 		return "/client/product/listbody";
 	}
+	
+	/*
+	 * 猜你喜欢列表数据页
+	 */
+	@RequestMapping("/enjoysearch")
+	public String enjoysearch(TdProductCriteria sc,HttpServletRequest req,ModelMap map)
+	{
+		sc.setKind(ConstantsUtils.PRODUCT_KIND_COMMON);
+		sc.setStatus(Byte.valueOf("1"));
+		sc.setOnshelf(true);
+		if(null==sc.getTypeId()){
+			sc.setHotRecommend(1);
+		}
+		map.addAttribute("productList", tdProductService.findBySearchCriteria(sc));
+		map.addAttribute("sc", sc);
+		return "/client/product/enjoylistbody";
+	}
+	
+	/*
+	 * 推荐列表数据页
+	 */
+	@RequestMapping("/recommendsearch")
+	public String recommendsearch(TdProductCriteria sc,HttpServletRequest req,ModelMap map)
+	{
+		sc.setKind(ConstantsUtils.PRODUCT_KIND_COMMON);
+		sc.setStatus(Byte.valueOf("1"));
+		sc.setOnshelf(true);
+		map.addAttribute("recommendList", tdProductService.findBySearchCriteria(sc));
+		map.addAttribute("sc", sc);
+		return "/client/product/recommendlistbody";
+	}
+	
 	/*
 	 * 商品类型数据页
 	 */
@@ -217,14 +250,18 @@ public class CProductController extends BaseController {
 			Integer points = product.getPrice().multiply(new BigDecimal(integralexchangerate)).setScale(0, BigDecimal.ROUND_FLOOR).intValue();
 			product.setExchangepoints(points);
 		}
-		//推荐商品
-		TdProductCriteria sc = new TdProductCriteria();
+		//相关推荐商品
+		/*TdProductCriteria sc = new TdProductCriteria();
 		sc.setKind(ConstantsUtils.PRODUCT_KIND_COMMON);
 		sc.setPageSize(3);
 		sc.setStatus(Byte.valueOf("1"));
 		sc.setOnshelf(true);
 		sc.setOrderBy("type_recommend desc, sort desc");
-		map.addAttribute("recommendList", tdProductService.findBySearchCriteria(sc));		
+		map.addAttribute("recommendList", tdProductService.findBySearchCriteria(sc));*/		
+		
+		//查询商品统计
+		TdProductStat productStat = tdProductStatService.findOne(product.getId());
+		map.addAttribute("productStat", productStat);
 		
 		map.addAttribute("product", product);
 		map.addAttribute("productjson", productjson);
@@ -235,12 +272,11 @@ public class CProductController extends BaseController {
 	/*
 	 * 商品图文详情页
 	 */
-	@RequestMapping("/describe/{type}/{id}")
-	public String describe(@PathVariable("id") Integer id,@PathVariable("type") Integer type,HttpServletRequest req,ModelMap map)
+	@RequestMapping("/describe/{id}")
+	public String describe(@PathVariable("id") Integer id,HttpServletRequest req,ModelMap map)
 	{
 		TdProductDescriptionCriteria sc = new TdProductDescriptionCriteria();
 		sc.setProductId(id);
-		sc.setType(type);
 		List<TdProductDescription>  descList  = tdProductDescriptionService.findBySearchCriteria(sc);
 		//图文说明
 		TdProductDescription productdesc = new TdProductDescription();

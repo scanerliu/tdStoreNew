@@ -63,6 +63,7 @@ import com.tiandu.custom.search.TdUserAccountLogSearchCriteria;
 import com.tiandu.custom.search.TdUserAddressCriteria;
 import com.tiandu.custom.search.TdUserCampaignCriteria;
 import com.tiandu.custom.search.TdUserIntegralLogSearchCriteria;
+import com.tiandu.custom.search.TdUserMessageSearchCriteria;
 import com.tiandu.custom.search.TdUserSearchCriteria;
 import com.tiandu.custom.search.TdUserSupplierSearchCriteria;
 import com.tiandu.custom.service.TdAgentService;
@@ -246,6 +247,20 @@ public class CUserController extends BaseController {
 			res.put("msg", "签到成功。");
 			res.put("gettedIntegral", signBackData.get("signIntegral"));
 		}
+		return res;
+	}
+	// 获取用户系统消息数量
+	@RequestMapping(value="/messagecount", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> messagecount(HttpServletRequest request, HttpServletResponse response) {
+		TdUser currentUser = this.getCurrentUser();
+		Map<String,String> res = new HashMap<String,String>(); 
+		TdUserMessageSearchCriteria sc = new TdUserMessageSearchCriteria();
+		sc.setUid(currentUser.getUid());
+		sc.setStatus(Byte.valueOf("1"));
+		Integer count = tdUserMessageService.countByCriteria(sc);
+		res.put("code", "1");
+		res.put("count", count.toString());
 		return res;
 	}
 	

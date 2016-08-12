@@ -14,6 +14,8 @@ public class TdProductSkuVO {
 
     private BigDecimal salesPrice;
     
+    private BigDecimal marketPrice;
+    
     private Integer stock;
 
 	public String getSpecificationids() {
@@ -54,6 +56,14 @@ public class TdProductSkuVO {
 
 	public void setSalesPrice(BigDecimal salesPrice) {
 		this.salesPrice = salesPrice;
+	}
+
+	public BigDecimal getMarketPrice() {
+		return marketPrice;
+	}
+
+	public void setMarketPrice(BigDecimal marketPrice) {
+		this.marketPrice = marketPrice;
 	}
 
 	public Integer getStock() {

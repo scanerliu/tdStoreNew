@@ -153,10 +153,14 @@ public class CShoppingcartController extends BaseController {
 	public Map<String,String> cartcount(HttpServletRequest request, HttpServletResponse response) {
 		Map<String,String> res = new HashMap<String,String>(); 
 		TdUser currUser = this.getCurrentUser();
-		//获取购物车
-		ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid());
+		//获取购物车商品数量
+		TdShoppingcartSearchCriteria sc = new TdShoppingcartSearchCriteria();
+		sc.setFlag(false);
+		sc.setUid(currUser.getUid());
+		Integer count = tdShoppingcartItemService.countByCriteria(sc);
+		
 		res.put("code", "1");
-		res.put("cartcount", shoppingcart.getTotalcount().toString());
+		res.put("cartcount", count.toString());
 		return res;
 	}
 	/**

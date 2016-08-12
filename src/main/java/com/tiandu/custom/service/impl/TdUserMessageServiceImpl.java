@@ -76,4 +76,9 @@ public class TdUserMessageServiceImpl implements TdUserMessageService {
 		return userMessageMapper.deleteByPrimaryKey(id);
 	}
 
+	@Override
+	public Integer countByCriteria(TdUserMessageSearchCriteria sc) {
+		return userMessageMapper.countByCriteria(sc);
+	}
+
 }

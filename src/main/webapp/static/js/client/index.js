@@ -24,3 +24,21 @@ function getshoppingcartcount(){
 	},'text');
 	
 }
+//获取系统消息个数
+function getsystemmessagecount(){
+	var url = basePath + "/user/messagecount";
+	$.post(url,null,function(data){
+		var result = eval("("+data+")");
+		if(result.code==1){
+			$("#smessagecount").html(result.count);
+		}
+	},'text');
+	
+}
+//猜你喜欢商品查询
+function getenjoyproducts(){
+	$("#enjoybtn").off("click");
+	var url = basePath + "/product/enjoysearch";
+	var loadData = $("#enjoyForm").serializeArray();
+	$("#enjoyList").loading().load(url,loadData);
+}

@@ -4,10 +4,11 @@
 		<div class="top_div">
 			<section class="signor fl">
 			<@shiro.user>
-				您好!欢迎来到创客联盟，<label><@shiro.principal/> <a href="${app.basePath}/logout" title="">退出</a></label>
+				您好!欢迎来到创客联盟，<label><@shiro.principal/> <a href="${app.basePath}/logout" title="">退出</a></label> <label>消息<a href="${app.basePath}/user/messageList" class="orange" title="" id="smessagecount">0</a></label>
 				<script>
 					$(function(){
 						getshoppingcartcount();
+						getsystemmessagecount();
 					});
 				</script>
 			</@shiro.user>
