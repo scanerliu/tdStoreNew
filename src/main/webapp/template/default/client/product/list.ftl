@@ -221,31 +221,6 @@
 			</aside>
 			<aside class="obody">
 				<ul id="enjoyList">
-					<li>
-						<a href="#" title="" class=""><img src="list/images/goods1.png" alt="" /></a>
-						<p class="p1">马来西亚进口优佳快熟澳洲纯燕麦片250g冲饮杂粮早餐</p>
-						<p class="p2">￥15</p>
-					</li>
-					<li>
-						<a href="#" title="" class=""><img src="list/images/goods1.png" alt="" /></a>
-						<p class="p1">马来西亚进口优佳快熟澳洲纯燕麦片250g冲饮杂粮早餐</p>
-						<p class="p2">￥15</p>
-					</li>
-					<li>
-						<a href="#" title="" class=""><img src="list/images/goods1.png" alt="" /></a>
-						<p class="p1">马来西亚进口优佳快熟澳洲纯燕麦片250g冲饮杂粮早餐</p>
-						<p class="p2">￥15</p>
-					</li>
-					<li>
-						<a href="#" title="" class=""><img src="list/images/goods1.png" alt="" /></a>
-						<p class="p1">马来西亚进口优佳快熟澳洲纯燕麦片250g冲饮杂粮早餐</p>
-						<p class="p2">￥15</p>
-					</li>
-					<li>
-						<a href="#" title="" class=""><img src="list/images/goods1.png" alt="" /></a>
-						<p class="p1">马来西亚进口优佳快熟澳洲纯燕麦片250g冲饮杂粮早餐</p>
-						<p class="p2">￥15</p>
-					</li>
 				</ul>
 			</aside>
 		</section>

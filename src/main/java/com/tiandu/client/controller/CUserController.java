@@ -809,7 +809,7 @@ public class CUserController extends BaseController {
 	/*
 	 * 商品管理
 	 */
-	@RequestMapping("/productManage")
+	@RequestMapping("/productmanage")
 	public String productManage(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		Byte supplierType = this.getCurrentUser().getSupplierType();
 		if(supplierType == null || supplierType.equals(Byte.valueOf("0"))){
@@ -817,22 +817,44 @@ public class CUserController extends BaseController {
 		}else{
 			modelMap.addAttribute("isSupplier", true);
 		}
+		
+		modelMap.addAttribute("system", getSystem());
 		return "/client/user/productManage";	
 	}
 	
 	/*
 	 * 查看我的商品
 	 */
-	@RequestMapping("/lookMyProduct")
+	@RequestMapping("/myproduct")
 	public String lookMyProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		modelMap.addAttribute("system", getSystem());
 		return "/client/user/myProduct";	
 	}
 	
 	/*
 	 * 搜索我的商品
 	 */
-	@RequestMapping("/searchMyProduct")
+	@RequestMapping("/searchmyproduct")
 	public String searchMyProduct(TdProductCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currentUser = this.getCurrentUser();
+		sc.setUid(currentUser.getUid());
+		List<TdProduct> productList = tdProductService.findBySearchCriteria(sc);
+		modelMap.addAttribute("productList", productList);			
+		modelMap.addAttribute("sc", sc);
+		return "/client/user/myProductListbody";	
+	}
+	
+	/*
+	 * 查看供应商商品
+	 */
+	@RequestMapping("/supplierproduct")
+	public String lookSupplierProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		modelMap.addAttribute("system", getSystem());
+		return "/client/user/SupplierProduct";	
+	}
+	
+	@RequestMapping("/searchsupplierproduct")
+	public String searchsupplierproduct(TdProductCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		int pageNo = sc.getPageNo();
 		TdUser currentUser = this.getCurrentUser();
 		sc.setPageSize(3);
@@ -855,15 +877,7 @@ public class CUserController extends BaseController {
 		}else{
 			modelMap.addAttribute("sc", sc);
 		}
-		return "/client/user/myProductTemplate";	
-	}
-	
-	/*
-	 * 查看供应商商品
-	 */
-	@RequestMapping("/lookSupplierProduct")
-	public String lookSupplierProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		return "/client/user/SupplierProduct";	
+		return "/client/user/supplierproductlistbody";	
 	}
 	
 	/*

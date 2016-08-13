@@ -7,102 +7,37 @@
     <meta name="keywords" content="中国创客联盟"/>
     <meta name="author" content="中国创客联盟"/>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
-    <title>个人中心首页</title>
+    <title>个人中心首页 - ${system.webkeywords!''}</title>
     <!-- 网站图标 -->
-    <link rel="shortcut icon" href="images/icon.ico"/>
+    <link rel="shortcut icon" href="${app.basePath}/static/default/images/icon.ico" />
     <!-- css -->
-    <link rel="stylesheet" href="${app.basePath}/static/default/client/css/site.css" type="text/css"/>
-    <link rel="stylesheet" type="text/css" href="${app.basePath}/static/default/client/css/personal-center-common.css">
-    <link rel="stylesheet" type="text/css" href="${app.basePath}/static/default/client/css/f_personal_center.css">
-    <link rel="stylesheet" type="text/css" href="${app.basePath}/static/default/client/css/lhead.css">
+    <link rel="stylesheet" href="${app.basePath}/static/default/client/style/site.css" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="${app.basePath}/static/default/client/style/personal-center-common.css">
+    <link rel="stylesheet" type="text/css" href="${app.basePath}/static/default/client/style/f_personal_center.css">
+    <link rel="stylesheet" type="text/css" href="${app.basePath}/static/default/client/style/lhead.css">
 	<#include "/common/common.ftl" />
     <!-- js -->
     <script type="text/javascript" src="${app.basePath}/static/js/jquery-1.12.3.min.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/js/client/html5.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/js/client/user/user.js"></script>
     <!--通用js-->
+    <script type="text/javascript" src="${app.basePath}/static/js/client/core.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/js/client/common.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/client/index.js"></script>
 </head>
 <body>
 <h1 style="display:none;"></h1>
-<!-- Header Start -->
-<div class="personal-top">
-    <div class="top">
-        <h1 class="left">您好!欢迎来到创客联盟，<label><@shiro.principal/> <a href="${app.basePath}/logout" title="">退出</a></label> <label>消息<a href="${app.basePath}/user/messageList" class="orange" title="">6</a></label></h1>
-        <div class="right">
-            <a href="${app.basePath}/" title="">创客联盟首页</a>|
-            <a href="${app.basePath}/user/index" title="">我的店铺</a>|
-            <a class="shopp-car" href="${app.basePath}/shoppingcart/list" title="">购物车(<span>3</span>)</a>|
-            <a href="${app.basePath}/user/center" title="">会员中心</a>|
-            <a href="${app.basePath}/mobile/index" title="">手机创客</a>|
-            <a class="help" href="${app.basePath}/helpcenter" title="帮助中心">帮助中心</a>
-        </div>
-    </div>
-</div>
-<!-- Header End -->
-
-<!-- 顶部导航 -->
-<div class="personal-top-nav">
-    <div class="top-nav">
-        <!-- LOGO尺寸 295*104 -->
-        <a class="personal-logo" href="${app.basePath}/">
-            <img src="${app.basePath}/static/default/client/images/index_logo_2.png" alt="中国创客联盟"/>
-        </a>
-        <!-- 导航 -->
-        <ul>
-            <li><a class="nav1" href="${app.basePath}/" title="">首页</a></li>
-            <li class="li2">
-                <a class="nav1" href="#" title="">账户设置 <span>V</span></a>
-                <div class="drop-down">
-                    <p>
-                        <label>安全设置</label>
-                        <a href="#">修改登录密码</a>
-                    </p>
-
-                    <p>
-                        <label>个人资料</label>
-                        <a href="#">个人信息设置</a>
-                        <a href="#">收货地址管理</a>
-                    </p>
-                </div>
-            </li>
-            <li><a class="nav1" href="#" title="">消息</a></li>
-        </ul>
-        <!-- 搜索框 -->
-        <div class="search-box">
-            <input type="text" placeholder="请输入关键字搜索"/>
-            <a href="#"></a>
-        </div>
-    </div>
-</div>
-<!-- 顶部导航 END -->
+<!-- Header -->
+<#include "../common/centerheader.ftl">
+<!-- Header -->
 <div class="clear"></div>
 
 <!-- Center Start -->
 <div class="index-main">
     <div class="personal-center">
         <!-- 左侧导航 -->
-        <div class="left-menu">
-            <ul>
-                <li class="li1">订单中心</li>
-                <li><a href="#" title="">我的订单</a></li>
-                <li><a href="#" title="">评价商品</a></li>
-                <li><a href="#" title="">我的收藏</a></li>
-                <li><a href="#" title="">浏览历史</a></li>
-            </ul>
-            <ul>
-                <li class="li1">我的资产</li>
-                <li><a href="#" title="">我的银卡</a></li>
-                <li><a href="#" title="">我的金卡</a></li>
-                <li><a href="#" title="">我是股东</a></li>
-            </ul>
-            <ul>
-                <li class="li1">售后服务</li>
-                <li><a href="#" title="">投诉建议</a></li>
-                <li><a href="#" title="">退款维权</a></li>
-            </ul>
-        </div>
-
+        <#include "../common/centerleftmenu.ftl">
+        
         <!-- 右侧内容 -->
         <div class="right-content">
             <!-- 个人信息 -->
@@ -275,56 +210,16 @@
             </div>
 
             <!--猜您喜欢-->
+            <form id="enjoyForm">
+			<input type="hidden" name="pageNo" id="enjoysc_pageNo" value="1">
+			<input type="hidden" name="pageSize" value="8"/>
+			</form>
             <div class="guess-like">
                 <div class="title">
                     <strong>猜你喜欢</strong>
                 </div>
                 <div class="pro-list">
-                    <ul>
-                        <li>
-                            <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
-                            <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
-                <span class="price">
-                    ￥<label>119.00</label>
-
-                </span>
-                        </li>
-                        <li>
-                            <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
-                            <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
-                <span class="price">
-                    ￥<label>119.00</label>
-                </span>
-                        </li>
-                        <li>
-                            <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
-                            <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
-                <span class="price">
-                    ￥<label>119.00</label>
-                </span>
-                        </li>
-                        <li>
-                            <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
-                            <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
-                <span class="price">
-                    ￥<label>119.00</label>
-                </span>
-                        </li>
-                        <li>
-                            <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
-                            <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
-                <span class="price">
-                    ￥<label>119.00</label>
-                </span>
-                        </li>
-                        <li>
-                            <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
-                            <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
-                <span class="price">
-                    ￥<label>119.00</label>
-                </span>
-                        </li>
-
+                    <ul id="enjoyList">
                     </ul>
                 </div>
 
@@ -342,5 +237,10 @@
 <#include "../common/foot.ftl">
 </footer>
 <!-- Footer End -->
+<script>
+	$(function(){
+		getenjoyproducts();
+	});
+</script>
 </body>
 </html>

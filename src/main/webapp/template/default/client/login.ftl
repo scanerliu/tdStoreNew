@@ -32,7 +32,7 @@
     <div class="login">
         <img src="${app.basePath}/static/default/client/images/zj_banner_login.jpg" alt=""/>
         <div class="login-form">
-            <form action="">
+            <form id="loginForm" action="${app.basePath}/login" method="post" autocomplete="false">
                 <div class="form_div1">
                     <p class="p1">会员登录</p>
                 </div>
@@ -40,8 +40,8 @@
                 <input type="password" class="ipt2" name="password" id="password" value="" placeholder="密码"/>
 
                 <div class="form_div2">
-                    <p><input type="checkbox" name="rememberMe" value="1">&nbsp;自动登录</p>
-                    <a href="javascript:void(0);" id="a_click" title="">忘记密码？</a>
+                    <p><label><input type="checkbox" name="rememberMe" value="true">&nbsp;自动登录</label></p>
+                    <!--<a href="javascript:void(0);" id="a_click" title="">忘记密码？</a>-->
                 </div>
                 <input type="button" value="登录" class="form_btn" onclick="login()"/>
                 <div class="login_way">

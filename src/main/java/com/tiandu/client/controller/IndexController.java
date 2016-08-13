@@ -58,7 +58,12 @@ public class IndexController extends BaseController {
 			cuser.setUpassword(WebUtils.generatePassword(loginForm.getUsername(), loginForm.getPassword()));
 			Subject user = SecurityUtils.getSubject();
 		    UsernamePasswordToken token = new UsernamePasswordToken(cuser.getUname(),cuser.getUpassword());
-		    token.setRememberMe(true);
+		    if(null!=loginForm.getRememberMe()){
+		    	token.setRememberMe(true);
+		    }else{
+		    	token.setRememberMe(false);
+		    }
+		    
 		    try {
 		      user.login(token);
 		      Date now = new Date();
@@ -72,7 +77,7 @@ public class IndexController extends BaseController {
 			      upuser.setLastLoginTime(now);
 			      tdUserService.updateByPrimaryKeySelective(upuser);
 		      }
-		      return "redirect:/index";
+		      return "redirect:/user/center";
 		    }catch (AuthenticationException e) {
 		    	logger.error("登录失败错误信息:"+e);
 		    	token.clear();
