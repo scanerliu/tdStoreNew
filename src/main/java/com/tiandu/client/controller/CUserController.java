@@ -85,6 +85,7 @@ import com.tiandu.order.entity.TdShoppingcartItem;
 import com.tiandu.order.search.TdShoppingcartSearchCriteria;
 import com.tiandu.order.service.TdShoppingcartItemService;
 import com.tiandu.order.vo.ShoppingcartVO;
+import com.tiandu.product.entity.TdBrand;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductAttachment;
 import com.tiandu.product.entity.TdProductAttribute;
@@ -93,9 +94,12 @@ import com.tiandu.product.entity.TdProductDescription;
 import com.tiandu.product.entity.TdProductSku;
 import com.tiandu.product.entity.TdProductType;
 import com.tiandu.product.entity.TdProductTypeAttribute;
+import com.tiandu.product.search.TdBrandSearchCriteria;
 import com.tiandu.product.search.TdProductAttributeOptionCriteria;
 import com.tiandu.product.search.TdProductCriteria;
+import com.tiandu.product.search.TdProductDescriptionCriteria;
 import com.tiandu.product.search.TdProductTypeCriteria;
+import com.tiandu.product.service.TdBrandService;
 import com.tiandu.product.service.TdProductAttachmentService;
 import com.tiandu.product.service.TdProductAttributeOptionService;
 import com.tiandu.product.service.TdProductAttributeService;
@@ -196,6 +200,8 @@ public class CUserController extends BaseController {
 	private TdUserQRcodeTools tdUserQRcodeTools;
 	@Autowired
 	private TdUserAccountLogService tdUserAccountLogService;
+	@Autowired
+	private TdBrandService tdBrandService;
 	
 	// 个人中心
 	@RequestMapping("/center")
@@ -1290,14 +1296,58 @@ public class CUserController extends BaseController {
 	/*
 	 * 上传商品
 	 */
-	@RequestMapping("/addProduct")
-	public String addProduct(Boolean isFreeProduct, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	@RequestMapping("/editproduct")
+	public String editProduct(Integer id, HttpServletRequest request, HttpServletResponse response, ModelMap map) {
 		TdProductTypeCriteria tsc = new TdProductTypeCriteria();
 		tsc.setStatus((byte) 1);
 		List<TdProductType> productTypeList = tdProductTypeService.findAll(tsc);
-		modelMap.addAttribute("productTypeList", productTypeList);
-		modelMap.addAttribute("isFreeProduct", isFreeProduct);
-		return "/client/user/addProduct";	
+		map.addAttribute("productTypeList", productTypeList);
+		
+		if(null != id && id != 0)
+		{
+			// 商品主要信息
+			TdProduct product = tdProductService.findOne(id);
+			map.addAttribute("tdProduct", product);
+			
+			// 商品图片
+			map.addAttribute("imgList", tdProductAttachmentService.findByProductId(id));
+			
+			TdProductDescriptionCriteria sc = new TdProductDescriptionCriteria();
+			sc.setProductId(id);
+			sc.setFlag(false);
+			// 图文详情
+			sc.setType(1);
+			map.addAttribute("detail", tdProductDescriptionService.findByProductId(sc));
+			// 包装配送
+			sc.setType(2);
+			map.addAttribute("packDetail", tdProductDescriptionService.findByProductId(sc));
+			// 售后
+			sc.setType(3);
+			map.addAttribute("afterSale", tdProductDescriptionService.findByProductId(sc));
+			
+			map.addAttribute("productStat", tdProductStatService.findOne(id));
+			// 商品规格
+			// 商品对应的货品
+			List<TdProductSku> productSkuList = tdProductSkuService.findByProductId(id);
+			map.addAttribute("productSkuList", productSkuList);
+			//商品类型规格
+			List<TdProductTypeAttribute> taList = tdProductTypeAttributeService.findByTypeIdWithOptions(product.getTypeId());
+			if(taList.size()>0){
+				//匹配货品库存状态
+				tdProductService.matchSkuStockWithAttributeOption(productSkuList,taList);
+			}
+			map.addAttribute("taList", taList);
+		}else{
+			TdProduct product = new TdProduct();
+			map.addAttribute("tdProduct", product);
+		}
+		
+		//品牌数据
+		TdBrandSearchCriteria bsc = new TdBrandSearchCriteria();
+		bsc.setFlag(false);
+		List<TdBrand> brandList = tdBrandService.findBySearchCriteria(bsc);
+		map.addAttribute("brandList", brandList);
+		return "/client/user/productform";	
 	}
 	
 	@RequestMapping(value="/getDownUsers", method = RequestMethod.POST)

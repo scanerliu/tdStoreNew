@@ -18,13 +18,15 @@
 		          </dd>
 		          <dd class="dd2 w80 txtc fl" style="padding:0;line-height:100px;">${product.postage!'0'}</dd>
 		          <dd class="dd3 w80 txtc fl" style="padding:0;line-height:100px;">${product.quantum!'0'}</dd>
-		          <dd class="dd4 w90 txtc fl" style="padding:0;line-height:100px;">${product.productType.name!''}</dd>
+		          <dd class="dd4 w90 txtc fl" style="padding:0;line-height:100px;">${product.tdProductType.name!''}</dd>
 		        </dl>
 		      </div>
 		      <div class="div5 w118 fl" style="line-height:100px;">${product.price!'0'}</div>
-		      <div class="div6 w108 fl" style="line-height:100px;">未上架</div>
+		      <div class="div6 w108 fl" style="line-height:100px;">
+		      	${product.joinStatusStr!''}
+		      </div>
 		      <div class="div7 w89 fl">
-		        <P><a href="${app.basePath}/user/editproduct/${product.id?c}" title="" class="a_sure2" style="margin-top:20px;">商品编辑</a></P>
+		        <P><a href="javascript:;" onclick="editProduct(${product.id?c})" title="" class="a_sure2" style="margin-top:20px;">商品编辑</a></P>
 		        <p><a href="javascript:;" class="a_sure3" title="立即上架" onclick="<#if product.onshelf>goOnshelf('${product.id?c}', 'false')<#else>goOnshelf('${product.id?c}', 'true')</#if>"><#if product.onshelf>立即下架<#else>立即上架</#if></a></p>
 		        <!--<P><a href="javascript:;" title="" class="a_sure3">立即上架</a></P>-->
 		        <!--<p><a href="${app.basePath}/mobile/imageorder/list?productId=${product.id?c}" class="a-up" title="图片美化">图片美化</a></p>-->
