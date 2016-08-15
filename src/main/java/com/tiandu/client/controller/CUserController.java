@@ -1072,8 +1072,6 @@ public class CUserController extends BaseController {
 			if(null != user)
 			{
 //				tdProduct.setBrandId(0);
-				product.setDefaultSkuId(0);
-				product.setSpecification(true);
 				product.setUpdateBy(user.getUid());
 			}
 			product.setUpdateTime(now);
@@ -1092,19 +1090,25 @@ public class CUserController extends BaseController {
 				product.setHotRecommend(0);
 				product.setNewRecommend(0);
 				product.setTypeRecommend(0);
+				product.setDefaultSkuId(0);
+				product.setSpecification(true);
+				product.setSort(0);
+				product.setStatus(Byte.valueOf("2"));
 			}
 			//设置库存，价格
 			Integer totalStock = 0;
 			BigDecimal lowPrice = BigDecimal.ZERO;
 			int i=0;
 			for(TdProductSku ps : product.getSkuList()){
-				totalStock = totalStock + ps.getStock();
-				if(i==0){
-					lowPrice = ps.getSalesPrice();
-				}else if(lowPrice.compareTo(ps.getSalesPrice())>0){
-					lowPrice = ps.getSalesPrice();
+				if(null!=ps.getStock()&&null!=ps.getSalesPrice()){
+					totalStock = totalStock + ps.getStock();
+					if(i==0){
+						lowPrice = ps.getSalesPrice();
+					}else if(lowPrice.compareTo(ps.getSalesPrice())>0){
+						lowPrice = ps.getSalesPrice();
+					}
+					i++;
 				}
-				i++;
 			}
 			product.setPrice(lowPrice);
 			product.setQuantum(totalStock);
@@ -1112,11 +1116,14 @@ public class CUserController extends BaseController {
 			tdProductService.save(product);
 			// 货品	atrributeArray格式：规格1=gv1,规格2=gv21	 保存规格格式：{"颜色":"红色","尺码":"38"}
 			for(TdProductSku ps : product.getSkuList()){
-				ps.setProductId(product.getId());
-				ps.setStatus(Byte.valueOf("1"));
-				ps.setUpdateBy(currentUser.getUid());
-				ps.setUpdateTime(now);
-				tdProductSkuService.save(ps);
+				if(null!=ps.getStock()&&null!=ps.getSalesPrice()){
+					ps.setProductId(product.getId());
+					ps.setStatus(Byte.valueOf("1"));
+					ps.setUpdateBy(currentUser.getUid());
+					ps.setUpdateTime(now);
+					ps.setSpecifications(ps.getSpecialJsonBySpecialKey(ps.getSpecifications()));
+					tdProductSkuService.save(ps);
+				}
 			}
 			// 修改展示图片
 			if(null != attId)
@@ -1425,6 +1432,19 @@ public class CUserController extends BaseController {
 		map.addAttribute("brandList", brandList);
 		return "/client/user/productform";	
 	}
+	
+	@RequestMapping("/producttypeattributes")
+	public String producttypeattributes(Integer id, HttpServletRequest request, HttpServletResponse response, ModelMap map) {
+		if(null != id && id != 0)
+		{
+			//商品类型规格
+			List<TdProductTypeAttribute> taList = tdProductTypeAttributeService.findByTypeIdWithOptions(id);
+			map.addAttribute("taList", taList);
+		}
+		return "/client/user/productTypeAttributes";	
+	}
+	
+	
 	
 	@RequestMapping(value="/getDownUsers", method = RequestMethod.POST)
 	@ResponseBody

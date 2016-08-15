@@ -214,6 +214,29 @@ public class TdProductSku {
 		return specStr;
 	}
 	/**
+	 * 获取规格配对key
+	 * @return
+	 */
+	public String getSpecKey(){
+		String specStr = "";
+		List<SkuSpecialVO> slist = this.getSpecialList();
+		if(slist == null){
+			return specStr;
+		}
+		Collections.sort(slist, new Comparator<SkuSpecialVO>() {
+            public int compare(SkuSpecialVO arg0, SkuSpecialVO arg1) {
+                return arg0.getSname().compareTo(arg1.getSname());
+            }
+        });
+		for(int i = 0; i < slist.size(); i ++){
+			specStr += slist.get(i).getSname()+"_"+slist.get(i).getSoption();
+			if(i < slist.size() - 1){
+				specStr += "|";
+			}
+		}
+		return specStr;
+	}
+	/**
 	 * 获取规格名称值key
 	 * @return
 	 */
@@ -229,12 +252,36 @@ public class TdProductSku {
             }
         });
 		for(int i = 0; i < slist.size(); i ++){
-			specStr += slist.get(i).getSoption();
+			specStr += slist.get(i).getSname()+"("+slist.get(i).getSoption()+")";
 			if(i < slist.size() - 1){
-				specStr += " ";
+				specStr += ",";
 			}
 		}
 		return specStr;
+	}
+	/**
+	 * 由key值转换为json字符串
+	 * 如：尺码_1.8米床用|颜色_蓝色 => {"尺码":"1.8米床用","颜色":"蓝色"}
+	 * @param special
+	 * @return
+	 */
+	public String getSpecialJsonBySpecialKey(String special){
+		StringBuffer sb = new StringBuffer();
+		if(StringUtils.isNotBlank(special)){
+			String[] arr = special.split("\\|");
+			int i = 0;
+			for(String str : arr){
+				String[] names = str.split("_");
+				if(i==0){
+					sb.append("\""+names[0]+"\":\""+names[1]+"\"");
+				}else{
+					sb.append(","+"\""+names[0]+"\":\""+names[1]+"\"");
+				}
+				i++;
+			}
+			return '{'+sb.toString()+'}';
+		}
+		return "";
 	}
     
 	
