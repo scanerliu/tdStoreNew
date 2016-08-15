@@ -143,6 +143,7 @@ public class TdProductServiceImpl implements TdProductService{
 				skuvo.setId(sku.getId());
 				skuvo.setProductId(sku.getProductId());
 				skuvo.setSalesPrice(sku.getSalesPrice());
+				skuvo.setMarketPrice(sku.getMarketPrice());
 				skuvo.setSkuCode(sku.getSkuCode());
 				skuvo.setStock(sku.getStock());
 				String opt = sku.getSpecifications();

@@ -11,9 +11,9 @@
     <link rel="shortcut icon" href="${app.basePath}/static/default/images/icon.ico" />
     <title>商品列表 - ${system.webkeywords!''}</title>
     <!-- css -->
-	<link rel="stylesheet" href="${app.basePath}/static/default/client/css/base.css" />
-	<link rel="stylesheet" href="${app.basePath}/static/default/client/css/index.css" />
-	<link rel="stylesheet" href="${app.basePath}/static/default/client/css/lhead.css" />
+	<link rel="stylesheet" href="${app.basePath}/static/default/client/style/base.css" />
+	<link rel="stylesheet" href="${app.basePath}/static/default/client/style/index.css" />
+	<link rel="stylesheet" href="${app.basePath}/static/default/client/style/lhead.css" />
 	<!-- js -->
 	<#include "/common/common.ftl" />
 	<script type="text/javascript" src="${app.basePath}/static/js/jquery-1.12.3.min.js"></script>
@@ -27,6 +27,7 @@
 		$(function(){
 			searchProductType(1);
 			searchProducts(true);
+			getenjoyproducts();
 		});
 	</script>
 </head>
@@ -152,15 +153,40 @@
 		<input type="hidden" id="sc_type" name="typeId" value="${sc.typeId!''}"/>
 		<input type="hidden" name="name" value="${sc.name!''}"/>
 		<!-- 价格区间 -->
-		<section class="price w1200">
+		<section class="oprice w1200">
 			<aside class="as1 fl">
-				<a href="javascript:;" title="" class="active fl"><span>综合</span></a>
-				<a href="javascript:;" title="" class="a1 fl"><span>销量</span></a>
-				<a href="javascript:;" title="" class="a1 fl"><span>价格</span></a>
-				<input type="text" name="startprice" class="fl" onKeyUp="formatInputPriceDefault(this)" onblur="formatInputPriceDefault(this)"/>
-				<span class="fl">-</span>
-				<input type="text" name="endprice" class="fl" onKeyUp="formatInputPriceDefault(this)" onblur="formatInputPriceDefault(this)"/>
+				<div class="a1 active fl"><span>综合</span></div>
+				<div class="a1 fl">
+					<span>销量 &or;</span>
+					<div class="oprice_hide"><a href="javascript:;" title="">按销量由高到低</a></div>
+				</div>
+				<div class="a1 fl">
+					<span>价格 &or;</span>
+					<div class="oprice_hide">
+						<a href="javascript:;" title="">按价格由高到低</a>
+						<a href="javascript:;" title="">按价格由低到高</a>
+					</div>
+					<script>
+					$(function(){
+						$(".oprice .as1 .a1").each(function(i,ele){
+							$(ele).hover(function(){
+								$(this).find('.oprice_hide').show();
+							},function(){
+								$(this).find('.oprice_hide').hide();
+							})
+						})
+						$('.oprice_hide').find('a').click(function(){
+							$(this).parent().prev().html($(this).html()+' &or;');
+							$(this).parent().hide();
+						})
+					})
+					</script>
+				</div>
+				<input type="text" name="startprice" class="ipt fl" onKeyUp="formatInputPriceDefault(this)" onblur="formatInputPriceDefault(this)"/>
+				<span class="fl" style="margin-left:10px;">-</span>
+				<input type="text" name="endprice" class="ipt fl" onKeyUp="formatInputPriceDefault(this)" onblur="formatInputPriceDefault(this)"/>
 				<input type="hidden" name="orderby" value=""/>
+				<input type="button" value="确定" class="ipt_sub fl" />
 			</aside>
 			<aside class="as2 fr">
 				<a href="javascript:;" title="下一页" class="aright fr" id="nextpagebtn">&gt;</a>
@@ -185,37 +211,16 @@
 		<!-- 列表-结束 -->
 		<!-- 猜你喜欢 -->
 		<section class="youlike w1200">
+			<form id="enjoyForm">
+			<input type="hidden" name="pageNo" id="enjoysc_pageNo" value="1">
+			<input type="hidden" name="pageSize" value="5"/>
+			</form>
 			<aside class="otitle">
 				<label for="" class="fl">猜你喜欢</label>
-				<span class="fr">换一批</span>
+				<span class="fr" id="enjoybtn">换一批</span>
 			</aside>
 			<aside class="obody">
-				<ul>
-					<li>
-						<a href="#" title="" class=""><img src="list/images/goods1.png" alt="" /></a>
-						<p class="p1">马来西亚进口优佳快熟澳洲纯燕麦片250g冲饮杂粮早餐</p>
-						<p class="p2">￥15</p>
-					</li>
-					<li>
-						<a href="#" title="" class=""><img src="list/images/goods1.png" alt="" /></a>
-						<p class="p1">马来西亚进口优佳快熟澳洲纯燕麦片250g冲饮杂粮早餐</p>
-						<p class="p2">￥15</p>
-					</li>
-					<li>
-						<a href="#" title="" class=""><img src="list/images/goods1.png" alt="" /></a>
-						<p class="p1">马来西亚进口优佳快熟澳洲纯燕麦片250g冲饮杂粮早餐</p>
-						<p class="p2">￥15</p>
-					</li>
-					<li>
-						<a href="#" title="" class=""><img src="list/images/goods1.png" alt="" /></a>
-						<p class="p1">马来西亚进口优佳快熟澳洲纯燕麦片250g冲饮杂粮早餐</p>
-						<p class="p2">￥15</p>
-					</li>
-					<li>
-						<a href="#" title="" class=""><img src="list/images/goods1.png" alt="" /></a>
-						<p class="p1">马来西亚进口优佳快熟澳洲纯燕麦片250g冲饮杂粮早餐</p>
-						<p class="p2">￥15</p>
-					</li>
+				<ul id="enjoyList">
 				</ul>
 			</aside>
 		</section>

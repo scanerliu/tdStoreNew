@@ -84,8 +84,9 @@
     from td_product_attribute 
     where 1=1 
     <if test="status != null" >
-       and  status = #{status,jdbcType=TINYINT}
-      </if>
+     and  status = #{status,jdbcType=TINYINT}
+    </if>
+    order by attri_id desc
   </select>
   
   

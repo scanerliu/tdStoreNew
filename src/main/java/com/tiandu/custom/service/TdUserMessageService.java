@@ -17,4 +17,5 @@ public interface TdUserMessageService {
 	public List<TdUserMessage> findBySearchCriteria(TdUserMessageSearchCriteria sc);
 	public Integer save(TdUserMessage tdUserMessage);
 	public Integer delete(Integer id);
+	public Integer countByCriteria(TdUserMessageSearchCriteria sc);
 }

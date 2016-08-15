@@ -2,43 +2,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
     <meta http-equiv="Content-Language" content="zh-CN">
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <meta name="copyright" content="" />
-    <meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1">
-    <meta content="yes" name="apple-mobile-web-app-capable">
-    <meta content="black" name="apple-mobile-web-app-status-bar-style">
-    <meta content="telephone=no" name="format-detection">
-    <title>登录</title>
-    <#include "/common/common.ftl" />
+    <meta name="keywords" content="${system.webkeywords!''}">
+    <meta name="description" content="${system.webdescription!''}">
+    <meta name="copyright" content="${system.webcopyright!''}" />
     <link rel="shortcut icon" href="${app.basePath}/static/default/images/icon.ico" />
-    <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/common.css"/>
-    <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/main.css"/>
-    <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/index.css"/>
+    <title>商品列表 - ${system.webkeywords!''}</title>
+    <#include "/common/common.ftl" />
+    <link rel="stylesheet" href="${app.basePath}/static/default/client/style/login.css" />
     <script src="${app.basePath}/static/js/jquery-1.12.3.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="${app.basePath}/static/js/mobile/common.js"></script>
-    <script src="${app.basePath}/static/js/mobile/login.js" type="text/javascript"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/client/common.js"></script>
+    <script src="${app.basePath}/static/js/client/login.js" type="text/javascript"></script>
 </head>
 <body class="body_bg1">
-<section class="container">
-    <div class="signin_logo"><img src="${app.basePath}/static/default/mobile/images/logo1.png" alt="logo"></div>
-    <form class="sign_form" id="loginForm" action="${app.basePath}/mobile/login" method="post">
-        <div class="div1"><input type="text" name="username" placeholder="ID号或手机号登录" id="username" value="${loginForm.username!''}"></div>
-        <div class="div2">
-            <input type="password" name="password" placeholder="密码" id="password">
-            <a href="${app.basePath}/mobile/forgetpassword" title="找回密码"></a>
+<!-- 顶部 -->
+<div class="login-top">
+    <h1></h1>
+    <a href="index.html" title="">
+        <!-- LOGO尺寸 559*71 -->
+        <img src="${app.basePath}/static/default/client/images/zj_logo_login.png" alt=""/>
+    </a>
+</div>
+<!-- 顶部 END -->
+
+<!-- 登录 -->
+<div class="login-banner">
+    <div class="login">
+        <img src="${app.basePath}/static/default/client/images/zj_banner_login.jpg" alt=""/>
+        <div class="login-form">
+            <form id="loginForm" action="${app.basePath}/login" method="post" autocomplete="false">
+                <div class="form_div1">
+                    <p class="p1">会员登录</p>
+                </div>
+                <input type="text" class="ipt1" name="username" id="username" value="" placeholder="ID号或手机号"/>
+                <input type="password" class="ipt2" name="password" id="password" value="" placeholder="密码"/>
+
+                <div class="form_div2">
+                    <p><label><input type="checkbox" name="rememberMe" value="true">&nbsp;自动登录</label></p>
+                    <!--<a href="javascript:void(0);" id="a_click" title="">忘记密码？</a>-->
+                </div>
+                <input type="button" value="登录" class="form_btn" onclick="login()"/>
+                <div class="login_way">
+                </div>
+            </form>
         </div>
-        <div class="div3"><input type="button" value="立即登录" onclick="login()"></div>
-    </form>
-    <div class="other_signin">
-        <!--<section class="sec3">还没有账号？<a href="${app.basePath}/mobile/register" title="">立即注册 ></a></section>-->
     </div>
-</section>
-<script>
-$(function(){
-});
-</script>
+</div>
+<!-- Center End -->
+<!-- Footer Start -->
+<footer class="login_footer">
+<#include "./common/foot.ftl">
+</footer>
+<!-- Footer End -->
 </body>  
 </html>

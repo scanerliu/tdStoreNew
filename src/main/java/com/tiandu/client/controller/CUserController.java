@@ -63,6 +63,7 @@ import com.tiandu.custom.search.TdUserAccountLogSearchCriteria;
 import com.tiandu.custom.search.TdUserAddressCriteria;
 import com.tiandu.custom.search.TdUserCampaignCriteria;
 import com.tiandu.custom.search.TdUserIntegralLogSearchCriteria;
+import com.tiandu.custom.search.TdUserMessageSearchCriteria;
 import com.tiandu.custom.search.TdUserSearchCriteria;
 import com.tiandu.custom.search.TdUserSupplierSearchCriteria;
 import com.tiandu.custom.service.TdAgentService;
@@ -84,6 +85,7 @@ import com.tiandu.order.entity.TdShoppingcartItem;
 import com.tiandu.order.search.TdShoppingcartSearchCriteria;
 import com.tiandu.order.service.TdShoppingcartItemService;
 import com.tiandu.order.vo.ShoppingcartVO;
+import com.tiandu.product.entity.TdBrand;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductAttachment;
 import com.tiandu.product.entity.TdProductAttribute;
@@ -92,9 +94,12 @@ import com.tiandu.product.entity.TdProductDescription;
 import com.tiandu.product.entity.TdProductSku;
 import com.tiandu.product.entity.TdProductType;
 import com.tiandu.product.entity.TdProductTypeAttribute;
+import com.tiandu.product.search.TdBrandSearchCriteria;
 import com.tiandu.product.search.TdProductAttributeOptionCriteria;
 import com.tiandu.product.search.TdProductCriteria;
+import com.tiandu.product.search.TdProductDescriptionCriteria;
 import com.tiandu.product.search.TdProductTypeCriteria;
+import com.tiandu.product.service.TdBrandService;
 import com.tiandu.product.service.TdProductAttachmentService;
 import com.tiandu.product.service.TdProductAttributeOptionService;
 import com.tiandu.product.service.TdProductAttributeService;
@@ -195,6 +200,8 @@ public class CUserController extends BaseController {
 	private TdUserQRcodeTools tdUserQRcodeTools;
 	@Autowired
 	private TdUserAccountLogService tdUserAccountLogService;
+	@Autowired
+	private TdBrandService tdBrandService;
 	
 	// 个人中心
 	@RequestMapping("/center")
@@ -246,6 +253,20 @@ public class CUserController extends BaseController {
 			res.put("msg", "签到成功。");
 			res.put("gettedIntegral", signBackData.get("signIntegral"));
 		}
+		return res;
+	}
+	// 获取用户系统消息数量
+	@RequestMapping(value="/messagecount", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> messagecount(HttpServletRequest request, HttpServletResponse response) {
+		TdUser currentUser = this.getCurrentUser();
+		Map<String,String> res = new HashMap<String,String>(); 
+		TdUserMessageSearchCriteria sc = new TdUserMessageSearchCriteria();
+		sc.setUid(currentUser.getUid());
+		sc.setStatus(Byte.valueOf("1"));
+		Integer count = tdUserMessageService.countByCriteria(sc);
+		res.put("code", "1");
+		res.put("count", count.toString());
 		return res;
 	}
 	
@@ -794,7 +815,7 @@ public class CUserController extends BaseController {
 	/*
 	 * 商品管理
 	 */
-	@RequestMapping("/productManage")
+	@RequestMapping("/productmanage")
 	public String productManage(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		Byte supplierType = this.getCurrentUser().getSupplierType();
 		if(supplierType == null || supplierType.equals(Byte.valueOf("0"))){
@@ -802,22 +823,44 @@ public class CUserController extends BaseController {
 		}else{
 			modelMap.addAttribute("isSupplier", true);
 		}
+		
+		modelMap.addAttribute("system", getSystem());
 		return "/client/user/productManage";	
 	}
 	
 	/*
 	 * 查看我的商品
 	 */
-	@RequestMapping("/lookMyProduct")
+	@RequestMapping("/myproduct")
 	public String lookMyProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		modelMap.addAttribute("system", getSystem());
 		return "/client/user/myProduct";	
 	}
 	
 	/*
 	 * 搜索我的商品
 	 */
-	@RequestMapping("/searchMyProduct")
+	@RequestMapping("/searchmyproduct")
 	public String searchMyProduct(TdProductCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currentUser = this.getCurrentUser();
+		sc.setUid(currentUser.getUid());
+		List<TdProduct> productList = tdProductService.findBySearchCriteria(sc);
+		modelMap.addAttribute("productList", productList);			
+		modelMap.addAttribute("sc", sc);
+		return "/client/user/myProductListbody";	
+	}
+	
+	/*
+	 * 查看供应商商品
+	 */
+	@RequestMapping("/supplierproduct")
+	public String lookSupplierProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		modelMap.addAttribute("system", getSystem());
+		return "/client/user/SupplierProduct";	
+	}
+	
+	@RequestMapping("/searchsupplierproduct")
+	public String searchsupplierproduct(TdProductCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		int pageNo = sc.getPageNo();
 		TdUser currentUser = this.getCurrentUser();
 		sc.setPageSize(3);
@@ -840,15 +883,7 @@ public class CUserController extends BaseController {
 		}else{
 			modelMap.addAttribute("sc", sc);
 		}
-		return "/client/user/myProductTemplate";	
-	}
-	
-	/*
-	 * 查看供应商商品
-	 */
-	@RequestMapping("/lookSupplierProduct")
-	public String lookSupplierProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		return "/client/user/SupplierProduct";	
+		return "/client/user/supplierproductlistbody";	
 	}
 	
 	/*
@@ -1261,14 +1296,58 @@ public class CUserController extends BaseController {
 	/*
 	 * 上传商品
 	 */
-	@RequestMapping("/addProduct")
-	public String addProduct(Boolean isFreeProduct, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	@RequestMapping("/editproduct")
+	public String editProduct(Integer id, HttpServletRequest request, HttpServletResponse response, ModelMap map) {
 		TdProductTypeCriteria tsc = new TdProductTypeCriteria();
 		tsc.setStatus((byte) 1);
 		List<TdProductType> productTypeList = tdProductTypeService.findAll(tsc);
-		modelMap.addAttribute("productTypeList", productTypeList);
-		modelMap.addAttribute("isFreeProduct", isFreeProduct);
-		return "/client/user/addProduct";	
+		map.addAttribute("productTypeList", productTypeList);
+		
+		if(null != id && id != 0)
+		{
+			// 商品主要信息
+			TdProduct product = tdProductService.findOne(id);
+			map.addAttribute("tdProduct", product);
+			
+			// 商品图片
+			map.addAttribute("imgList", tdProductAttachmentService.findByProductId(id));
+			
+			TdProductDescriptionCriteria sc = new TdProductDescriptionCriteria();
+			sc.setProductId(id);
+			sc.setFlag(false);
+			// 图文详情
+			sc.setType(1);
+			map.addAttribute("detail", tdProductDescriptionService.findByProductId(sc));
+			// 包装配送
+			sc.setType(2);
+			map.addAttribute("packDetail", tdProductDescriptionService.findByProductId(sc));
+			// 售后
+			sc.setType(3);
+			map.addAttribute("afterSale", tdProductDescriptionService.findByProductId(sc));
+			
+			map.addAttribute("productStat", tdProductStatService.findOne(id));
+			// 商品规格
+			// 商品对应的货品
+			List<TdProductSku> productSkuList = tdProductSkuService.findByProductId(id);
+			map.addAttribute("productSkuList", productSkuList);
+			//商品类型规格
+			List<TdProductTypeAttribute> taList = tdProductTypeAttributeService.findByTypeIdWithOptions(product.getTypeId());
+			if(taList.size()>0){
+				//匹配货品库存状态
+				tdProductService.matchSkuStockWithAttributeOption(productSkuList,taList);
+			}
+			map.addAttribute("taList", taList);
+		}else{
+			TdProduct product = new TdProduct();
+			map.addAttribute("tdProduct", product);
+		}
+		
+		//品牌数据
+		TdBrandSearchCriteria bsc = new TdBrandSearchCriteria();
+		bsc.setFlag(false);
+		List<TdBrand> brandList = tdBrandService.findBySearchCriteria(bsc);
+		map.addAttribute("brandList", brandList);
+		return "/client/user/productform";	
 	}
 	
 	@RequestMapping(value="/getDownUsers", method = RequestMethod.POST)

@@ -10,6 +10,12 @@ function searchProductAttribute(t){
 	$("#results").load(url,loadData);
 }
 
+//分页函数
+function fnGotoPageattributes(num){
+	searchProductAttribute(false);
+}
+
+
 function editProductAttribute(id){
 	var url = basePath + "/admin/productattribute/edit";
 	var loadData = {"id" : id};

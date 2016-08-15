@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.service.TdUserService;
@@ -27,7 +28,7 @@ import com.tiandu.custom.vo.LoginForm;
 
 @Controller
 @RequestMapping("")
-public class IndexController {
+public class IndexController extends BaseController {
 	private final Logger logger = Logger.getLogger(getClass());
 	@Autowired
 	private TdUserService tdUserService;
@@ -45,6 +46,7 @@ public class IndexController {
 	}
 	@RequestMapping("/login")
 	public String login(LoginForm loginForm, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		modelMap.addAttribute("system", this.getSystem());
 		modelMap.addAttribute("loginForm", loginForm);
 		return "/client/login";
 	}
@@ -56,7 +58,12 @@ public class IndexController {
 			cuser.setUpassword(WebUtils.generatePassword(loginForm.getUsername(), loginForm.getPassword()));
 			Subject user = SecurityUtils.getSubject();
 		    UsernamePasswordToken token = new UsernamePasswordToken(cuser.getUname(),cuser.getUpassword());
-		    token.setRememberMe(true);
+		    if(null!=loginForm.getRememberMe()){
+		    	token.setRememberMe(true);
+		    }else{
+		    	token.setRememberMe(false);
+		    }
+		    
 		    try {
 		      user.login(token);
 		      Date now = new Date();
@@ -70,7 +77,7 @@ public class IndexController {
 			      upuser.setLastLoginTime(now);
 			      tdUserService.updateByPrimaryKeySelective(upuser);
 		      }
-		      return "redirect:/index";
+		      return "redirect:/user/center";
 		    }catch (AuthenticationException e) {
 		    	logger.error("登录失败错误信息:"+e);
 		    	token.clear();

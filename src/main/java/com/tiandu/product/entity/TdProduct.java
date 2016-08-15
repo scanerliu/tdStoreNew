@@ -382,4 +382,27 @@ public class TdProduct {
     	return sb.toString();
     }
 
+    public String getJoinStatusStr(){
+    	StringBuffer sb = new StringBuffer();
+    	if(null!=this.getStatus() && null!=this.getOnshelf()){
+    		switch (this.getStatus()) {
+				case 1:
+					if(this.getOnshelf()) {
+		    			sb.append("已上架");
+		    		}else{
+		    			sb.append("已下架");
+		    		}
+					break;
+				case 2:
+					sb.append("待审核");
+					break;
+				case 3:
+					sb.append("审核未通过");
+					break;
+				default:
+					break;
+			}
+    	}
+    	return sb.toString();
+    }
 }

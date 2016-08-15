@@ -102,4 +102,14 @@ public class TdProductStat {
     public void setReviewScore(BigDecimal reviewScore) {
         this.reviewScore = reviewScore;
     }
+    /**
+     * 获取好评率
+     */
+    public BigDecimal getPositivePercent(){
+    	BigDecimal percent = BigDecimal.ZERO;
+    	if(null!=this.positiveRate && null!=this.reviewCount && this.reviewCount>0){
+    		percent = new BigDecimal(this.positiveRate).divide(new BigDecimal(this.reviewCount), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)); 
+    	}
+    	return percent;
+    }
 }
