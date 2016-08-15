@@ -133,6 +133,7 @@
 </div>
 <!-- 精品专区-结束 -->
 <!-- 热销推荐 -->
+<#--
 <#if productList?? && productList?size gt 0 >
 <div class="hot">
     <section class="index_title">
@@ -153,6 +154,23 @@
     </section>
 </div>
 </#if>
+-->
+<div class="hot">
+    <section class="index_title">
+        <label class="lab1 fl">热销推荐</label>
+        <a href="javascript:;" class="a_link"></a>
+    </section>
+</div>
+<div class="lcy_index1">
+	<ul>
+	<#if productTypeAdList?? && productTypeAdList?size gt 0>
+	<#list productTypeAdList as ad>
+		<li class="lcy_index2"><a href="${ad.linkUrl!''}"><img class="img-responsive" src="${ad.imageUrl!''}"/></a></li>
+	</#list>
+	</#if>
+   </ul>
+</div>
+
 <!-- 热销推荐-结束 -->
 <!-- 底部 -->
 <div style="width:100%;height:0.9rem"></div>

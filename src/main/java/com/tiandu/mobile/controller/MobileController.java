@@ -87,6 +87,13 @@ public class MobileController extends BaseController {
 			map.addAttribute("hotAdList", tdAdvertisementService.findBySearchCriteria(sc));
 		}
 		
+		adsense = tdAdsenseService.findByName("触屏首页类别展示广告");
+		if(null != adsense)
+		{
+			sc.setAdsId(adsense.getId());
+			map.addAttribute("productTypeAdList", tdAdvertisementService.findBySearchCriteria(sc));
+		}
+		
 		// 系统配置
 		map.addAttribute("system", getSystem());
 		

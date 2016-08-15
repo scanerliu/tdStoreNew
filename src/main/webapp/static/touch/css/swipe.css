@@ -58,3 +58,24 @@
 	height: auto;
 }
 /* 广告轮播-结束 */
+
+
+
+.addWrap2 div a{
+	width: 100%;
+	display: block;
+}
+.addWrap2 .swipe{
+	overflow: hidden;
+	visibility: hidden;
+	position:relative;
+}
+.addWrap2 .swipe-wrap{
+	overflow:hidden;
+	position:relative;
+}
+.addWrap2 .swipe-wrap > div {
+	float: left;
+	width: 100%;
+	position:relative;
+}

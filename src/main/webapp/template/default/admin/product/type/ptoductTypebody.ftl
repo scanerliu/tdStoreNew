@@ -1,7 +1,12 @@
 <#import "/common/app.ftl" as app>
 <link rel="stylesheet" href="${app.basePath}/static/js/easyui/easyui.css"/>
 <script src="${app.basePath}/static/js/easyui/jquery.easyui.min.js" type="text/javascript"></script>
-<div class="subnav"><div class="content_menu ib_a blue line_x"><a data-height="190" data-width="450" data-id="add" data-title="添加类型" href="javascript:;" class="add fb J_showdialog" onclick="editProductType(0)"><em>添加类型</em></a>&#12288;</div></div>
+<div class="subnav">
+	<div class="content_menu ib_a blue line_x">
+	<a data-height="190" data-width="450" data-id="add" data-title="添加类型" href="javascript:;" class="add fb J_showdialog" onclick="editProductType(0)"><em>添加类型</em></a>&#12288;
+	<a data-height="190" data-width="450" data-id="add" id="scollExp" data-title="添加类型" href="javascript:;" class="add fb J_showdialog" onclick="collapseAll()"><em>展开/关闭全部</em></a>&#12288;
+	</div>
+</div>
 <div class="pad_lr_10">
 <div class="J_tablelist table_list">
 	<div id="district">
@@ -36,30 +41,10 @@
 		</#list>
 	</ul>
     </#if>
-<#--
-<table id="test" title="Folder Browser" class="easyui-treegrid" style="width:700px;height:300px"
-	 data-options="
-				iconCls: 'icon-ok',
-				rownumbers: true,
-				animate: true,
-				fitColumns: true,
-				url: '',
-				method: 'get',
-				idField: 'id',
-				treeField: 'name',
-				showFooter: true
-			">
-	<thead>
-	 <tr>
-	 <th field="name" width="220">标题</th>
-	 <th field="size" width="100" align="right">状态</th>
-	 <th field="date" width="150">时间</th>
-	 </tr>
-	</thead>
-</table>-->
 </div>
 <script>
 $(function(){
+
     $("#J_checkall").click(function() {
         $('input[name="subbox"]').prop("checked",this.checked); 
     });
@@ -67,8 +52,18 @@ $(function(){
     $subBox.click(function(){
         $("#J_checkall").prop("checked",$subBox.length == $("input[name='subbox']:checked").length ? true : false);
     });
+    collapseAll();
 });
 
-
+// 全部收缩
+function collapseAll() { 
+		$('#tt').tree('collapseAll'); 
+		$("#scollExp").attr("onclick", "expandAll()");  
+} 
+//全部展开
+function expandAll() { 
+		$('#tt').tree('expandAll'); 
+		$("#scollExp").attr("onclick", "collapseAll()");  
+} 
 
 </script>

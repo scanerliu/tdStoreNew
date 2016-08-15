@@ -1,4 +1,9 @@
 @charset "utf-8";
+a, button, input {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent;
+   -webkit-appearance: none;
+  /* For some Androids */ }
 /* Document Css */
 /* 通用 */
 .fl{float:left;}
