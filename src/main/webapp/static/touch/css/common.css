@@ -1,11 +1,11 @@
 @charset "UTF-8";
 .m {
   margin: 0 0.2rem;
-  width: 6rem; }
+ }
 
 .p {
   padding: 0 0.2rem;
-  width: 6rem; }
+  }
 
 .body_gray {
   background: #f2f2f2;
@@ -79,10 +79,12 @@ th, td {
   text-align: left; }
 
 input {
+	 -webkit-appearance: none;
   font-family: "微软雅黑";
   font-size: 0.25rem; }
 
 input:focus {
+	 -webkit-appearance: none;
   outline: none; }
 
 input.sub {
@@ -92,12 +94,14 @@ input.sub {
   -webkit-appearance: none; }
 
 input.text {
+	 -webkit-appearance: none;
   background: none;
   border: none; }
 
 a, button, input {
   -webkit-tap-highlight-color: transparent;
   -webkit-tap-highlight-color: transparent;
+   -webkit-appearance: none;
   /* For some Androids */ }
 
 /* conmmon style */

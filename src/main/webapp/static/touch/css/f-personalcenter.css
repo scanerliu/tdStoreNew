@@ -450,7 +450,6 @@
     font-size: .24rem;
     color: #999; }
 .chuangke-list .banner {
-  width: 6.4rem;
   height: 5.5rem;
   display: block; }
 .chuangke-list .member {
@@ -601,7 +600,7 @@
     .data-fill .data-avatar li:last-child {
       padding: 0 .2rem; }
 .data-fill article textarea {
-  width: 6.4rem;
+  width: 100%;
   padding: .2rem;
   border: 0;
   border-top: .01rem solid #ddd;
@@ -1083,7 +1082,7 @@
   top: .88rem;
   left: 0;
   height: .8rem;
-  width: 6.4rem;
+  width: 100%;
   line-height: .8rem;
   border-bottom: .01rem solid #ddd;
   color: #999; }

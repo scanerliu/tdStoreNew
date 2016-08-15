@@ -4,11 +4,11 @@
 
 .m {
   margin: 0 0.2rem;
-  width: 6rem; }
+  }
 
 .p {
   padding: 0 0.2rem;
-  width: 6rem; }
+ }
 
 .body_gray {
   background: #f2f2f2;
@@ -20,6 +20,7 @@
   border-top: #dddddd 0.01rem solid;
   background: white;
   color: #333;
+  width: 100%;
   border-bottom: #dddddd 1px solid; }
 
 .order_detail label {
@@ -31,7 +32,6 @@
 .order_detail p {
   color: #666666;
   margin-top: 6px;
-  width: 5.6rem;
   padding-left: 0.4rem;
   background: url(../images/order-arae.png) no-repeat 0rem 0.04rem;
   background-size: 0.18rem 0.24rem;
@@ -67,7 +67,8 @@
     padding: 0.2rem; }
     .order_goods .goods_box section {
       float: right;
-      width: 4rem; }
+      width: 68%;
+  margin-left:2%; }
     .order_goods .goods_box h3 {
       overflow: hidden;
       text-overflow: ellipsis;

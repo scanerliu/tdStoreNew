@@ -1,11 +1,11 @@
 @charset "UTF-8";
 .m {
   margin: 0 0.2rem;
-  width: 6rem; }
+  }
 
 .p {
   padding: 0 0.2rem;
-  width: 6rem; }
+ }
 
 .body_gray {
   background: #f2f2f2;

@@ -348,8 +348,10 @@ strong {font-weight: normal;}
 }
 .my-order ol li section .middle .right-content {
 	float: right;
-  width: 4rem;
+ width: 68%;
+  margin-left:2%;
   height: .18rem;
+ 
 }
 .my-order ol li section .middle .right-content h3 {
 	overflow: hidden;

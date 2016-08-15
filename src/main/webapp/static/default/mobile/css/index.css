@@ -376,8 +376,8 @@
 	height:2.8rem;
 }
 .sign_form{
-	padding:0 0.3rem;
-	width:5.8rem;
+	padding: 0 5%;
+    width: 90%;
 }
 .sign_form div{
 	padding-left:0.6rem;
@@ -412,10 +412,9 @@
 	color:#666;
 	border:none;
 	background:none;
+	width: 90%;
 }
-.sign_form div:nth-child(2) input{
-	width:4.6rem;
-}
+
 .sign_form div:nth-child(3){
 	padding:0;
 	margin-top:0.6rem;
@@ -2417,7 +2416,7 @@
 	display:block;
 	padding-bottom:0.2rem;
 	border-bottom:1px solid #ddd;
-	background:#fff url(../images/right.png) no-repeat 6.1rem center;
+	background:#fff url(../images/right.png) no-repeat 90% center;
 	background-size:0.2rem 0.25rem;
 }
 .sub_order p{
@@ -2435,7 +2434,7 @@
 	margin-right:0.3rem;
 }
 .sub_order .p2{
-	height:0.72rem;
+
 	line-height:0.36rem;
 	background:url(../images/order-arae.png) no-repeat 0 0.08rem;
 	background-size:0.19rem 0.24rem;
