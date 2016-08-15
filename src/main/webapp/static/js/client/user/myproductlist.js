@@ -40,6 +40,15 @@ function editProduct(id){
 	$("#formdiv").loading().load(url,loadData);
 	showForm();
 }
+/**
+ * 添加零元商品
+ */
+function addZeroProduct(){
+	var url = basePath + "/user/editproduct";
+	var loadData = {"id":id,"ktype":2};
+	$("#formdiv").loading().load(url,loadData);
+	showForm();
+}
 
 function saveProduct(){
 	
@@ -51,4 +60,14 @@ function showForm(){
 function returnList(){
 	$("#formdiv").hide();
 	$("#listdiv").show();
+}
+function refreshList(){
+	searchProducts(false);
+}
+/**
+ * 删除图片
+ */
+function deleteImg(aid){
+	$("#attId"+aid).remove();
+	$("#atid"+aid).remove();
 }

@@ -249,6 +249,9 @@
 .all_nation .obody .fig3 input {
   width: 782px;
 }
+.all_nation .obody .fig3 select{
+width:300px;
+}
 .all_nation .obody .fig4 {
   width: 50%;
 }
@@ -279,6 +282,11 @@
   width: 58px;
   text-align: center;
   color: #666;
+}
+.all_nation .obody .fig5 .sig ul li input.chk{
+      float: left;
+    width: 28px;
+    height: 31px;
 }
 .all_nation .obody .fig5 .sig ul li a {
   display: block;
@@ -312,6 +320,27 @@
   border-top: 1px solid #fff7ed;
   border-bottom: 1px solid #fff7ed;
 }
+.all_nation .obody .table1 {
+  width: 97%;
+  border-color: #ddd;
+  border:1px solid #ddd;
+  border-right: 0;
+  border-bottom: 0;
+}
+.all_nation .obody .table1 td {
+  border:1px solid #ddd;
+  border-left: 0;
+  border-top: 0;
+  text-align:center;
+  height: 36px;
+  line-height: 36px;
+}
+.all_nation .obody .table1 td > input[type='text']{
+  width: 65px;
+  border:0;
+  padding:0;
+}
+
 
 .pop {
   height: 930px;

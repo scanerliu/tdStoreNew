@@ -2,6 +2,7 @@ package com.tiandu.product.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class TdProduct {
 	private Integer id;
@@ -62,6 +63,10 @@ public class TdProduct {
 
 	private Date endTime;
 
+	/**
+	 * 商品的货品集合
+	 */
+	private List<TdProductSku> skuList;
 	// 关联类别
 	private TdProductType tdProductType;
 	/**
@@ -315,6 +320,14 @@ public class TdProduct {
 
 	public void setExchangepoints(Integer exchangepoints) {
 		this.exchangepoints = exchangepoints;
+	}
+
+	public List<TdProductSku> getSkuList() {
+		return skuList;
+	}
+
+	public void setSkuList(List<TdProductSku> skuList) {
+		this.skuList = skuList;
 	}
 
 	/**

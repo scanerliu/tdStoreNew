@@ -2,6 +2,8 @@ package com.tiandu.product.entity;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -207,6 +209,29 @@ public class TdProductSku {
 			specStr += "["+slist.get(i).getSname() + ":" + slist.get(i).getSoption() +"]";
 			if(i < slist.size() - 1){
 				specStr += "，";
+			}
+		}
+		return specStr;
+	}
+	/**
+	 * 获取规格名称值key
+	 * @return
+	 */
+	public String getSpecOptionsKey(){
+		String specStr = "";
+		List<SkuSpecialVO> slist = this.getSpecialList();
+		if(slist == null){
+			return specStr;
+		}
+		Collections.sort(slist, new Comparator<SkuSpecialVO>() {
+            public int compare(SkuSpecialVO arg0, SkuSpecialVO arg1) {
+                return arg0.getSname().compareTo(arg1.getSname());
+            }
+        });
+		for(int i = 0; i < slist.size(); i ++){
+			specStr += slist.get(i).getSoption();
+			if(i < slist.size() - 1){
+				specStr += " ";
 			}
 		}
 		return specStr;

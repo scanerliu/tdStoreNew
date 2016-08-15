@@ -92,6 +92,7 @@ import com.tiandu.product.entity.TdProductAttribute;
 import com.tiandu.product.entity.TdProductAttributeOption;
 import com.tiandu.product.entity.TdProductDescription;
 import com.tiandu.product.entity.TdProductSku;
+import com.tiandu.product.entity.TdProductStat;
 import com.tiandu.product.entity.TdProductType;
 import com.tiandu.product.entity.TdProductTypeAttribute;
 import com.tiandu.product.search.TdBrandSearchCriteria;
@@ -832,8 +833,10 @@ public class CUserController extends BaseController {
 	 * 查看我的商品
 	 */
 	@RequestMapping("/myproduct")
-	public String lookMyProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	public String lookMyProduct(Integer op, Integer type, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		modelMap.addAttribute("system", getSystem());
+		modelMap.addAttribute("op", op);
+		modelMap.addAttribute("type", type);		
 		return "/client/user/myProduct";	
 	}
 	
@@ -1051,84 +1054,154 @@ public class CUserController extends BaseController {
 	/*
 	 * 商品保存
 	 */
-	@RequestMapping(value="/saveProduct", method = RequestMethod.POST)
+	@RequestMapping(value="/saveproduct", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,String> saveProduct(Boolean isFreeProduct, TdProduct product,  String[] attachment, TdProductDescription productDescription, TdProductSku productSku, String attributeAssembleStr, HttpServletRequest request, HttpServletResponse response) {
+	public Map<String,String> saveProduct(TdProduct product,  Integer[] attId, String detail, String  packDetail,
+			String afterSale, HttpServletRequest request, HttpServletResponse response) {
 		Map<String,String> res = new HashMap<String,String>();
 		TdUser currentUser = this.getCurrentUser();
-		String[] atrributeArray = attributeAssembleStr.split("_");
 		try{
+			if(null==product.getSkuList()||product.getSkuList().size()<1){
+				res.put("code", "0");
+				res.put("msg", "商品保存失败:商品规格不能为空!");
+				return res;
+			}
 			// 商品
-			if(isFreeProduct != null && isFreeProduct){
-				product.setKind(Byte.valueOf("3"));
+			Date now = new Date();
+			TdUser user = getCurrentUser();
+			if(null != user)
+			{
+//				tdProduct.setBrandId(0);
+				product.setDefaultSkuId(0);
+				product.setSpecification(true);
+				product.setUpdateBy(user.getUid());
+			}
+			product.setUpdateTime(now);
+			
+			boolean isUpdate = false;
+			if(product.getId() != null){
+				isUpdate = true;
+			}
+			if(isUpdate){
+				tdProductSkuService.deleteByProductId(product.getId());
 			}else{
-				product.setKind(Byte.valueOf("1"));
+				product.setCreateTime(now);
+				product.setUid(user.getUid());
+				product.setOnshelf(false);
+				product.setFineRecommend(0);
+				product.setHotRecommend(0);
+				product.setNewRecommend(0);
+				product.setTypeRecommend(0);
 			}
-			product.setUid(currentUser.getUid());
-			product.setSpecification(true);
-			product.setStatus(Byte.valueOf("2"));
-			if(attachment != null && attachment.length > 0){
-				product.setImageUrl(attachment[0]);
+			//设置库存，价格
+			Integer totalStock = 0;
+			BigDecimal lowPrice = BigDecimal.ZERO;
+			int i=0;
+			for(TdProductSku ps : product.getSkuList()){
+				totalStock = totalStock + ps.getStock();
+				if(i==0){
+					lowPrice = ps.getSalesPrice();
+				}else if(lowPrice.compareTo(ps.getSalesPrice())>0){
+					lowPrice = ps.getSalesPrice();
+				}
+				i++;
 			}
-			product.setCreateTime(new Date());
-			product.setUpdateTime(new Date());
-			product.setUpdateBy(currentUser.getUid());
-			product.setQuantum(productSku.getStock() * atrributeArray.length);
+			product.setPrice(lowPrice);
+			product.setQuantum(totalStock);
+			
 			tdProductService.save(product);
-			// 商品图片
-			if(attachment != null && attachment.length > 0){
-				for(String a : attachment){
-					TdProductAttachment pa = new TdProductAttachment();
-					pa.setAttachment(a);
-					// 格式：/tdStore/static/imgs/product/2016/7/21/78c60dcc-0938-4128-85fb-1291d75be098.jpg
-					String fileName = a.substring(a.lastIndexOf("/") + 1);
-					pa.setFilename(fileName);
-					pa.setProductId(product.getId());
-					tdProductAttachmentService.save(pa);
-				}
-			}
-			// 商品描述
-			productDescription.setType(Byte.valueOf("1"));
-			productDescription.setProductId(product.getId());
-			productDescription.setUpdateBy(currentUser.getUid());
-			productDescription.setUpdateTime(new Date());
-			tdProductDescriptionService.save(productDescription);
 			// 货品	atrributeArray格式：规格1=gv1,规格2=gv21	 保存规格格式：{"颜色":"红色","尺码":"38"}
-			for(String at : atrributeArray){
-				TdProductSku ps = new TdProductSku();
-				ps.setHighPrice(productSku.getHighPrice());
-				ps.setLowPrice(productSku.getLowPrice());
-				ps.setMarketPrice(productSku.getMarketPrice());
+			for(TdProductSku ps : product.getSkuList()){
 				ps.setProductId(product.getId());
-				ps.setSalesPrice(productSku.getSalesPrice());
-				ps.setStatus(Byte.valueOf("2"));
-				ps.setStock(productSku.getStock());
-				ps.setSupplierPrice(productSku.getSupplierPrice());
+				ps.setStatus(Byte.valueOf("1"));
 				ps.setUpdateBy(currentUser.getUid());
-				ps.setUpdateTime(new Date());
-				// 设置规格
-				JSONObject jo = new JSONObject();
-				String[] gga = at.split(",");
-				for(String ggas : gga){
-					try {
-						jo.put(ggas.split("=")[0], ggas.split("=")[1]);
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				ps.setSpecifications(jo.toString());
+				ps.setUpdateTime(now);
 				tdProductSkuService.save(ps);
-				
 			}
+			// 修改展示图片
+			if(null != attId)
+			{
+				for (Integer attaId : attId) {
+					TdProductAttachment attachment = tdProductAttachmentService.findOne(attaId);
+					attachment.setProductId(product.getId());
+					tdProductAttachmentService.save(attachment);
+				}
+			}
+			// 保存其他信息
+			TdProductDescriptionCriteria sc = new TdProductDescriptionCriteria();
+			sc.setProductId(product.getId());
+			sc.setFlag(false);
+			
+			// 图文详情
+			sc.setType(1);
+			TdProductDescription imgDetail = tdProductDescriptionService.findByProductId(sc);
+			if(null == imgDetail)
+			{
+				imgDetail = new TdProductDescription();
+				imgDetail.setProductId(product.getId());
+				imgDetail.setType((byte) 1);
+			}
+			imgDetail.setDescription(detail);
+			imgDetail.setUpdateBy(user.getUid());
+			imgDetail.setUpdateTime(new Date());
+			
+			// 包装配送
+			sc.setType(2);
+			TdProductDescription packdetail = tdProductDescriptionService.findByProductId(sc);
+			if(null == packdetail)
+			{
+				packdetail = new TdProductDescription();
+				packdetail.setProductId(product.getId());
+				packdetail.setType((byte) 2);
+			}
+			packdetail.setDescription(packDetail);
+			packdetail.setUpdateBy(user.getUid());
+			packdetail.setUpdateTime(new Date());
+			
+			// 售后说明
+			sc.setType(3);
+			TdProductDescription afterSaleDetail = tdProductDescriptionService.findByProductId(sc);
+			
+			if(null == afterSaleDetail)
+			{
+				afterSaleDetail = new TdProductDescription();
+				afterSaleDetail.setProductId(product.getId());
+				afterSaleDetail.setType((byte) 3);
+			}
+			afterSaleDetail.setDescription(afterSale);
+			afterSaleDetail.setUpdateBy(user.getUid());
+			afterSaleDetail.setUpdateTime(new Date());
+			
+			tdProductDescriptionService.save(imgDetail);
+			tdProductDescriptionService.save(packdetail);
+			tdProductDescriptionService.save(afterSaleDetail);
+			
+			// 新增商品时添加统计表
+			TdProductStat stat = tdProductStatService.findOne(product.getId());
+			if(null == stat)
+			{
+				stat = new TdProductStat();
+				stat.setBuyCount(0);
+				stat.setBuyTimes(0);
+				stat.setNegativeRate(0);
+				stat.setNeutralRate(0);
+				stat.setPositiveRate(0);
+				stat.setProductId(product.getId());
+				stat.setReviewCount(0);
+				stat.setReviewScore(new BigDecimal(0));
+				stat.setShowreviewCount(0);
+				stat.setViewCount(0);
+				tdProductStatService.Insert(stat);
+			}
+			
 		}catch(Exception e){
 			logger.error("商品保存失败。");
 			e.printStackTrace();
-			res.put("status", "n");
-			res.put("info", "商品保存失败。");
+			res.put("code", "0");
+			res.put("msg", "商品保存失败:"+e.getMessage());
 		}
-		res.put("status", "y");
-		res.put("info", "商品保存成功。");
+		res.put("code", "1");
+		res.put("msg", "商品保存成功。");
 		
 		return res;
 	}
@@ -1297,7 +1370,7 @@ public class CUserController extends BaseController {
 	 * 上传商品
 	 */
 	@RequestMapping("/editproduct")
-	public String editProduct(Integer id, HttpServletRequest request, HttpServletResponse response, ModelMap map) {
+	public String editProduct(Integer id, Integer ktype, HttpServletRequest request, HttpServletResponse response, ModelMap map) {
 		TdProductTypeCriteria tsc = new TdProductTypeCriteria();
 		tsc.setStatus((byte) 1);
 		List<TdProductType> productTypeList = tdProductTypeService.findAll(tsc);
@@ -1339,6 +1412,9 @@ public class CUserController extends BaseController {
 			map.addAttribute("taList", taList);
 		}else{
 			TdProduct product = new TdProduct();
+			if(null!=ktype && ktype.equals(2)){
+				product.setKind(Byte.valueOf("3"));
+			}
 			map.addAttribute("tdProduct", product);
 		}
 		
