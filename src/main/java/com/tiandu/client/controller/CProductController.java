@@ -24,6 +24,9 @@ import com.tiandu.article.search.TdArticleCategorySearchCriteria;
 import com.tiandu.article.search.TdArticleTitleSearchCriteria;
 import com.tiandu.article.service.TdArticleCategoryService;
 import com.tiandu.article.service.TdArticleTitleService;
+import com.tiandu.comment.entity.TdProductComment;
+import com.tiandu.comment.search.TdProductCommentCrateria;
+import com.tiandu.comment.service.TdProductCommentService;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.custom.entity.TdUser;
@@ -93,6 +96,9 @@ public class CProductController extends BaseController {
 	
 	@Autowired
 	private TdProductSkuService tdProductSkuService;
+	
+	@Autowired
+	private TdProductCommentService tdProductCommentService;
 	
 	@Autowired
 	private TdDistrictService tdDistrictService; 
@@ -307,11 +313,28 @@ public class CProductController extends BaseController {
 				servicedesc = desc;
 			}
 		}
+		
+		//查询商品统计
+		TdProductStat productStat = tdProductStatService.findOne(id);
+		map.addAttribute("productStat", productStat);
+		
 		map.addAttribute("productdesc", productdesc);
 		map.addAttribute("delivedesc", delivedesc);
 		map.addAttribute("servicedesc", servicedesc);
-		map.addAttribute("sc", sc);
 		return "/client/product/productdescribe";
+	}
+	
+	/*
+	 * 商品图文详情页
+	 */
+	@RequestMapping("/searchcomments")
+	public String searchcomments(TdProductCommentCrateria sc,HttpServletRequest req,ModelMap map)
+	{
+		sc.setStatus(Byte.valueOf("1"));
+		List<TdProductComment>  commentList  = tdProductCommentService.findBySearchCriteria(sc);
+		map.addAttribute("commentList", commentList);
+		map.addAttribute("sc", sc);
+		return "/client/product/productcommentlistBody";
 	}
 	
 	

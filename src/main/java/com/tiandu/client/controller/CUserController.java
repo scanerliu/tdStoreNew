@@ -884,6 +884,7 @@ public class CUserController extends BaseController {
 		List<TdProduct> productList = tdProductService.findBySearchCriteria(sc);
 		modelMap.addAttribute("productList", productList);		
 		modelMap.addAttribute("sc", sc);		
+		modelMap.addAttribute("agent", agent);		
 		return "/client/user/supplierProductListBody";	
 	}
 	/**

@@ -36,6 +36,8 @@
         searchProductType(1);
         getrecommendproducts("hotrecommendList",1,10);
         getrecommendproducts("typerecommendList",2,3);
+        getenjoyproducts();
+        getdescribe(${product.id?c});
         
         //$('.para span').click(function () {
         //    $(this).addClass('checked').siblings().removeClass('checked');
@@ -203,316 +205,24 @@
 	        <div class="product-detail">
 	            <div id="subnav" class="subnav" style="position: static; top: 0;">
 	                <a href="javascript:void(0);" onclick="hreftotop($(this),1);" class="on">商品详情</a>
-	                <a href="javascript:void(0);" onclick="hreftotop($(this),2)">具体参数</a>
-	                <a href="javascript:void(0);" onclick="hreftotop($(this),3)">商品评价</a>
-	                <a href="javascript:void(0);" onclick="hreftotop($(this),4)">包装与配送</a>
-	                <a href="javascript:void(0);" onclick="hreftotop($(this),5)" class="noborder">售后服务</a>
+	                <a href="javascript:void(0);" onclick="hreftotop($(this),2)">商品评价</a>
+	                <a href="javascript:void(0);" onclick="hreftotop($(this),3)">包装与配送</a>
+	                <a href="javascript:void(0);" onclick="hreftotop($(this),4)" class="noborder">售后服务</a>
 	            </div>
 	            <div id="detailcontent" class="content">
-	                <div id="1" class="description">
-	                    <table class="param" cellpadding="0" cellspacing="0">
-	                        <tr>
-	                            <td>商品名称：xxxxxxxxxxxxxxxxxxxxx</td>
-	                            <td>店铺名称：xxxxxxxxx旗舰店</td>
-	                            <td>品牌:XXXXXXXX</td>
-	                        </tr>
-	                        <tr>
-	                            <td>风格：xxxx</td>
-	                            <td>材质：棉麻</td>
-	                            <td>季节：夏季</td>
-	                        </tr>
-	                        <tr>
-	                            <td>裙长：xxxx</td>
-	                            <td>上衣袖型：短袖</td>
-	                            <td>颜色：两色</td>
-	                        </tr>
-	                        <tr>
-	                            <td>尺码：xxxx</td>
-	                        </tr>
-	                    </table>
-	                    <div class="info">
-	                        <img src="images/1.jpg" alt=""/>
-	                    </div>
-	                </div>
-	                <div id="2" class="main-param">
-	                    <table cellspacing="1" cellpadding="1">
-	                        <tr>
-	                            <th colspan="2">主观参数</th>
-	                        </tr>
-	                        <tr>
-	                            <td class="td1">花型图案</td>
-	                            <td>印花</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="td1">风格</td>
-	                            <td>韩版</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="td1">袖型</td>
-	                            <td>A字裙</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="td1">风格</td>
-	                            <td>韩版</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="td1">风格</td>
-	                            <td>韩版</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="td1">风格</td>
-	                            <td>韩版</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="td1">风格</td>
-	                            <td>韩版</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="td1">风格</td>
-	                            <td>韩版</td>
-	                        </tr>
-	
-	                        <tr>
-	                            <th colspan="2">实质参数</th>
-	                        </tr>
-	
-	                        <tr>
-	                            <td class="td1">适用人群</td>
-	                            <td>女士</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="td1">适用年龄</td>
-	                            <td>25-30岁</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="td1">适用季节</td>
-	                            <td>春季</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="td1">适用人群</td>
-	                            <td>女士</td>
-	                        </tr>
-	                    </table>
-	                </div>
-	                <div id="3" class="evalute">
-	                    <div class="enav">
-	                        <a class="on"><label>全部（904）</label></a>
-	                        <a><label>好评（689）</label></a>
-	                        <a><label>中评（135）</label></a>
-	                        <a><label class="noborder">差评（32）</label></a>
-	                    </div>
-	                    <div class="evalute-list">
-	                        <ul>
-	                            <li>
-	                                <span class="useravatar">
-	                                    <img src="images/avatar.png" alt=""/>
-	                                    <label>155*****11</label>
-	                                    <span class="vip">V1</span>
-	                                </span>
-	
-	                                <div class="right">
-	                                    <div class="star star1">
-	                                        <span class="s1"></span>
-	                                        <span class="s2"></span>
-	                                    </div>
-	                                    <p>
-	                                        卖家服务态度好，性价比高，值得入手，推荐！收到宝贝时包装完好无损。宝贝与商家店铺的宝贝描述是一致的。非常喜欢这件宝贝。全是5分好评。下次还来购买卖家服务态度好，性价比高，值得入手，推荐！收到宝贝时包装完好无损。宝贝与商家店铺的宝贝描述是一致的。非常喜欢这件宝贝。全是5分好评。下次还来购买卖家服务态度好，性价比高，值得入手，推荐！收到宝贝时包装完好无损。宝贝与商家店铺的宝贝描述是一致的。非常喜欢这件宝贝。全是5分好评。下次还来购买卖家服务态度好，性价比高，值得入手，推荐！收到宝贝时包装完好无损。宝贝与商家店铺的宝贝描述是一致的。非常喜欢这件宝贝。全是5分好评。下次还来购买卖家服务态度好，性价比高，值得入手，推荐！收到宝贝时包装完好无损。宝贝与商家店铺的宝贝描述是一致的。非常喜欢这件宝贝。全是5分好评。下次还来购买</p>
-	
-	                                    <div class="item">
-	                                        <label>尺码：L</label>
-	                                        <label>颜色：黑色</label>
-	                                        <label>2016-04-11 20:30:20</label>
-	                                    </div>
-	                                </div>
-	                            </li>
-	                            <li>
-	                                <span class="useravatar">
-	                                    <img src="images/avatar.png" alt=""/>
-	                                    <label>155*****11</label>
-	                                    <span class="vip">V1</span>
-	                                </span>
-	
-	                                <div class="right">
-	                                    <div class="star star2">
-	                                        <span class="s1"></span>
-	                                        <span class="s2"></span>
-	                                    </div>
-	                                    <p>
-	                                        卖家服务态度好，性价比高，值得入手，推荐！收到宝贝时包装完好无损。宝贝与商家店铺的宝贝描述是一致的。非常喜欢这件宝贝。全是5分好评。下次还来购买卖家服务态度好，性价比高，值得入手，推荐！</p>
-	
-	                                    <div class="item">
-	                                        <label>尺码：L</label>
-	                                        <label>颜色：黑色</label>
-	                                        <label>2016-04-11 20:30:20</label>
-	                                    </div>
-	                                </div>
-	                            </li>
-	                            <li>
-	                                <span class="useravatar">
-	                                    <img src="images/avatar.png" alt=""/>
-	                                    <label>155*****11</label>
-	                                    <span class="vip">V1</span>
-	                                </span>
-	
-	                                <div class="right">
-	                                    <div class="star star3">
-	                                        <span class="s1"></span>
-	                                        <span class="s2"></span>
-	                                    </div>
-	                                    <p>
-	                                        卖家服务态度好，性价比高，值得入手，推荐！收到宝贝时包装完好无损。宝贝与商家店铺的宝贝描述是一致的。非常喜欢这件宝贝。全是5分好评。下次还来购买卖家服务态度好，性价比高，值得入手，推荐！</p>
-	
-	                                    <div class="item">
-	                                        <label>尺码：L</label>
-	                                        <label>颜色：黑色</label>
-	                                        <label>2016-04-11 20:30:20</label>
-	                                    </div>
-	                                </div>
-	                            </li>
-	                            <li>
-	                                <span class="useravatar">
-	                                    <img src="images/avatar.png" alt=""/>
-	                                    <label>155*****11</label>
-	                                    <span class="vip">V1</span>
-	                                </span>
-	
-	                                <div class="right">
-	                                    <div class="star star4">
-	                                        <span class="s1"></span>
-	                                        <span class="s2"></span>
-	                                    </div>
-	                                    <p>
-	                                        卖家服务态度好，性价比高，值得入手，推荐！收到宝贝时包装完好无损。宝贝与商家店铺的宝贝描述是一致的。非常喜欢这件宝贝。全是5分好评。下次还来购买卖家服务态度好，性价比高，值得入手，推荐！</p>
-	
-	                                    <div class="item">
-	                                        <label>尺码：L</label>
-	                                        <label>颜色：黑色</label>
-	                                        <label>2016-04-11 20:30:20</label>
-	                                    </div>
-	                                </div>
-	                            </li>
-	                            <li>
-	                                <span class="useravatar">
-	                                    <img src="images/avatar.png" alt=""/>
-	                                    <label>155*****11</label>
-	                                    <span class="vip">V1</span>
-	                                </span>
-	
-	                                <div class="right">
-	                                    <div class="star star5">
-	                                        <span class="s1"></span>
-	                                        <span class="s2"></span>
-	                                    </div>
-	                                    <p>
-	                                        卖家服务态度好，性价比高，值得入手，推荐！收到宝贝时包装完好无损。宝贝与商家店铺的宝贝描述是一致的。非常喜欢这件宝贝。全是5分好评。下次还来购买卖家服务态度好，性价比高，值得入手，推荐！</p>
-	
-	                                    <div class="item">
-	                                        <label>尺码：L</label>
-	                                        <label>颜色：黑色</label>
-	                                        <label>2016-04-11 20:30:20</label>
-	                                    </div>
-	                                </div>
-	                            </li>
-	                        </ul>
-	                        <div class="page">
-	                            <a class="on">1</a>
-	                            <a>2</a>
-	                            <a>3</a>
-	                            <a>4</a>
-	                            <a class="more">...</a>
-	                            <a class="next">下一页 &gt;</a>
-	                        </div>
-	                        <span class="noinfo">
-	                            暂无评论
-	                        </span>
-	                    </div>
-	                </div>
-	                <div id="4" class="iteminfo">
-	                    <div class="title">
-	                        <label>包装与配送</label>
-	                    </div>
-	                    <div class="itemcontent">
-	                        <strong>包装清单</strong><br/>
-	                        由于厂商产品批次不同，具体包装清单可能各有不同，请以实物为准 ！ <br/><br/>
-	                        <strong>服务承诺</strong><br/>
-	                        网站所售产品均为厂商正品，如有任何问题可与我们客服人员联系，我们会在第一时间跟您沟通处理。我们将争取以更具竞争力的价格、更优质的服务来满足您最大的需求。开箱验货：签收时在付款后与配送人员当面核对：商品及配件、应付金额、商品数量及发货清单、发票（如有）、赠品（如有）等；如存在包装破损、商品错误、商品短缺、商品存在质量问题等影响签收的因素，请您可以拒收全部或部分商品，相关的赠品，配件或捆绑商品应一起当场拒收；为了保护您的权益，建议您尽量不要委托他人代为签收；如由他人代为签收商品而没有在配送人员在场的情况下验货，则视为您所订购商品的包装无任何问题。<br/><br/>
-	
-	                        <strong>温馨提示</strong><br/>
-	                        由于部分商品包装更换较为频繁，因此您收到的货品有可能与图片不完全一致，请您以收到的商品实物为准，同时我们会尽量做到及时更新，由此给您带来不便多多谅解，谢谢！<br/><br/>
-	
-	                        <strong>配送说明</strong><br/>
-	                        所有商品24小时内发货，请注意查收您的消息！本平台购买的商品，都是次日达!
-	                    </div>
-	                </div>
-	                <div id="5" class="iteminfo">
-	                    <div class="title">
-	                        <label>售后服务</label>
-	                    </div>
-	                    <div class="itemcontent">
-	
-	
-	                        <strong>售后服务</strong><br/>
-	                        本商家商品保证正品行货，严格按照国家三包政策提供售后服务，因质量问题或实物与描述不符产生的退换货服务运费由本店承担。<br/><br/>
-	                        <strong>温馨提示</strong><br/>
-	                        亲爱的顾客，为保障您的权益，请您对配送商品查验确认合格后签收，如有问题，请及时与商家联系。如需退货，请将包装一并寄回哦。<br/><br/>
-	
-	                        <strong>特别声明</strong><br/>
-	                        本站商品信息均来自于创客商家，其真实性、准确性和合法性由信息发布者（商家）负责。本站不提供任何保证，并不承担任何法律责任。因厂家会在没有任何提前通知的情况下更改产品包装、产地或者一些附件，本站不能确保客户收到的货物与网站图片、产地、附件说明完全一致，网站商品的功能参数仅供参考，请以实物为准。若本站没有及时更新，请您谅解！<br/><br/>
-	                    </div>
-	                </div>
 	            </div>
 	        </div>
 	    </div>
 	    <div class="guess-like">
+	    	<form id="enjoyForm">
+			<input type="hidden" name="pageNo" id="enjoysc_pageNo" value="1">
+			<input type="hidden" name="pageSize" value="6"/>
+			</form>
 	        <div class="title">
 	            <label>猜你喜欢</label>
-	            <a href="#" class="a-change" title="">换一批</a>
+	            <a href="javascript:;" class="a-change" title="" id="enjoybtn">换一批</a>
 	        </div>
-	        <ul class="pro-list">
-	            <li>
-	                <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
-	                <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
-	                <span class="price">
-	                    ￥<label>119.00</label>
-	
-	                </span>
-	            </li>
-	            <li>
-	                <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
-	                <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
-	                <span class="price">
-	                    ￥<label>119.00</label>
-	                </span>
-	            </li>
-	            <li>
-	                <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
-	                <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
-	                <span class="price">
-	                    ￥<label>119.00</label>
-	                </span>
-	            </li>
-	            <li>
-	                <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
-	                <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
-	                <span class="price">
-	                    ￥<label>119.00</label>
-	                </span>
-	            </li>
-	            <li>
-	                <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
-	                <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
-	                <span class="price">
-	                    ￥<label>119.00</label>
-	                </span>
-	            </li>
-	            <li>
-	                <a href="#" class="img" title=""><img src="images/fimg.png" alt=""/></a>
-	                <a href="#" class="ptitle" title="">黑白条纹宽松休闲圆领显瘦t恤修身夏季韩版荷</a>
-	                <span class="price">
-	                    ￥<label>119.00</label>
-	                </span>
-	            </li>
-	
+	        <ul class="pro-list" id="enjoyList">
 	        </ul>
 	    </div>
 	</div>

@@ -9,7 +9,7 @@
     <meta name="description" content="${system.webdescription!''}">
     <meta name="copyright" content="${system.webcopyright!''}" />
     <link rel="shortcut icon" href="${app.basePath}/static/default/images/icon.ico" />
-    <title>商品列表 - ${system.webkeywords!''}</title>
+    <title>登陆- ${system.webkeywords!''}</title>
     <#include "/common/common.ftl" />
     <link rel="stylesheet" href="${app.basePath}/static/default/client/style/login.css" />
     <script src="${app.basePath}/static/js/jquery-1.12.3.min.js" type="text/javascript"></script>
