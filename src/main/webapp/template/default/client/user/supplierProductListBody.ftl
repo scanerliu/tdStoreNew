@@ -38,7 +38,8 @@
 	<div class="flowbox4 mt20">
 	    <label><input type="checkbox" style="margin-left:20px;" id="J_checkall">
 	    <a href="javascript:;" title="" class="lab1">全选</a></label>
-	    <a href="javascript:;" title="" class="lab2" onclick="bacthDelProducts(11)">删除</a>
+	    <a href="javascript:;" title="" class="lab2" onclick="bacthOperProducts(1)">上架</a>
+	    <a href="javascript:;" title="" class="lab2" onclick="bacthOperProducts(2)">下架</a>
 	</div>
 </ul>
 <input type="hidden" value="${sc.name!''}" name="name">

@@ -26,7 +26,8 @@ public class TdProductSkuServiceImpl implements TdProductSkuService{
 		if(null != sku)
 		{
 			if(null != sku.getId()){
-				return tdProductSkuMapper.updateByPrimaryKey(sku);
+//				return tdProductSkuMapper.updateByPrimaryKey(sku);
+				return tdProductSkuMapper.updateByPrimaryKeySelective(sku);
 			}else{
 				return tdProductSkuMapper.insert(sku);
 			}

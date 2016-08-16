@@ -45,7 +45,7 @@
     <h3>${errmsg}</h3>
 	</#if>
 	</div>
-    <a class="btn-share" href="${app.basePath}/mobile/index" title="">点击返回首页</a>
+    <a class="btn-share" href="${app.basePath}/index" title="">点击返回首页</a>
   </section>
   <!-- Center End -->
 <script>
