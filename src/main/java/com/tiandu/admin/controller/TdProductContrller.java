@@ -146,12 +146,16 @@ public class TdProductContrller extends BaseController{
 			// 规格数量
 			map.addAttribute("specifiactionNum", attributeList.size());
 			// 设置规格值
-			for(TdProductAttribute pa : attributeList){
-				TdProductAttributeOptionCriteria aosc = new TdProductAttributeOptionCriteria();
-				aosc.setFlag(false);
-				aosc.setAttriId(pa.getAttriId());
-				List<TdProductAttributeOption> aoList = tdProductAttributeOptionService.findBySearchCriteria(aosc);
-				pa.setTdProductAttributeOptionList(aoList);
+			if(null != attributeList && attributeList.size() > 0){
+				for(TdProductAttribute pa : attributeList){
+					if(null != pa){
+						TdProductAttributeOptionCriteria aosc = new TdProductAttributeOptionCriteria();
+						aosc.setFlag(false);
+						aosc.setAttriId(pa.getAttriId());
+						List<TdProductAttributeOption> aoList = tdProductAttributeOptionService.findBySearchCriteria(aosc);
+						pa.setTdProductAttributeOptionList(aoList);
+					}
+				}
 			}
 			map.addAttribute("attributeList", attributeList);
 			// 商品对应的货品
@@ -442,7 +446,9 @@ public class TdProductContrller extends BaseController{
 		// 表头
 		List<String> columnList = new ArrayList<>();
 		for(TdProductAttribute ta : attributeList){
-			columnList.add(ta.getName());
+			if(null != ta){
+				columnList.add(ta.getName());
+			}
 		}
 		int specSize =  columnList.size();
 		
@@ -517,7 +523,9 @@ public class TdProductContrller extends BaseController{
 		// 表头
 		List<String> columnList = new ArrayList<>();
 		for(TdProductAttribute ta : attributeList){
-			columnList.add(ta.getName());
+			if(null != ta){
+				columnList.add(ta.getName());
+			}
 		}
 		int specSize =  columnList.size();
 		tableHeadData.setSpecSize(specSize);
@@ -561,16 +569,20 @@ public class TdProductContrller extends BaseController{
 				// 规格数量
 				pt.setSpecifiactionNum(attributeList.size());
 				// 设置规格值
-				for(TdProductAttribute pa : attributeList){
-					TdProductAttributeOptionCriteria aosc = new TdProductAttributeOptionCriteria();
-					aosc.setFlag(false);
-					aosc.setAttriId(pa.getAttriId());
-					List<TdProductAttributeOption> aoList = tdProductAttributeOptionService.findBySearchCriteria(aosc);
-					pa.setTdProductAttributeOptionList(aoList);
-				}
-				pt.setTdProductAttributeList(attributeList);
-				if(pt.getSubList() != null){
-					initTypeWithSpecifiaction(pt.getSubList());
+				if(null != attributeList && attributeList.size() > 0){
+					for(TdProductAttribute pa : attributeList){
+						if(null != pa){
+							TdProductAttributeOptionCriteria aosc = new TdProductAttributeOptionCriteria();
+							aosc.setFlag(false);
+							aosc.setAttriId(pa.getAttriId());
+							List<TdProductAttributeOption> aoList = tdProductAttributeOptionService.findBySearchCriteria(aosc);
+							pa.setTdProductAttributeOptionList(aoList);
+						}
+					}
+					pt.setTdProductAttributeList(attributeList);
+					if(pt.getSubList() != null){
+						initTypeWithSpecifiaction(pt.getSubList());
+					}
 				}
 			}
 		}

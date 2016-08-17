@@ -58,12 +58,14 @@
 		    	<td id="hpgg">
 		    		<#if attributeList??>
 			    		<#list attributeList as attribute>
+			    			<#if attribute??>
 			    			<#if (attribute_index != 0) && (attribute_index lt attributeList?size)><br/></#if>
 			    			<label>${attribute.name!''}：<label>
 			    			<#if attribute.tdProductAttributeOptionList??>
 			    				<#list attribute.tdProductAttributeOptionList as option>
 			    					${option.name!''}<input type="checkbox" onchange="flushTable()" id="spe_${attribute.name!''}_${option.name!''}" name="${attribute.name!''}" <#if keyValueStr?? && keyValueStr?contains(attribute.name + "=" + option.name)>checked</#if>>&nbsp;&nbsp;&nbsp;
 								</#list>
+							</#if>
 							</#if>
 			    		</#list>	
 					</#if>
