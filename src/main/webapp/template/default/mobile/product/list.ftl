@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="${app.basePath}/static/touch/css/swipe.css" />
     <link rel="stylesheet" href="${app.basePath}/static/touch/css/swiper.min.css" />
     <link rel="stylesheet" href="${app.basePath}/static/touch/css/index.css">
+    <link rel="stylesheet" href="${app.basePath}/static/touch/css/x_pc.css">
     <!-- js -->
     <script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script> 
     <script type="text/javascript" src="${app.basePath}/static/touch/js/swipe.js"></script> 

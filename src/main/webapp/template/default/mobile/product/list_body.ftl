@@ -14,7 +14,40 @@ $(document).ready(function(){
     <span><#if productType??>${productType.name!''}</#if></span>
 </div>
 <!-- header_top end -->
-
+<!-- ****广告轮播**** -->
+<#if adList?? && adList?size gt 0>
+<div class="addWrap2">
+    <div class="swipe" id="mySwipe">
+        <div class="swipe-wrap">
+        	<#list adList as ad>
+				<div><a href="${ad.linkUrl!''}"><img class="img-responsive" src="${ad.imageUrl!''}"/></a></div>
+        	</#list>
+        </div>
+    </div>
+    <ul id="position">
+          <li class="cur"></li>
+          <li class=""></li>
+          <li class=""></li>
+    </ul>
+</div> 
+<script type="text/javascript">
+    var bullets = document.getElementById('position').getElementsByTagName('li');
+    var banner = Swipe(document.getElementById('mySwipe'), {
+        auto: 3000,
+        continuous: true,
+        disableScroll:false,
+        callback: function(pos) {
+            var i = bullets.length;
+            while (i--) {
+              bullets[i].className = ' ';
+            }
+            bullets[pos].className = 'cur';
+        }
+    });
+</script>
+<!-- ****广告轮播-结束**** -->
+</div>
+</#if>
 <!-- Center Start -->
 <!-- <section class="container"> -->
     <div class="three">
@@ -23,30 +56,6 @@ $(document).ready(function(){
     	<a href="javascript:;" onclick="searchList(${sc.typeId?c},<#if sc??><#if sc.orderby==3 || sc.orderby==4><#if sc.orderby==3>4<#else>3</#if><#else>3</#if><#else>3</#if>)" title="价格" <#if sc?? && sc.orderby==3 || sc.orderby==4>class="active"</#if>>价格</a>
     </div>
  
- 	<#--
-    <div class="strenth">
-        <div class="swiper-container">
-            <div class="swiper-wrapper" id="swiper-wrapper">
-                <div class="swiper-slide"><a href="产品列表.html" title="">翡翠玉石</a></div>
-                <div class="swiper-slide"><a href="#" title="">发饰/发卡</a></div>
-                <div class="swiper-slide"><a href="#" title="">3</a></div>
-                <div class="swiper-slide"><a href="#" title="">4</a></div>
-                <div class="swiper-slide"><a href="#" title="">5</a></div>
-                <div class="swiper-slide"><a href="#" title="">6</a></div>
-                <div class="swiper-slide"><a href="#" title="">7</a></div> 
-            </div>
-        </div>
-        <script>
-        var swiper = new Swiper('.swiper-container', {
-            pagination: '.swiper-pagination',
-            slidesPerView: 3,
-            paginationClickable: true,
-            // spaceBetween: 30
-        });
-        </script>
-    </div>
-    -->
-
     <!-- 热销推荐 -->
     <div class="hot">
         <section class="sec2" id="product_more">

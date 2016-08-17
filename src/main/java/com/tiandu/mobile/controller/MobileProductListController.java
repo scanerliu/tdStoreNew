@@ -12,6 +12,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.tiandu.article.entity.TdAdsense;
+import com.tiandu.article.search.TdAdvertisementSearchCriteria;
+import com.tiandu.article.service.TdAdsenseService;
+import com.tiandu.article.service.TdAdvertisementService;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.product.entity.TdProduct;
@@ -39,6 +43,12 @@ public class MobileProductListController extends BaseController{
 	@Autowired
 	private TdProductTypeService tdProductTypeService;
 	
+	@Autowired
+	private TdAdsenseService tdAdsenseService;
+	
+	@Autowired
+	private TdAdvertisementService tdAdvertisementService;
+	
 	@RequestMapping("/list/{typeId}")
 	public String productList(@PathVariable Integer typeId,
 			HttpServletRequest req,ModelMap map)
@@ -59,6 +69,19 @@ public class MobileProductListController extends BaseController{
 	@RequestMapping("/list/search")
 	public String listSearch(TdProductCriteria sc ,HttpServletRequest req,ModelMap map)
 	{
+		// 轮播广告
+		TdAdvertisementSearchCriteria adsc = new TdAdvertisementSearchCriteria();
+		adsc.setCreateTime(new Date());
+		adsc.setEndTime(new Date());
+		adsc.setOrderBy("2");
+		adsc.setStatus((byte)1);
+		TdAdsense adsense = tdAdsenseService.findByName("触屏分类列表页广告");
+		if(null != adsense)
+		{
+			adsc.setAdsId(adsense.getId());
+			map.addAttribute("adList", tdAdvertisementService.findBySearchCriteria(adsc));
+		}
+		
 		map.addAttribute("productType", tdProductTypeService.findOne(sc.getTypeId()));
 		
 		sc.setOnshelf(true);

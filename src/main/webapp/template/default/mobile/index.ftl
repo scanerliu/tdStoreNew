@@ -35,9 +35,25 @@
 
 <body class="body_bg">
 <!-- 头部 -->
+<style>
+	.index_header {
+		background:rgba(255,255,255,.5);
+		position:fixed;
+		top:0;
+		left:inherit;
+		z-index:99;
+	}
+	.index_header .input {
+		background-color:#fff !important;
+	}
+	.my_banner1 {
+		min-height:3rem  !important;
+	}
+</style>
+
 <div class="index_header">
     <div class="fl"><img src="${app.basePath}/static/touch/images/logo.png" alt="LOGO"></div>
-    <a href="${app.basePath}/mobile/search" title="搜索" class="fl">搜索我的宝贝</a>
+    <a href="${app.basePath}/mobile/search" title="搜索"  class="fl input">搜索我的宝贝</a>
     <a href="javascript:;" title="分享" id="avalue_btn" class="fr">分享</a>
 </div>
 <!-- 头部-结束 -->
