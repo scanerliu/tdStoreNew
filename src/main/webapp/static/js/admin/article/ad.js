@@ -129,3 +129,13 @@ function delAdsense(id){
 	});
 }
 
+
+function changeAds(obj){
+	var asid = $(obj).val();
+	if(asid==6){
+		$("#typeIdTr").show();
+	}else{
+		$("#typeIdTr").hide();
+		$("#typeIdSelect").find("option[value='']").prop("selected",true);
+	}
+}

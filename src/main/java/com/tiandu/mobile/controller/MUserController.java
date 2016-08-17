@@ -1157,6 +1157,12 @@ public class MUserController extends BaseController {
 			product.setUpdateTime(new Date());
 			product.setUpdateBy(currentUser.getUid());
 			product.setQuantum(productSku.getStock() * atrributeArray.length);
+			//保存商品类型Tree
+			if(null!=product.getTypeId()&&product.getTypeId()>0){
+				TdProductType type = tdProductTypeService.findOneWithParents(product.getTypeId());
+				String typeIdTree = type.getParentIdTree();
+				product.setTypeIdTree(typeIdTree);
+			}
 			tdProductService.save(product);
 			// 商品图片
 			if(attachment != null && attachment.length > 0){

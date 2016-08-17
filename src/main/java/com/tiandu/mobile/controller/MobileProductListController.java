@@ -85,16 +85,35 @@ public class MobileProductListController extends BaseController{
 		map.addAttribute("productType", tdProductTypeService.findOne(sc.getTypeId()));
 		
 		sc.setOnshelf(true);
+		sc.setStatus(Byte.valueOf("1"));
 		if(null == sc.getOrderby())
 		{
 			sc.setOrderby(1);
 		}
 		sc.setKind((byte)1);
 		sc.setOrderBy(sc.getOrderBySql());
+		if(null!=sc.getTypeId() && sc.getTypeId()>0){
+			sc.setTypeIdTree("["+sc.getTypeId()+"]");
+		}
 		
 		List<TdProduct> productList = tdProductService.findBySearchCriteria(sc);
 		map.addAttribute("productList", productList);
 		map.addAttribute("sc", sc);
+		//分类广告
+		if(null!=sc.getTypeId() && sc.getTypeId()>0){
+			// 轮播广告
+			TdAdvertisementSearchCriteria asc = new TdAdvertisementSearchCriteria();
+			asc.setCreateTime(new Date());
+			asc.setEndTime(new Date());
+			adsense = tdAdsenseService.findByName("触屏商品分类列表页轮播大图广告");
+			if(null != adsense)
+			{
+				asc.setAdsId(adsense.getId());
+				asc.setTypeId(sc.getTypeId());
+				asc.setOrderBy("2");
+				map.addAttribute("adList", tdAdvertisementService.findBySearchCriteria(asc));
+			}
+		}
 		return "/mobile/product/list_body";
 	}
 	
@@ -112,6 +131,8 @@ public class MobileProductListController extends BaseController{
 		
 		sc.setTypeId(typeId);
 		sc.setOnshelf(true);
+		sc.setStatus(Byte.valueOf("1"));
+		sc.setTypeIdTree("["+typeId+"]");
 		if(null == sc.getOrderby())
 		{
 			sc.setOrderby(1);

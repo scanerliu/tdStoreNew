@@ -45,6 +45,22 @@ public class TdProductTypeImpl implements TdProductTypeService{
 		
 		return tdProduceTypeMapper.selectByPrimaryKey(id);
 	}
+	
+	@Override
+	public TdProductType findOneWithParents(Integer id) {
+		TdProductType type = tdProduceTypeMapper.selectByPrimaryKey(id);
+		if(null!=type&& null!=type.getParentId() && type.getParentId()>0){//查找上一级分类
+			TdProductType uptype = tdProduceTypeMapper.selectByPrimaryKey(type.getParentId());
+			if(null!=uptype&& null!=uptype.getParentId() && uptype.getParentId()>0){//查找上二级分类
+				TdProductType up2type = tdProduceTypeMapper.selectByPrimaryKey(uptype.getParentId());
+				if(null!=up2type){//查找上二级分类
+					uptype.setParent(up2type);
+				}
+			}
+			type.setParent(uptype);
+		}
+		return type;
+	}
 
 	@Override
 	public Integer save(TdProductType e) {

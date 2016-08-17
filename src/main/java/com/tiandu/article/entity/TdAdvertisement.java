@@ -29,6 +29,8 @@ public class TdAdvertisement extends TdBaseEntity{
 
     private Integer regionId;
     
+    private Integer typeId; //商品分类Id,分类广告使用
+    
     private Date endTime;
     
     /**
@@ -147,6 +149,13 @@ public class TdAdvertisement extends TdBaseEntity{
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
+
+	public Integer getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
+	}
     
-	
 }

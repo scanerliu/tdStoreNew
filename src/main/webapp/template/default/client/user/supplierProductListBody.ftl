@@ -26,7 +26,7 @@
 		      	${product.joinStatusStr!''}
 		      </div>
 		      <div class="div7 w89 fl">
-		        <P><a href="javascript:;" onclick="editProduct(${product.id?c})" title="" class="a_sure2" style="margin-top:20px;">商品编辑</a></P>
+		        <#if agent?? && agent.level==1><P><a href="javascript:;" onclick="editProduct(${product.id?c})" title="" class="a_sure2" style="margin-top:20px;">商品编辑</a></P></#if>
 		        <!--<p><a href="javascript:;" class="a_sure3" title="立即上架" onclick="<#if product.onshelf>goOnshelf('${product.id?c}', 'false')<#else>goOnshelf('${product.id?c}', 'true')</#if>"><#if product.onshelf>立即下架<#else>立即上架</#if></a></p>-->
 		        <!--<P><a href="javascript:;" title="" class="a_sure3">立即上架</a></P>-->
 		        <!--<p><a href="${app.basePath}/mobile/imageorder/list?productId=${product.id?c}" class="a-up" title="图片美化">图片美化</a></p>-->
@@ -38,7 +38,10 @@
 	<div class="flowbox4 mt20">
 	    <label><input type="checkbox" style="margin-left:20px;" id="J_checkall">
 	    <a href="javascript:;" title="" class="lab1">全选</a></label>
-	    <a href="javascript:;" title="" class="lab2" onclick="bacthDelProducts(11)">删除</a>
+	    <#if agent?? && agent.level==1>
+	    <a href="javascript:;" title="" class="lab2" onclick="bacthOperProducts(1)">上架</a>
+	    <a href="javascript:;" title="" class="lab2" onclick="bacthOperProducts(2)">下架</a>
+	    </#if>
 	</div>
 </ul>
 <input type="hidden" value="${sc.name!''}" name="name">

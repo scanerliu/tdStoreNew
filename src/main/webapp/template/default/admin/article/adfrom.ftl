@@ -11,13 +11,22 @@
     <tr>
         <th width="150">所属广告位：</th>
         <td>
-        	<select name="adsId" class="easyui-combobox" style="width:200px;">
+        	<#if ad?? && ad.id??>
+        		<#if adsenseList ??>
+        		<#list adsenseList as ads>
+        			<#if ad?? && ad.adsId == ads.id>${ads.name!''}</#if>
+        		</#list>
+        		</#if>
+        		<input type="hidden" name="adsId" value="${ad.adsId?c}">
+        	<#else>
+        	<select name="adsId" style="width:200px;" onchange="changeAds(this)">
         		<#if adsenseList ??>
         		<#list adsenseList as ads>
         			<option value="${ads.id?c}" <#if ad?? && ad.adsId == ads.id>selected</#if>>${ads.name!''}</option>
         		</#list>
         		</#if>
         	</select>
+        	</#if>
         </td>
     </tr>
     <tr>
@@ -67,6 +76,19 @@
             <input type="text" name="sort" class="easyui-textbox" value="<#if ad??>${ad.sort!'99'}</#if>" style="width:200px;height:30px" data-options="required:true" validType="">
         </td>
     </tr>
+    <tr style="display:none;" id="typeIdTr">
+        <th>商品分类：</th>
+        <td>
+            <select name="typeId" style="width:200px;" id="typeIdSelect">
+            	<option value="">--请选择--</option>
+        		<#if typeList ??>
+        		<#list typeList as type>
+        			<option value="${type.id?c}" <#if ad?? && ad.typeId?? && ad.typeId== type.id>selected</#if>>${type.name!''}</option>
+        		</#list>
+        		</#if>
+        	</select>
+        </td>
+    </tr>
     <tr>
         <th>
         </th>
@@ -98,5 +120,8 @@
 		        	$.messager.alert('消息提醒','上传失败。');
 		        }
 		});
+		<#if ad?? && ad.adsId?? && ad.adsId==6>
+			$("#typeIdTr").show();
+		</#if>
 	});
 </script>

@@ -252,7 +252,7 @@ public class WechatNotify {
 		user.setJointId(opendI);
 		user.setUverification(Byte.valueOf("2"));//未验证
 		user.setUstatus(Byte.valueOf("1"));
-		user.setUtype(Byte.valueOf("2"));//普通会员
+		user.setUtype(Byte.valueOf("1"));//普通会员
 		user.setUparentId(SpreadId);
 		user.setCreateTime(currentDate);
 		user.setUpdateBy(1);

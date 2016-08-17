@@ -26,6 +26,8 @@ public class TdProduct {
 	private Integer brandId;
 
 	private Integer typeId = 0;
+	
+	private String typeIdTree;
 
 	private Integer uid;
 
@@ -160,6 +162,14 @@ public class TdProduct {
 
 	public void setTypeId(Integer typeId) {
 		this.typeId = typeId;
+	}
+
+	public String getTypeIdTree() {
+		return typeIdTree;
+	}
+
+	public void setTypeIdTree(String typeIdTree) {
+		this.typeIdTree = typeIdTree;
 	}
 
 	public Integer getUid() {

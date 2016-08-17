@@ -25,6 +25,12 @@ public interface TdProductTypeService {
 	public List<TdProductType> findAll(TdProductTypeCriteria sc);
 	
 	public List<TdProductType> findByParentId(Integer id);
+	/**
+	 * 查找分类带所有上级分类(最多只找三级)
+	 * @param id
+	 * @return
+	 */
+	public TdProductType findOneWithParents(Integer id);
 	
 	// 查找分类已有属性
 	List<TdProductAttribute> findProducrAttribute(Integer typeId);

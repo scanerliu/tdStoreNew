@@ -16,6 +16,29 @@ function getrecommendproducts(dvid,type,size){
 	}
 	$("#"+dvid).loading().load(url,loadData);
 }
+//获取商品详情
+function getdescribe(pid){
+	var url = basePath + "/product/describe/"+pid;
+	$("#detailcontent").loading().load(url,null);
+}
+
+//获取商品详情
+function searchComments(flag){
+	var url = basePath + "/product/searchcomments";
+	var loadData = "";
+	if(flag){//热门推荐
+		loadData = $("#searchcommentform").serializeArray();;		
+	}else{//相关推荐
+		loadData = $("#commentlistform").serializeArray();
+	}
+	$("#commentList").loading().load(url,loadData);
+}
+
+
+//分页函数
+function fnGotoPageComments(num){
+	searchComments(false);
+}
 
 /**
  * 规格选择货品操作

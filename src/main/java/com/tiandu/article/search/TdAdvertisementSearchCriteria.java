@@ -16,6 +16,8 @@ public class TdAdvertisementSearchCriteria extends SearchCriteria{
     
     private Integer regionId;
     
+    private Integer typeId;
+    
     private Integer createBy;
 
 	public Byte getStatus() {
@@ -65,7 +67,14 @@ public class TdAdvertisementSearchCriteria extends SearchCriteria{
 	public void setCreateBy(Integer createBy) {
 		this.createBy = createBy;
 	}
+
+	public Integer getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
+	}
     
-	
 	
 }

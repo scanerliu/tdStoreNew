@@ -818,13 +818,17 @@ public class CUserController extends BaseController {
 	 */
 	@RequestMapping("/productmanage")
 	public String productManage(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		Byte supplierType = this.getCurrentUser().getSupplierType();
+		TdUser currUser = this.getCurrentUser();
+		Byte supplierType = currUser.getSupplierType();
 		if(supplierType == null || supplierType.equals(Byte.valueOf("0"))){
 			modelMap.addAttribute("isSupplier", false);
 		}else{
 			modelMap.addAttribute("isSupplier", true);
 		}
-		
+		TdAgent agent = tdAgentService.findByUid(currUser.getUid());
+		if(null!=agent){
+			modelMap.addAttribute("isAgent", true);
+		}
 		modelMap.addAttribute("system", getSystem());
 		return "/client/user/productManage";	
 	}
@@ -859,34 +863,197 @@ public class CUserController extends BaseController {
 	@RequestMapping("/supplierproduct")
 	public String lookSupplierProduct(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		modelMap.addAttribute("system", getSystem());
-		return "/client/user/SupplierProduct";	
+		return "/client/user/supplierProduct";	
 	}
 	
+	/**
+	 * 搜索代理商商品(单类代理才有，全国代理可以调价，上下架)
+	 * @param sc
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
 	@RequestMapping("/searchsupplierproduct")
 	public String searchsupplierproduct(TdProductCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		int pageNo = sc.getPageNo();
 		TdUser currentUser = this.getCurrentUser();
-		sc.setPageSize(3);
-		TdAgentSearchCriteria asc = new TdAgentSearchCriteria();
-		asc.setFlag(false);
-		asc.setUid(currentUser.getUid());
-		List<TdAgent> agentList = tdAgentService.findBySearchCriteria(asc);
-		List<Integer> productTypeIdList = new ArrayList<Integer>();
-		if(agentList != null && agentList.size() > 0){
-			for(TdAgent agent : agentList){
-				productTypeIdList.add(agent.getProductTypeId());
-			}
-		}
-		if(productTypeIdList.size() > 0){
-			sc.setProductTypeIds(productTypeIdList);
-		}
+		TdAgent agent = tdAgentService.findByUid(currentUser.getUid());
+		sc.setTypeId(agent.getProductTypeId());
+		sc.setKind(ConstantsUtils.PRODUCT_KIND_COMMON);
+		sc.setStatus(Byte.valueOf("1"));
 		List<TdProduct> productList = tdProductService.findBySearchCriteria(sc);
-		if(sc.getPageNo() == pageNo){
-			modelMap.addAttribute("productList", productList);			
-		}else{
-			modelMap.addAttribute("sc", sc);
+		modelMap.addAttribute("productList", productList);		
+		modelMap.addAttribute("sc", sc);		
+		modelMap.addAttribute("agent", agent);		
+		return "/client/user/supplierProductListBody";	
+	}
+	/**
+	 * 全国代理修改价格
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping("/editproductprice")
+	public String editproductprice(Integer id, HttpServletRequest request, HttpServletResponse response, ModelMap map) {
+		TdUser currentUser = this.getCurrentUser();
+		TdAgent agent = tdAgentService.findByUid(currentUser.getUid());
+		if(null==agent || !agent.getLevel().equals(1)){//全国单代才有权限修改价格
+			map.put("errmsg", "您没有权限进行商品价格修改！");
+			return "/client/error";
 		}
-		return "/client/user/supplierproductlistbody";	
+		if(null != id && id != 0)
+		{
+			// 商品主要信息
+			TdProduct product = tdProductService.findOne(id);
+			if(null==product || !product.getTypeId().equals(agent.getProductTypeId())){
+				map.put("errmsg", "商品未找到！");
+				return "/client/error";
+			}
+			map.addAttribute("tdProduct", product);
+			
+			// 商品对应的货品
+			List<TdProductSku> productSkuList = tdProductSkuService.findByProductId(id);
+			map.addAttribute("productSkuList", productSkuList);
+			
+		}else{
+			map.put("errmsg", "商品未找到！");
+			return "/client/error";
+		}
+		return "/client/user/productpriceform";	
+	}
+	
+	/*
+	 * 商品保存
+	 */
+	@RequestMapping(value="/saveproductprice", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> saveproductprice(TdProduct product, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>();
+		TdUser currentUser = this.getCurrentUser();
+		try{
+			if(null==product.getId()){
+				res.put("code", "0");
+				res.put("msg", "商品价格保存失败:商品不能为空!");
+				return res;
+			}
+			if(null==product.getSkuList()||product.getSkuList().size()<1){
+				res.put("code", "0");
+				res.put("msg", "商品保存失败:商品规格不能为空!");
+				return res;
+			}
+			// 商品
+			Date now = new Date();
+			TdUser user = getCurrentUser();
+			if(null != user)
+			{
+//				tdProduct.setBrandId(0);
+				product.setUpdateBy(user.getUid());
+			}
+			product.setUpdateTime(now);
+			
+			
+			//设置库存，价格
+			BigDecimal lowPrice = BigDecimal.ZERO;
+			int i=0;
+			for(TdProductSku ps : product.getSkuList()){
+				if(null!=ps.getId()&&null!=ps.getSalesPrice()){
+					if(i==0){
+						lowPrice = ps.getSalesPrice();
+					}else if(lowPrice.compareTo(ps.getSalesPrice())>0){
+						lowPrice = ps.getSalesPrice();
+					}
+					i++;
+				}
+			}
+			product.setPrice(lowPrice);	
+			
+			//设置其它属性为null,不更新
+			product.setTypeId(null);
+			product.setSpecification(null);
+			product.setDefaultSkuId(null);
+			product.setOnshelf(null);
+			product.setStatus(null);
+			product.setNewRecommend(null);
+			product.setFineRecommend(null);
+			product.setHotRecommend(null);
+			product.setTypeRecommend(null);
+			product.setSort(null);			
+			tdProductService.save(product);
+			// 货品	atrributeArray格式：规格1=gv1,规格2=gv21	 保存规格格式：{"颜色":"红色","尺码":"38"}
+			for(TdProductSku ps : product.getSkuList()){
+				if(null!=ps.getId()&&null!=ps.getSalesPrice()){
+					TdProductSku sku = new TdProductSku();
+					sku.setId(ps.getId());
+					sku.setSalesPrice(ps.getSalesPrice());
+					sku.setUpdateBy(currentUser.getUid());
+					sku.setUpdateTime(now);
+					tdProductSkuService.save(sku);
+				}
+			}
+			
+		}catch(Exception e){
+			logger.error("商品价格保存失败。");
+			e.printStackTrace();
+			res.put("code", "0");
+			res.put("msg", "商品价格保存失败:"+e.getMessage());
+			return res;
+		}
+		res.put("code", "1");
+		res.put("msg", "商品价格保存成功。");
+		
+		return res;
+	}
+	
+	/*
+	 * 商品批量操作
+	 */
+	@RequestMapping(value="/batchoperproducts", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> batchoperproducts(String ids, Integer type, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>();
+		TdUser currentUser = this.getCurrentUser();
+		try{
+			if(type==11){//批量删除
+				if(StringUtils.isNotEmpty(ids)){
+					String[] pids = ids.split(",");
+					if(pids.length>0){
+						for(String id : pids){
+							int iid = Integer.valueOf(id);
+							TdProduct product = tdProductService.findOne(iid);
+							if(null!=product && product.getUid().equals(currentUser.getUid())){
+								tdProductService.deleteByPrimaryKey(iid);								
+							}
+						}
+					}
+				}
+				res.put("code", "1");
+				return res;				
+			}else{//上下架操作
+				if(null!=type && type>0 && type<3 && StringUtils.isNotEmpty(ids)){
+					int count = tdProductService.batchOperProducts(type,ids);
+					if(count>0){
+						res.put("code", "1");
+						return res;
+					}else{
+						res.put("code", "0");
+						res.put("msg", "操作失败：更新失败！");
+						return res;
+					}
+					
+				}else{
+					res.put("code", "0");
+					res.put("msg", "操作失败：操作非法！");
+					return res;
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			res.put("code", "0");
+			res.put("msg", "操作失败："+e.getMessage());
+		}
+		return res;
 	}
 	
 	/*
@@ -899,23 +1066,6 @@ public class CUserController extends BaseController {
 		return "/client/user/electionMaterial";	
 	}
 	
-	/*
-	 * 搜索供应商商品
-	 */
-	@RequestMapping("/searchSupplierProduct")
-	public String searchSupplierProduct(TdProductCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		int pageNo = sc.getPageNo();
-		TdUser currentUser = this.getCurrentUser();
-		sc.setPageSize(3);
-		sc.setUid(currentUser.getUid());
-		List<TdProduct> productList = tdProductService.findBySearchCriteria(sc);
-		if(sc.getPageNo() == pageNo){
-			modelMap.addAttribute("productList", productList);			
-		}else{
-			modelMap.addAttribute("sc", sc);
-		}
-		return "/client/user/myProductTemplate";	
-	}
 	
 	/*
 	 * 刷新活动描述
@@ -1094,6 +1244,12 @@ public class CUserController extends BaseController {
 				product.setSpecification(true);
 				product.setSort(0);
 				product.setStatus(Byte.valueOf("2"));
+				//保存商品类型Tree
+				if(null!=product.getTypeId()&&product.getTypeId()>0){
+					TdProductType type = tdProductTypeService.findOneWithParents(product.getTypeId());
+					String typeIdTree = type.getParentIdTree();
+					product.setTypeIdTree(typeIdTree);
+				}
 			}
 			//设置库存，价格
 			Integer totalStock = 0;
@@ -1206,6 +1362,7 @@ public class CUserController extends BaseController {
 			e.printStackTrace();
 			res.put("code", "0");
 			res.put("msg", "商品保存失败:"+e.getMessage());
+			return res;
 		}
 		res.put("code", "1");
 		res.put("msg", "商品保存成功。");

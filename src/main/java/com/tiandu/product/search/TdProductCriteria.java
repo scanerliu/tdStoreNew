@@ -22,6 +22,7 @@ public class TdProductCriteria extends SearchCriteria {
 	private Set<Integer> orderskuIdSet;
 
 	private Integer typeId;//商品类型id
+	private String  typeIdTree;//商品类型idTree
 	private Integer brandId; //商品品牌id
 
 	private List<Integer> productTypeIds;
@@ -132,6 +133,14 @@ public class TdProductCriteria extends SearchCriteria {
 
 	public void setTypeId(Integer typeId) {
 		this.typeId = typeId;
+	}
+
+	public String getTypeIdTree() {
+		return typeIdTree;
+	}
+
+	public void setTypeIdTree(String typeIdTree) {
+		this.typeIdTree = typeIdTree;
 	}
 
 	public Integer getOrderby() {

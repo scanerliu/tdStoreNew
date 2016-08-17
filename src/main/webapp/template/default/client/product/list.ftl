@@ -155,16 +155,16 @@
 		<!-- 价格区间 -->
 		<section class="oprice w1200">
 			<aside class="as1 fl">
-				<div class="a1 active fl"><span>综合</span></div>
+				<div class="a1 fl"><span>排序方式</span></div>
 				<div class="a1 fl">
-					<span>销量 &or;</span>
-					<div class="oprice_hide"><a href="javascript:;" title="">按销量由高到低</a></div>
-				</div>
-				<div class="a1 fl">
-					<span>价格 &or;</span>
+					<span>按综合由高到低</span>
 					<div class="oprice_hide">
-						<a href="javascript:;" title="">按价格由高到低</a>
-						<a href="javascript:;" title="">按价格由低到高</a>
+						<a href="javascript:;" title="" tid="2">按综合由高到低</a>
+						<a href="javascript:;" title="" tid="1">按综合由低到高</a>
+						<a href="javascript:;" title="" tid="4">按销量由高到低</a>
+						<a href="javascript:;" title="" tid="3">按销量由低到高</a>
+						<a href="javascript:;" title="" tid="6">按价格由高到低</a>
+						<a href="javascript:;" title="" tid="5">按价格由低到高</a>
 					</div>
 					<script>
 					$(function(){
@@ -178,6 +178,8 @@
 						$('.oprice_hide').find('a').click(function(){
 							$(this).parent().prev().html($(this).html()+' &or;');
 							$(this).parent().hide();
+							$("#sc_orderby").val($(this).attr("tid"));
+							searchProducts(true);
 						})
 					})
 					</script>
@@ -185,8 +187,8 @@
 				<input type="text" name="startprice" class="ipt fl" onKeyUp="formatInputPriceDefault(this)" onblur="formatInputPriceDefault(this)"/>
 				<span class="fl" style="margin-left:10px;">-</span>
 				<input type="text" name="endprice" class="ipt fl" onKeyUp="formatInputPriceDefault(this)" onblur="formatInputPriceDefault(this)"/>
-				<input type="hidden" name="orderby" value=""/>
-				<input type="button" value="确定" class="ipt_sub fl" />
+				<input type="hidden" name="orderby" id="sc_orderby" value="2"/>
+				<input type="button" value="确定" class="ipt_sub fl" onclick="searchProducts(true);"/>
 			</aside>
 			<aside class="as2 fr">
 				<a href="javascript:;" title="下一页" class="aright fr" id="nextpagebtn">&gt;</a>

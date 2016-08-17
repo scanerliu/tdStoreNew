@@ -14,6 +14,24 @@
 		    <tr>
 		        <th width="150">商品分类：</th>
 		        <td>
+		        	<#if tdProduct?? && tdProduct.id??>
+		        		<#if productTypeList ??>
+		        		<#list productTypeList as pro>
+		        			<#if tdProduct?? && tdProduct.typeId == pro.id>${pro.name!''}</#if>
+		        			<#if pro.subList??>
+		        			<#list pro.subList as spro>
+		        				<#if tdProduct?? && tdProduct.typeId == spro.id>${spro.name!''}</#if>
+		        				<#if spro.subList??>
+			        			<#list spro.subList as tpro>
+			        				<#if tdProduct?? && tdProduct.typeId == tpro.id>${tpro.name!''}</#if>
+			        			</#list>
+			        			</#if>
+		        			</#list>
+		        			</#if>	
+		        		</#list>
+		        		</#if>
+		        		<input type="hidden" name="typeId" value="<#if tdProduct??>${tdProduct.typeId?c}</#if>">
+		        	<#else>
 		        	<select id="productTypeSelections" name="typeId" style="width:200px;" onchange="flushHpgg(this)">
 		        		<option value="0" <#if !tdProduct?? || tdProduct.typeId == 0>selected="selected"</#if>>无上级分类</option>
 		        		<#if productTypeList ??>
@@ -32,6 +50,7 @@
 		        		</#list>
 		        		</#if>
 		        	</select>
+		        	</#if>
 		        </td>
 		    </tr>
 		    <tr>
