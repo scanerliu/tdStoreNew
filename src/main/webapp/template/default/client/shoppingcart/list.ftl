@@ -22,9 +22,9 @@
 	<script type="text/javascript" src="${app.basePath}/static/js/client/html5.js"></script>
 	<script type="text/javascript" src="${app.basePath}/static/js/client/common.js"></script>
 	<script type="text/javascript" src="${app.basePath}/static/js/client/core.js"></script>
-    <script src="${app.basePath}/static/js/mobile/shoppingcart/shoppingcartlist.js" type="text/javascript"></script>
+    <script src="${app.basePath}/static/js/client/shoppingcart/shoppingcartlist.js" type="text/javascript"></script>
 </head>
-<body class="body_bg">
+<body>
 	<h1 style="display:none;"></h1>
 	<!-- Header Start -->
 	<#include "../common/commonheader.ftl">
@@ -67,7 +67,7 @@
 	                    <p class="p3">运费（元）</p>
 	                    <p class="p3">操作</p>
 	                </div>
-	                <#if shoppingcart?? && shoppingcart.itemList??>
+	                <#if shoppingcart?? && shoppingcart.itemList?? && shoppingcart.itemList?size gt 0>
         			<#list shoppingcart.itemList as item>
 	                <ul>
 	                    <li class="li1">
@@ -88,48 +88,61 @@
 	                        <!-- 数量选择 -->
 	                        <div class="numbers">
 	                            <input class="button less" type="button" value="-" onclick="additem(${item.id},2)">
-	                            <input type="text" name="quantity" itemid="${item.id}" id="quantity_${item.id}" value="${item.quantity}" placeholder="1" class="ipt2" onChange="changeitem(this)" onKeyUp="formatInputInteger(this,1,9999)">
+	                            <input type="text" name="quantity" itemid="${item.id}" id="quantity_${item.id}" value="${item.quantity}" placeholder="1" class="ipt2" onChange="changeitem(this)" onblur="changeitem(this)" onKeyUp="formatInputInteger(this,1,9999)">
 	                            <input class="button add" type="button" value="+" onclick="additem(${item.id},1)">
 	                            <input type="hidden" id="stock_${item.id}" value="${item.productSku.stock!''}"/>
 	                        </div>
 	                    </li>
 	                    <li class="li3">${item.postage}</li>
 	                    <li class="li3 last">
-	                        <a href="javascript:;" title="移除" onclick="removeItem(${item.id!'0'})" >删除</a>
+	                        <a href="javascript:;" title="移除" onclick="removeItems(${item.id!'0'})" >删除</a>
 	                    </li>
 	                </ul>
 	                </#list>
+	                <#else>
+		                <div class="noorder">
+		                    <span class="lbltips">是时候补充一波购物车了 <br/>赶快去挑选几件好货吧！</span>
+		                </div>
           			</#if>
 	            </div>
 	        </div>
 	        <!-- 全选 -->
+	        <#if shoppingcart?? && shoppingcart.itemList?? && shoppingcart.itemList?size gt 0>
 	        <div class="whole-choose">
 	            <div class="left">
 	            </div>
 	            <div class="right">
-	                <a href="javascript:;" title="" onclick="nextOrder()">去支付</a>
-	                <p>合计  ￥<strong id="totalAmount">${shoppingcart.totalAmount}</strong>（含运费 ￥<span id="totalPostage">${shoppingcart.totalPostage}</span>)</p>
+	                <a href="javascript:;" title="" onclick="nextOrder()">去结算</a>
+	                <p>合计  <strong>￥<span id="totalAmount">${shoppingcart.totalAmount}</span></strong>（含运费 ￥<span id="totalPostage">${shoppingcart.totalPostage}</span>)</p>
 	            </div>
 	        </div>
+	        <#else>
+	        	<div class="guess-like">
+	        		<form id="enjoyForm">
+					<input type="hidden" name="pageNo" id="enjoysc_pageNo" value="1">
+					<input type="hidden" name="pageSize" value="6"/>
+					</form>
+		            <div class="title">
+		                <label>猜你喜欢</label>
+		                <a href="javascript:;" class="a-change" title="" id="enjoybtn">换一批</a>
+		            </div>
+		            <div class="pro-list">
+		                <ul id="enjoyList">
+		                </ul>
+		            </div>
+		        </div>
+		        <script>
+				$(function(){
+					getenjoyproducts();
+				});
+				</script>
+	        </#if>
 	    </div>
 	    <div class="clear"></div>
 	</div>
 	<!-- Center End -->
- 
-
 <!-- Footer Start -->
-<footer>
-    <div class="gopay">
-        <label class="all_sel"><input type="checkbox" id="all_sel"/>全选</label>
-        <a href="javascript:;" class="a-pay" title="" onclick="nextOrder()">结算</a>
-        <section class="all_price">
-          <p class="p1">总计：<font color="red">￥<span id="totalAmount">${shoppingcart.totalAmount}</span></font></p>
-          <p class="p2">（运费：<span id="totalPostage">${shoppingcart.totalPostage}</span>元）</p>
-        </section>
-    </div>
-    <span class="footclear"></span>
-    <#include "../common/foot.ftl">
-</footer>
+    <#include "../common/commonfooter.ftl">
 <!-- Footer End -->
 <script>
 $(function(){

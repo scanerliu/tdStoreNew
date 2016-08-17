@@ -292,6 +292,8 @@ public class CShoppingcartController extends BaseController {
 		
 		modelMap.addAttribute("shoppingcart", shoppingcart) ;
 		modelMap.addAttribute("randomNo",-(int)(Math.random()*(100-1+1)));
+		// 系统配置
+		modelMap.addAttribute("system", getSystem());
 	    return "/client/shoppingcart/confirmorder";
 	}
 	
