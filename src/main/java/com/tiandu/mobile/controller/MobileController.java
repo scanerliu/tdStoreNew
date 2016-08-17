@@ -60,7 +60,8 @@ public class MobileController extends BaseController {
 	@RequestMapping("")
 	public String index(HttpServletRequest request, HttpServletResponse response, ModelMap map) {
 		
-		// 轮播广告
+		return "redirect:/mobile/index";
+		/*// 轮播广告
 		TdAdvertisementSearchCriteria sc = new TdAdvertisementSearchCriteria();
 		sc.setCreateTime(new Date());
 		sc.setEndTime(new Date());
@@ -109,7 +110,7 @@ public class MobileController extends BaseController {
 		psc.setKind((byte)1);
 		map.addAttribute("productList", tdProductService.findBySearchCriteria(psc));
 		
-	    return "/mobile/index";
+	    return "/mobile/index";*/
 	}
 	
 	/**
@@ -144,6 +145,13 @@ public class MobileController extends BaseController {
 			sc.setAdsId(adsense.getId());
 			sc.setOrderBy("2");
 			map.addAttribute("hotAdList", tdAdvertisementService.findBySearchCriteria(sc));
+		}
+		
+		adsense = tdAdsenseService.findByName("触屏首页类别展示广告");
+		if(null != adsense)
+		{
+			sc.setAdsId(adsense.getId());
+			map.addAttribute("productTypeAdList", tdAdvertisementService.findBySearchCriteria(sc));
 		}
 		
 		// 系统配置

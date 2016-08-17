@@ -29,6 +29,9 @@ import com.tiandu.custom.entity.TdBrancheCompany;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.search.TdBrancheCompanySearchCriteria;
 import com.tiandu.custom.service.TdBrancheCompanyService;
+import com.tiandu.product.entity.TdProductType;
+import com.tiandu.product.search.TdProductTypeCriteria;
+import com.tiandu.product.service.TdProductTypeService;
 
 /**
  * 
@@ -48,6 +51,9 @@ public class AdSenseController extends BaseController{
 	
 	@Autowired
 	private TdBrancheCompanyService tdBrancheCompanyService;
+	
+	@Autowired
+	private TdProductTypeService tdProductTypeService;
 	
 	/**
 	 * @author Max
@@ -169,6 +175,14 @@ public class AdSenseController extends BaseController{
 		{
 			map.addAttribute("ad", tdAdvertService.findOne(id));
 		}
+		//查询商品一级分类
+		TdProductTypeCriteria tsc = new TdProductTypeCriteria();
+		tsc.setParentId(0);
+		tsc.setStatus(Byte.valueOf("1"));
+		tsc.setOrderBy("1");
+		tsc.setFlag(false);
+		List<TdProductType> typeList = tdProductTypeService.findBySearchCriteria(tsc);
+		map.addAttribute("typeList", typeList);
 		return "/admin/article/adfrom";
 	}
 	

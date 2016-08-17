@@ -12,6 +12,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.tiandu.article.entity.TdAdsense;
+import com.tiandu.article.search.TdAdvertisementSearchCriteria;
+import com.tiandu.article.service.TdAdsenseService;
+import com.tiandu.article.service.TdAdvertisementService;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.product.entity.TdProduct;
@@ -39,6 +43,12 @@ public class MobileProductListController extends BaseController{
 	@Autowired
 	private TdProductTypeService tdProductTypeService;
 	
+	@Autowired
+	private TdAdsenseService tdAdsenseService;
+	
+	@Autowired
+	private TdAdvertisementService tdAdvertisementService;
+	
 	@RequestMapping("/list/{typeId}")
 	public String productList(@PathVariable Integer typeId,
 			HttpServletRequest req,ModelMap map)
@@ -62,16 +72,35 @@ public class MobileProductListController extends BaseController{
 		map.addAttribute("productType", tdProductTypeService.findOne(sc.getTypeId()));
 		
 		sc.setOnshelf(true);
+		sc.setStatus(Byte.valueOf("1"));
 		if(null == sc.getOrderby())
 		{
 			sc.setOrderby(1);
 		}
 		sc.setKind((byte)1);
 		sc.setOrderBy(sc.getOrderBySql());
+		if(null!=sc.getTypeId() && sc.getTypeId()>0){
+			sc.setTypeIdTree("["+sc.getTypeId()+"]");
+		}
 		
 		List<TdProduct> productList = tdProductService.findBySearchCriteria(sc);
 		map.addAttribute("productList", productList);
 		map.addAttribute("sc", sc);
+		//分类广告
+		if(null!=sc.getTypeId() && sc.getTypeId()>0){
+			// 轮播广告
+			TdAdvertisementSearchCriteria asc = new TdAdvertisementSearchCriteria();
+			asc.setCreateTime(new Date());
+			asc.setEndTime(new Date());
+			TdAdsense adsense = tdAdsenseService.findByName("触屏商品分类列表页轮播大图广告");
+			if(null != adsense)
+			{
+				asc.setAdsId(adsense.getId());
+				asc.setTypeId(sc.getTypeId());
+				asc.setOrderBy("2");
+				map.addAttribute("adList", tdAdvertisementService.findBySearchCriteria(asc));
+			}
+		}
 		return "/mobile/product/list_body";
 	}
 	
@@ -89,6 +118,8 @@ public class MobileProductListController extends BaseController{
 		
 		sc.setTypeId(typeId);
 		sc.setOnshelf(true);
+		sc.setStatus(Byte.valueOf("1"));
+		sc.setTypeIdTree("["+typeId+"]");
 		if(null == sc.getOrderby())
 		{
 			sc.setOrderby(1);

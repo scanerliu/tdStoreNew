@@ -14,7 +14,41 @@ $(document).ready(function(){
     <span><#if productType??>${productType.name!''}</#if></span>
 </div>
 <!-- header_top end -->
-
+<#if adList?? && adList?size gt 0>
+<div class="my_banner1" style="height:4rem;">
+<!-- ****广告轮播**** -->
+<div class="addWrap">
+    <div class="swipe" id="mySwipe">
+        <div class="swipe-wrap">
+        	<#list adList as ad>
+				<div><a href="${ad.linkUrl!''}"><img class="img-responsive" src="${ad.imageUrl!''}"/></a></div>
+        	</#list>
+        </div>
+    </div>
+    <ul id="position">
+    	<#list adList as ad>
+    	<li class="cur"></li>
+    	</#list>
+    </ul>
+</div> 
+<script type="text/javascript">
+    var bullets = document.getElementById('position').getElementsByTagName('li');
+    var banner = Swipe(document.getElementById('mySwipe'), {
+        auto: 3000,
+        continuous: true,
+        disableScroll:false,
+        callback: function(pos) {
+            var i = bullets.length;
+            while (i--) {
+              bullets[i].className = ' ';
+            }
+            bullets[pos].className = 'cur';
+        }
+    });
+</script>
+<!-- ****广告轮播-结束**** -->
+</div>
+</#if>
 <!-- Center Start -->
 <!-- <section class="container"> -->
     <div class="three">
@@ -57,7 +91,7 @@ $(document).ready(function(){
                 <p class="p1">${item.name!''}</p>
                 <p class="p2">
                     <label class="lab1">¥<#if item.price??>${item.price?string('0.00')}</#if></label>
-                    <label class="lab2">￥188.00</label>
+                    <!--<label class="lab2">￥188.00</label>-->
                 </p>
             </a>
             </#list>

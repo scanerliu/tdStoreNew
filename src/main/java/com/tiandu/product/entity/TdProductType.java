@@ -23,6 +23,8 @@ public class TdProductType {
 	private Integer sort;
 
 	private List<TdProductType> subList;
+	
+	private TdProductType parent;
 
 	// 关联类别规格
 	private List<TdProductTypeAttribute> tdProductTypeAttributeList;
@@ -135,4 +137,29 @@ public class TdProductType {
 		this.tdProductAttributeList = tdProductAttributeList;
 	}
 
+	public TdProductType getParent() {
+		return parent;
+	}
+
+	public void setParent(TdProductType parent) {
+		this.parent = parent;
+	}
+
+	/**
+	 * 获取类型的上级分类id树，如[1][5][7]
+	 * @return
+	 */
+	public String getParentIdTree() {
+		StringBuffer sb = new StringBuffer();
+		if(null!=this.getId()){
+			if(null!=this.getParent()){
+				if(null!=this.getParent().getParentId() && this.getParent().getParentId()>0){
+					sb.append("["+this.getParent().getParentId()+"]");
+				}
+				sb.append("["+this.getParent().getId()+"]");
+			}
+			sb.append("["+this.getId()+"]");
+		}
+		return sb.toString();
+	}
 }

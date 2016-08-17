@@ -14,6 +14,7 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="INTEGER" />
     <result column="region_id" property="regionId" jdbcType="INTEGER" />
+    <result column="type_id" property="typeId" jdbcType="INTEGER" />
     <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
     <!-- 广告位 -->
     <association property="adsense" resultMap="adsenseResult"/>
@@ -25,7 +26,7 @@
   
   <sql id="Base_Column_List" >
     a.id, a.ads_id, a.title, a.image_url, a.link_url, a.sort, a.status, a.create_time, a.create_by, a.update_time, 
-    a.update_by, a.region_id,a.end_time
+    a.update_by, a.region_id,a.end_time, a.type_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -44,11 +45,11 @@
     insert into td_advertisement (ads_id, title, image_url, 
       link_url, sort, status, 
       create_time, create_by, update_time, 
-      update_by, region_id,end_time)
+      update_by, region_id, type_id, end_time)
     values (#{adsId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{imageUrl,jdbcType=VARCHAR}, 
       #{linkUrl,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, 
       #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=INTEGER}, #{regionId,jdbcType=INTEGER}, #{endTime,jdbcType=TIMESTAMP})
+      #{updateBy,jdbcType=INTEGER}, #{regionId,jdbcType=INTEGER}, #{typeId,jdbcType=INTEGER}, #{endTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.tiandu.article.entity.TdAdvertisement" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -89,6 +90,9 @@
       <if test="regionId != null" >
         region_id,
       </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
       <if test="endTime != null" >
         end_time,
       </if>
@@ -126,6 +130,9 @@
       </if>
       <if test="regionId != null" >
         #{regionId,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=INTEGER},
       </if>
       <if test="endTime != null" >
         end_time = #{endTime,jdbcType=TIMESTAMP},
@@ -168,6 +175,9 @@
       <if test="regionId != null" >
         region_id = #{regionId,jdbcType=INTEGER},
       </if>
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=INTEGER},
+      </if>
       <if test="endTime != null" >
         end_time = #{endTime,jdbcType=TIMESTAMP},
       </if>
@@ -187,6 +197,7 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=INTEGER},
       region_id = #{regionId,jdbcType=INTEGER},
+      type_id = #{typeId,jdbcType=INTEGER},
       end_time = #{endTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -204,6 +215,9 @@
       </if>
       <if test="regionId != null" >
        	and  a.region_id = #{regionId,jdbcType=TINYINT}
+      </if>
+      <if test="typeId != null" >
+       	and  a.type_id = #{typeId,jdbcType=TINYINT}
       </if>
       <if test="createTime != null" >
        	and  a.create_time <![CDATA[<=]]> #{createTime,jdbcType=TIMESTAMP} 
@@ -228,6 +242,9 @@
       </if>
       <if test="regionId != null" >
        	and  a.region_id = #{regionId,jdbcType=TINYINT}
+      </if>
+      <if test="typeId != null" >
+       	and  a.type_id = #{typeId,jdbcType=TINYINT}
       </if>
       <if test="createBy != null" >
        	and  a.create_by = #{createBy,jdbcType=INTEGER}

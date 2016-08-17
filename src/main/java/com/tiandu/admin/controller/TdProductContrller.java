@@ -221,6 +221,12 @@ public class TdProductContrller extends BaseController{
 				tdProductSkuService.deleteByProductId(tdProduct.getId());
 			}else{
 				tdProduct.setUid(1);//添加供应商为平台系统
+				//保存商品类型Tree
+				if(null!=tdProduct.getTypeId()&&tdProduct.getTypeId()>0){
+					TdProductType type = tdProductTypeService.findOneWithParents(tdProduct.getTypeId());
+					String typeIdTree = type.getParentIdTree();
+					tdProduct.setTypeIdTree(typeIdTree);
+				}
 			}
 			tdProductService.save(tdProduct);
 			

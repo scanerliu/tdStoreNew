@@ -53,22 +53,21 @@
   
 <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"32"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
 <!-- -->
+<#if adList?? && adList?size gt 0>
 <div class="my_banner1">
 <!-- ****广告轮播**** -->
 <div class="addWrap">
     <div class="swipe" id="mySwipe">
         <div class="swipe-wrap">
-        	<#if adList?? && adList?size gt 0>
         	<#list adList as ad>
 				<div><a href="${ad.linkUrl!''}"><img class="img-responsive" src="${ad.imageUrl!''}"/></a></div>
         	</#list>
-        	</#if>
         </div>
     </div>
     <ul id="position">
+    	<#list adList as ad>
           <li class="cur"></li>
-          <li class=""></li>
-          <li class=""></li>
+         </#list>
     </ul>
 </div> 
 <script type="text/javascript">
@@ -88,7 +87,7 @@
 </script>
 <!-- ****广告轮播-结束**** -->
 </div>
-
+</#if>
 <!-- 股东竞选 -->
 <div class="rank">
     <span></span>

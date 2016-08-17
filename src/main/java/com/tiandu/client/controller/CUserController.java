@@ -1244,6 +1244,12 @@ public class CUserController extends BaseController {
 				product.setSpecification(true);
 				product.setSort(0);
 				product.setStatus(Byte.valueOf("2"));
+				//保存商品类型Tree
+				if(null!=product.getTypeId()&&product.getTypeId()>0){
+					TdProductType type = tdProductTypeService.findOneWithParents(product.getTypeId());
+					String typeIdTree = type.getParentIdTree();
+					product.setTypeIdTree(typeIdTree);
+				}
 			}
 			//设置库存，价格
 			Integer totalStock = 0;
