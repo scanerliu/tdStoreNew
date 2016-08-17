@@ -201,7 +201,7 @@ function addToShoppingcart(){
 	var itemType = $("#productKind").val();
 	
 	if(skuId>0){
-		var url = basePath+"/mobile/shoppingcart/addsku";
+		var url = basePath+"/shoppingcart/addsku";
 		var postData = {"productId":productId,"productSkuId":skuId,"price":skuPrice,"postage":postage,"quantity":quantity,"itemType":itemType};
 		$.post(url,postData,addToShoppingcartCallback,"text");
 	}else{
@@ -228,7 +228,7 @@ function buyNow(){
 	var itemType = $("#productKind").val();
 	
 	if(skuId>0){
-		var url = basePath+"/mobile/shoppingcart/buynow";
+		var url = basePath+"/shoppingcart/buynow";
 		var postData = {"productId":productId,"productSkuId":skuId,"quantity":quantity,"productType":itemType};
 		window.location.href= url+"?productId="+productId+"&productSkuId="+skuId+"&quantity="+quantity;
 	}else{

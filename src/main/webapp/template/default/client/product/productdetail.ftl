@@ -175,8 +175,8 @@
 	                    </div>
 	                </div>
 	                <div class="btnwrap">
-	                    <input type="button" value="立即购买" class="orange"/>
-	                    <input type="button" value="加入购物车" class="white"/>
+	                    <input type="button" value="立即购买" class="orange" onclick="buyNow();"/>
+	                    <input type="button" value="加入购物车" class="white" onclick="addToShoppingcart();"/>
 	                </div>
 	            </div>
 	        </div>

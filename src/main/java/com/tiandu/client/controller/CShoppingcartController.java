@@ -106,6 +106,8 @@ public class CShoppingcartController extends BaseController {
 		//获取购物车
 		ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid());
 		modelMap.addAttribute("shoppingcart", shoppingcart) ;
+		// 系统配置
+		modelMap.addAttribute("system", getSystem());
 	    return "/client/shoppingcart/list";
 	}
 	/**

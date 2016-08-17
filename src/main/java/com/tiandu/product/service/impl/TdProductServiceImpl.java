@@ -93,14 +93,16 @@ public class TdProductServiceImpl implements TdProductService{
 		if(null!=skuList && skuList.size()>0 && null!=taList && taList.size()>0){
 			for(TdProductTypeAttribute typeatrr : taList){
 				TdProductAttribute atrribute = typeatrr.getAttribute(); //
-				List<TdProductAttributeOption> optionList = atrribute.getTdProductAttributeOptionList();
-				for(TdProductAttributeOption option : optionList){
-					option.setStatus(Byte.valueOf("0"));
-					for(TdProductSku sku : skuList){
-						boolean status = this.matchstock(atrribute, option, sku);
-						if(status){
-							option.setStatus(Byte.valueOf("1"));
-							break;
+				if(null!=atrribute && null!= atrribute.getTdProductAttributeOptionList()){
+					List<TdProductAttributeOption> optionList = atrribute.getTdProductAttributeOptionList();
+					for(TdProductAttributeOption option : optionList){
+						option.setStatus(Byte.valueOf("0"));
+						for(TdProductSku sku : skuList){
+							boolean status = this.matchstock(atrribute, option, sku);
+							if(status){
+								option.setStatus(Byte.valueOf("1"));
+								break;
+							}
 						}
 					}
 				}

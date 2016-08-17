@@ -197,6 +197,7 @@ function timer()
         </section>
         <#if taList??>
         <#list taList as typeatt>
+        <#if typeatt.attribute??>
         <section class="sec1">
             <label class="fl">${typeatt.attribute.name}</label>
             <ul class="fl slect" id="attul_${typeatt.attribute.attriId}">
@@ -218,6 +219,7 @@ function timer()
 				});
 			</script>
         </section>
+        </#if>
         </#list>
         </#if>
         <section class="sec4">

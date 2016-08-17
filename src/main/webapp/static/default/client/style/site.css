@@ -77,5 +77,6 @@ header, footer, nav, section, article, menu, aside {
 
 .key {
   display: none; }
-
+.nav_div_box section {
+  width: auto; }
 /*# sourceMappingURL=site.css.map */
