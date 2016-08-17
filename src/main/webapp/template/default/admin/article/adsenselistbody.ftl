@@ -48,6 +48,13 @@
 </tbody>
 </table>
 </div>
+<div class="btn_wrap_fixed">
+</div>
+</div>
+<div class="btn_wrap_fixed">
+<#assign pageId="AdType" />
+<#include "/admin/common/common_postpage.ftl" />
+</div>
 <script>
 $(function(){
     $("#J_checkall").click(function() {

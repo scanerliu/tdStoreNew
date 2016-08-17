@@ -57,9 +57,11 @@
 </tbody>
 </table>
 </div>
-<div class="btn_wrap_fixed"></div>
 <div class="btn_wrap_fixed">
-<#assign pageId="Ads" />
+</div>
+</div>
+<div class="btn_wrap_fixed">
+<#assign pageId="Advertisement" />
 <#include "/admin/common/common_postpage.ftl" />
 </div>
 <script>

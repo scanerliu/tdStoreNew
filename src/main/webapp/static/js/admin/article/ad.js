@@ -30,6 +30,12 @@ function refreshList(){
 	searchAdsense(false);
 }
 
+//分页函数
+function fnGotoPageAdType(num){
+	searchAdsense(false);
+}
+
+
 // 提交新增、修改广告为内容
 function saveAdsense(){
 	var f = $('#adsenseForm').form('enableValidation').form('validate');
@@ -70,6 +76,11 @@ function delAdseneceCallback(data){
 	}
 }
 
+
+//分页函数
+function fnGotoPageAdvertisement(num){
+	searchAd(false);
+}
 
 /**
  * 
