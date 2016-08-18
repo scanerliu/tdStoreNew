@@ -63,7 +63,7 @@
 		                    	<#if stype.subList??>
 		                    	<#list stype.subList as etype>
 		                        <a href="${app.basePath}/mobile/product/list/${etype.id?c}" title="${etype.name!''}" class="active">
-		                            <img src="<#if etype.imageUrl!="">${etype.imageUrl!''}<#else>${app.basePath}/static/default/images/noimg.jpg</#if>" alt="${etype.name!''}">
+		                            <img src="<#if etype.imageUrl!="">${etype.imageUrl!''}<#else>${app.basePath}/static/default/images/noimg.png</#if>" alt="${etype.name!''}">
 		                            <p>${etype.name!''}</p>
 		                        </a>
 		                        </#list>
