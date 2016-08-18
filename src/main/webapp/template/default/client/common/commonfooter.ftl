@@ -90,3 +90,6 @@
 	<#include "foot.ftl">
 </footer>
 <!-- 底部-结束 -->
+<div class="load-container load8">
+	<div class="loader">Loading...</div>
+</div>

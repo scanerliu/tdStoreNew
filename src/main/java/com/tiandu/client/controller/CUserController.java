@@ -480,7 +480,7 @@ public class CUserController extends BaseController {
 		}
 		// 系统配置
 		map.addAttribute("system", getSystem());
-		return "/user/shoppingAddressList";
+		return "/client/user/shoppingAddressList";
 	}
 	
 	/**
@@ -498,7 +498,7 @@ public class CUserController extends BaseController {
 		sc.setFlag(false);
 		List<TdUserAddress> userAddresses = tdUserAddressService.findBySearchCriteria(sc);
 		map.addAttribute("address_list", userAddresses);
-		return "/user/shoppingAddressListBody";
+		return "/client/user/shoppingAddressListBody";
 	}
 	
 	/**
@@ -550,7 +550,7 @@ public class CUserController extends BaseController {
 			TdUserAddress userAddress = new TdUserAddress();
 			map.addAttribute("address",userAddress);
 		}
-		return "/user/shoppingAddressForm";
+		return "/client/user/shoppingAddressForm";
 	}
 	
 	/**

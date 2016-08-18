@@ -48,7 +48,7 @@
                     <p>
                         <label>个人资料</label>
                         <a href="#">个人信息设置</a>
-                        <a href="#">收货地址管理</a>
+                        <a href="${app.basePath}/user/shoppingaddress">收货地址管理</a>
                     </p>
                 </div>
             </li>

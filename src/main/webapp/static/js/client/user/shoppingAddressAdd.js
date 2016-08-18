@@ -44,49 +44,49 @@ function save(){
 	var regionId = districtChildNo > 1 ? districtId:cityId;
 	var fullAddress = province + city + district + detailAddress;
 	if (TdIsNull(receiverName)) {
-		warning("请填写收货人的姓名");
+		alert("请填写收货人的姓名");
 		return;
 	}
 	
 	if(!isAllLegal(receiverName)){
-		warning("收货人信息不能输入除-()#,以外的特殊字符");
+		alert("收货人信息不能输入除-()#,以外的特殊字符");
 		return;
 	}
 
 	if (TdIsNull(receiverMobile)) {
-		warning("请填写收货人的联系电话");
+		alert("请填写收货人的联系电话");
 		return;
 	}
 
 	if(!/^1\d{10}$/.test(receiverMobile)){
-		warning("请输入正确的手机号码");
+		alert("请输入正确的手机号码");
 		return;
 	}
 	
 	if(TdIsNull(provinceId) || TdIsNull(cityId) ||(districtChildNo > 1 && TdIsNull(districtId)))
 	{
-		warning("请填写所在区域");
+		alert("请填写所在区域");
 		return;
 	}
 	
 	if (TdIsNull(detailAddress)) {
-		warning("请填写详细地址");
+		alert("请填写详细地址");
 		return;
 	}
 	
 	if (detailAddress.length > 128) {
-		warning("请控制详细地址字数在128");
+		alert("请控制详细地址字数在128");
 		return;
 	}
 
 	if(!isAllLegal(detailAddress)){
-		warning("详细地址不能输入除-()#,以外的特殊字符");
+		alert("详细地址不能输入除-()#,以外的特殊字符");
 		return;
 	}
 
 	// 发送异步请求
 	$.ajax({
-		url : basePath + "/mobile/user/shoppingAddressSave",
+		url : basePath + "/user/shoppingAddressSave",
 		type : "post",
 		timeout : 10000,
 		data : {
@@ -100,14 +100,61 @@ function save(){
 		},
 		error : function(XMLHttpRequest, textStatus, errorThrown) {
 			// 关闭等待图标
-			warning("添加失败")
+			alert("添加失败")
 		},
 		success : function(res) {
 			$('.outerbox').fadeIn(400,function(){
 				$('.outerbox').fadeOut();
-				window.location.href=basePath + "/mobile/user/shoppingAddress";
+				window.location.href=basePath + "/user/shoppingAddress";
 			});
 		}
 	});
 }
 
+/**
+ * 查询收货地址
+ * @param flag
+ */
+function searchAddress(flag){
+	var url = basePath+"/user/sarchshoppingaddress";
+	var loadData = null;
+	$("#results").loading().load(url,null);
+}
+//修改收货地址
+function editAddress(id){
+	var url = basePath + "/user/editshoppingaddress";
+	var loadData = {"addressId":id};
+	$("#formdiv").loading().load(url,loadData);
+	showForm();
+}
+//删除收货地址
+function delAddress(id){
+	var url = basePath + "/user/shoppingAddressDelete";
+	var postData = {"addressId":id};
+	$.post(url,postData,delAddressCallback,"text");
+}
+//删除回调函数
+function delAddressCallback(data){
+	var result = eval("("+data+")");
+	if(result.code==1){
+		searchAddress(false);
+	}else{
+		alert(result.msg);
+	}
+}
+//设置默认地址
+function defaultAddress(id){
+	var url = basePath + "/user/defaultshoppingaddress";
+	var postData = {"addressId":id};
+	$.post(url,postData,delAddressCallback,"text");
+}
+//显示form页
+function showForm(){
+	$("#results").hide();
+	$("#formdiv").show();
+}
+//显示列表页
+function backtoList(){
+	$("#results").show();
+	$("#formdiv").hide();
+}
