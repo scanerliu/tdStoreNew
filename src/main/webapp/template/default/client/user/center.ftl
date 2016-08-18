@@ -233,9 +233,7 @@
 </div>
 <!-- Center End -->
 <!-- Footer Start -->
-<footer>
-<#include "../common/foot.ftl">
-</footer>
+<#include "../common/commonfooter.ftl">
 <!-- Footer End -->
 <script>
 	$(function(){

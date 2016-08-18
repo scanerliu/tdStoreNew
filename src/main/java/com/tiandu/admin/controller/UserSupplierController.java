@@ -125,9 +125,12 @@ public class UserSupplierController extends BaseController {
 			tus.setStatus(Byte.valueOf("2"));
 			//修改用户供应商类型
 			Integer userid = tus.getUid();
-			TdUser suser = tdUserService.findOne(userid);
+//			TdUser suser = tdUserService.findOne(userid);
+			TdUser suser = new TdUser();
+			suser.setUid(userid);
+			suser.setUavatar(null);
 			suser.setSupplierType(tus.getSupplierType());
-			tdUserService.saveCustomer(suser);
+			tdUserService.updateByPrimaryKeySelective(suser);
 		}else{
 			tus.setStatus(Byte.valueOf("3"));
 		}

@@ -466,14 +466,53 @@ public class CUserController extends BaseController {
 	 * @param map
 	 * @return
 	 */
-	@RequestMapping(value = "/shoppingAddress")
-	public String shoppingAddress(HttpServletRequest request,ModelMap map,Integer addressId)
+	@RequestMapping(value = "/shoppingaddress")
+	public String shoppingAddress(HttpServletRequest request,ModelMap map,Integer redirect)
 	{
 		TdUser tdUser = this.getCurrentUser();
 		if(tdUser == null)
 		{
-			return "redirect:/mobile/login";
+			return "redirect:/login";
 		}
+		if(redirect != null && redirect > 0)
+		{
+			request.getSession().setAttribute("redirect", redirect);
+		}
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		return "/user/shoppingAddressList";
+	}
+	
+	/**
+	 * 收货地址listbody
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping(value = "/sarchshoppingaddress")
+	public String sarchshoppingaddress(TdUserAddressCriteria sc, HttpServletRequest request,ModelMap map)
+	{
+		TdUser tdUser = this.getCurrentUser();
+		sc.setUid(tdUser.getUid());
+		sc.setFlag(false);
+		List<TdUserAddress> userAddresses = tdUserAddressService.findBySearchCriteria(sc);
+		map.addAttribute("address_list", userAddresses);
+		return "/user/shoppingAddressListBody";
+	}
+	
+	/**
+	 *设置默认地址 
+	 * @param tdUserAddress
+	 * @return
+	 */
+	@RequestMapping(value = "/defaultshoppingaddress" ,method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> defaultshoppingaddress(Integer addressId, HttpServletRequest request, ModelMap map)
+	{
+		Map<String,String> result = new HashMap<String,String>();
+		result.put("code", ConstantsUtils.RETURN_CODE_SUCCESS.toString());
+		TdUser tdUser = this.getCurrentUser();
 		if(addressId != null && addressId > 0)
 		{
 			tdUserAddressService.setIsDefaultFalse(tdUser.getUid());
@@ -481,32 +520,8 @@ public class CUserController extends BaseController {
 			userAddress.setIsDefault(true);
 			tdUserAddressService.save(userAddress);
 		}
-		if(addressId != null && addressId < 0)
-		{
-			map.addAttribute("shopping",addressId);
-			request.getSession().setAttribute("shopping", addressId);
-		}
-		Integer randomNo = (Integer)request.getSession().getAttribute("shopping");
-		
-		if(randomNo != null)
-		{
-			map.addAttribute("shopping",randomNo);
-			if(randomNo > -100)
-			{
-				map.addAttribute("returnPath", "confirmorder");
-			}
-			else
-			{
-				map.addAttribute("returnPath", "buynow");
-			}
-		}
-		// 系统配置
-		map.addAttribute("system", getSystem());
-		TdUserAddressCriteria sc = new TdUserAddressCriteria();
-		sc.setUid(tdUser.getUid());
-		List<TdUserAddress> userAddresses = tdUserAddressService.findBySearchCriteria(sc);
-		map.addAttribute("address_list", userAddresses);
-		return "/mobile/user/shoppingAddress";
+		result.put("msg", "成功");
+		return result;
 	}
 	
 	/**
@@ -516,16 +531,11 @@ public class CUserController extends BaseController {
 	 * @param map
 	 * @return
 	 */
-	@RequestMapping(value = "/shoppingAddressAdd")
-	public String shoppingAddressAdd(Integer addressId,ModelMap map,HttpServletRequest request)
+	@RequestMapping(value = "/editshoppingaddress")
+	public String editshoppingaddress(Integer addressId,ModelMap map,HttpServletRequest request)
 	{
 		TdUser tdUser = this.getCurrentUser();
-		if(tdUser == null)
-		{
-			return "redirect:/modile/login";
-		}
 		// 系统配置
-		map.addAttribute("system", getSystem());
 		if(addressId != null && addressId > 0)
 		{
 			TdUserAddress userAddress = tdUserAddressService.findOne(addressId);
@@ -536,15 +546,11 @@ public class CUserController extends BaseController {
 				Map<String, Object> regionMap = tdUserAddressService.getUserDistrictIdByRegionId(new HashMap<String,Object>(),regionId);
 				map.addAllAttributes(regionMap);
 			}
+		}else{
+			TdUserAddress userAddress = new TdUserAddress();
+			map.addAttribute("address",userAddress);
 		}
-		
-		if(addressId != null && addressId < 0)
-		{
-			map.addAttribute("shopping",addressId);
-			request.getSession().setAttribute("shopping", addressId);
-		}
-		
-		return "/mobile/user/shoppingAddressAdd";
+		return "/user/shoppingAddressForm";
 	}
 	
 	/**

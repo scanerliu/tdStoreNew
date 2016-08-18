@@ -174,3 +174,13 @@ function waitSecondsForPhoneNum(o) {
         }, 1000);
     }
 }
+
+/**
+ * 查询收货地址
+ * @param flag
+ */
+function searchAddress(flag){
+	var url = basePath+"/user/sarchshoppingaddress";
+	var loadData = null;
+	$("#results").loading().load(url,null);
+}

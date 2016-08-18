@@ -914,11 +914,16 @@ public class MUserController extends BaseController {
 	 */
 	@RequestMapping("/productManage")
 	public String productManage(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		Byte supplierType = this.getCurrentUser().getSupplierType();
+		TdUser currUser = this.getCurrentUser();
+		Byte supplierType = currUser.getSupplierType();
 		if(supplierType == null || supplierType.equals(Byte.valueOf("0"))){
 			modelMap.addAttribute("isSupplier", false);
 		}else{
 			modelMap.addAttribute("isSupplier", true);
+		}
+		TdAgent agent = tdAgentService.findByUid(currUser.getUid());
+		if(null!=agent){
+			modelMap.addAttribute("isAgent", true);
 		}
 		return "/mobile/user/productManage";	
 	}
@@ -939,7 +944,7 @@ public class MUserController extends BaseController {
 		int pageNo = sc.getPageNo();
 		TdUser currentUser = this.getCurrentUser();
 		sc.setPageSize(3);
-		TdAgentSearchCriteria asc = new TdAgentSearchCriteria();
+		/*TdAgentSearchCriteria asc = new TdAgentSearchCriteria();
 		asc.setFlag(false);
 		asc.setUid(currentUser.getUid());
 		List<TdAgent> agentList = tdAgentService.findBySearchCriteria(asc);
@@ -951,7 +956,11 @@ public class MUserController extends BaseController {
 		}
 		if(productTypeIdList.size() > 0){
 			sc.setProductTypeIds(productTypeIdList);
-		}
+		}*/
+		TdAgent agent = tdAgentService.findByUid(currentUser.getUid());
+		sc.setTypeId(agent.getProductTypeId());
+		sc.setKind(ConstantsUtils.PRODUCT_KIND_COMMON);
+		sc.setStatus(Byte.valueOf("1"));
 		List<TdProduct> productList = tdProductService.findBySearchCriteria(sc);
 		if(sc.getPageNo() == pageNo){
 			modelMap.addAttribute("productList", productList);			
