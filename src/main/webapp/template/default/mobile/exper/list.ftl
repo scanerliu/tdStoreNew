@@ -28,7 +28,7 @@
 <body class="body_bg">
 <div class="top_heater">
     <a href="javascript:history.go(-1);" title="" class="hleft hback"></a>
-    <span>排行榜</span>
+    <span>附近门店</span>
 </div>
 <div id="results"></div>
 

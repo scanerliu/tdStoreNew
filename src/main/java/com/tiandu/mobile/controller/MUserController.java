@@ -1470,8 +1470,8 @@ public class MUserController extends BaseController {
 		for(TdUser user : downUserList){
 			JSONObject jsonObject = new JSONObject();
 			try {
-				jsonObject.put("uavatar", user.getUavatar()!=null?user.getUavatar():"");
-				jsonObject.put("unick", user.getUnick()!=null?user.getUnick():"/static/default/mobile/images/defaultavtar.png");
+				jsonObject.put("uavatar", user.getUavatar()!=null?user.getUavatar():"/static/default/images/defaultimg.jpg");
+				jsonObject.put("unick", user.getUnick()!=null?user.getUnick():"");
 				jsonObject.put("ugenter", user.getUgenter()!=null?user.getUgenter().toString():"");
 				if(user.getUgenter() != null){
 					if(user.getUgenter().equals(Byte.valueOf("1"))){
