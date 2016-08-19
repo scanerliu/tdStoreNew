@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.ConstantsUtils;
+import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdAgent;
 import com.tiandu.custom.entity.TdBrancheCompany;
 import com.tiandu.custom.entity.TdUser;
@@ -268,6 +269,13 @@ public class MShoppingcartController extends BaseController {
 		
 		modelMap.addAttribute("shoppingcart", shoppingcart) ;
 		modelMap.addAttribute("randomNo",-(int)(Math.random()*(100-1+1)));
+		
+		String ua = request.getHeader("user-agent") .toLowerCase();
+		
+		// 微信端
+		if(WebUtils.checkAgentIsWX(ua)){
+			modelMap.addAttribute("isWx", true);
+		}
 	    return "/mobile/shoppingcart/confirmorder";
 	}
 	
@@ -376,6 +384,13 @@ public class MShoppingcartController extends BaseController {
 			modelMap.addAttribute("order", order) ;
 		    return "/mobile/shoppingcart/ordererror";
 		}
+		String ua = request.getHeader("user-agent") .toLowerCase();
+		
+		// 微信端
+		if(WebUtils.checkAgentIsWX(ua)){
+			modelMap.addAttribute("isWx", true);
+		}
+		
 		modelMap.addAttribute("orderForm", orderForm) ;
 	    return "/mobile/shoppingcart/buynow";
 	}
