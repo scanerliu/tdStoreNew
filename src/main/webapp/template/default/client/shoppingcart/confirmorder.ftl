@@ -55,20 +55,25 @@
 	                <label>商品评论</label>
 	            </li>
 	        </ul>
-	
+			<#if shoppingcart.needShipment?? && shoppingcart.needShipment==true>
 	        <div class="sureorderitem">
 	            <span class="title">请选择收货地址</span>
-	            <div class="addressitem">
-	                <div class="address">
-	                    <span class="p1">张大中 <label>135 3585 6672</label></span>
-	                    <span class="p2">重庆市-渝北区-黄龙路28号朗俊中心3栋感知科技园5层</span>
+	            <div class="addressitem" id="useraddresslist">
+	            	<#if addressList??>
+		        	<#list addressList as addr>
+	                <div class="selct address<#if (defaulteAddressId?? && addr.id!=defaulteAddressId)||!defaulteAddressId??> new</#if>" tid="${addr.id!''}">
+	                    <span class="p1">${addr.name!''} <label>${addr.telphone!''}</label></span>
+	                    <span class="p2">${addr.fullAddress!''} ${addr.address!''}</span>
 	                </div>
+	                </#list>
+			     	</#if>
 	                <div class="address new">
-	                    <a href="#" class="addnew" title="">新增收货地址</a>
+	                    <a href="${app.basePath}/user/shoppingaddress?redirect=1" class="addnew" title="">新增收货地址</a>
 	                </div>
 	            </div>
 	        </div>
-			<form id="confirmorder" method="post" action ="">
+	        </#if>
+			<form id="confirmorder" method="post" action ="" autocomplete="off">
 	        <div class="sureorderitem">
 	            <span class="title">请选择支付方式</span>
 	            <div class="payitem">
@@ -96,7 +101,7 @@
 	                        <div class="img">
 	                            <img src="${app.basePath}<#if item.product??>${item.product.imageUrl!''}</#if>" alt="${item.product.name!''}" />
 	                        </div>
-	                        <a class="writing" href="${app.basePath}/product/item${item.productId!'0'}" title="${item.product.name!''}">${item.product.name!''}</a>
+	                        <a class="writing" href="${app.basePath}/product/item${item.productId!'0'}" title="${item.product.name!''}" target="_blank">${item.product.name!''}</a>
 	                    </li>
 	                    <li class="li2">
 	                    	<#if item.productSku?? && item.productSku.specialList??>
@@ -116,10 +121,9 @@
 	            </div>
 	        </div>
 	        <#if shoppingcart.totalPointsUsed gt 0>
-	        <div class="table">
-	            <span>使用积分</span>
-	
-	            <label class="lblcheckbox fr">可使用积分${shoppingcart.totalPointsUsed!'0'}抵扣￥${shoppingcart.totalPointAmount!'0'}<input id="userpoints" type="checkbox" name="usePoints" value="true"/><i class=""></i></label>
+	        <div class="table" style="padding:0 30px;text-align:right;height:30px;line-height:30px;">
+	            <span style="margin-right:20px;">使用积分</span>
+	            <label class="lblcheckbox"><input id="userpoints" type="checkbox" name="usePoints" value="true" style="margin-right:10px;"/>可使用积分${shoppingcart.totalPointsUsed!'0'}抵扣￥${shoppingcart.totalPointAmount!'0'}<i class=""></i></label>
 	            <script>
 	                $(function(){
 	                    $("#userpoints").click(function(){
@@ -138,10 +142,10 @@
 	                });
 	            </script>
 	        </div>
-			</#if>
+	        </#if>
 	        <div class="table">
-	            <span>买家留言</span>
-	            <span class="message" style="width:70%;"><input type="text" name="userMsg" value="" placeholder="可填写您与卖家达成一致的要求" style="width:100%;text-align:right;border:none;"/></span>
+	            <span class="fl" style="margin-left:30px;">买家留言</span>
+	            <span class="message fl" style="width:70%;margin-left:10px;"><input type="text" name="userMsg" value="" placeholder="可填写您与卖家达成一致的要求" style="height:24px;line-height:24px;border:1px solid #ddd;width:100%;text-align:left;"/></span>
 	        </div>
 	        <!-- 全选 -->
 	        <div class="whole-choose">
@@ -157,7 +161,7 @@
 	    <input type="hidden" id="totalAmount" value="${shoppingcart.totalAmount!''}"/>
 	    <input type="hidden" id="totalPointAmount" value="${shoppingcart.totalPointAmount!'0'}"/>
 	    <input type="hidden" id="needShipment" value="${shoppingcart.needShipment?c}"/>
-	    <input type="hidden" name="addressId" id="addressId" value="<#if address??>${address.id!''}</#if>"/>
+	    <input type="hidden" name="addressId" id="addressId" value="<#if  shoppingcart.needShipment?? && shoppingcart.needShipment==true && defaulteAddressId??>${defaulteAddressId!''}</#if>"/>
 	    </form>
 	    <div class="clear"></div>
 	</div>
@@ -166,7 +170,11 @@
 	<#include "../common/commonfooter.ftl">
 <script>
 $(function(){
-	
+	$("#useraddresslist .selct").click(function(){
+        var addrid = $(this).attr("tid");
+        $("#addressId").val(addrid);
+        $(this).removeClass('new').siblings('.selct').addClass("new");        
+    });
 });
 </script>
 </body>  

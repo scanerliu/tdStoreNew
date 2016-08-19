@@ -111,7 +111,7 @@ required:必选项
 			var provinceId = prov_obj.val();
 			$.ajax({
 				type: "post",
-				url: basePath+"/mobile/user/shoppingAddressDistrict",
+				url: "/tdStore/mobile/user/shoppingAddressDistrict",
 				data: { "cityId": ctiyId,"provinceId":provinceId},
 				dataType: "json",
 				async : false,
@@ -134,7 +134,7 @@ required:必选项
 			temp_html=select_prehtml;
 			$.ajax({
 				type: "post",
-				url: basePath+"/mobile/user/shoppingAddressDistrict",
+				url: "/tdStore/mobile/user/shoppingAddressDistrict",
 				dataType: "json",
 				async : false,
 				success: function (data) 

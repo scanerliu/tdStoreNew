@@ -80,6 +80,7 @@
     .order_goods .goods_box div {
       overflow: hidden;
       width: 100%;
+      margin-top:.1rem;
       line-height: 0.36rem;
       color: #999999; }
       .order_goods .goods_box div span {
@@ -168,7 +169,7 @@
 /* 03.个人中心 */
 .my_center {
   background: white; }
-  .my_center li:nth-of-type(5) {
+  .my_center li:last-child {
     border: none; }
   .my_center li {
     padding: 0.2rem 0rem;
@@ -192,7 +193,7 @@
         background-size: 0.14rem 0.25rem; }
 #file_upload a {
       float: right;
-      width: auto; }
+       }
   .my_center .li01 font {
     line-height: 1rem; }
   .my_center .li01 span {

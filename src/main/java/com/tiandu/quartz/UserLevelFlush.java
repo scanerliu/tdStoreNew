@@ -58,7 +58,7 @@ public class UserLevelFlush {
 		sc.setTotalCount(totalCount);
 		int totalPage = sc.getTotalPageCount();
 		sc.setFlag(true);
-		List<TdUser> userList = new ArrayList<>();
+		/*List<TdUser> userList = new ArrayList<>();
 		for(int i = 1; i <= totalPage; i ++){
 			sc.setPageNo(i);
 			userList.addAll(tdUserService.findBySearchCriteria(sc));
@@ -78,8 +78,26 @@ public class UserLevelFlush {
 				}
 				userList.remove(user);
 			}
+		}*/
+		List<TdUser> userList = tdUserService.findBySearchCriteria(sc);
+		if(null!=userList && userList.size()>0){
+			for(TdUser user : userList){
+				List<TdUser> downThreeUser = downThreeUserNum(user);
+				if(downThreeUser == null){
+					user.setDownThreeUserNum(0);
+				}else{
+					user.setDownThreeUserNum(downThreeUser.size());
+				}
+				for(TdMembership ms : membershipList){
+					if(user.getDownThreeUserNum() >= ms.getUpgradeAgents()){
+						user.setMembershipId(ms.getId());
+						tdUserService.saveCustomer(user);
+						break;
+					}
+				}
+			}
+			sendSystemMessage(userList);
 		}
-		sendSystemMessage(userList);
 	}
 	
 	// 给升级的会员发送系统消息

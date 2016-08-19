@@ -454,7 +454,7 @@
       ubirthday = #{ubirthday,jdbcType=DATE},
       ugenter = #{ugenter,jdbcType=TINYINT},
       membership_id = #{membershipId,jdbcType=INTEGER},
-      supplier_type = #{supplierType,jdbcType=TINYINT}
+      supplier_type = #{supplierType,jdbcType=TINYINT},
       qrcode_url =  #{qrcodeUrl,jdbcType=VARCHAR},
       qrcode_update =  #{qrcodeUpdate,jdbcType=TIMESTAMP},
     where uid = #{uid,jdbcType=INTEGER}

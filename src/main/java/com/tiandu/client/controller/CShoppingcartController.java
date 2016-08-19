@@ -260,7 +260,7 @@ public class CShoppingcartController extends BaseController {
 	 * 确认订单
 	 */
 	@RequestMapping(value = "/confirmorder")
-	public String confirmorder(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap,Integer addressId) {
+	public String confirmorder(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser currUser = this.getCurrentUser();
 		if(!TdUser.USTATUS_ACTIVE.equals(currUser.getUverification())){//未验证的用户不能购买商品
 			String errmsg = "用户未验证，请先到个人信息中绑定手机号码和设置地区完成验证才能购买商品！";
@@ -269,29 +269,33 @@ public class CShoppingcartController extends BaseController {
 		}
 		//获取购物车
 		ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid());
+		if(shoppingcart.getTotalcount()==0){
+			return "redirect:/shoppingcart/list";
+		}
 		
 		//收货地址
-		TdUserAddress defaultAddress = null;
-		if(addressId != null)
+		Integer defaulteAddressId = null;
+		TdUserAddressCriteria sc = new TdUserAddressCriteria();
+		sc.setUid(currUser.getUid());
+		sc.setFlag(false);
+		List<TdUserAddress> addressList = tdUserAddressService.findBySearchCriteria(sc);
+		if(addressList != null)
 		{
-			defaultAddress = tdUserAddressService.findOne(addressId);
-			if(defaultAddress != null && defaultAddress.getUid() != currUser.getUid())
-			{
-				defaultAddress = null;
+			int i=1;
+			for(TdUserAddress address : addressList){
+				if(i==1){
+					defaulteAddressId = address.getId();
+				}else if(address.getIsDefault()){
+					defaulteAddressId = address.getId();
+					break;
+				}
+				i++;
 			}
-			request.getSession().removeAttribute("shopping");
-		}
-		else
-		{
-			defaultAddress = tdUserAddressService.defaultAddressByUid(currUser.getUid());
-		}
-		if(defaultAddress != null)
-		{
-			modelMap.addAttribute("address", defaultAddress);
+			modelMap.addAttribute("addressList", addressList) ;
 		}
 		
 		modelMap.addAttribute("shoppingcart", shoppingcart) ;
-		modelMap.addAttribute("randomNo",-(int)(Math.random()*(100-1+1)));
+		modelMap.addAttribute("defaulteAddressId", defaulteAddressId);
 		// 系统配置
 		modelMap.addAttribute("system", getSystem());
 	    return "/client/shoppingcart/confirmorder";
@@ -362,35 +366,38 @@ public class CShoppingcartController extends BaseController {
 		//生成购物车
 		ShoppingcartVO shoppingcart;	
 		try {
+			if(null==orderForm.getProductId()&& null==orderForm.getAgentProductId()){
+				orderForm = (OrderForm)request.getSession().getAttribute("orderForm");
+			}else{
+				request.getSession().setAttribute("orderForm", orderForm);
+			}
+			
 			shoppingcart = getShoppingcart(currUser.getUid(), orderForm);
 			modelMap.addAttribute("shoppingcart", shoppingcart) ;
 			
 			//收货地址
-			TdUserAddress defaultAddress = null;
-			if(addressId != null)
+			Integer defaulteAddressId = null;
+			TdUserAddressCriteria sc = new TdUserAddressCriteria();
+			sc.setUid(currUser.getUid());
+			sc.setFlag(false);
+			List<TdUserAddress> addressList = tdUserAddressService.findBySearchCriteria(sc);
+			if(addressList != null)
 			{
-				defaultAddress = tdUserAddressService.findOne(addressId);
-				if(defaultAddress != null && defaultAddress.getUid() != currUser.getUid())
-				{
-					defaultAddress = null;
+				int i=1;
+				for(TdUserAddress address : addressList){
+					if(i==1){
+						defaulteAddressId = address.getId();
+					}else if(address.getIsDefault()){
+						defaulteAddressId = address.getId();
+						break;
+					}
+					i++;
 				}
-				orderForm = (OrderForm)request.getSession().getAttribute("orderForm");
-				request.getSession().removeAttribute("shopping");
-				request.getSession().removeAttribute("orderForm");
+				modelMap.addAttribute("addressList", addressList) ;
 			}
-			else
-			{
-				defaultAddress = tdUserAddressService.defaultAddressByUid(currUser.getUid());
-				request.getSession().setAttribute("orderForm", orderForm);
-			}
-			
-			if(defaultAddress != null)
-			{
-				modelMap.addAttribute("address", defaultAddress);
-			}
-			
-			
-			modelMap.addAttribute("randomNo",-(int)(Math.random()*(1000-101+1)));
+			modelMap.addAttribute("defaulteAddressId", defaulteAddressId);
+			// 系统配置
+			modelMap.addAttribute("system", getSystem());
 			
 			
 		} catch (Exception e) {

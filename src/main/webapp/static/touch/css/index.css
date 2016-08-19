@@ -194,7 +194,7 @@
 .clickbtn a p{
 	margin-top: 1.1rem;
     text-align: center;
-    font-size: 0.28rem;
+    font-size: 0.24rem;
 }
 .index_title{
 	padding:0.2rem 0.3rem;
@@ -1132,7 +1132,6 @@
 	width:100%;
 }
 .detail2 p:nth-child(1){
-	height:0.8rem;
 	line-height:0.4rem;
 	font-size:0.28rem;
 	color:#333;
@@ -2127,7 +2126,7 @@
 	box-sizing:border-box;
 	background:#fff;
 }
-.tarea section:nth-child(1){
+.tarea section:nth-of-type(1){
 	border-left:none;
 }
 .tarea section span{
@@ -2356,6 +2355,9 @@
 	margin-bottom:0.1rem;
 	width:1.4rem;
 	height:1.4rem;
+	line-height:1.4rem;
+	text-align:center;
+	background:#fff;
 }
 .upload a img{
 	width:100%;

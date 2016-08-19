@@ -466,14 +466,54 @@ public class CUserController extends BaseController {
 	 * @param map
 	 * @return
 	 */
-	@RequestMapping(value = "/shoppingAddress")
-	public String shoppingAddress(HttpServletRequest request,ModelMap map,Integer addressId)
+	@RequestMapping(value = "/shoppingaddress")
+	public String shoppingAddress(HttpServletRequest request,ModelMap map,Integer redirect)
 	{
 		TdUser tdUser = this.getCurrentUser();
 		if(tdUser == null)
 		{
-			return "redirect:/mobile/login";
+			return "redirect:/login";
 		}
+		if(redirect != null && redirect > 0)
+		{
+			request.getSession().setAttribute("redirect", redirect);
+		}
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		map.addAttribute("redirect", redirect);
+		return "/client/user/shoppingAddressList";
+	}
+	
+	/**
+	 * 收货地址listbody
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping(value = "/sarchshoppingaddress")
+	public String sarchshoppingaddress(TdUserAddressCriteria sc, HttpServletRequest request,ModelMap map)
+	{
+		TdUser tdUser = this.getCurrentUser();
+		sc.setUid(tdUser.getUid());
+		sc.setFlag(false);
+		List<TdUserAddress> userAddresses = tdUserAddressService.findBySearchCriteria(sc);
+		map.addAttribute("address_list", userAddresses);
+		return "/client/user/shoppingAddressListBody";
+	}
+	
+	/**
+	 *设置默认地址 
+	 * @param tdUserAddress
+	 * @return
+	 */
+	@RequestMapping(value = "/defaultshoppingaddress" ,method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> defaultshoppingaddress(Integer addressId, HttpServletRequest request, ModelMap map)
+	{
+		Map<String,String> result = new HashMap<String,String>();
+		result.put("code", ConstantsUtils.RETURN_CODE_SUCCESS.toString());
+		TdUser tdUser = this.getCurrentUser();
 		if(addressId != null && addressId > 0)
 		{
 			tdUserAddressService.setIsDefaultFalse(tdUser.getUid());
@@ -481,32 +521,8 @@ public class CUserController extends BaseController {
 			userAddress.setIsDefault(true);
 			tdUserAddressService.save(userAddress);
 		}
-		if(addressId != null && addressId < 0)
-		{
-			map.addAttribute("shopping",addressId);
-			request.getSession().setAttribute("shopping", addressId);
-		}
-		Integer randomNo = (Integer)request.getSession().getAttribute("shopping");
-		
-		if(randomNo != null)
-		{
-			map.addAttribute("shopping",randomNo);
-			if(randomNo > -100)
-			{
-				map.addAttribute("returnPath", "confirmorder");
-			}
-			else
-			{
-				map.addAttribute("returnPath", "buynow");
-			}
-		}
-		// 系统配置
-		map.addAttribute("system", getSystem());
-		TdUserAddressCriteria sc = new TdUserAddressCriteria();
-		sc.setUid(tdUser.getUid());
-		List<TdUserAddress> userAddresses = tdUserAddressService.findBySearchCriteria(sc);
-		map.addAttribute("address_list", userAddresses);
-		return "/mobile/user/shoppingAddress";
+		result.put("msg", "成功");
+		return result;
 	}
 	
 	/**
@@ -516,16 +532,11 @@ public class CUserController extends BaseController {
 	 * @param map
 	 * @return
 	 */
-	@RequestMapping(value = "/shoppingAddressAdd")
-	public String shoppingAddressAdd(Integer addressId,ModelMap map,HttpServletRequest request)
+	@RequestMapping(value = "/editshoppingaddress")
+	public String editshoppingaddress(Integer addressId,ModelMap map,HttpServletRequest request)
 	{
 		TdUser tdUser = this.getCurrentUser();
-		if(tdUser == null)
-		{
-			return "redirect:/modile/login";
-		}
 		// 系统配置
-		map.addAttribute("system", getSystem());
 		if(addressId != null && addressId > 0)
 		{
 			TdUserAddress userAddress = tdUserAddressService.findOne(addressId);
@@ -536,15 +547,11 @@ public class CUserController extends BaseController {
 				Map<String, Object> regionMap = tdUserAddressService.getUserDistrictIdByRegionId(new HashMap<String,Object>(),regionId);
 				map.addAllAttributes(regionMap);
 			}
+		}else{
+			TdUserAddress userAddress = new TdUserAddress();
+			map.addAttribute("address",userAddress);
 		}
-		
-		if(addressId != null && addressId < 0)
-		{
-			map.addAttribute("shopping",addressId);
-			request.getSession().setAttribute("shopping", addressId);
-		}
-		
-		return "/mobile/user/shoppingAddressAdd";
+		return "/client/user/shoppingAddressForm";
 	}
 	
 	/**
@@ -554,10 +561,10 @@ public class CUserController extends BaseController {
 	 */
 	@RequestMapping(value = "/shoppingAddressSave" ,method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> shoppingAddressSave(TdUserAddress tdUserAddress)
+	public Map<String,Object> shoppingAddressSave(TdUserAddress tdUserAddress, HttpServletRequest request)
 	{
 		Map<String,Object> result = new HashMap<String,Object>();
-		result.put("code", ConstantsUtils.RETURN_CODE_SUCCESS);
+		result.put("code", ConstantsUtils.RETURN_CODE_FAILURE);
 		TdUser tdUser = this.getCurrentUser();
 		if(tdUser == null)
 		{
@@ -575,7 +582,21 @@ public class CUserController extends BaseController {
 			tdUserAddressService.setIsDefaultFalse(tdUser.getUid());
 		}
 		tdUserAddressService.save(tdUserAddress);
-		
+		Object rediret = request.getSession().getAttribute("redirect");
+		if(null!=rediret){
+			Integer diret = (Integer) rediret;
+			if(diret==1){//购物车下单
+				result.put("redirct", "/shoppingcart/confirmorder");
+			}else if(diret==2){//立即购买下单
+				result.put("redirct", "/shoppingcart/buynow");
+			}else{
+				result.put("redirct", "");
+			}
+			request.getSession().removeAttribute("redirect");
+		}else{
+			result.put("redirct", "");
+		}
+		result.put("code", ConstantsUtils.RETURN_CODE_SUCCESS);
 		result.put("msg", "成功");
 		return result;
 	}
@@ -650,7 +671,7 @@ public class CUserController extends BaseController {
 	public Map<String,Object> shoppingAddressDelete(Integer addressId)
 	{
 		Map<String,Object> resMap = new HashMap<String,Object>();
-		resMap.put("status",ConstantsUtils.RETURN_CODE_FAILURE);
+		resMap.put("code",ConstantsUtils.RETURN_CODE_FAILURE);
 		TdUser tdUser = this.getCurrentUser();
 		if(tdUser == null)
 		{
@@ -669,7 +690,7 @@ public class CUserController extends BaseController {
 			return resMap;
 		}
 		tdUserAddressService.delete(addressId);
-		resMap.put("status",ConstantsUtils.RETURN_CODE_SUCCESS);
+		resMap.put("code",ConstantsUtils.RETURN_CODE_SUCCESS);
 		resMap.put("msg","成功");
 		return resMap;
 	}

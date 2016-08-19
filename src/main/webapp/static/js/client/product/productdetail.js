@@ -199,11 +199,16 @@ function addToShoppingcart(){
 	var postage = $("#propostage").val();
 	var quantity = $("#prodquantity").val();
 	var itemType = $("#productKind").val();
-	
+	var skustock = $("#skustock").val();
 	if(skuId>0){
-		var url = basePath+"/shoppingcart/addsku";
-		var postData = {"productId":productId,"productSkuId":skuId,"price":skuPrice,"postage":postage,"quantity":quantity,"itemType":itemType};
-		$.post(url,postData,addToShoppingcartCallback,"text");
+		if(skustock>quantity){
+			var url = basePath+"/shoppingcart/addsku";
+			var postData = {"productId":productId,"productSkuId":skuId,"price":skuPrice,"postage":postage,"quantity":quantity,"itemType":itemType};
+			openwaiting();
+			$.post(url,postData,addToShoppingcartCallback,"text");
+		}else{
+			alert("商品库存不足！");
+		}
 	}else{
 		alert("请先选择商品规格！");
 	}
@@ -211,6 +216,7 @@ function addToShoppingcart(){
 }
 
 function addToShoppingcartCallback(data){
+	closewaiting();
 	var result = eval("("+data+")");
 	if(result.code==1){
 		alert('加入购物车成功。');
@@ -226,11 +232,15 @@ function buyNow(){
 	var postage = $("#propostage").val();
 	var quantity = $("#prodquantity").val();
 	var itemType = $("#productKind").val();
-	
+	var skustock = $("#skustock").val();
 	if(skuId>0){
-		var url = basePath+"/shoppingcart/buynow";
-		var postData = {"productId":productId,"productSkuId":skuId,"quantity":quantity,"productType":itemType};
-		window.location.href= url+"?productId="+productId+"&productSkuId="+skuId+"&quantity="+quantity;
+		if(skustock>quantity){
+			var url = basePath+"/shoppingcart/buynow";
+			var postData = {"productId":productId,"productSkuId":skuId,"quantity":quantity,"productType":itemType};
+			window.location.href= url+"?productId="+productId+"&productSkuId="+skuId+"&quantity="+quantity;
+		}else{
+			alert("商品库存不足！");
+		}
 	}else{
 		alert("请先选择商品规格！");
 	}
@@ -246,7 +256,7 @@ function addCollect(productId)
     {
         return;
     }
-    
+    openwaiting();
     $.ajax({
         type:"post",
         url:basePath+"/mobile/product/collect",
@@ -254,6 +264,7 @@ function addCollect(productId)
         dataType: "json",
         success:function(data){
             // 需登录
+        	closewaiting();
             if (data.code==0)
             {
                 alert(data.msg);
@@ -261,7 +272,12 @@ function addCollect(productId)
                     window.location.href = basePath+"/mobile/login";
                 }, 1000); 
             }
-        }
+        },
+        error : function(XMLHttpRequest, textStatus, errorThrown) {
+			// 关闭等待图标
+			closewaiting();
+			alert("收藏失败");
+		},
     });
 }
 

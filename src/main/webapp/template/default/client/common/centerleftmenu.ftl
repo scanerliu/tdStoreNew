@@ -3,7 +3,7 @@
     <li>
         <p class="p1">订单中心</p>
 
-        <p <#if menucode?? && menucode=="order">class="active"</#if>><a href="${app.basePath}/" title="">我的订单</a></p>
+        <p <#if menucode?? && menucode=="order">class="active"</#if>><a href="${app.basePath}/order/list" title="">我的订单</a></p>
 
         <p><a href="${app.basePath}/" title="">我的评价</a></p>
 

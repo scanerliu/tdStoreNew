@@ -64,3 +64,11 @@ function delCookie(name)
     if(cval!=null)
         document.cookie= name + "="+cval+";expires="+exp.toGMTString();
 }
+//open waiting
+function openwaiting(){
+	$("#loaddiv").show();
+}
+//close waiting
+function closewaiting(){
+	$("#loaddiv").hide();
+}

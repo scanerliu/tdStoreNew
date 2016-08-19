@@ -25,10 +25,12 @@ function additem(id,type){
 	$("#quantity_"+id).val(numint);
 	var url = basePath+"/shoppingcart/add";
 	var postData = {"id":id,"optype":type};
+	openwaiting();
 	$.post(url,postData,additemCallback,"text");
 }
 
 function additemCallback(data){
+	closewaiting();
 	var result = eval("("+data+")");
 	if(result.code==1){
 		$("#totalAmount").html(result.totalAmount);
@@ -58,10 +60,12 @@ function changeitem(obj){
 	$(obj).val(numint);
 	var url = basePath+"/shoppingcart/change";
 	var postData = {"id":itemid,"quantity":numint};
+	openwaiting();
 	$.post(url,postData,changeitemCallback,"text");
 }
 
 function changeitemCallback(data){
+	closewaiting();
 	var result = eval("("+data+")");
 	if(result.code==1){
 		$("#totalAmount").html(result.totalAmount);
@@ -92,6 +96,7 @@ function removeItems(ids){
 	if(confirm("确定要移除商品？")){
 		var url = basePath+"/shoppingcart/remove?ids="+ids;
 		var postData = {"ids":ids};
+		openwaiting();
 		$.post(url,postData,removeItemsCallback,"text");
 	}
 	
@@ -102,6 +107,7 @@ function refreshList(){
 }
 
 function removeItemsCallback(data){
+	closewaiting();
 	var result = eval("("+data+")");
 	if(result.code==1){
 		alert('商品删除成功。');
@@ -123,6 +129,7 @@ function genernateOrder(){
 		alert("请填写收货地址！");
 		return ;
 	}
+	openwaiting();
 	var url = basePath+"/shoppingcart/order";
 	$("#confirmorder").attr("action",url);
 	$("#confirmorder").submit();
@@ -136,6 +143,7 @@ function genernateOrder2(){
 		alert("请填写收货地址！");
 		return ;
 	}
+	openwaiting();
 	$("#confirmorder").attr("action",url);
 	$("#confirmorder").submit();
 }

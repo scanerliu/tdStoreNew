@@ -92,6 +92,7 @@ function bacthOperProducts(optype){
 	if(confirm("确定要"+op+"选择的商品？")){
 		var url = basePath+"/user/batchoperproducts";
 		var postData = {"type":optype,"ids":ids};
+		openwaiting();
 		$.post(url,postData,batchOperCallback,"text");
 	}
 }
@@ -101,6 +102,7 @@ function bacthOperProducts(optype){
  * @param data
  */
 function batchOperCallback(data){
+	closewaiting();
 	var result = eval("("+data+")");
 	if(result.code==1){
 		alert('操作成功。');

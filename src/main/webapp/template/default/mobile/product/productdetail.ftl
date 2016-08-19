@@ -199,8 +199,8 @@ function timer()
         <#list taList as typeatt>
         <#if typeatt.attribute??>
         <section class="sec1">
-            <label class="fl">${typeatt.attribute.name}</label>
-            <ul class="fl slect" id="attul_${typeatt.attribute.attriId}">
+            <label class="">${typeatt.attribute.name}</label>
+            <ul class="slect" id="attul_${typeatt.attribute.attriId}">
             	<#if typeatt.attribute.tdProductAttributeOptionList??>
             	<#list typeatt.attribute.tdProductAttributeOptionList as option>
                 <li attri="${option.id}" <#if option.status==0>class="ogray"</#if>>${option.name}</li>
@@ -223,8 +223,8 @@ function timer()
         </#list>
         </#if>
         <section class="sec4">
-            <label class="fl">数量</label>
-            <aside class="fl">
+            <label class="">数量</label>
+            <aside class="">
                 <span  onclick="additem(2)">-</span>
                 <input type="text" placeholder="1" value="1" id="prodquantity" onKeyUp="formatInputSkuNum(this)">
                 <span onclick="additem(1)">+</span>
