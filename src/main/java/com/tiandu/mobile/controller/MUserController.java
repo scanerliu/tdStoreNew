@@ -45,6 +45,7 @@ import com.tiandu.common.utils.WebUtils;
 import com.tiandu.complaint.search.TdComplaintCriteria;
 import com.tiandu.complaint.service.TdComplaintService;
 import com.tiandu.custom.entity.TdAgent;
+import com.tiandu.custom.entity.TdBrancheCompany;
 import com.tiandu.custom.entity.TdCampaign;
 import com.tiandu.custom.entity.TdExperienceStore;
 import com.tiandu.custom.entity.TdMembership;
@@ -63,6 +64,7 @@ import com.tiandu.custom.search.TdUserMessageSearchCriteria;
 import com.tiandu.custom.search.TdUserSearchCriteria;
 import com.tiandu.custom.search.TdUserSupplierSearchCriteria;
 import com.tiandu.custom.service.TdAgentService;
+import com.tiandu.custom.service.TdBrancheCompanyService;
 import com.tiandu.custom.service.TdCampaignService;
 import com.tiandu.custom.service.TdExperienceStoreService;
 import com.tiandu.custom.service.TdMembershipService;
@@ -188,6 +190,8 @@ public class MUserController extends BaseController {
 	private TdUserQRcodeTools tdUserQRcodeTools;
 	@Autowired
 	private TdUserAccountLogService tdUserAccountLogService;
+	@Autowired
+	private TdBrancheCompanyService tdBrancheCompanyService;
 	
 	// 个人中心
 	@RequestMapping("/center")
@@ -200,6 +204,11 @@ public class MUserController extends BaseController {
 		modelMap.addAttribute("currentUser", currentUser);
 		TdMembership membership = tdMembershipService.findOne(currentUser.getMembershipId());
 		modelMap.addAttribute("membership", membership);
+		//判断是否是分公司
+		TdBrancheCompany branch  = tdBrancheCompanyService.findByUid(currentUser.getUid());
+		if(null!=branch && null!=branch.getId()){
+			modelMap.addAttribute("isbranch", true);
+		}
 		// 系统配置
 		modelMap.addAttribute("system", getSystem());
 	    return "/mobile/user/center";

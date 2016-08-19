@@ -1,6 +1,5 @@
 //common js
 $(function(){
-	Rich.pageSize();//页面计算 rem
 	// Rich.html_height();//页面高度计算
 });
 
@@ -8,9 +7,11 @@ var Rich = {};
 //math for page width
 Rich.pageSize = function ()
 {
-	$(document).ready(function(){
-		setRootSize();
-	});
+
+	setRootSize();
+	//$(document).ready(function(){
+		//setRootSize();
+	//});
 	function setRootSize() {
 		var deviceWidth = document.documentElement.clientWidth; 
 		if(deviceWidth>640){deviceWidth = 640;}  
@@ -36,6 +37,7 @@ Rich.pageSize = function ()
 // 	};
 // }
 
+Rich.pageSize();//页面计算 rem
 
 
 

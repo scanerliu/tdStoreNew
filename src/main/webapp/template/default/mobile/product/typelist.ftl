@@ -24,6 +24,7 @@
 </head>
 
 <script>
+Rich.pageSize();
     window.onload=function(){
         left_right2();
         cleft_height2();

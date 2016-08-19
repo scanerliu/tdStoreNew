@@ -122,11 +122,13 @@
         <label>我的推广</label>
         <i class="icon-next"></i>
       </a>
+      <#if isbranch??>
       <a href="${app.basePath}/mobile/user/index" title="我的店铺">
         <i class="icon bg_icon_6"></i>
         <label>我的店铺</label>
         <i class="icon-next"></i>
       </a>
+      </#if>
       <a href="${app.basePath}/mobile/agent/list" title="">
         <i class="icon bg_icon_7"></i>
         <label>成为代理</label>

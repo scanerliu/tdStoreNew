@@ -11,7 +11,7 @@
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <meta content="telephone=no" name="format-detection">
-    <title>登录</title>
+    <title>下载app</title>
     <#include "/common/common.ftl" />
     <link rel="shortcut icon" href="${app.basePath}/static/default/images/icon.ico" />
     <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/common.css"/>

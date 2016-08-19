@@ -210,10 +210,11 @@ function left_right2(){
 	function oLichange(obj){
 		for(var j=0;j<obj.length;j++){
 			obj[j].onclick=function(){
-				for(j=0;j<obj.length;j++){
-					obj[j].className='';
+				if(this.className==""){
+					this.className='active';
+				}else{
+					this.className="";
 				}
-				this.className='active';
 			}
 		}
 	}

@@ -127,9 +127,10 @@ strong {font-weight: normal;}
 	float: right;
 	display: block;
 	margin-top: .2rem;
+	margin-bottom: .1rem;
 	margin-right: .2rem;
-	width: .3rem;
-	height: .26rem;
+	width: .4rem;
+	height: .36rem;
 	background: url(../x-img/icon_pc_head_news.png) center center no-repeat;
 	-webkit-background-size: 100% 100%;
 					background-size: 100% 100%;
