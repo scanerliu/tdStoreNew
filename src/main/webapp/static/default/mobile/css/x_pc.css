@@ -425,12 +425,13 @@ strong {font-weight: normal;}
 /*my-order end*/
 
 /*order-details*/
-.button-group {
+/* .button-group {
 	position:absolute;
 	bottom:0;
 	right:0;
 	display:block;
-}
+} */
+
 .alinkb{
 	float: right;
     padding: 0 .1rem;

@@ -1171,8 +1171,8 @@ a, button, input {
 	padding:0.1rem 0;
 }
 .detail3 label{
-	margin-right:0.1rem;
-	width:0.6rem;
+display:block;
+	width:100%;
 	height:0.5rem;
 	line-height:0.5rem;
 	font-size:0.28rem;
@@ -1180,7 +1180,7 @@ a, button, input {
 }
 .detail3 aside,.detail3 ul{
 	overflow:hidden;
-	width:5.1rem;
+	width:100%;
 }
 .detail3 section:nth-child(1) aside{
 	height:0.5rem;
@@ -1195,7 +1195,7 @@ a, button, input {
 	float:left;
 	padding:0.1rem 0.2rem;
 	margin-right:0.1rem;
-	margin-bottom:0.1rem;
+	margin-top:0.1rem;
 	text-align:center;
 	font-size:0.28rem;
 	color:#666;
@@ -2752,11 +2752,25 @@ a, button, input {
     float: left;
     width: 1.36rem;
     height: 1.36rem;
-    border: .01rem solid #ddd;
     position: relative;
     cursor: pointer;
     margin-right: .08rem;
     margin-bottom: .1rem; }
+    #imageslist{
+    float:left;}
+  .zizhirenzheng article .imgupload a{
+  display:block;
+    width: 1.36rem;
+    height: 1.36rem;
+    color:rgba(0,0,0,0);
+  }
+  .zizhirenzheng article .imgupload #imageslist>a{
+  float:left;
+  margin-left:.1rem;}
+  
+  .zizhirenzheng article .imgupload #imageslist>a img{
+  width:100%;
+  height:100%;}
   .zizhirenzheng article .imgupload .input-file:before,
   .zizhirenzheng article .imgupload .input-file:after {
     position: absolute;

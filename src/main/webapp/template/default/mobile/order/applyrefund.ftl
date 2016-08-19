@@ -72,10 +72,14 @@
     <article>
         <span>上传图片凭证</span>
         <div class="imgupload">
+            <div id="imageslist">
+            
+            
             <div class="input-file" id="file_upload">
                 
             </div>
-            <div id="imageslist"></div>
+            
+            </div>
             <input type="hidden" id="voucherImages" name="voucherImages" value=""/>
         </div>
     </article>
@@ -104,7 +108,7 @@
 				'buttonText' : '上传图片',
 				'onUploadSuccess' : function(file, data, response) {
 					var result = eval("("+data+")");
-					var html = '<img src="'+basePath+result.savedFile+'"/>'
+					var html = '<a><img src="'+basePath+result.savedFile+'"/></a>'
 					$("#imageslist").append(html);
 					var images = $("#voucherImages").val();
 					if(images.length>0){

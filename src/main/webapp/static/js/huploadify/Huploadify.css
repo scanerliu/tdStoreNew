@@ -1,6 +1,6 @@
 @charset "utf-8";
 /* CSS Document */
-.uploadify-button{
+/* .uploadify-button{
 	display:inline-block;
 	margin:12px;
 	border:1px solid #808080;
@@ -14,6 +14,10 @@
 	color:#FFF;
 	cursor:pointer;
 	text-decoration:none;
+} */
+.uploadify-button{
+	border:1px solid #ddd;
+	color:#999;
 }
 .uploadify-button:hover{
 	background-color: #888;

@@ -82,6 +82,7 @@
       overflow: hidden;
       width: 100%;
       line-height: 0.36rem;
+      margin-top:.1rem;
       color: #999999; }
       .order_goods .goods_box div span {
         width: 50%;
