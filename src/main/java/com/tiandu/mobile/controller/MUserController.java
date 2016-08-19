@@ -1336,12 +1336,12 @@ public class MUserController extends BaseController {
 		try{
 			String changePasswordValidCode = (String) request.getSession().getAttribute("changePasswordValidCode");
 			
-			if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
+			/*if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
 				res.put("info", "验证码错误！");
 				res.put("status", "n");
 				request.getSession().removeAttribute("changePasswordValidCode");
 				return res;
-			}
+			}*/
 			
 			TdUser currentUser = this.getCurrentUser();
 			//检查手机号码是否重复

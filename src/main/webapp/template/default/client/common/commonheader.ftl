@@ -22,7 +22,7 @@
 				<a href="#" title="" class="">关注创客</a>
 				<a href="${app.basePath}/mobile/index" title="" class="">手机创客</a>
 				<a href="${app.basePath}/user/center" title="" class="">会员中心</a>
-				<a href="${app.basePath}/user/orderlist" title="" class="">我的订单</a>
+				<a href="${app.basePath}/order/list" title="" class="">我的订单</a>
 				<a href="${app.basePath}/user/index" title="" class="">我的店铺</a>
 			</section>
 		</div>

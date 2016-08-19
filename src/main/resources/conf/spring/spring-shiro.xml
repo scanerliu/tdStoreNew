@@ -65,6 +65,7 @@
 				/main**=authc
 				/user/verifyCode=anon
 				/user/**=user
+				/order/**=user
 				/mobile/shoppingcart/**=user
 				/mobile/order/**=user
 				/mobile/user/verifyCode=anon
