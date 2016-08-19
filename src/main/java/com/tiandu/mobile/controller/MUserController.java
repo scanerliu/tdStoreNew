@@ -62,6 +62,7 @@ import com.tiandu.custom.search.TdUserAccountLogSearchCriteria;
 import com.tiandu.custom.search.TdUserAddressCriteria;
 import com.tiandu.custom.search.TdUserCampaignCriteria;
 import com.tiandu.custom.search.TdUserIntegralLogSearchCriteria;
+import com.tiandu.custom.search.TdUserMessageSearchCriteria;
 import com.tiandu.custom.search.TdUserSearchCriteria;
 import com.tiandu.custom.search.TdUserSupplierSearchCriteria;
 import com.tiandu.custom.service.TdAgentService;
@@ -336,22 +337,20 @@ public class MUserController extends BaseController {
 	 * 消息列表
 	 */
 	@RequestMapping("/messageList")
-	public String messageList(Byte msgType, String active, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	public String messageList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	    return "/mobile/user/messageList";
+	}
+	/*
+	 * 消息列表
+	 */
+	@RequestMapping("/searchmessages")
+	public String searchmessages(TdUserMessageSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser currentUser = this.getCurrentUser();
-		if(msgType == null){
-			//获取购物车
-			Map<String, List<TdUserMessage>> messageMap = tdUserService.getMessageList(currentUser.getUid());
-			List<TdUserMessage> systemMessageList = messageMap.get("systemMessageList");
-			List<TdUserMessage> orderMessageList = messageMap.get("orderMessageList");
-			List<TdUserMessage> experienceStoreMessageList = messageMap.get("experienceStoreMessageList");
-			modelMap.addAttribute("systemMessageList", systemMessageList);
-			modelMap.addAttribute("orderMessageList", orderMessageList);
-			modelMap.addAttribute("experienceStoreMessageList", experienceStoreMessageList);
-		}
-		if(active != null && !active.equals("")){
-			modelMap.addAttribute("active", active);			
-		}
-	    return "/mobile/user/MessageList";
+		sc.setUid(currentUser.getUid());
+		List<TdUserMessage> messageList = tdUserMessageService.findBySearchCriteria(sc);
+		modelMap.put("sc", sc);
+		modelMap.put("messageList", messageList);
+		return "/mobile/user/messageListBody";
 	}
 	
 	/*

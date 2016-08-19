@@ -147,7 +147,7 @@
 	    		and o.shipment_status=1
 	    	</when>
 	    	<when test="fliterType==4">
-	    		and o.order_status=2 and o.commented=0
+	    		and o.order_status=4 and o.commented=0
 	    	</when>
 	    	<otherwise></otherwise>
     	</choose>
@@ -201,7 +201,7 @@
 	    		and o.shipment_status=1
 	    	</when>
 	    	<when test="fliterType==4">
-	    		and o.order_status=2 and o.commented=0
+	    		and o.order_status=4 and o.commented=0
 	    	</when>
 	    	<otherwise></otherwise>
     	</choose>
