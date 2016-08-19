@@ -8,6 +8,8 @@ public class TdProductCommentCrateria extends SearchCriteria{
 	private Integer fliter;	//过滤查询1-好评，2-中评，3-差评
 	
 	private Integer uid;
+	
+	private Integer productId;
 
 	public Byte getStatus() {
 		return status;
@@ -32,5 +34,14 @@ public class TdProductCommentCrateria extends SearchCriteria{
 	public void setFliter(Integer fliter) {
 		this.fliter = fliter;
 	}
+
+	public Integer getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
+	
 	
 }

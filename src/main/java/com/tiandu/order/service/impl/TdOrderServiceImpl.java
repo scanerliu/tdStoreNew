@@ -879,6 +879,10 @@ public class TdOrderServiceImpl implements TdOrderService{
 	@Override
 	public OperResult applyRefundOrder(TdOrder order, TdOrderShipment shipment,Integer skuId) {
 		OperResult result = new OperResult();
+		if(order.getOrderStatus() == ConstantsUtils.ORDER_STATUS_APPLYREFUND){
+			result.setFailMsg("退款申请失败：此商品已经申请退款");
+			return result;
+		}
 		if(order.getPayAmount().subtract(order.getRefundAmount()).compareTo(shipment.getReturnAmount())>=0){
 			Date now = new Date();
 			shipment.setStatus(Byte.valueOf("1"));

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tiandu.comment.search.TdProductCommentCrateria;
+import com.tiandu.comment.service.TdProductCommentService;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.custom.entity.TdUser;
@@ -91,6 +93,9 @@ public class MProductController extends BaseController {
 	
 	@Autowired
 	private ConfigUtil configUtil;
+	
+	@Autowired
+	private TdProductCommentService tdProductCommentService;
 	
 	/*
 	 * 商品列表页
@@ -220,6 +225,40 @@ public class MProductController extends BaseController {
 		return "/mobile/product/productdescribe";
 	}
 	
+	@RequestMapping("/comment/{productId}")
+	public String comment(@PathVariable Integer productId,HttpServletResponse req,ModelMap map){
+		
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		map.addAttribute("productId", productId);
+		
+		map.addAttribute("stat",tdProductStatService.findOne(productId));
+		
+		TdUser user = getCurrentUser();
+		map.addAttribute("collect", false);
+		if(null != user)
+		{
+			TdUserCollectionCriteria csc = new TdUserCollectionCriteria();
+			csc.setItemId(productId);
+			csc.setUid(user.getUid());
+			// 是否收藏
+			List<TdUserCollection> collect = tdUserCollectionService.findBySearchCriteria(csc);
+			if(null != collect && collect.size() > 0)
+			{
+				map.addAttribute("collect", true);
+			}
+		}
+		return "/mobile/product/product_comment";
+	}
+	
+	@RequestMapping("/comment/search")
+	public String commentSearch(TdProductCommentCrateria sc,HttpServletResponse req,ModelMap map){
+		
+		map.addAttribute("commentList", tdProductCommentService.findBySearchCriteria(sc));
+		map.addAttribute("sc", sc);
+		
+		return "/mobile/product/comment_list";
+	}
 	
 	/**
 	 * 

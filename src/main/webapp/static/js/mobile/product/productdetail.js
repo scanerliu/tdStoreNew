@@ -229,3 +229,33 @@ function addCollect(productId)
     });
 }
 
+// 评价
+function searchComment(pId,f){
+	var url = basePath + "/mobile/product/comment/search";
+	var loadData = {"productId":pId,"fliter":f};
+	
+	$("#commentlist").load(url,loadData);
+}
+
+
+function searchComments(f){
+	var url = basePath+"/mobile/product/comment/search";
+	var loadData = "";
+	$(window).off("scroll", scrollCommentHandler);
+	if(f){
+		loadData = $("#searchform").serializeArray();
+		$("#results").loading().load(url,loadData);
+	}else{
+		loadData = $("#listform").serializeArray();
+		$.get(url, loadData, function(html){
+	  		  $(html).appendTo("#results");
+	  	});
+	}
+}
+
+var scrollCommentHandler = function(){
+    if ($(document).height() - $(this).scrollTop() - $(this).height()<100){
+    	searchComments(false);
+    } 
+};
+

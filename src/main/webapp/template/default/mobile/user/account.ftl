@@ -54,7 +54,7 @@
   </section>
   <!-- Center End -->
 <form id="searchForm" autocomplete="false">
-		<input type="hidden" name="pageNo" id="pageNo" value="0"/>
+		<input type="hidden" name="pageNo" id="pageNo" value="1"/>
 </form>
 <script type="text/javascript">
 	$(function(){

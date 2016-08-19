@@ -222,6 +222,23 @@
     <if test="uid != null" >
        and  uid = #{uid,jdbcType=INTEGER}
     </if>
+    <if test="fliter != null">
+    	<choose>
+	    	<when test="fliter == 1">
+	    		and score=5
+	    	</when>
+	    	<when test="fliter==2">
+	    		and ( score=3 or score=4 )
+	    	</when>
+	    	<when test="fliter==3">
+	    		and ( score=1 or score=2 )
+	    	</when>
+	    	<otherwise></otherwise>
+    	</choose>
+    </if>
+    <if test="productId != null">
+    	and product_id = #{productId,jdbcType=INTEGER}
+    </if>
   </select>
   
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.comment.search.TdProductCommentCrateria" >
@@ -244,6 +261,23 @@
     </if>
     <if test="uid != null" >
        and  c.uid = #{uid,jdbcType=INTEGER}
+    </if>
+    <if test="fliter != null">
+    	<choose>
+	    	<when test="fliter == 1">
+	    		and c.score=5
+	    	</when>
+	    	<when test="fliter==2">
+	    		and (c.score=3 or c.score=4)
+	    	</when>
+	    	<when test="fliter==3">
+	    		and (c.score=1 or c.score=2)
+	    	</when>
+	    	<otherwise></otherwise>
+    	</choose>
+    </if>
+    <if test="productId != null">
+    	and c.product_id = #{productId,jdbcType=INTEGER}
     </if>
     order by c.create_time desc
   </select>
