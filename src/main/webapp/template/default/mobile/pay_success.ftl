@@ -42,8 +42,12 @@
   <!-- Center Start -->
   <section class="container evaluate-success">
     <img class="icon-success" src="${app.basePath}/static/touch/images/f-success.png" alt="重庆天度网络信息技术有限公司">
-    <div class="div1">您已成功付款<#if order??>${order.payAmount?string('0.00')}</#if>元</div>
+    <#if order??>
+    <div class="div1">您已成功付款${order.payAmount?string('0.00')}元</div>
     <div class="div2">点击查看<a href="${app.basePath}/mobile/order/detail${order.orderId!'0'}" title="订单详情">订单详情</a></div>
+    <#elseif torder??>
+    <div class="div1">您已成功付款${torder.amount?string('0.00')}元</div>
+    </#if>
     <#--
     <a class="btn-share" id="avalue_btn" href="javascript:;" title="">分享<i class="icon-share"></i></a>
     -->

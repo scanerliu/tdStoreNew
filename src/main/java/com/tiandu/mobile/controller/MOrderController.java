@@ -350,11 +350,11 @@ public class MOrderController extends BaseController {
 			// 钱包余额支付
 			TdUserAccount account = tdUserAccountService.findByUid(user.getUid());
 			// 钱包余额小于支付金额
-			if(null == account || torder.getAmount().compareTo(account.getAmount()) < 0){
+			if(null == account || torder.getAmount().compareTo(account.getAmount()) > 0){
 				return "/mobile/pay_failed";
 			}
 			jointOrderAccountPay(torder,account);
-			map.addAttribute("order", torder);
+			map.addAttribute("torder", torder);
 			
 			return "/mobile/pay_success";
 		}else if(ConstantsUtils.ORDER_PAYMENT_WEIXIN.equals(pay)){

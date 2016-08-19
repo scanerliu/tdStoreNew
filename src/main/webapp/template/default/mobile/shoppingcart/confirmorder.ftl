@@ -105,9 +105,13 @@
 	                <#if shoppingcart.canUserAccount==true>
 	            	<option value="4">钱包余额支付</option>
 	            	</#if>
-	            	<option value="1">支付宝支付</option>
+	            	<#if isWx?? && isWx==true>
 	            	<option value="2">微信支付</option>
-	            	<option value="3">银联支付</option>
+	            	<#else>
+	            	<option value="2">微信支付</option>
+	            	<option value="1">支付宝支付</option>
+	            	</#if>
+	            	<#--<option value="3">银联支付</option>-->
 	            </select>
 	            <!--<a href="javascript:;"  class="fr wechatpay" title="">微信支付<i></i></a>-->
 	        </li>
