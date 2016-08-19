@@ -366,10 +366,8 @@ public class CShoppingcartController extends BaseController {
 		//生成购物车
 		ShoppingcartVO shoppingcart;	
 		try {
-			
 			if(null==orderForm.getProductId()&& null==orderForm.getAgentProductId()){
 				orderForm = (OrderForm)request.getSession().getAttribute("orderForm");
-				request.getSession().removeAttribute("orderForm");
 			}else{
 				request.getSession().setAttribute("orderForm", orderForm);
 			}

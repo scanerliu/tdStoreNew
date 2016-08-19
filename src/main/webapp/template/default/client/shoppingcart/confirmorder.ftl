@@ -68,7 +68,7 @@
 	                </#list>
 			     	</#if>
 	                <div class="address new">
-	                    <a href="#" class="addnew" title="">新增收货地址</a>
+	                    <a href="${app.basePath}/user/shoppingaddress?redirect=1" class="addnew" title="">新增收货地址</a>
 	                </div>
 	            </div>
 	        </div>

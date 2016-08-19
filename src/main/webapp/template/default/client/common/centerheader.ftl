@@ -15,7 +15,7 @@
             <span class="fl">|</span>
             <a href="${app.basePath}/" title="">我的店铺</a>
             <span class="fl">|</span>
-            <a class="shopp-car" href="${app.basePath}/" title="">购物车(<span id="shoppingcartcount">0</span>)</a>
+            <a class="shopp-car" href="${app.basePath}/shoppingcart/list" title="">购物车(<span id="shoppingcartcount">0</span>)</a>
             <span class="fl">|</span>
             <a href="${app.basePath}/user/center" title="">会员中心</a>
             <span class="fl">|</span>

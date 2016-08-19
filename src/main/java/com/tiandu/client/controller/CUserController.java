@@ -480,6 +480,7 @@ public class CUserController extends BaseController {
 		}
 		// 系统配置
 		map.addAttribute("system", getSystem());
+		map.addAttribute("redirect", redirect);
 		return "/client/user/shoppingAddressList";
 	}
 	
@@ -560,10 +561,10 @@ public class CUserController extends BaseController {
 	 */
 	@RequestMapping(value = "/shoppingAddressSave" ,method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> shoppingAddressSave(TdUserAddress tdUserAddress)
+	public Map<String,Object> shoppingAddressSave(TdUserAddress tdUserAddress, HttpServletRequest request)
 	{
 		Map<String,Object> result = new HashMap<String,Object>();
-		result.put("code", ConstantsUtils.RETURN_CODE_SUCCESS);
+		result.put("code", ConstantsUtils.RETURN_CODE_FAILURE);
 		TdUser tdUser = this.getCurrentUser();
 		if(tdUser == null)
 		{
@@ -581,7 +582,21 @@ public class CUserController extends BaseController {
 			tdUserAddressService.setIsDefaultFalse(tdUser.getUid());
 		}
 		tdUserAddressService.save(tdUserAddress);
-		
+		Object rediret = request.getSession().getAttribute("redirect");
+		if(null!=rediret){
+			Integer diret = (Integer) rediret;
+			if(diret==1){//购物车下单
+				result.put("redirct", "/shoppingcart/confirmorder");
+			}else if(diret==2){//立即购买下单
+				result.put("redirct", "/shoppingcart/buynow");
+			}else{
+				result.put("redirct", "");
+			}
+			request.getSession().removeAttribute("redirect");
+		}else{
+			result.put("redirct", "");
+		}
+		result.put("code", ConstantsUtils.RETURN_CODE_SUCCESS);
 		result.put("msg", "成功");
 		return result;
 	}
@@ -656,7 +671,7 @@ public class CUserController extends BaseController {
 	public Map<String,Object> shoppingAddressDelete(Integer addressId)
 	{
 		Map<String,Object> resMap = new HashMap<String,Object>();
-		resMap.put("status",ConstantsUtils.RETURN_CODE_FAILURE);
+		resMap.put("code",ConstantsUtils.RETURN_CODE_FAILURE);
 		TdUser tdUser = this.getCurrentUser();
 		if(tdUser == null)
 		{
@@ -675,7 +690,7 @@ public class CUserController extends BaseController {
 			return resMap;
 		}
 		tdUserAddressService.delete(addressId);
-		resMap.put("status",ConstantsUtils.RETURN_CODE_SUCCESS);
+		resMap.put("code",ConstantsUtils.RETURN_CODE_SUCCESS);
 		resMap.put("msg","成功");
 		return resMap;
 	}

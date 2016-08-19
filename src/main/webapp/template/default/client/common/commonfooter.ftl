@@ -90,6 +90,6 @@
 	<#include "foot.ftl">
 </footer>
 <!-- 底部-结束 -->
-<div class="load-container load8">
-	<div class="loader">Loading...</div>
+<div class="load-container" id="loaddiv" style="display:none;">
+	<div class="loader" style="position:fixed;left:0;top:0;width:100%;height:100%;background:url('${app.basePath}/static/default/client/images/opa1.png');text-align:center;"><img style="position:relative;top:50%;margin-top:-18px;" src="${app.basePath}/static/default/client/images/loading.gif"></div>
 </div>

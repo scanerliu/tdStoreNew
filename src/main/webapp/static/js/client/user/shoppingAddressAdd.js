@@ -83,7 +83,7 @@ function save(){
 		alert("详细地址不能输入除-()#,以外的特殊字符");
 		return;
 	}
-
+	openwaiting();
 	// 发送异步请求
 	$.ajax({
 		url : basePath + "/user/shoppingAddressSave",
@@ -100,13 +100,22 @@ function save(){
 		},
 		error : function(XMLHttpRequest, textStatus, errorThrown) {
 			// 关闭等待图标
-			alert("添加失败")
+			closewaiting();
+			alert("添加失败");
 		},
 		success : function(res) {
-			$('.outerbox').fadeIn(400,function(){
-				$('.outerbox').fadeOut();
-				window.location.href=basePath + "/user/shoppingAddress";
-			});
+			var result = eval("("+res+")");
+			closewaiting();
+			if(result.code==1){
+				if(result.redirct!=""){
+					window.location.href = basePath + result.redirct;
+				}else{
+					backtoList();
+					searchAddress(false);
+				}
+			}else{
+				alert(result.msg);
+			}
 		}
 	});
 }
@@ -131,10 +140,12 @@ function editAddress(id){
 function delAddress(id){
 	var url = basePath + "/user/shoppingAddressDelete";
 	var postData = {"addressId":id};
+	openwaiting();
 	$.post(url,postData,delAddressCallback,"text");
 }
 //删除回调函数
 function delAddressCallback(data){
+	closewaiting();
 	var result = eval("("+data+")");
 	if(result.code==1){
 		searchAddress(false);
@@ -146,15 +157,16 @@ function delAddressCallback(data){
 function defaultAddress(id){
 	var url = basePath + "/user/defaultshoppingaddress";
 	var postData = {"addressId":id};
+	openwaiting();
 	$.post(url,postData,delAddressCallback,"text");
 }
 //显示form页
 function showForm(){
-	$("#results").hide();
+	$("#listdiv").hide();
 	$("#formdiv").show();
 }
 //显示列表页
 function backtoList(){
-	$("#results").show();
+	$("#listdiv").show();
 	$("#formdiv").hide();
 }

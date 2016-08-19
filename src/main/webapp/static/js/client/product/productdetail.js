@@ -204,6 +204,7 @@ function addToShoppingcart(){
 		if(skustock>quantity){
 			var url = basePath+"/shoppingcart/addsku";
 			var postData = {"productId":productId,"productSkuId":skuId,"price":skuPrice,"postage":postage,"quantity":quantity,"itemType":itemType};
+			openwaiting();
 			$.post(url,postData,addToShoppingcartCallback,"text");
 		}else{
 			alert("商品库存不足！");
@@ -215,6 +216,7 @@ function addToShoppingcart(){
 }
 
 function addToShoppingcartCallback(data){
+	closewaiting();
 	var result = eval("("+data+")");
 	if(result.code==1){
 		alert('加入购物车成功。');
@@ -254,7 +256,7 @@ function addCollect(productId)
     {
         return;
     }
-    
+    openwaiting();
     $.ajax({
         type:"post",
         url:basePath+"/mobile/product/collect",
@@ -262,6 +264,7 @@ function addCollect(productId)
         dataType: "json",
         success:function(data){
             // 需登录
+        	closewaiting();
             if (data.code==0)
             {
                 alert(data.msg);
@@ -269,7 +272,12 @@ function addCollect(productId)
                     window.location.href = basePath+"/mobile/login";
                 }, 1000); 
             }
-        }
+        },
+        error : function(XMLHttpRequest, textStatus, errorThrown) {
+			// 关闭等待图标
+			closewaiting();
+			alert("收藏失败");
+		},
     });
 }
 
