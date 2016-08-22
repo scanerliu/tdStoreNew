@@ -63,7 +63,7 @@
     </article>
     <article>
         <span>退款金额</span>
-        <input type="text" placeholder="${sku.price}" value="${sku.price}" id="returnAmount" name="returnAmount" onkeyup="formatInputPrice(this,0,${sku.price})">
+        <input type="text" placeholder="${sku.price}" value="${sku.price}" id="returnAmount" name="returnAmount" onblur="formatInputPrice(this,0,${sku.price*sku.quantity})" onkeyup="formatInputPrice(this,0,${sku.price*sku.quantity})">
     </article>
     <article>
         <span>退货说明</span>
