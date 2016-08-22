@@ -12,7 +12,7 @@
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <meta content="telephone=no" name="format-detection">
-    <title>促销活动</title>
+    <title>零元区</title>
     <!-- css -->
     <link rel="stylesheet" href="${app.basePath}/static/touch/css/common.css" type="text/css" />
     <link rel="stylesheet" href="${app.basePath}/static/touch/css/main.css" type="text/css" />
@@ -27,7 +27,7 @@
 </head>
 <script>
     window.onload=function(){
-        two2();
+        //two2();
     }
     
  $(document).ready(function(){   
@@ -49,19 +49,19 @@
 <!-- header_top -->
 <div class="top_heater">
     <a href="javascript:history.go(-1);" title="" class="hleft hback"></a>
-    <span>促销活动</span>
+    <span>零元区</span>
 </div>
 <!-- header_top end -->
 
 <!-- Center Start -->
 <section class="container">
-    <div class="two2" id="two2">
+    <!--<div class="two2" id="two2">
         <a href="javascript:;" title="零元购" class="active">零元购</a>
         <a href="javascript:;" title="10元购" class="">10元购</a>
-    </div>
+    </div>-->
     <!-- 热销推荐 -->
     <div class="two2_match" id="two2_match">
-        <div class="hot">
+        <div class="hot" style="display:block;">
             <section class="sec2" id="kill_list">
             	<#if zeroList??>
             	<#list zeroList as item>
@@ -70,7 +70,7 @@
                     <p class="p1">${item.name!''}</p>
                     <p class="p2">
                         <label class="lab1">¥<#if item.price??>${item.price?string('0.00')}</#if></label>
-                        <label class="lab2">￥188.00</label>
+                        <label class="lab3 fr" style="font-size:.2rem;color:#999;">运费￥<#if item.postage??>${item.postage?string('0.00')}</#if></label>
                     </p>
                 </a>
                 </#list>

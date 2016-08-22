@@ -241,9 +241,9 @@ public class MobileProductListController extends BaseController{
 		sc.setKind((byte)3);
 		map.addAttribute("zeroList", tdProductService.findBySearchCriteria(sc));
 		
-		// 预售
+		/*// 预售
 		sc.setKind((byte)4);
-		map.addAttribute("tenList", tdProductService.findBySearchCriteria(sc));
+		map.addAttribute("tenList", tdProductService.findBySearchCriteria(sc));*/
 		
 		return "/mobile/product/zero_list";
 	}

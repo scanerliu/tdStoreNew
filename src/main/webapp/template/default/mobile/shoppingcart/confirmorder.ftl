@@ -28,7 +28,7 @@
 <body class="body_gray">
   <!-- header_top -->
   <div class="top_heater">
-    <a href="javascript:;" onclick="window.history.go(-1)" title="" class="hleft hback"></a>
+    <a href="${app.basePath}/mobile/shoppingcart/list" title="" class="hleft hback"></a>
     <span>结算</span>
   </div>
   <!-- header_top end -->

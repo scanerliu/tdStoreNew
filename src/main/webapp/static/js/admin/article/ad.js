@@ -130,16 +130,25 @@ function refreshListAd(){
 	searchAd(false);
 }
 
-function delAdsense(id){
+function delAd(id){
 	$.messager.confirm('消息提醒', '确定要删掉该广告?', function(r){
 		if (r){
 			var url = basePath+"/admin/advert/delete";
 			var loadData={"id":id};
-			$.post(url,loadData,delAdseneceCallback,"text");
+			$.post(url,loadData,delAdCallback,"text");
 		}
 	});
 }
 
+function delAdCallback(data){
+	var result = eval("("+data+")");
+	if(result.code==1){
+		$.messager.alert('消息提醒','删除成功。');
+		refreshListAd();
+	}else{
+		$.messager.alert('消息提醒','删除失败!');
+	}
+}
 
 function changeAds(obj){
 	var asid = $(obj).val();

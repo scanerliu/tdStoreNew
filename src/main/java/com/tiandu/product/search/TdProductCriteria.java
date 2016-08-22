@@ -253,7 +253,7 @@ public class TdProductCriteria extends SearchCriteria {
 
 		Integer orderType = this.orderby;
 		switch (orderType) {
-		case 1:
+		/*case 1:
 			orderBySql = "s.positive_rate desc , s.buy_count desc";
 			break;
 		// case 2:
@@ -269,6 +269,24 @@ public class TdProductCriteria extends SearchCriteria {
 			orderBySql = "p.price desc";
 			break;
 		case 4:
+			orderBySql = "p.price asc";
+			break;*/
+		case 1:
+			orderBySql = "s.positive_rate desc , s.buy_count desc";
+			break;
+		case 2:
+			orderBySql = "s.positive_rate asc , s.buy_count asc";
+			break;
+		case 3:
+			 orderBySql = "s.buy_count desc";
+			 break;
+		case 4:
+			orderBySql = "s.buy_count asc";
+			break;
+		case 5:
+			orderBySql = "p.price desc";
+			break;
+		case 6:
 			orderBySql = "p.price asc";
 			break;
 		default:

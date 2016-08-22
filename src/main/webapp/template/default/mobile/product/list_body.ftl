@@ -51,9 +51,9 @@ $(document).ready(function(){
 <!-- Center Start -->
 <!-- <section class="container"> -->
     <div class="three">
-    	<a href="javascript:;" title="综合" onclick="searchList(${sc.typeId?c},1)" <#if sc?? && sc.orderby==1>class="active"</#if>>综合</a>
-    	<a href="javascript:;" title="销量" onclick="searchList(${sc.typeId?c},2)" <#if sc?? && sc.orderby==2>class="active"</#if>>销量</a>
-    	<a href="javascript:;" onclick="searchList(${sc.typeId?c},<#if sc??><#if sc.orderby==3 || sc.orderby==4><#if sc.orderby==3>4<#else>3</#if><#else>3</#if><#else>3</#if>)" title="价格" <#if sc?? && sc.orderby==3 || sc.orderby==4>class="active"</#if>>价格</a>
+    	<a href="javascript:;" title="综合" <#if sc?? && sc.orderby==1>onclick="searchList(${sc.typeId?c},2)" class="down"<#elseif sc?? && sc.orderby==2>onclick="searchList(${sc.typeId?c},1)" class="up"<#else>onclick="searchList(${sc.typeId?c},1)"</#if>>综合</a>
+    	<a href="javascript:;" title="销量" <#if sc?? && sc.orderby==3>onclick="searchList(${sc.typeId?c},4)" class="down"<#elseif sc?? && sc.orderby==4>onclick="searchList(${sc.typeId?c},3)" class="up"<#else>onclick="searchList(${sc.typeId?c},3)"</#if>>销量</a>
+    	<a href="javascript:;" title="价格" <#if sc?? && sc.orderby==5>onclick="searchList(${sc.typeId?c},6)" class="down"<#elseif sc?? && sc.orderby==6>onclick="searchList(${sc.typeId?c},5)" class="up"<#else>onclick="searchList(${sc.typeId?c},5)"</#if>>价格</a>
     </div>
  
     <!-- 热销推荐 -->
