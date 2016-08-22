@@ -33,6 +33,7 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	text-align: center;
 	text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
 	width: 100%;
+	height:100%;
 }
 .uploadify:hover .uploadify-button {
 	background-color: #606060;

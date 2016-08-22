@@ -44,8 +44,10 @@ public class TdAdvertisementServiceImpl implements TdAdvertisementService{
 
 	@Override
 	public List<TdAdvertisement> findBySearchCriteria(TdAdvertisementSearchCriteria sc) {
-		Integer count = tdAdvertMapper.countByCriteria(sc);
-		sc.setTotalCount(count);
+		if(sc.isFlag()){
+			Integer count = tdAdvertMapper.countByCriteria(sc);
+			sc.setTotalCount(count);
+		}
 		return tdAdvertMapper.findBySearchCriteria(sc);
 	}
 

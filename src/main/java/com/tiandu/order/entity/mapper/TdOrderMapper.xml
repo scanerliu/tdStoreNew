@@ -164,12 +164,18 @@
     <if test="receiptTime != null" >
         and o.update_time <![CDATA[ < ]]> #{receiptTime,jdbcType=TIMESTAMP}
     </if>
+    <if test="keyword != null" >
+        and (o.order_no  like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%') or s.product_name like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%'))
+    </if>
     order by o.create_time desc
   </select>
   
   <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.order.search.TdOrderSearchCriteria" >
     select count(o.order_id)
     from td_order o
+    <if test="keyword != null" >
+    	left join td_order_sku s on s.order_id= o.order_id
+    </if>
     where 1=1 
     <if test="orderNo != null and orderNo!=''" >
         and o.order_no=#{orderNo,jdbcType=VARCHAR}
@@ -211,6 +217,9 @@
     </if>
     <if test="receiptTime != null" >
         and o.update_time <![CDATA[ < ]]> #{receiptTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="keyword != null" >
+        and (o.order_no  like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%') or s.product_name like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%'))
     </if>
   </select>
   

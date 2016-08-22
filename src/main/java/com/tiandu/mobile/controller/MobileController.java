@@ -151,7 +151,7 @@ public class MobileController extends BaseController {
 		if(null != adsense)
 		{
 			sc.setAdsId(adsense.getId());
-			sc.setPageSize(30);
+			sc.setFlag(false);
 			map.addAttribute("productTypeAdList", tdAdvertisementService.findBySearchCriteria(sc));
 		}
 		

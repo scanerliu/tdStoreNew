@@ -52,7 +52,7 @@ public class UserLevelFlush {
 		// 满足升级的普通会员(分批查询)
 		TdUserSearchCriteria sc = new TdUserSearchCriteria();
 		sc.setFlag(false);
-		sc.setUtype(Byte.valueOf("2"));
+		sc.setUtype(Byte.valueOf("1"));
 		int totalCount = tdUserService.getTotalCount(sc);
 		sc.setPageSize(1000);
 		sc.setTotalCount(totalCount);

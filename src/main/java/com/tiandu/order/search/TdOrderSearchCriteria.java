@@ -24,7 +24,7 @@ public class TdOrderSearchCriteria extends SearchCriteria {
     private Boolean getProductSku = false; //获取订单货品集合
     private Integer fliterType; //查询分类0-全部订单，1-待付款，2-代发货，3-待收货，4-待评价
     private Integer supplierId; // 供应商ID
-    
+    private String keyword;	//关键词，匹配订单编号和商品名称
     private Integer jointId; // 联合订单ID
     
 	public String getOrderNo() {
@@ -130,6 +130,13 @@ public class TdOrderSearchCriteria extends SearchCriteria {
 	public void setJointId(Integer jointId) {
 		this.jointId = jointId;
 	}
-    
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
     
 }

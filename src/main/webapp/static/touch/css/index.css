@@ -109,7 +109,7 @@
 	position:relative;
 	float:left;
 	overflow:hidden;
-	width:4rem;
+	width:69%;
 	height:0.3rem;
 }
 .rank .lab2 ul{
@@ -221,8 +221,6 @@
 	display:block;
 	float:left;
 	width:33.33%;
-	height:1.56rem;
-	border-left:1px solid #ddd;
 	border-top:1px solid #ddd;
 	box-sizing:border-box;
 }

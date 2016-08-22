@@ -701,6 +701,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 		orderproduct.setTitle(shoppingcart.getAgentProduct().getTitle());
 		orderproduct.setProductTypeId(agent.getProductTypeId());
 		orderproduct.setOrderId(order.getOrderId());
+		orderproduct.setAttachment(shoppingcart.getAgentProduct().getImageUrl());
 		tdOrderProductMapper.insert(orderproduct);
 		//保存订单货品
 		if(null!=shoppingcart.getItemList() && orderForm.getAgentProductId().equals(1)||( orderForm.getAgentProductId().equals(4)&&canuserpackage)&& null!=orderForm.getProductId()){
@@ -813,6 +814,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 		orderproduct.setSupplierPrice(shoppingcart.getAgentProduct().getSupplierPrice());
 		orderproduct.setQuantity(1);
 		orderproduct.setTitle(shoppingcart.getAgentProduct().getTitle());
+		orderproduct.setAttachment(shoppingcart.getAgentProduct().getImageUrl());
 		tdOrderProductMapper.insert(orderproduct);
 		return order;
 	}

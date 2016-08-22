@@ -186,5 +186,15 @@ public class TdOrderSku {
 		}
 		return BigDecimal.ZERO;
 	}
-    
+	/**
+     * 获取商品总金额
+     * @return
+     */
+    public BigDecimal getTotalProductAmount(){
+    	BigDecimal amount = BigDecimal.ZERO;
+    	if(null!=this.getPrice() && null!=this.getQuantity()){
+    		amount = this.getPrice().multiply(new BigDecimal(this.getQuantity()));
+    	}
+    	return amount;
+    }
 }

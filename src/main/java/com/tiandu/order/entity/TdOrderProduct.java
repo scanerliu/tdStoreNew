@@ -159,4 +159,15 @@ public class TdOrderProduct {
     	}
     	return sb.toString();
     }
+    /**
+     * 获取商品总金额
+     * @return
+     */
+    public BigDecimal getTotalProductAmount(){
+    	BigDecimal amount = BigDecimal.ZERO;
+    	if(null!=this.getItemPrice() && null!=this.getQuantity()){
+    		amount = this.getItemPrice().multiply(new BigDecimal(this.getQuantity()));
+    	}
+    	return amount;
+    }
 }

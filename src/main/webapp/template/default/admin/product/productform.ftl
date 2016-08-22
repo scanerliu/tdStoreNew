@@ -93,6 +93,7 @@
 		        <th>品牌：</th>
 		        <td>
 		            <select name="brandId">
+		            	<option value="0">--请选择--</option>
 		            	<#if brandList??>
 		    				<#list brandList as brand>
 		    					<option value="${brand.id!''}">${brand.name!''}</option>

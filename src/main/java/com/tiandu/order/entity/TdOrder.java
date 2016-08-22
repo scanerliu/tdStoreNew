@@ -419,6 +419,8 @@ public class TdOrder extends TdBaseEntity{
     			sb.append("银联");
     		}else if(ConstantsUtils.ORDER_PAYMENT_ACCOUNT.equals(this.getPaymentId())){
     			sb.append("钱包余额");
+    		}else{
+    			sb.append("线下支付");
     		}
     	}
     	return sb.toString();

@@ -25,9 +25,11 @@ $(document).ready(function(){
         </div>
     </div>
     <ul id="position">
+    	  <#if adList?? && adList?size gt 0>
+    	  <#list adList as ad>
           <li class="cur"></li>
-          <li class=""></li>
-          <li class=""></li>
+          </#list>
+          </#if>
     </ul>
 </div> 
 <script type="text/javascript">
