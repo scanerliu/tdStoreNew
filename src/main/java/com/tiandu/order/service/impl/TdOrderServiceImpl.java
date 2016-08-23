@@ -894,6 +894,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 			shipment.setCreateTime(now);
 			shipment.setUpdateTime(now);
 			shipment.setSupplyId(order.getSupplierId());
+			shipment.initVoucherImages();
 			tdOrderShipmentMapper.insert(shipment);
 			
 			/**

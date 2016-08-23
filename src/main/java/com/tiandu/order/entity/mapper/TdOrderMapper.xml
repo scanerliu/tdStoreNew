@@ -38,6 +38,7 @@
 	<!-- 订单货品集合 -->
 	<collection property="skuList" column="orderId" ofType="com.tiandu.order.entity.TdOrderSku">
 		<id property="orderSkuId" column="order_sku_id"/>
+		<result property="productId" column="product_id"/>
 		<result property="productName" column="product_name"/>
 		<result property="displaySpecifications" column="display_specifications"/>
 		<result property="quantity" column="quantity"/>
@@ -105,7 +106,7 @@
         , u.uname as up_uname, u.unick as up_unick
     </if>
     <if test="getProductSku" >
-        , s.order_sku_id, s.product_name, s.display_specifications, s.price, s.quantity,s.product_image
+        , s.order_sku_id, s.product_id, s.product_name, s.display_specifications, s.price, s.quantity,s.product_image
         , p.title as product_title, p.quantity as product_quantity, p.item_price as product_price, p.attachment as product_attachment, p.item_type as product_itemType
     </if>
     from td_order o
@@ -144,7 +145,7 @@
 	    		and o.pay_status=1 and o.shipment_status=2
 	    	</when>
 	    	<when test="fliterType==3">
-	    		and o.shipment_status=1
+	    		and o.order_status=3
 	    	</when>
 	    	<when test="fliterType==4">
 	    		and o.order_status=4 and o.commented=0
@@ -204,13 +205,19 @@
 	    		and o.pay_status=1 and o.shipment_status=2
 	    	</when>
 	    	<when test="fliterType==3">
-	    		and o.shipment_status=1
+	    		and o.order_status=3
 	    	</when>
 	    	<when test="fliterType==4">
 	    		and o.order_status=4 and o.commented=0
 	    	</when>
 	    	<otherwise></otherwise>
     	</choose>
+    </if>
+    <if test="supplierId != null" >
+        and o.supplier_id=#{supplierId,jdbcType=INTEGER}
+    </if>
+    <if test="jointId != null" >
+        and o.joint_id=#{jointId,jdbcType=INTEGER}
     </if>
     <if test="shippmentTime != null" >
         and o.update_time <![CDATA[ < ]]> #{shippmentTime,jdbcType=TIMESTAMP}

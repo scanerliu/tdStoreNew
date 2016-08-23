@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.tiandu.express.entity.TdExpress;
 
 public class TdOrderShipment {
@@ -34,6 +36,10 @@ public class TdOrderShipment {
     private String voucherImages;
     private BigDecimal returnAmount;
     private Integer returnCause;
+    /**
+     * 图片凭证，前台上传使用
+     */
+    private String[] voucherImageList;
     /**
      * 物流公司
      */
@@ -219,6 +225,34 @@ public class TdOrderShipment {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	
-    
+
+	public String[] getVoucherImageList() {
+		return voucherImageList;
+	}
+
+	public void setVoucherImageList(String[] voucherImageList) {
+		this.voucherImageList = voucherImageList;
+	}
+    /**
+     * 前台上传图片后，赋值给数据库属性voucherImages
+     */
+	public void initVoucherImages(){
+		if(null!=voucherImageList && voucherImageList.length>0){
+			StringBuffer sb = new StringBuffer();
+			int i=0;
+			for(String image : voucherImageList){
+				if(StringUtils.isNotBlank(image)){
+					if(i==0){
+						sb.append(image);
+					}else{
+						sb.append(","+image);
+					}
+					i++;
+				}
+			}
+			if(i>0){
+				this.setVoucherImages(sb.toString());
+			}
+		}
+	}
 }

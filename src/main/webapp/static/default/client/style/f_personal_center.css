@@ -18,6 +18,7 @@
 .w270{width:270px;}
 .w340{width:340px;}
 .w370{width:370px;}
+.w500{width:500px;}
 .w540{width:540px;}
 .w590{width:590px;}
 .w910{width:910px;}
@@ -1723,24 +1724,24 @@
 .form_box3{
     padding:0 40px;
 }
-.form_box3 div{
+.form_box3 .div_obox{
     overflow:hidden;
     padding:0;
     margin-top:20px;
     height:32px;
     line-height:32px;
 }
-.form_box3 div .lab1{
+.form_box3 .div_obox .lab1{
     display:block;
     margin-right:20px;
     width:100px;
     text-align:right;
 }
-.form_box3 div .lab1 span{
+.form_box3 .div_obox .lab1 span{
     margin-right:4px;
     color:#ff9900;
 }
-.form_box3 div select{
+.form_box3 .div_obox select{
     float:left;
     width:178px;
     height:32px;

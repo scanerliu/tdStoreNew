@@ -255,14 +255,17 @@
       <if test="endTime != null" >
        	and  a.end_time <![CDATA[>=]]> #{endTime,jdbcType=TIMESTAMP}
       </if>
-      <if test="orderBy != null" >
-      	<if test="orderBy ==1">
-      		order by  a.sort desc
-      	</if>
-      	<if  test="orderBy ==2">
-	      	order by a.sort asc
-      	</if>
-      </if>
+      <choose>
+	      <when test="orderBy != null and orderBy ==1">
+	      	order by  a.sort desc
+	      </when>
+	      <when test="orderBy != null and orderBy ==2">
+	      	order by  a.sort desc
+	      </when>
+	      <otherwise>
+	      	order by  a.id desc
+	      </otherwise>
+      </choose>
   </select>
   
 </mapper>
