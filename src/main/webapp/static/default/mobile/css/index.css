@@ -1217,7 +1217,10 @@ display:block;
 	color:#666;
 	box-sizing:border-box;
 	border:0.02rem solid #959595;
+	margin-top:.02rem;
+	margin-bottom:.02rem;
 }
+
 .detail3 section.sec4 span:nth-of-type(1){
 	border-radius:0.1rem 0 0 0.1rem;
 	border-right:none;
@@ -1968,7 +1971,10 @@ display:block;
 	width:0.22rem;
 	height:0.22rem;
 	border:1px solid #ddd;
-	/*-webkit-appearance:none;*/
+	appearance:normal;
+	-webkit-appearance:normal;
+	-moz-appearance:normal;
+	-o-appearance:normal;
 }
 .become .sec5 a{
 	color:#333;
@@ -2720,7 +2726,7 @@ display:block;
 .zizhirenzheng article {
   padding: 0 .2rem;
   background: #fff;
-  border: .01rem solid #ddd;
+  border: .02rem solid #ddd;
   border-left: 0;
   border-right: 0;
   margin-top: .2rem;
@@ -2797,7 +2803,7 @@ display:block;
   .zizhirenzheng article .imgupload > img {
     width: 1.36rem;
     height: 1.36rem;
-    border: .01rem solid #ddd;
+    border: .02rem solid #ddd;
     float: left;
     margin-right: .08rem;
     margin-bottom: .1rem; }
@@ -2870,7 +2876,7 @@ li.s_adreess section{
 .sorder2 .somiddle {
 	padding: .2rem;
 	height: 1.8rem;
-	border-top: .01rem solid #ddd;
+	border-top: .02rem solid #ddd;
 	background-color: #fff;
 }
 .sorder2 .somiddle img {
@@ -2925,8 +2931,8 @@ li.s_adreess section{
 	font-size: .22rem;
 	color: #666;
 	text-align: right;
-	border-bottom: .01rem solid #ddd;
-	border-top: .01rem solid #ddd;
+	border-bottom: .02rem solid #ddd;
+	border-top: .02rem solid #ddd;
 	background:#fff;
 }
 .sorder2 .sobottom strong.price {

@@ -88,7 +88,7 @@ strong {font-weight: normal;}
 .pc-head .head-img {
 	float: left;
 	margin: .3rem .15rem .3rem .2rem;
-	padding: .01rem;
+	padding: .02rem;
 	width: .82rem;
 	height: .82rem;
 	background-color: #fff;
@@ -159,8 +159,8 @@ strong {font-weight: normal;}
 	background: #fff url(../x-img/icon_pc_index_tips.png) .2rem center no-repeat;
 	-webkit-background-size: .26rem .26rem;
 					background-size: .26rem .26rem;
-	border-top: .01rem solid #ddd;
-	border-bottom: .01rem solid #ddd;
+	border-top: .02rem solid #ddd;
+	border-bottom: .02rem solid #ddd;
 }
 
 /*pc-nav*/
@@ -169,8 +169,8 @@ strong {font-weight: normal;}
     margin-bottom: .2rem;
     height: 1.4rem;
     background-color: #fff;
-    border-top: .01rem solid #ddd;
-    border-bottom: .01rem solid #ddd;
+    border-top: .02rem solid #ddd;
+    border-bottom: .02rem solid #ddd;
 }
 
 .pc-nav a {
@@ -201,7 +201,7 @@ strong {font-weight: normal;}
 .pc-menu {
 	margin-bottom: .2rem;
 	background-color: #fff;
-	border-top: .01rem solid #ddd;
+	border-top: .02rem solid #ddd;
 }
 .pc-menu a {
 	display: block;
@@ -210,7 +210,7 @@ strong {font-weight: normal;}
 	line-height: .8rem;
 	font-size: .28rem;
 	color: #666;
-	border-bottom: .01rem solid #ddd;
+	border-bottom: .02rem solid #ddd;
 }
 .pc-menu a .icon {
 	display: block;
@@ -325,7 +325,7 @@ strong {font-weight: normal;}
 	height: .6rem;
 	line-height: .6rem;
 	font-size: .22rem;
-	border-bottom: .01rem solid #ddd;
+	border-bottom: .02rem solid #ddd;
 }
 .my-order ol li section .top .p1 {
 	float: left;
@@ -395,7 +395,7 @@ strong {font-weight: normal;}
 	font-size: .22rem;
 	color: #666;
 	text-align: right;
-	border-bottom: .01rem solid #ddd;
+	border-bottom: .02rem solid #ddd;
 }
 .my-order ol li section .bottom strong.price {
 	font-size: .26rem;
@@ -413,7 +413,7 @@ strong {font-weight: normal;}
 	padding: 0 .15rem;
 	height: .5rem;
 	font-size: .24rem;
-	border: .01rem solid #ddd;
+	border: .02rem solid #ddd;
 	-webkit-box-sizing: border-box;
 					box-sizing: border-box;
 }
@@ -514,7 +514,7 @@ strong {font-weight: normal;}
   height: .85rem;
   width: 100%;
   background-color: #fff;
-  border-top: .01rem solid #ddd;
+  border-top: .02rem solid #ddd;
 }
 .lblcheckbox {
   display: inline-block;
@@ -527,7 +527,7 @@ strong {font-weight: normal;}
 	position: relative;
   float: left;
   display: block;
-  border: .01rem solid #999;
+  border: .02rem solid #999;
   width: .2rem;
   height: .2rem;
   margin-top: .29rem;
@@ -621,6 +621,7 @@ strong {font-weight: normal;}
 .my-wallet .top-balance {
 	padding-top: .5rem;
 	height: 4.2rem;
+	position:relative;
 	background: url(../x-img/bg_my_wallet_1.png) repeat;
 }
 .my-wallet .top-balance section {
@@ -628,9 +629,17 @@ strong {font-weight: normal;}
 	height: 2.05rem;
 	color: #fff;
 	text-align: center;
-	background: url(../x-img/bg_my_wallet_2.png) 1.7rem top no-repeat;
-	-webkit-background-size: 4.6rem 3.4rem;
-					background-size: 4.6rem 3.4rem;
+	
+}
+.my-wallet .top-balance section .bg {
+	position:absolute;
+	z-index:0;
+	top:0;
+	left:50%;
+	width:4.6rem;
+	height:3.4rem;
+	margin-left:-1.5rem;
+	
 }
 .my-wallet .top-balance section .div1 {
 	line-height: .5rem;
@@ -663,7 +672,7 @@ strong {font-weight: normal;}
 .my-wallet .points-detail section {
 	height: .8rem;
 	line-height: .8rem;
-	border-bottom: .01rem solid #ddd;
+	border-bottom: .02rem solid #ddd;
 }
 .my-wallet .points-detail section div {
 	float: left;
@@ -676,7 +685,7 @@ strong {font-weight: normal;}
 	padding: 0 .2rem;
 	height: .6rem;
 	line-height: .6rem;
-	border-bottom: .01rem solid #ddd;
+	border-bottom: .02rem solid #ddd;
 }
 .my-wallet .points-detail ul li div {
 	float: left;
@@ -695,7 +704,7 @@ strong {font-weight: normal;}
 	margin-bottom: .2rem;
 	height: .8rem;
 	background-color: #fff;
-	border-bottom: .01rem solid #ddd;
+	border-bottom: .02rem solid #ddd;
 }
 .now-withdraw ul li {
 	float: left;
@@ -717,8 +726,8 @@ strong {font-weight: normal;}
 	line-height: .8rem;
 	font-size: .28rem;
 	background-color: #fff;
-	border-top: .01rem solid #ddd;
-	border-bottom: .01rem solid #ddd;
+	border-top: .02rem solid #ddd;
+	border-bottom: .02rem solid #ddd;
 } 
 .now-withdraw ol li .inpt label {float: left;}
 .now-withdraw ol li .inpt input[type="text"] {
@@ -753,8 +762,8 @@ strong {font-weight: normal;}
 	font-size: .28rem;
 	background-color: #fff;
 	border: none;
-	border-top: .01rem solid #ddd;
-	border-bottom: .01rem solid #ddd;
+	border-top: .02rem solid #ddd;
+	border-bottom: .02rem solid #ddd;
 }
 
 .btn-now-withdraw {
@@ -820,7 +829,7 @@ strong {font-weight: normal;}
 .empty-bank-card img {
 	display: block;
 	margin: 0 auto;
-	width: 2.01rem;
+	width: 2.02rem;
 	height: 1.42rem;
 }
 .empty-bank-card .wrtings {
@@ -928,7 +937,7 @@ strong {font-weight: normal;}
 	margin-top: .49rem;
 	height: .7rem;
 	line-height: .7rem;
-	border-top: .01rem solid #ddd;
+	border-top: .02rem solid #ddd;
 	-webkit-box-sizing: border-box;
 					box-sizing: border-box;
 }
@@ -938,7 +947,7 @@ strong {font-weight: normal;}
 	width: 50%;
 	font-size: .36rem;
 	color: #999;
-	border-right: .01rem solid #ddd;
+	border-right: .02rem solid #ddd;
 	-webkit-box-sizing: border-box;
 					box-sizing: border-box;
 }
@@ -994,7 +1003,7 @@ strong {font-weight: normal;}
 /*change-password*/
 .change-password {
 	margin: .2rem auto;
-	border-top: .01rem solid #ddd;
+	border-top: .02rem solid #ddd;
 }
 .change-password .inpt {
 	padding: 0 .2rem;
@@ -1002,7 +1011,7 @@ strong {font-weight: normal;}
 	line-height: .8rem;
 	font-size: .28rem;
 	background-color: #fff;
-	border-bottom: .01rem solid #ddd;
+	border-bottom: .02rem solid #ddd;
 } 
 .change-password .inpt label {
 	float: left;
@@ -1021,7 +1030,7 @@ strong {font-weight: normal;}
 	line-height: .8rem;
 	font-size: .28rem;
 	background-color: #fff;
-	border-bottom: .01rem solid #ddd;
+	border-bottom: .02rem solid #ddd;
 }
 .change-password .get-code label {
 	float: left;
@@ -1116,7 +1125,7 @@ strong {font-weight: normal;}
 .addresslist li .address-edit .default i {
   position: relative;
   background: #f23030;
-  border: .01rem solid #f23030;
+  border: .02rem solid #f23030;
 }
 .addresslist li .address-edit .default i, .addresslist li .address-edit .setdefault i {
   float: left;
@@ -1161,21 +1170,21 @@ strong {font-weight: normal;}
 .addresslist li .address-edit .default {color: #f23030;}
 .addresslist li .address-edit .setdefault i {
   background: transparent;
-  border: .01rem solid #ddd;
+  border: .02rem solid #ddd;
 }
 /*addresslist end*/
 
 /*add-new-address*/
 .add-new-address {
 	margin: .2rem 0;
-	border-top: .01rem solid #ddd;
+	border-top: .02rem solid #ddd;
 }
 .add-new-address .inpt {
 	padding: 0 .2rem;
 	height: .8rem;
 	line-height: .8rem;
 	background-color: #fff;
-	border-bottom: .01rem solid #ddd;
+	border-bottom: .02rem solid #ddd;
 }
 .add-new-address .inpt label {
 	float: left;
@@ -1214,7 +1223,7 @@ select {
 	height: 2rem;
 	background-color: #fff;
 	border: none;
-	border-bottom: .01rem solid #ddd;
+	border-bottom: .02rem solid #ddd;
 	-webkit-box-sizing: border-box;
 					box-sizing: border-box;
 }
@@ -1224,8 +1233,8 @@ select {
 	height: .8rem;
 	line-height: .8rem;
 	background-color: #fff;
-	border-top: .01rem solid #ddd;
-	border-bottom: .01rem solid #ddd;
+	border-top: .02rem solid #ddd;
+	border-bottom: .02rem solid #ddd;
 }
 .add-new-address .set-default i {
   position: relative;
@@ -1235,7 +1244,7 @@ select {
   margin-right: .1rem;
   width: .2rem;
   height: .2rem;
-  border: .01rem solid #999;
+  border: .02rem solid #999;
 }
 .add-new-address .set-default i.checked:before {
   position: absolute;
@@ -1267,7 +1276,7 @@ select {
 	padding: 0 .2rem;
 	height: .6rem;
 	line-height: .6rem;
-	border-bottom: .01rem solid #ddd;
+	border-bottom: .02rem solid #ddd;
 }
 .recommended .person-list .top .tips {
 	float: left;
@@ -1342,7 +1351,7 @@ select {
 	float:left;
 	width: 1.2rem;
 	height: 1.2rem;
-	border: .01rem solid #ddd;
+	border: .02rem solid #ddd;
 	position: relative;
 	cursor: pointer;
 }
@@ -1395,8 +1404,8 @@ height:1.22rem;
     font-size: .28rem;
     margin-bottom: .2rem;
     color: #666;
-    border-bottom: .01rem solid #ddd;
-    border-top: .01rem solid #ddd;
+    border-bottom: .02rem solid #ddd;
+    border-top: .02rem solid #ddd;
 }
 .person-center .a_go .icon-next {
     float: right;

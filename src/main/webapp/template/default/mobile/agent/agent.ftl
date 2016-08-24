@@ -63,7 +63,40 @@ $(document).ready(function(){
         <section class="sec3">${agent.note!''}</section>
         <section class="sec4">￥<span><#if agent.salesPrice??>${agent.salesPrice?string('0.00')}</#if></span></section>
         </#if>
-        <section class="sec5"><input type="checkbox" checked="checked" id="isCheck">我已阅读并同意<a href="${app.basePath}/mobile/agent/article" title="《创客联盟代理条款》">《创客联盟代理条款》</a></section>
+        <section class="sec5">
+        <style>
+        	#isCheck {
+        		display:none;
+        	}
+        	#isCheck + label {
+        		float:left;
+        		margin-right: 0.1rem;
+			    width: 0.22rem;
+			    height: 0.22rem;
+			    border: 1px solid #ddd;
+			    position:relative;
+        	}
+        	#isCheck:checked + label:before {
+        		    position: absolute;
+    content: '';
+    display: inline-block;
+    left: 50%;
+    width: .08rem;
+    height: .14rem;
+    margin-top: .014rem;
+    margin-left: -.04rem;
+    border-left: .02rem solid #999;
+    border-top: .02rem solid #999;
+    transform: rotate(-135deg);
+    -ms-transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+    -o-transform: rotate(-135deg);
+        	}
+        </style>
+        
+        <input type="checkbox" checked="checked" class='chkis' id="isCheck">
+        <label for="isCheck"></label>
+        我已阅读并同意<a href="${app.basePath}/mobile/agent/article" title="《创客联盟代理条款》">《创客联盟代理条款》</a></section>
  <!--       <section class="sec6"><a href="${app.basePath}/mobile/agent/dopay?id=${agent.id?c}" title="立即加入" id="sub_btn">立即加入</a></section> -->
         <section class="sec6"><a href="javascript:;" onclick="buyNow();" title="立即加入" id="sub_btn">立即加入</a></section>
         <form id="agentform" method="post" action="">

@@ -214,7 +214,7 @@
 .bestarea .sec2{
 	overflow:hidden;
 	margin:0 auto;
-	height:3.12rem;
+	height:auto;
 	border-bottom:1px solid #ddd;
 }
 .bestarea .sec2 a{
@@ -262,7 +262,7 @@
 	text-align:left;
 }
 .hot .sec2 a .p1{
-	height:0.6rem;
+	height:0.58rem;
 	line-height:0.3rem;
 	font-size:0.22rem;
 	color:#333;
@@ -1990,7 +1990,7 @@
 	width:0.22rem;
 	height:0.22rem;
 	border:1px solid #ddd;
-	/*-webkit-appearance:none;*/
+	/*-webkit-appearance:normal;*/
 }
 .become .sec5 a{
 	color:#333;
@@ -2743,23 +2743,23 @@
 	text-align:center;
 }
 .value_over1 .sec1 a:nth-child(1){
-	background:url(../images/qq.png) no-repeat center 0;
+	background:url(../images/qq.png) no-repeat center .05rem;
 	background-size:0.7rem;
 }
 .value_over1 .sec1 a:nth-child(2){
-	background:url(../images/v2.png) no-repeat center 0;
+	background:url(../images/v2.png) no-repeat center .05rem;
 	background-size:0.7rem;
 }
 .value_over1 .sec1 a:nth-child(3){
-	background:url(../images/v3.png) no-repeat center 0;
+	background:url(../images/v3.png) no-repeat center .05rem;
 	background-size:0.7rem;
 }
 .value_over1 .sec1 a:nth-child(4){
-	background:url(../images/v5.png) no-repeat center 0;
+	background:url(../images/v5.png) no-repeat center .05rem;
 	background-size:0.7rem;
 }
 .value_over1 .sec1 a:nth-child(5){
-	background:url(../images/v6.png) no-repeat center 0;
+	background:url(../images/v6.png) no-repeat center .05rem;
 	background-size:0.7rem;
 }
 .value_over1 .sec1 a p{

@@ -59,7 +59,7 @@
   height: .6rem;
   line-height: .6rem;
   font-size: .22rem;
-  border-bottom: .01rem solid #ddd; }
+  border-bottom: .02rem solid #ddd; }
 .my-evaluate-list ol li section .top .p1 {
   float: left;
   color: #666; }
@@ -110,7 +110,7 @@
   font-size: .22rem;
   color: #666;
   text-align: right;
-  border-bottom: .01rem solid #ddd; }
+  border-bottom: .02rem solid #ddd; }
 .my-evaluate-list ol li section .bottom strong.price {
   font-size: .26rem;
   color: #f23030; }
@@ -154,7 +154,7 @@
   padding: 0 .15rem;
   height: .5rem;
   font-size: .24rem;
-  border: .01rem solid #ddd;
+  border: .02rem solid #ddd;
   -webkit-box-sizing: border-box;
   box-sizing: border-box; }
 .my-evaluate-list ol li section .btn-group a.active {
@@ -308,7 +308,7 @@
 .personalcode .nav {
   height: .8rem;
   background: #fff;
-  border-bottom: .01rem solid #ddd; }
+  border-bottom: .02rem solid #ddd; }
   .personalcode .nav a {
     width: 50%;
     text-align: center;
@@ -327,12 +327,12 @@
       width: 1.8rem;
       height: 1.8rem;
       border-radius: 100%;
-      border: .01rem solid #fff;
+      border: .02rem solid #fff;
       margin: 0 auto .1rem; }
     .personalcode .setting .avatar-change a {
       color: #097cbe; }
   .personalcode .setting .txtset {
-    border: .01rem solid #ddd;
+    border: .02rem solid #ddd;
     border-radius: .1rem;
     background: #fff;
     padding: .2rem; }
@@ -343,7 +343,7 @@
       color: #999; }
     .personalcode .setting .txtset input, .personalcode .setting .txtset textarea {
       width: 100%;
-      border: .01rem solid #ddd;
+      border: .02rem solid #ddd;
       border-radius: .05rem;
       line-height: .6rem;
       text-indent: .05rem; }
@@ -369,13 +369,13 @@
     .avatarchange .pop-one .title {
       display: block;
       padding: .2rem;
-      border-bottom: .01rem solid #ddd;
+      border-bottom: .02rem solid #ddd;
       font-size: .24rem; }
     .avatarchange .pop-one .avatar-cut {
       width: 2.4rem;
       height: 2.4rem;
       margin: .3rem auto;
-      border: 0.01rem solid #ddd;
+      border: .02rem solid #ddd;
       background: #fafafa; }
     .avatarchange .pop-one .input-upload {
       position: relative;
@@ -408,15 +408,15 @@
         height: .5rem;
         line-height: .5rem;
         font-size: .2rem;
-        border: .01rem solid #ddd;
+        border: .02rem solid #ddd;
         border-right: 0; }
       .avatarchange .pop-one .avatar-edit a:last-child {
-        border-right: .01rem solid #ddd;
+        border-right: .02rem solid #ddd;
         background: #0ec040;
         color: #fff; }
     .avatarchange .pop-one .btn-wrap {
       padding: .15rem;
-      border-top: .01rem solid #ddd;
+      border-top: .02rem solid #ddd;
       text-align: right; }
       .avatarchange .pop-one .btn-wrap a, .avatarchange .pop-one .btn-wrap input {
         display: inline-block;
@@ -428,7 +428,7 @@
         border-radius: .1rem; }
       .avatarchange .pop-one .btn-wrap a {
         background: #f9f9f9;
-        border: .01rem solid #ddd; }
+        border: .02rem solid #ddd; }
       .avatarchange .pop-one .btn-wrap input {
         background: #0b5ad0;
         color: #fff;
@@ -537,7 +537,7 @@
   display: inline-block;
   background: #fff;
   height: .8rem;
-  border-bottom: .01rem solid #ddd;
+  border-bottom: .02rem solid #ddd;
   margin-bottom: .2rem; }
   .data-fill .areachoose li {
     float: left;
@@ -576,10 +576,10 @@
   margin-bottom: .2rem;
   width: 100%;
   display: inline-block;
-  border-top: .01rem solid #ddd;
+  border-top: .02rem solid #ddd;
   background: #fff; }
   .data-fill .data-avatar li {
-    border-bottom: .01rem solid #ddd;
+    border-bottom: .02rem solid #ddd;
     line-height: .8rem; }
     .data-fill .data-avatar li a {
       color: #999;
@@ -603,8 +603,8 @@
   width: 100%;
   padding: .2rem;
   border: 0;
-  border-top: .01rem solid #ddd;
-  border-bottom: .01rem solid #ddd;
+  border-top: .02rem solid #ddd;
+  border-bottom: .02rem solid #ddd;
   height: 2.8rem;
   color: #999;
   margin-bottom: .2rem; }
@@ -613,7 +613,7 @@
 .zizhirenzheng article {
   padding: 0 .2rem;
   background: #fff;
-  border: .01rem solid #ddd;
+  border: .02rem solid #ddd;
   border-left: 0;
   border-right: 0;
   margin-top: .2rem;
@@ -645,7 +645,7 @@
     float: left;
     width: 1.36rem;
     height: 1.36rem;
-    border: .01rem solid #ddd;
+    border: .02rem solid #ddd;
     position: relative;
     cursor: pointer;
     margin-right: .08rem;
@@ -678,7 +678,7 @@
     text-align:center;
     height: 1.36rem;
     line-height: 1.36rem;
-    border: .01rem solid #ddd;
+    border: .02rem solid #ddd;
     float: left;
     margin-right: .08rem;
     margin-bottom: .1rem; }
@@ -695,17 +695,17 @@
   background: #fff;
   font-size: .28rem;
   text-align: center;
-  border-top: .01rem solid #ddd;
+  border-top: .02rem solid #ddd;
   line-height: .8rem;
   margin-top: .2rem; }
   .product-manager article span {
     display: block;
     color: #f23030;
-    border-bottom: .01rem solid #ddd;
+    border-bottom: .02rem solid #ddd;
     cursor: pointer; }
   .product-manager article .menu a {
     display: block;
-    border-bottom: .01rem solid #ddd;
+    border-bottom: .02rem solid #ddd;
     position: relative; }
     .product-manager article .menu a:last-child {
       font-size: .24rem;
@@ -725,7 +725,7 @@
 .my-product .nav {
   height: .8rem;
   background: #fff;
-  border-bottom: .01rem solid #ddd; }
+  border-bottom: .02rem solid #ddd; }
   .my-product .nav a {
     width: 33.33%;
     text-align: center;
@@ -736,7 +736,7 @@
       color: #f23030; }
 .my-product ol li article {
   background: #fff;
-  border: .01rem solid #ddd;
+  border: .02rem solid #ddd;
   border-right: 0;
   border-left: 0;
   margin-top: .2rem; }
@@ -764,7 +764,7 @@
         background: #cbcbcb; }
   .my-product ol li article .btnedit {
     height: .8rem;
-    border-top: .01rem solid #ddd;
+    border-top: .02rem solid #ddd;
     text-align: center;
     line-height: .8rem;
     color: #666; }
@@ -781,7 +781,7 @@
 .product-upload article {
   padding: 0 .2rem;
   background: #fff;
-  border: .01rem solid #ddd;
+  border: .02rem solid #ddd;
   border-left: 0;
   border-right: 0;
   margin-top: .2rem;
@@ -820,7 +820,7 @@
     float: left;
     width: 1.36rem;
     height: 1.36rem;
-    border: .01rem solid #ddd;
+    border: .02rem solid #ddd;
     position: relative;
     cursor: pointer;
     margin-right: .08rem;
@@ -851,7 +851,7 @@
   .product-upload article .imgupload .imgedit {
     width: 1.36rem;
     height: 1.36rem;
-    border: .01rem solid #ddd;
+    border: .02rem solid #ddd;
     float: left;
     position: relative;
     margin-right: .08rem;
@@ -866,7 +866,7 @@
       right: 0;
       width: .37rem;
       height: .37rem;
-      border: .01rem solid #ddd;
+      border: .02rem solid #ddd;
       border-right: 0;
       border-bottom: 0;
       background: #fff; }
@@ -910,7 +910,7 @@
       height: .6rem;
       line-height: .6rem;
       margin-right: .28rem;
-      border: .01rem solid #ddd;
+      border: .02rem solid #ddd;
       text-align: center;
       margin-bottom: .15rem; }
       .product-upload article .items span:nth-of-type(3n) {
@@ -919,7 +919,7 @@
         float: right;
         width: .38rem;
         height: .6rem;
-        border-left: .01rem solid #ddd; }
+        border-left: .02rem solid #ddd; }
         .product-upload article .items span a:before, .product-upload article .items span a:after {
           position: absolute;
           content: ' ';
@@ -945,7 +945,7 @@
   .product-upload article .editwrap {
     display: none;
     float: left;
-    border-top: .01rem solid #ddd;
+    border-top: .02rem solid #ddd;
     height: .8rem;
     width: 6.4rem;
     line-height: .8rem;
@@ -1014,7 +1014,7 @@
 .edit-images article {
   padding: 0 .2rem;
   background: #fff;
-  border: .01rem solid #ddd;
+  border: .02rem solid #ddd;
   border-left: 0;
   border-right: 0;
   margin-bottom: .2rem;
@@ -1041,7 +1041,7 @@
     .edit-images article .imgchecked div {
       width: 1.36rem;
       height: 1.36rem;
-      border: .01rem solid #ddd;
+      border: .02rem solid #ddd;
       float: left;
       position: relative;
       margin-right: .08rem;
@@ -1086,7 +1086,7 @@
   height: .8rem;
   width: 100%;
   line-height: .8rem;
-  border-bottom: .01rem solid #ddd;
+  border-bottom: .02rem solid #ddd;
   color: #999; }
   .search-wrap input[type='text'] {
     float: left;

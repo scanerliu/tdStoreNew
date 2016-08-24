@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/common.css"/>
     <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/main.css"/>
     <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/index.css"/>
+    <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/x_pc.css"/>
     <script src="${app.basePath}/static/js/jquery-1.12.3.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="${app.basePath}/static/js/mobile/common.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/js/mobile/core.js"></script>

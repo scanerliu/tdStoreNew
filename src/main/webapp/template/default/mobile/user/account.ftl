@@ -37,6 +37,7 @@
   <section class="container my-wallet">
     <article class="top-balance">
       <section>
+      <img src='${app.basePath}/static/touch/x-img/bg_my_wallet_2.png' class='bg'/>
         <div class="div1">￥<span><#if account??>${account.amount!''}</#if></span></div>
         <div class="div2">钱包余额</div>
       </section>

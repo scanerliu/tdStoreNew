@@ -17,7 +17,7 @@
 /* 02.订单详情 */
 .order_detail {
   padding: 0.25rem 0.2rem;
-  border-top: #dddddd 0.01rem solid;
+  border-top: #dddddd 0.02rem solid;
   background: white;
   color: #333;
   border-bottom: #dddddd 1px solid; }
@@ -111,7 +111,7 @@
   width: 5.9rem;
   line-height: 0.8rem;
   font-size: 0.26rem;
-  border-bottom: #dddddd 0.01rem solid; }
+  border-bottom: #dddddd 0.02rem solid; }
 
 .detail_order .name {
   line-height: 0.8rem;
@@ -177,15 +177,15 @@
     border-bottom: #dddddd 1px solid; }
     .my_center li font {
       float: left; }
-    .my_center li a {
+    .my_center li .div,.my_center li a {
       float: right;
       width: 1.8rem; }
-      .my_center li a img {
+      .my_center li .div img,.my_center li a img {
         float: left;
         width: 1rem;
         height: 1rem;
         border-radius: 0.5rem; }
-      .my_center li a span {
+      .my_center li .div span , .my_center li a span {
         float: right;
         display: block;
         width: 0.3rem;
@@ -315,8 +315,8 @@
 
 /* 06 提交订单 */
 .payinfo {
-  border-top: .01rem solid #ddd;
-  border-bottom: .01rem solid #ddd;
+  border-top: .02rem solid #ddd;
+  border-bottom: .02rem solid #ddd;
   padding: 0 .2rem 0;
   margin: .2rem 0;
   background: #fff; }
@@ -324,7 +324,7 @@
     height: .78rem;
     font-size: .28rem;
     color: #666;
-    border-bottom: .01rem solid #ddd; }
+    border-bottom: .02rem solid #ddd; }
     .payinfo li a {
       color: #666;
       line-height: .78rem; }
@@ -371,7 +371,7 @@
     opacity: 0; }
   .lblcheckbox i {
     float: right;
-    border: .01rem solid #999;
+    border: .02rem solid #999;
     width: .28rem;
     height: .28rem;
     margin-top: .24rem;
@@ -397,7 +397,7 @@
 
 .smallcheckbox i {
   float: right;
-  border: .01rem solid #999;
+  border: .02rem solid #999;
   width: .2rem;
   height: .2rem;
   margin-top: .29rem;
@@ -423,7 +423,7 @@
     width: 4.4rem;
     padding-right: .2rem;
     line-height: .84rem;
-    border-top: .01rem solid #ddd;
+    border-top: .02rem solid #ddd;
     text-align: right;
     font-size: .28rem; }
   .gopay .a-pay {
@@ -441,7 +441,6 @@
   left: 0;
   height: .85rem;
   width: 100%;
-  border-top: .01rem solid #ddd; }
   .publishcomment a.a-publish {
     float: right;
     width: 1.8rem;

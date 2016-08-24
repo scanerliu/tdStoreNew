@@ -32,7 +32,7 @@
 
   <!-- Center Start -->
   <section class="container evaluate-success">
-    <img class="icon-success" src="images/f-fail.png" alt="">
+    <img class="icon-success" src="${app.basePath}/static/touch/images/f-fail.png" alt="">
     <div class="div1">对不起！支付超时</div>
     <div class="div2">请在下单后24小时内支付</div>
     <a class="btn-share" href="javascript:history.go(-1);" title="点击返回">点击返回</a>

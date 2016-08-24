@@ -101,37 +101,37 @@
 	<ul class="my_center p">
 		<li class="li01">
 			<font>个人头像</font>
-			<a id="avatar-change" href="javascript:;" title="修改头像">
-				<img alt="暂无头像" id="uavatarShow" src="${app.basePath}${currentUser.uavatar!''}"/>
-				<div id="file_upload"><div>
+			<div class="div" id="avatar-change" style="width:50%;float:right;">
+				<img alt="暂无头像" id="uavatarShow" style="float:right;" src="${app.basePath}${currentUser.uavatar!''}"/>
+				<div id="file_upload" style="width:60%;margin-top:.32rem;text-align:center;"><div>
 				<input type="hidden" id="uavatar" name="uavatar" value="${app.basePath}${currentUser.uavatar!''}">
-			</a>
+			</div>
 		</li>
 		<li class="li02">
 			<font>用户昵称</font>
-			<a href="#" title="修改昵称">
+			<div class="div">
 				<input type="text" name="unick" id="unick" value="${currentUser.unick!''}" />
 				<span></span>
-			</a>
+			</div>
 		</li>
 		<li class="li02">
 			<font>性别</font>
-			<a href="#" title="">
+			<div class="div">
 				<div class="sky"></div>
-				<select name="ugenter">
+				<select name="ugenter" style="background:#fff;">
 					<option value="1" <#if currentUser.ugenter==1>selected</#if>>男</option>
 					<option value="2" <#if currentUser.ugenter==2>selected</#if>>女</option>
 					<option value="3" <#if currentUser.ugenter==3>selected</#if>>保密</option>
 				</select>
 				<span></span>
-			</a>
+			</div>
 		</li>
 		<li class="li02">
 			<font>生日</font>
-			<a href="#" title="修改生日">
+			<div class="div">
 				<input name="ubirthday" id="beginTime" class="select-date" placeholder="${currentUser.ubirthdayStr!''}">
 				<span></span>
-			</a>
+			</div>
 		</li>
 		<li class="li02">
 			<font>手机号码</font>

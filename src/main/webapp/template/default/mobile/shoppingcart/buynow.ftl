@@ -120,7 +120,7 @@
 	        </style>
 	        <li class="sli">
 	            <span>支付方式</span>
-	            <select name="paymentId" class="fr" style="height:100%;border:none;appearance:none;-webkit-appearance:none;font-size:.3rem;color:#999;">
+	            <select name="paymentId" class="fr" style="height:100%;border:none;appearance:none;-webkit-appearance:none;font-size:.3rem;color:#999; background:#fff;">
 	                <#if shoppingcart.canUserAccount==true>
 	            	<option value="4">钱包余额支付</option>
 	            	</#if>
@@ -181,9 +181,9 @@
 </form>
 	<!-- Footer Start -->
 	<footer>
-	    <div class="gopay" onclick="genernateOrder2()">
+	    <div class="gopay">
 	        <span class="totalprice">总计：<font color="red" id="totalAmountdv">￥${shoppingcart.totalAmount!''}</font></span>
-	        <a href="javascript:;" class="a-pay" title="">提交订单</a>
+	        <a href="javascript:;" onclick="genernateOrder2()" class="a-pay" title="">提交订单</a>
 	    </div>
 	    <span class="footclear"></span>
 	</footer>
