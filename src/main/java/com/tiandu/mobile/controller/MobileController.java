@@ -325,13 +325,11 @@ public class MobileController extends BaseController {
 			logger.error("wechat login url:"+wechat_access_token_url);
 			RestTemplate restTemplate = new RestTemplate();
 			try {
-//				ResponseEntity<String> codesponse = restTemplate.getForEntity(wechat_access_token_url, String.class);
-//				System.out.println(codesponse.getBody());
-//				logger.error("wechat login response:"+codesponse.getBody());
-//				Gson gson = new Gson();
-//				WeChatCodeResponse codeResponse = gson.fromJson(codesponse.getBody(), WeChatCodeResponse.class);
-				WeChatCodeResponse codeResponse = new WeChatCodeResponse();
-				codeResponse.setOpenid("oS3MPvzCOv87S0awGtwaB5TfRG7k");				
+				ResponseEntity<String> codesponse = restTemplate.getForEntity(wechat_access_token_url, String.class);
+				System.out.println(codesponse.getBody());
+				logger.error("wechat login response:"+codesponse.getBody());
+				Gson gson = new Gson();
+				WeChatCodeResponse codeResponse = gson.fromJson(codesponse.getBody(), WeChatCodeResponse.class);
 				if(null!=codeResponse&&null!=codeResponse.getOpenid()){//获取openid
 					TdUser cuser = tdUserService.findByJoinCode(codeResponse.getOpenid());
 					if(null!=cuser){//匹配到用户
