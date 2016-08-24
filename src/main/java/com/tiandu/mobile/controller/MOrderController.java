@@ -511,7 +511,7 @@ public class MOrderController extends BaseController {
 		signMap.addAttribute("body", body);
 		signMap.addAttribute("mch_id", Configure.getMchid());
 		signMap.addAttribute("nonce_str",noncestr);
-		signMap.addAttribute("notify_url", "http://120.76.217.106/tdStore/order/wx_notify");
+		signMap.addAttribute("notify_url", "http://120.76.217.106/tdStore/mobile/order/wx_notify");
 		signMap.addAttribute("openid", openId);
 		signMap.addAttribute("out_trade_no", out_trade_no);
 		signMap.addAttribute("spbill_create_ip", "120.76.217.106");
@@ -526,7 +526,7 @@ public class MOrderController extends BaseController {
 				+ "<body>"+ body+ "</body>\n"
 				+ "<mch_id>"+ Configure.getMchid()+ "</mch_id>\n"
 				+ "<nonce_str>"+ noncestr+ "</nonce_str>\n"
-				+ "<notify_url>http://120.76.217.106/tdStore/order/wx_notify</notify_url>\n"
+				+ "<notify_url>http://120.76.217.106/tdStore/mobile/order/wx_notify</notify_url>\n"
 				+ "<openid>" + openId + "</openid>\n" 
 				+ "<out_trade_no>" + out_trade_no + "</out_trade_no>\n"
 				+ "<spbill_create_ip>120.76.217.106</spbill_create_ip>\n"
