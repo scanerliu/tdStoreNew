@@ -103,5 +103,11 @@ public interface TdUserService {
 	 * @return
 	 */
 	public TdUser findByUtel(String utel);
+	/**
+	 * 按openid查找用户
+	 * @param openid
+	 * @return
+	 */
+	public TdUser findByJoinCode(String openid);
 		
 }

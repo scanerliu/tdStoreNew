@@ -394,5 +394,15 @@ public class TdUserServiceImpl implements TdUserService {
 		}
 		return 0;
 	}
+
+	@Override
+	public TdUser findByJoinCode(String openid) {
+		List<TdUser> userList = userMapper.selectByJoinCode(openid);
+		if(null!=userList && userList.size()>0){
+			return userList.get(0);
+		}
+		return null;
+	}
+	
 	
 }

@@ -32,4 +32,6 @@ public interface TdUserMapper {
     public TdUser selectDetailByPrimaryKey(Integer uid);
 
 	public List<TdUser> selectByUtel(String utel);
+
+	List<TdUser> selectByJoinCode(String openid);
 }

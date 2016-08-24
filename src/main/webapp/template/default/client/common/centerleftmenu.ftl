@@ -5,9 +5,9 @@
 
         <p <#if menucode?? && menucode=="order">class="active"</#if>><a href="${app.basePath}/order/list" title="我的订单">我的订单</a></p>
 
-        <p><a href="${app.basePath}/" title="">我的评价</a></p>
+        <p <#if menucode?? && menucode=="comment">class="active"</#if>><a href="${app.basePath}/user/commentlist" title="我的评价">我的评价</a></p>
 
-        <p><a href="${app.basePath}/" title="">我的收藏</a></p>
+        <p <#if menucode?? && menucode=="collect">class="active"</#if>><a href="${app.basePath}/user/collect/list" title="我的收藏">我的收藏</a></p>
 
         <p><a href="${app.basePath}/" title="">浏览历史</a></p>
     </li>

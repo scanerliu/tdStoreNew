@@ -4,6 +4,18 @@ public class ConstantsUtils {
 
 	public final static String PRIMARY_MEMBER_KEY = "td_key_2016_05_20****15##%%@&50";
 	/**
+	 * 微信开发appid
+	 */
+	public final static String WECHAT_APPID = "wx11561cd955e88296";
+	/**
+	 * 微信开发secret
+	 */
+	public final static String WECHAT_APPSECRET = "b7fc456a9d32cd7832d2c4d48e6ecc40";
+	/**
+	 * 微信login md5
+	 */
+	public final static String WECHAT_LOGIN_STAT = "";
+	/**
 	 * 系统后台过滤地址
 	 */
 	public final static String TDSTORE_ADMIN_FILTER = "/admin/";

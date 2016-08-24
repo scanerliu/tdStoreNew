@@ -3,6 +3,7 @@ package com.tiandu.client.controller;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,38 +39,27 @@ public class CUserCommentController extends BaseController{
 	@Autowired
 	private TdProductSkuService tdProductSkuService;
 	
-	@RequestMapping("/productComment")
-	public String comment(HttpServletRequest req,ModelMap map)
+	@RequestMapping("/commentlist")
+	public String commentlist(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap)
 	{
 		// 系统配置
-		map.addAttribute("system", getSystem());
+		modelMap.addAttribute("system", getSystem());
+		modelMap.addAttribute("menucode", "comment") ;//菜单code
 		TdUser user = getCurrentUser();
 		if(null==user)
 		{
 			return "redirect:/login";
 		}
-		
-		TdProductCommentCrateria sc = new TdProductCommentCrateria();
-		sc.setUid(user.getUid());
-		
-		
-		map.addAttribute("commentList", tdProductCommentService.findBySearchCriteria(sc));
 		return "/client/user/comment/comment";	
 	}
 	
 	@RequestMapping("/comment/search")
-	public String commentSearch(TdProductCommentCrateria sc,Integer page,HttpServletRequest req,ModelMap map)
+	public String commentSearch(TdProductCommentCrateria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap)
 	{
 		TdUser user = getCurrentUser();
-		sc.setPageNo(page);
 		sc.setUid(user.getUid());
-		
-		int count = tdProductCommentService.getTotalPageCount(sc);
-		if(count >= page)
-		{
-			map.addAttribute("commentList", tdProductCommentService.findBySearchCriteria(sc));
-			map.addAttribute("sc", sc);
-		}
+		modelMap.addAttribute("commentList", tdProductCommentService.findBySearchCriteria(sc));
+		modelMap.addAttribute("sc", sc);
 		
 		return "/client/user/comment/commentmore";
 	}

@@ -14,22 +14,29 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.tiandu.article.entity.TdAdsense;
 import com.tiandu.article.search.TdAdvertisementSearchCriteria;
 import com.tiandu.article.service.TdAdsenseService;
 import com.tiandu.article.service.TdAdvertisementService;
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.complaint.search.TdComplaintCriteria;
 import com.tiandu.complaint.service.TdComplaintService;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.vo.LoginForm;
+import com.tiandu.custom.vo.WeChatCodeResponse;
 import com.tiandu.product.search.TdProductCriteria;
 import com.tiandu.product.service.TdProductService;
 
@@ -310,6 +317,55 @@ public class MobileController extends BaseController {
 	@RequestMapping("/app")
 	public String app(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		return "/mobile/app";
+	}
+	@RequestMapping("/wechatlogin")
+	public String wechatlogin(String code, String state, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap){
+		if(StringUtils.isNotBlank(code)){
+			String wechat_access_token_url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="+ConstantsUtils.WECHAT_APPID+"&secret="+ConstantsUtils.WECHAT_APPSECRET+"&code="+code+"&grant_type=authorization_code";
+			logger.error("wechat login url:"+wechat_access_token_url);
+			RestTemplate restTemplate = new RestTemplate();
+			try {
+//				ResponseEntity<String> codesponse = restTemplate.getForEntity(wechat_access_token_url, String.class);
+//				System.out.println(codesponse.getBody());
+//				logger.error("wechat login response:"+codesponse.getBody());
+//				Gson gson = new Gson();
+//				WeChatCodeResponse codeResponse = gson.fromJson(codesponse.getBody(), WeChatCodeResponse.class);
+				WeChatCodeResponse codeResponse = new WeChatCodeResponse();
+				codeResponse.setOpenid("oS3MPvzCOv87S0awGtwaB5TfRG7k");				
+				if(null!=codeResponse&&null!=codeResponse.getOpenid()){//获取openid
+					TdUser cuser = tdUserService.findByJoinCode(codeResponse.getOpenid());
+					if(null!=cuser){//匹配到用户
+						Subject user = SecurityUtils.getSubject();
+						UsernamePasswordToken token = new UsernamePasswordToken(cuser.getUname(),cuser.getUpassword());
+					    token.setRememberMe(true);
+					    try {
+					      user.login(token);
+					      Date now = new Date();
+					      String hostip = request.getRemoteHost();
+					      //记录登陆时间 host ip
+					      TdUser muser = tdUserService.selectByUname(cuser.getUname());
+					      if(null!=muser && null!=muser.getUid()){
+						      TdUser upuser = new TdUser();
+						      upuser.setUid(muser.getUid());
+						      upuser.setLastLoginIp(hostip);
+						      upuser.setLastLoginTime(now);
+						      tdUserService.updateByPrimaryKeySelective(upuser);
+					      }
+					      return "redirect:/mobile/index";
+					    }catch (AuthenticationException e) {
+					    	logger.error("wechat login error:"+e.getMessage());
+					    	token.clear();
+					    	return "redirect:/mobile/login";
+					    }
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.error("wechat login error:"+e.getMessage());
+			}
+			
+		}
+		return "redirect:/mobile/login";
 	}
 	
 }
