@@ -1,8 +1,11 @@
 package com.tiandu.mobile.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +34,7 @@ import com.tiandu.article.service.TdAdsenseService;
 import com.tiandu.article.service.TdAdvertisementService;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.ConstantsUtils;
+import com.tiandu.common.utils.MessageSender;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.complaint.search.TdComplaintCriteria;
 import com.tiandu.complaint.service.TdComplaintService;
@@ -237,12 +241,12 @@ public class MobileController extends BaseController {
 		try{
 			String changePasswordValidCode = (String) request.getSession().getAttribute("changePasswordValidCode");
 			
-			/*if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
+			if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
 				request.getSession().removeAttribute("changePasswordValidCode");
 				String errmsg = "验证码错误！";
 				modelMap.addAttribute("errmsg", errmsg) ;
 				return  "/mobile/error";
-			}*/
+			}
 			
 			if(StringUtils.isBlank(utel)){
 				String errmsg = "手机号码不能为空！";
@@ -269,6 +273,31 @@ public class MobileController extends BaseController {
 			return  "/mobile/error";
 		}
 		
+	}
+	
+	@RequestMapping(value="/getChangePhoneNumValidCode", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> getChangePhoneNumValidCode(HttpServletRequest request, String phone) {
+		Map<String,String> res = new HashMap<String,String>();
+		Random random = new Random();
+		String smscode = String.format("%04d", random.nextInt(9999));
+		request.getSession().setAttribute("changePasswordValidCode", smscode);
+		List<String> phoneNums =new ArrayList<>();
+		phoneNums.add(phone);
+		List<String> datas =new ArrayList<>();
+		datas.add(smscode);
+		datas.add("1");
+		MessageSender ms = new MessageSender();
+		ms.init();
+		boolean isSendSuccess = ms.send(phoneNums, ConstantsUtils.SMS_TEMPLATE_VALIDCODE, datas);
+		if(isSendSuccess){
+			res.put("code", "1");
+			res.put("msg", "发送验证码成功!");			
+		}else{
+			res.put("code", "0");
+			res.put("msg", "验证码获取失败,请稍后再试!");
+		}
+		return res;
 	}
 	
 	@RequestMapping("/repassword")

@@ -313,7 +313,7 @@ public class MUserController extends BaseController {
 		datas.add("1");
 		MessageSender ms = new MessageSender();
 		ms.init();
-		boolean isSendSuccess = ms.send(phoneNums, "1", datas);
+		boolean isSendSuccess = ms.send(phoneNums, ConstantsUtils.SMS_TEMPLATE_VALIDCODE, datas);
 		if(isSendSuccess){
 			res.put("code", "1");
 			res.put("msg", "发送验证码成功!");			
@@ -1341,12 +1341,12 @@ public class MUserController extends BaseController {
 		try{
 			String changePasswordValidCode = (String) request.getSession().getAttribute("changePasswordValidCode");
 			
-			/*if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
+			if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
 				res.put("info", "验证码错误！");
 				res.put("status", "n");
 				request.getSession().removeAttribute("changePasswordValidCode");
 				return res;
-			}*/
+			}
 			
 			TdUser currentUser = this.getCurrentUser();
 			//检查手机号码是否重复
