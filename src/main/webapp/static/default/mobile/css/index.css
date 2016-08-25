@@ -1219,15 +1219,17 @@ display:block;
 	border:0.02rem solid #959595;
 	margin-top:.02rem;
 	margin-bottom:.02rem;
+	margin-right:.2rem;
+	border-radius:.1rem;
 }
 
 .detail3 section.sec4 span:nth-of-type(1){
-	border-radius:0.1rem 0 0 0.1rem;
-	border-right:none;
+	/* border-radius:0.1rem 0 0 0.1rem; */
+	/* border-right:none; */
 }
 .detail3 section.sec4 span:nth-of-type(2){
-	border-radius:0 0.1rem 0.1rem 0 ;
-	border-left:none;
+	/* border-radius:0 0.1rem 0.1rem 0 ; */
+	/* border-left:none; */
 }
 .detail4{
 	padding:0.2rem 0.3rem;

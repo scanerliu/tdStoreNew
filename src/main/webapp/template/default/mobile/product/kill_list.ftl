@@ -32,8 +32,12 @@
 </style>
 <script>
     window.onload=function(){
-        two2();
-        
+       $('#two2 a ').click(function(){
+    	   $('#two2 a').removeClass("active");
+    	   $(this).addClass("active");
+    	   $('#two2_match').children('div').stop().hide();
+    	   $('#two2_match').children('div:eq('+$(this).index()+')').stop().fadeIn();
+       });
     }
     
  $(document).ready(function(){   
@@ -68,8 +72,9 @@
     <!-- 热销推荐 -->
     <div class="two2_match" id="two2_match">
         <div class="hot">
-            <section class="sec2" id="kill_list">
-            	<#if killList??>
+            
+            	<#if killList?? && killList?size gt 0>
+            	<section class="sec2" id="kill_list">
             	<#list killList as item>
                 <a href="${app.basePath}/mobile/product/item${item.id?c}" title="${item.name!''}" class="">
                     <img src="${app.basePath}${item.imageUrl!''}" alt="${item.name!''}">
@@ -147,12 +152,18 @@ function timer${item_index}()
 
 </script>
                 </#list>
-                </#if>
+                
+                
             </section>
+            <#else>
+                	<div style=" background:#f2f2f2;padding-bottom:0;display:inline-block;width:100%; text-align:center;padding-top:3rem;">
+                		<span style="background:#f2f2f2;">暂无商品</span>
+                	</div>
+                </#if>
         </div>
         <div class="hot">
-            <section class="sec2" id="persell_list">
-            	<#if presellList??>
+            <#if presellList?? && presellList?size gt 0>
+            	<section class="sec2" id="persell_list">
             	<#list presellList as item>
                 <a href="${app.basePath}/mobile/product/item${item.id?c}" title="${item.name!''}" class="">
                     <img src="${app.basePath}${item.imageUrl!''}" alt="${item.name!''}">
@@ -230,9 +241,15 @@ function timer${item.id?c}()
 
 </script>
                 </#list>
-                </#if>
                 
             </section>
+            <#else>
+            <div style=" background:#f2f2f2;padding-bottom:0;display:inline-block;width:100%; text-align:center;padding-top:3rem;">
+                <span style="background:#f2f2f2;">暂无商品</span>
+            </div>
+                
+            </#if>
+                
         </div>
     </div>
     <!-- 热销推荐-结束 -->

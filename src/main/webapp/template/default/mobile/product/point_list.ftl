@@ -52,8 +52,8 @@
     <div class="two2_match" id="two2_match">
         <div class="hot">
         	<form id="listform">
-            <section class="sec2" id="results">
-            </section>
+            <div id="results">
+            </div>
             <input type="hidden" name="kind" id="kind" value=""/>
 	        <input type="hidden" name="pageNo" id="pageNo" value=""/>        
 	        </form>

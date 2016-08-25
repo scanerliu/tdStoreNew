@@ -62,8 +62,9 @@
     <!-- 热销推荐 -->
     <div class="two2_match" id="two2_match">
         <div class="hot" style="display:block;">
-            <section class="sec2" id="kill_list">
-            	<#if zeroList??>
+            
+            	<#if zeroList?? && zeroList?size gt 0>
+            	<section class="sec2" id="kill_list">
             	<#list zeroList as item>
                 <a href="${app.basePath}/mobile/product/item${item.id?c}" title="${item.name!''}" class="">
                     <img src="${app.basePath}${item.imageUrl!''}" alt="${item.name!''}">
@@ -74,8 +75,13 @@
                     </p>
                 </a>
                 </#list>
-                </#if>
-            </section>
+                
+            	</section>
+            	<#else>
+            	<div style=" background:#f2f2f2;padding-bottom:0;display:inline-block;width:100%; text-align:center;padding-top:3rem;">
+                		<span style="background:#f2f2f2;">暂无商品</span>
+                	</div>
+            </#if>
         </div>
         <div class="hot">
             <section class="sec2" id="persell_list">

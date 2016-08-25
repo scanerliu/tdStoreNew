@@ -5,7 +5,7 @@ strong {font-weight: normal;}
 
 /*pop-ups*/
 .pop-ups {
-	position: absolute;
+	position: fixed;
 	left: 0;
 	top: 0;
 	z-index: 11;

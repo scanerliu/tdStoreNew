@@ -52,9 +52,9 @@
 </style>
 
 <div class="index_header">
-    <div class="fl"><img src="${app.basePath}/static/touch/images/logo.png" alt="LOGO"></div>
+    <div class="fl"><img src="${app.basePath}/static/touch/images/touchlogo.png" alt="LOGO"></div>
     <a href="${app.basePath}/mobile/search" title="搜索"  class="fl input">搜索我的宝贝</a>
-    <a href="javascript:;" title="分享" id="avalue_btn" class="fr">分享</a>
+    <a href="javascript:;" title="分享" style="color:#e4211a;" id="avalue_btn" class="fr">分享</a>
 </div>
 <!-- 头部-结束 -->
   <div class="value_over1" id="value_over1">

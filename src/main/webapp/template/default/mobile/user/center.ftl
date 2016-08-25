@@ -35,9 +35,11 @@
   </article>
   <script type="text/javascript">
     $(document).ready(function(){
-    	$(document).click(function(){
+    	$(document).bind('touchstart  click',function(ev){
 			$('.pop-ups').hide();
+			ev.stopPropagation();
 		});
+    	
     });
   </script>
   <!-- pop-ups end -->

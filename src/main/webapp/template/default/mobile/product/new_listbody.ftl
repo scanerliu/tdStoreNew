@@ -26,8 +26,9 @@ $(document).ready(function(){
 
 <!-- 热销推荐 -->
 <div class="hot">
-    <section class="sec2" id="product_more">
-    	<#if new_list??>
+    
+    	<#if new_list?? && new_list?size gt 0>
+    	<section class="sec2" id="product_more">
     	<#list new_list as item>
         <a href="${app.basePath}/mobile/product/item${item.id!'0'}" title="${item.name!''}" class="">
             <img src="${app.basePath}${item.imageUrl!''}" alt="${item.name!''}">
@@ -38,6 +39,10 @@ $(document).ready(function(){
             </p>
         </a>
         </#list>
-        </#if>
     </section>
+    <#else>
+    <div style=" background:#f2f2f2;padding-bottom:0;display:inline-block;width:100%; text-align:center;padding-top:3rem;">
+           <span style="background:#f2f2f2;">暂无商品</span>
+     </div>
+    </#if>
 </div>

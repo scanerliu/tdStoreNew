@@ -74,6 +74,7 @@ $(document).ready(function(){
             </#list>
             </#if>
         </section>
+    	<div style="width:100%;height:100%;background:#fff;"></div>
     </div>
     <!-- 热销推荐-结束 -->
 <!-- </section> -->
