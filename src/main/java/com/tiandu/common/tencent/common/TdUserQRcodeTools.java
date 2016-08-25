@@ -276,10 +276,10 @@ public class TdUserQRcodeTools {
     	else
     	{
     		qrcodeUrl = this.getQRcodeUrl(this.validAccessToken(), uId);
+    		user.setQrcodeUrl(qrcodeUrl);
+    		user.setQrcodeUpdate(new Date());
+    		tdUserService.saveCustomer(user);
     	}
-    	user.setQrcodeUrl(qrcodeUrl);
-		user.setQrcodeUpdate(new Date());
-		tdUserService.saveCustomer(user);
     	return qrcodeUrl;
     }
     
@@ -291,7 +291,7 @@ public class TdUserQRcodeTools {
     
     
     /**
-     * 时间是否有效
+     * 时间是否有效 30天有效
      * @param date
      * @return
      */
@@ -303,8 +303,9 @@ public class TdUserQRcodeTools {
     	}
     	
     	Date currentDate = new Date();
-    	
-    	return (currentDate.getTime() - date.getTime() < 2591400 * 1000) ? true : false;
+    	Long distirct = (long)2591400 *(long)1000;
+    	Long dute = currentDate.getTime() - date.getTime();
+    	return dute < distirct ? true : false;
     }
     
     

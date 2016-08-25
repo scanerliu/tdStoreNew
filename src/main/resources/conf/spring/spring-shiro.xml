@@ -70,6 +70,8 @@
 				/mobile/order/**=user
 				/mobile/user/verifyCode=anon
 				/mobile/getChangePhoneNumValidCode=anon
+				<!-- /mobile/user/mySpread=anon
+				/mobile/user/mySpread/**=anon -->
 				/mobile/user/**=user
 				/admin/**=authc,roles[admin]<!-- ,perms[manage] -->
 			</value>

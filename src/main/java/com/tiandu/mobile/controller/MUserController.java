@@ -739,12 +739,14 @@ public class MUserController extends BaseController {
 			avatar = avatar.replaceFirst("/", "");
 			avatar = avatar.substring(avatar.indexOf("/"));			
 		}
-		currentUser.setUavatar(avatar);
+		/*currentUser.setUavatar(avatar);
 		currentUser.setUnick(user.getUnick());
 		currentUser.setUgenter(user.getUgenter());
 		currentUser.setUbirthday(user.getUbirthday());
-		currentUser.setUtel(user.getUtel());
-		if(tdUserService.saveUserInfo(currentUser) == 1){
+		currentUser.setUtel(user.getUtel());*/
+		user.setUavatar(avatar);
+		user.setUid(currentUser.getUid());
+		if(tdUserService.saveUserInfo(user) == 1){
 			res.put("msg", "个人信息修改成功！");
 			res.put("code", "1");
 		}
@@ -1273,6 +1275,17 @@ public class MUserController extends BaseController {
 	@RequestMapping("/mySpread")
 	public String mySpread(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) throws UnrecoverableKeyException, KeyManagementException, NoSuchAlgorithmException, KeyStoreException, IOException, JSONException {
 		TdUser currentUser = this.getCurrentUser();
+//		if(null==currentUser){
+//			String fromUser = request.getParameter("fr");
+//			if(StringUtils.isNotBlank(fromUser)){
+//				TdUser frUser = tdUserService.selectByUname(fromUser);
+//				if(null!=frUser){
+//					currentUser = frUser;
+//				}else{
+//					return "/moblie/index";
+//				}
+//			}
+//		}
 		modelMap.addAttribute("currentUser", currentUser);
 		String spreadUrl = "http://www.cqupt.edu.cn";
 		String imgName = UUID.randomUUID().toString() + ".png";
@@ -1284,9 +1297,18 @@ public class MUserController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/mySpread/qrcode")
-	public void spreadQRcode(HttpServletResponse response) throws UnsupportedEncodingException, JSONException
+	public void spreadQRcode(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, JSONException
 	{
 		TdUser currentUser = this.getCurrentUser();
+//		if(null==currentUser){
+//			String fromUser = request.getParameter("fr");
+//			if(StringUtils.isNotBlank(fromUser)){
+//				TdUser frUser = tdUserService.selectByUname(fromUser);
+//				if(null!=frUser){
+//					currentUser = frUser;
+//				}
+//			}
+//		}
 //		tdUserQRcodeTools.QRcodeByUidAndResponse(currentUser.getUid(), response);
 //		TdUserQRcodeTools QRcodeTools = new TdUserQRcodeTools();
 		tdUserQRcodeTools.QRcodeByUidAndResponse(currentUser.getUid(), response);
