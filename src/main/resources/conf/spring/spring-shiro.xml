@@ -69,6 +69,7 @@
 				/mobile/shoppingcart/**=user
 				/mobile/order/**=user
 				/mobile/user/verifyCode=anon
+				/mobile/getChangePhoneNumValidCode=anon
 				/mobile/user/**=user
 				/admin/**=authc,roles[admin]<!-- ,perms[manage] -->
 			</value>

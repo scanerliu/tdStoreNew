@@ -15,7 +15,7 @@ function waitSecondsForPhoneNum(o) {
 			}else{
 				pisWait = true;
 				waitSecondsForPhoneNum($("#getChangePhoneNumValidCode"));
-				var url = basePath+"/mobile/user/getChangePhoneNumValidCode";
+				var url = basePath+"/mobile/getChangePhoneNumValidCode";
 				var loadData = {'phone': phone};
 				$.post(url, loadData, function(pdata){
 					var result = eval("("+pdata+")");

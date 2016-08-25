@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.common.utils.MessageSender;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.search.TdUserSearchCriteria;
@@ -72,7 +73,7 @@ public class LevelOneRegionUserCount {
 			datas.add(message);
 			MessageSender ms = new MessageSender();
 			ms.init();
-			boolean isSendSuccess = ms.send(phoneList, "106246", datas);
+			boolean isSendSuccess = ms.send(phoneList, ConstantsUtils.SMS_TEMPLATE_CUSTOMERCOUNT, datas);
 			if(!isSendSuccess){
 				logger.error("省直辖市会员人数短信发送失败");		
 			}

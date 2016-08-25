@@ -291,6 +291,17 @@ public class ConstantsUtils {
 	
 	
 	/***** 投诉短信通知模板id**************/
+	/**
+	 * 投诉短信通知模板id
+	 */
 	public static final String SMS_TEMPLATE_COMPLAINT = "105647";
+	/**
+	 * 验证码短信模板id
+	 */
+	public static final String SMS_TEMPLATE_VALIDCODE = "107118";
+	/**
+	 *会员统计通知短信模板id
+	 */
+	public static final String SMS_TEMPLATE_CUSTOMERCOUNT = "106246";
 	
 }

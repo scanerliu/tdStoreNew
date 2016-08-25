@@ -18,9 +18,9 @@ $(document).ready(function(){
 <!-- Center Start -->
 <!-- <section class="container"> -->
 <div class="three">
-    <a href="javascript:;" title="综合" onclick="searchNew(1)" <#if sc?? && sc.orderby==1>class="active"</#if>>综合</a>
-    <a href="javascript:;" title="销量" onclick="searchNew(2)" <#if sc?? && sc.orderby==2>class="active"</#if>>销量</a>
-    <a href="javascript:;" onclick="searchNew(<#if sc??><#if sc.orderby==3 || sc.orderby==4><#if sc.orderby==3>4<#else>3</#if><#else>3</#if><#else>3</#if>)" title="价格" <#if sc?? && sc.orderby==3 || sc.orderby==4>class="active"</#if>>价格</a>
+    <a href="javascript:;" title="综合" <#if sc?? && sc.orderby==1>onclick="searchNew(2)" class="down"<#elseif sc?? && sc.orderby==2>onclick="searchNew(1)" class="up"<#else>onclick="searchNew(1)"</#if>>综合</a>
+	<a href="javascript:;" title="销量" <#if sc?? && sc.orderby==3>onclick="searchNew(4)" class="down"<#elseif sc?? && sc.orderby==4>onclick="searchNew(3)" class="up"<#else>onclick="searchNew(3)"</#if>>销量</a>
+	<a href="javascript:;" title="价格" <#if sc?? && sc.orderby==5>onclick="searchNew(6)" class="down"<#elseif sc?? && sc.orderby==6>onclick="searchNew(5)" class="up"<#else>onclick="searchNew(5)"</#if>>价格</a>
 </div>
  
 
@@ -34,7 +34,7 @@ $(document).ready(function(){
             <p class="p1">${item.name!''}</p>
             <p class="p2">
                 <label class="lab1">¥<#if item.price??>${item.price?string('0.00')}</#if></label>
-                <label class="lab2">￥188.00</label>
+                <!--<label class="lab2">￥188.00</label>-->
             </p>
         </a>
         </#list>

@@ -54,6 +54,8 @@
 				<ref bean="cronTrigger" />
 				<ref bean="userLevelCronTrigger" />
 				<ref bean="orderReciptTrigger" />
+				<ref bean="orderCompleteTrigger" />
+				<ref bean="orderCancleTrigger" />
 				<ref bean="seckillProductTrigger" />
 			</list>
 		</property>
