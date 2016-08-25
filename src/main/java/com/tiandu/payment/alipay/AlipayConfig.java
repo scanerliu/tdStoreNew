@@ -8,16 +8,16 @@ public class AlipayConfig {
     public static final String CHARSET = "gbk";
     
     // 合作身份者ID-2088421287138091
-    public static final String PARTNER = "2088121425421082";
+    public static final String PARTNER = "2088421287138091";
 
     // 收款支付宝账号-1683998877@qq.com
-    public static String SELLER_EMAIL = "13987418399@163.com";
+    public static String SELLER_EMAIL = "1683998877@qq.com";
     
     // 收款支付宝ID
     public static String SELLER_ID = PARTNER;
 
     // 商户的私钥-83vls39l7x75iyr2ls7k86ak3vhwm7rv
-    public static String KEY = "705nmp52l3kmumpn18jws3mcjuzuox9n";
+    public static String KEY = "83vls39l7x75iyr2ls7k86ak3vhwm7rv";
 
     // 签名方式
     public static String SIGN_TYPE = "MD5";
@@ -32,7 +32,7 @@ public class AlipayConfig {
     public static final String PAYMENT_TYPE = "1";
     
     // 合作伙伴名称-重庆市一路上电子商务有限公司
-    public static final String SUBJECT = "云南联超商贸有限公司";
+    public static final String SUBJECT = "重庆市一路上电子商务有限公司";
     
     // 货物数量
     public static final String DEFAULT_QUANTITY = "1";

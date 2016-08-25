@@ -18,10 +18,10 @@ public class AlipayConfig {
 	//↓↓↓↓↓↓↓↓↓↓请在这里配置您的基本信息↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 	// 合作身份者ID，以2088开头由16位纯数字组成的字符串
 	// 2088421287138091
-	public static String partner = "2088121425421082";
+	public static String partner = "2088421287138091";
 	// 商户的私钥
 	// 83vls39l7x75iyr2ls7k86ak3vhwm7rv
-	public static String key = "705nmp52l3kmumpn18jws3mcjuzuox9n";
+	public static String key = "83vls39l7x75iyr2ls7k86ak3vhwm7rv";
 
 	//必填，页面跳转同步通知页面路径
 //	public static String return_url = "http://116.55.230.207/login/alipay_return_url";
