@@ -260,7 +260,7 @@
 	      	order by  a.sort desc
 	      </when>
 	      <when test="orderBy != null and orderBy ==2">
-	      	order by  a.sort desc
+	      	order by  a.sort asc
 	      </when>
 	      <otherwise>
 	      	order by  a.id desc

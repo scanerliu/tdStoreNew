@@ -1694,7 +1694,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 	 * @param now
 	 */
 	private BigDecimal saveBenefit(TdUserAccount account, TdUser orderUser, BigDecimal amount, TdOrder order, TdBenefit benefit, Date now, String note){
-		BigDecimal benefitAmount = amount.multiply(new BigDecimal(benefit.getPercent())).divide(new BigDecimal(100));
+		BigDecimal benefitAmount = amount.multiply(new BigDecimal(benefit.getPercent())).divide(ConstantsUtils.SYSTEM_BENEFIT_PERCENT_NUM);
 		account.setUpdateBy(1);
 		account.setUpdateTime(now);
 		TdUserAccountLog alog = new TdUserAccountLog();

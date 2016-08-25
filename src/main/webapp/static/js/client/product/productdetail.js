@@ -259,7 +259,7 @@ function addCollect(productId)
     openwaiting();
     $.ajax({
         type:"post",
-        url:basePath+"/mobile/product/collect",
+        url:basePath+"/product/collect",
         data:{"productId": productId},
         dataType: "json",
         success:function(data){
@@ -268,9 +268,6 @@ function addCollect(productId)
             if (data.code==0)
             {
                 alert(data.msg);
-                setTimeout(function(){
-                    window.location.href = basePath+"/mobile/login";
-                }, 1000); 
             }
         },
         error : function(XMLHttpRequest, textStatus, errorThrown) {

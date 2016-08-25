@@ -353,7 +353,7 @@ public class MobileController extends BaseController {
 					    }catch (AuthenticationException e) {
 					    	logger.error("wechat login error:"+e.getMessage());
 					    	token.clear();
-					    	return "redirect:/mobile/login";
+					    	return "redirect:/mobile/index";
 					    }
 					}
 				}
@@ -363,7 +363,7 @@ public class MobileController extends BaseController {
 			}
 			
 		}
-		return "redirect:/mobile/login";
+		return "redirect:/mobile/index";
 	}
 	
 }

@@ -15,7 +15,7 @@ public class TdBenefit extends TdBaseEntity {
 
     private Integer level;
 
-    private Byte percent;
+    private Integer percent;
 
     private Date updateTime;
 
@@ -53,11 +53,11 @@ public class TdBenefit extends TdBaseEntity {
         this.level = level;
     }
 
-    public Byte getPercent() {
+    public Integer getPercent() {
         return percent;
     }
 
-    public void setPercent(Byte percent) {
+    public void setPercent(Integer percent) {
         this.percent = percent;
     }
 

@@ -1,5 +1,7 @@
 package com.tiandu.common.utils;
 
+import java.math.BigDecimal;
+
 public class ConstantsUtils {
 
 	public final static String PRIMARY_MEMBER_KEY = "td_key_2016_05_20****15##%%@&50";
@@ -34,6 +36,10 @@ public class ConstantsUtils {
 	
 	
 	public final static Byte CONF_DATA_TYPE_BOOLEAN = 3;
+	/**
+	 * 系统分润比例，千分比
+	 */
+	public final static BigDecimal SYSTEM_BENEFIT_PERCENT_NUM = new BigDecimal(1000);
 	
 	/*******************************订单类型****************************/
 	/**

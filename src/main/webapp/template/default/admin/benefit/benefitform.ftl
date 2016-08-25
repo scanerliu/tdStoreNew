@@ -2,7 +2,7 @@
 <script src="${app.basePath}/static/js/easyui/jquery.easyui.min.js" type="text/javascript"></script>
 <script src="${app.basePath}/static/js/easyui/easyui-lang-zh_CN.js" type="text/javascript"></script>
 <div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="returnList()"><em>返回列表</em></a>&#12288;</div></div>
-<div class="subnav gray">提示：设置的数字为整数，代表百分比例，如：设置5，代表5%。</div>
+<div class="subnav red">提示：设置的数字为整数，代表千分比例，如：设置5，代表5‰。</div>
 <div class="pad_lr_10">
 <form id="benefitForm" action="${app.basePath}/admin/benefit/save" class="easyui-form" method="post" data-options="novalidate:true">
 <#assign _n=0 />
@@ -25,7 +25,7 @@
         		<#if benefit?? && benefit.groupId==1>
 			    <tr>
 			        <th>${benefit.getLevelStr()!''}<input type="hidden" name="benefitList[${_n}].id" value="${benefit.id!''}"></th>
-			        <td><input type="text" name="benefitList[${_n}].percent" class="easyui-numberspinner" value="${benefit.percent!''}" id="benefit_${benefit.id!''}" style="width:200px;height:30px" data-options="min:0,max:100,required:true"></th>
+			        <td><input type="text" name="benefitList[${_n}].percent" class="easyui-numberspinner" value="${benefit.percent!''}" id="benefit_${benefit.id!''}" style="width:200px;height:30px" data-options="min:0,max:1000,required:true"></th>
 			    </tr>
 			    <#assign _n++ />
 			    </#if>
@@ -40,7 +40,7 @@
         		<#if benefit?? && benefit.groupId==2>
 			    <tr>
 			        <th>${benefit.getLevelStr()!''}<input type="hidden" name="benefitList[${_n}].id" value="${benefit.id!''}"></th>
-			        <td><input type="text" name="benefitList[${_n}].percent" class="easyui-numberspinner" value="${benefit.percent!''}" id="benefit_${benefit.id!''}" style="width:200px;height:30px" data-options="min:0,max:100,required:true"></th>
+			        <td><input type="text" name="benefitList[${_n}].percent" class="easyui-numberspinner" value="${benefit.percent!''}" id="benefit_${benefit.id!''}" style="width:200px;height:30px" data-options="min:0,max:1000,required:true"></th>
 			    </tr>
 			    <#assign _n++ />
 			    </#if>
@@ -55,7 +55,7 @@
         		<#if benefit?? && benefit.groupId==3>
 			    <tr>
 			        <th>${benefit.getLevelStr()!''}<input type="hidden" name="benefitList[${_n}].id" value="${benefit.id!''}"></th>
-			        <td><input type="text" name="benefitList[${_n}].percent" class="easyui-numberspinner" value="${benefit.percent!''}" id="benefit_${benefit.id!''}" style="width:200px;height:30px" data-options="min:0,max:100,required:true"></th>
+			        <td><input type="text" name="benefitList[${_n}].percent" class="easyui-numberspinner" value="${benefit.percent!''}" id="benefit_${benefit.id!''}" style="width:200px;height:30px" data-options="min:0,max:1000,required:true"></th>
 			    </tr>
 			    <#assign _n++ />
 			    </#if>
