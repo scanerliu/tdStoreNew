@@ -48,7 +48,11 @@
   <header class="pc-head">
     <div class="head-img">
       <#if currentUser.uavatar??>
-      <img src="${app.basePath}${currentUser.uavatar!''}" alt="暂无头像">
+      		<#if currentUser.uavatar?index_of("http")==0>
+        	<img src="${currentUser.uavatar!''}" alt="暂无头像">
+        	<#else>
+	        <img src="${app.basePath}${currentUser.uavatar!''}" alt="暂无头像">
+	        </#if>
       <#else>
       <img src="${app.basePath}/static/default/mobile/images/defaultavtar.png" alt="暂无头像">
       </#if>

@@ -77,6 +77,7 @@ public class TdUserQRcodeTools {
     	Date currenDate				= new Date();
     	String accessToken;
     	TdSystemConfig tokenConfig	= tdSystemConfigService.findByKey(ConstantsUtils.K_ACCESSTOKEN);
+    	Long timelimit = (long)7100 * (long)1000;
     	if(tokenConfig == null)
     	{
     		accessToken	= getAccessToken();
@@ -88,7 +89,7 @@ public class TdUserQRcodeTools {
     		tokenConfig.setUpdateBy(0);
     		tdSystemConfigService.save(tokenConfig);
     	}
-    	else if (StringUtils.isBlank(tokenConfig.getConfigValue()) || currenDate.getTime() - tokenConfig.getUpdateTime().getTime() > 7100 * 1000)
+    	else if (StringUtils.isBlank(tokenConfig.getConfigValue()) || timelimit.compareTo(currenDate.getTime() - tokenConfig.getUpdateTime().getTime()) <0)
     	{
     		accessToken = getAccessToken();
     		tokenConfig.setConfigValue(accessToken);

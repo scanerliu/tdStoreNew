@@ -33,6 +33,7 @@ import com.tiandu.article.search.TdAdvertisementSearchCriteria;
 import com.tiandu.article.service.TdAdsenseService;
 import com.tiandu.article.service.TdAdvertisementService;
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.common.tencent.common.TdUserQRcodeTools;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.common.utils.MessageSender;
 import com.tiandu.common.utils.WebUtils;
@@ -41,6 +42,7 @@ import com.tiandu.complaint.service.TdComplaintService;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.vo.LoginForm;
 import com.tiandu.custom.vo.WeChatCodeResponse;
+import com.tiandu.custom.vo.WeChatUserInfoResponse;
 import com.tiandu.product.search.TdProductCriteria;
 import com.tiandu.product.service.TdProductService;
 
@@ -64,6 +66,9 @@ public class MobileController extends BaseController {
 	
 	@Autowired
 	private TdProductService tdProductService;
+	
+	@Autowired
+	private TdUserQRcodeTools tdUserQRcodeTools;
 	
 	/**
 	 * @author Max
@@ -362,6 +367,22 @@ public class MobileController extends BaseController {
 				if(null!=codeResponse&&null!=codeResponse.getOpenid()){//获取openid
 					TdUser cuser = tdUserService.findByJoinCode(codeResponse.getOpenid());
 					if(null!=cuser){//匹配到用户
+						boolean updateuserinfo = false;
+						if(StringUtils.isBlank(cuser.getUnick())){//昵称为空时，获取微信信息
+							String access_tocken = tdUserQRcodeTools.validAccessToken();
+							String wechat_user_info_url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token="+access_tocken+"&openid="+codeResponse.getOpenid()+"&lang=zh_CN";
+							logger.error("wechat get userinfo url:"+wechat_user_info_url);
+							ResponseEntity<String> userinfosponse = restTemplate.getForEntity(wechat_user_info_url, String.class);
+							System.out.println(userinfosponse.getBody());
+							logger.error("wechat get userinfo response:"+userinfosponse.getBody());
+							WeChatUserInfoResponse uinfoResponse = gson.fromJson(userinfosponse.getBody(), WeChatUserInfoResponse.class);
+							if(null!=uinfoResponse&&null!=uinfoResponse.getOpenid()){
+								updateuserinfo = true;
+								cuser.setUnick(uinfoResponse.getNickname());
+								cuser.setUgenter(uinfoResponse.getGenter());
+								cuser.setUavatar(uinfoResponse.getHeadimgurl());
+							}							
+						}
 						Subject user = SecurityUtils.getSubject();
 						UsernamePasswordToken token = new UsernamePasswordToken(cuser.getUname(),cuser.getUpassword());
 					    token.setRememberMe(true);
@@ -370,12 +391,17 @@ public class MobileController extends BaseController {
 					      Date now = new Date();
 					      String hostip = request.getRemoteHost();
 					      //记录登陆时间 host ip
-					      TdUser muser = tdUserService.selectByUname(cuser.getUname());
-					      if(null!=muser && null!=muser.getUid()){
+					      //TdUser muser = tdUserService.selectByUname(cuser.getUname());
+					      if(null!=cuser && null!=cuser.getUid()){
 						      TdUser upuser = new TdUser();
-						      upuser.setUid(muser.getUid());
+						      upuser.setUid(cuser.getUid());
 						      upuser.setLastLoginIp(hostip);
 						      upuser.setLastLoginTime(now);
+						      if(updateuserinfo){
+						    	  upuser.setUnick(cuser.getUnick());
+						    	  upuser.setUgenter(cuser.getUgenter());
+						    	  upuser.setUavatar(cuser.getUavatar());
+						      }
 						      tdUserService.updateByPrimaryKeySelective(upuser);
 					      }
 					      return "redirect:/mobile/index";

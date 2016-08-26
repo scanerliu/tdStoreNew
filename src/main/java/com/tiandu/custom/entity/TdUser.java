@@ -48,7 +48,7 @@ public class TdUser {
 
     private String lastLoginIp;
 
-    private String uavatar = "/static/default/images/defaultimg.jpg";
+    private String uavatar;
 
     private Integer uregionId;
 

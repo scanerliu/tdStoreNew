@@ -31,7 +31,7 @@
 </head>
 <script type="text/javascript">
 	$(function(){
-	   $('#beginTime').date();
+	   $('#beginTime').date({"beginyear":"1968","endyear":"2020"});
 	   $('body').winout({
 	   		innerwidth:"4rem",
 	   		font:"0.24rem",
@@ -102,9 +102,9 @@
 		<li class="li01">
 			<font>个人头像</font>
 			<div class="div" id="avatar-change" style="width:50%;float:right;">
-				<img alt="暂无头像" id="uavatarShow" style="float:right;" src="${app.basePath}${currentUser.uavatar!''}"/>
+				<img alt="暂无头像" id="uavatarShow" style="float:right;" src="<#if currentUser.uavatar??><#if currentUser.uavatar?index_of("http")==0><#else>${app.basePath}</#if>${currentUser.uavatar!''}<#else>${app.basePath}/static/default/mobile/images/defaultavtar.png</#if>"/>
 				<div id="file_upload" style="width:60%;margin-top:.32rem;text-align:center;"><div>
-				<input type="hidden" id="uavatar" name="uavatar" value="${app.basePath}${currentUser.uavatar!''}">
+				<input type="hidden" id="uavatar" name="uavatar" value="">
 			</div>
 		</li>
 		<li class="li02">
