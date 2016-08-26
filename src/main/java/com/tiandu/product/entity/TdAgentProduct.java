@@ -26,6 +26,10 @@ public class TdAgentProduct extends TdBaseEntity {
     private Date updateTime;
 
     private Integer updateBy;
+    
+    private Integer sort;
+    
+    private Boolean gift;
 
     public Integer getId() {
         return id;
@@ -106,7 +110,24 @@ public class TdAgentProduct extends TdBaseEntity {
     public void setUpdateBy(Integer updateBy) {
         this.updateBy = updateBy;
     }
-    /**
+    
+    public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+	
+	public Boolean getGift() {
+		return gift;
+	}
+
+	public void setGift(Boolean gift) {
+		this.gift = gift;
+	}
+
+	/**
      * 获取代理类型文字说明
      * @return
      */
@@ -117,7 +138,9 @@ public class TdAgentProduct extends TdBaseEntity {
     			sb.append("单类代理");
     		}else if(ConstantsUtils.AGENT_GROUPID_BRANCH.equals(this.getGroupId())){
     			sb.append("分公司");
-    		}    		
+    		}else if(ConstantsUtils.AGENT_GROUPID_SUPPLIER.equals(this.getGroupId())){
+    			sb.append("供应商");
+    		}   		
     	}
     	return sb.toString();
     }

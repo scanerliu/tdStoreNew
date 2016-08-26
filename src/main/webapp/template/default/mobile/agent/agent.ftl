@@ -33,7 +33,7 @@ $(document).ready(function(){
         var check = document.getElementById("isCheck");
         if(check.checked){
             $("#sub_btn").css("background","#f23030");
-            $("#sub_btn").on("click",buynow);
+            $("#sub_btn").on("click",buyNow);
         }else{
             $("#sub_btn").off("click");
             $("#sub_btn").css("background","#999999");
@@ -122,7 +122,7 @@ function buyNow(){
 		if(agentProductId==1||(agentProductId==4 && isAgentProductUsePackage=="true")){
 			var agent = '{"agentProductId":'+agentProductId+',"regionId":'+regionId+',"productTypeId":'+productTypeId+',"productType":'+productType+'}';
 			setCookie("agentpackage", agent, 30);
-			url = basePath+"/mobile/package/list";
+			url = basePath+"/mobile/package/list?acpe=${agent.salesPrice!''}";
 			window.location.href=url;
 		}else{
 			var url = basePath+"/mobile/shoppingcart/singleorder";

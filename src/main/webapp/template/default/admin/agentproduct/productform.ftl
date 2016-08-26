@@ -64,6 +64,19 @@
         </td>
     </tr>
     <tr>
+        <th>排序值：</th>
+        <td>
+            <input type="text" name="sort" class="easyui-textbox" value="${product.sort!'0'}" style="width:200px;height:30px" data-options="required:true" validType="length[0,200]">
+        </td>
+    </tr>
+    <tr>
+        <th>是否送礼包：</th>
+        <td>
+            <label><input type="checkbox" name="gift" value="true" <#if product.gift?? && product.gift==true>checked="true"</#if>>是</label>
+            <label><input type="checkbox" name="gift" value="false" <#if !product.gift?? || product.gift?? && product.gift==false>checked="true"</#if>>否</label>
+        </td>
+    </tr>
+    <tr>
         <td><input type="hidden" name="id" value="${product.id!''}"></td>
         <td>
             <button type="button" class="smt mr10" onclick="saveAgentProduct()">保存</button>

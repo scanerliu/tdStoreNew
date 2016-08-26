@@ -13,6 +13,8 @@
 <th align="left">销售价</th>
 <th align="left">代理类型</th>
 <th align="left">级别</th>
+<th align="left">是否赠送礼品包</th>
+<th align="left">排序值</th>
 <th align="left">更新时间</th>
 <th align="left">更新人</th>
 <th width="200">管理操作</th>
@@ -28,6 +30,8 @@
         <td>${product.salesPrice!''}</td>
         <td>${product.getGroupIdStr()!''}</td>
         <td>${product.getLevelStr()!''}</td>
+        <td><#if product.gift?? && product.gift==true>是<#else>否</#if></td>
+        <td>${product.sort!''}</td>
         <td><#if product.updateTime??>${product.updateTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
         <td><#if product.updateUser??>${product.updateUser.unick!''}</#if></td>
         <td align="center">

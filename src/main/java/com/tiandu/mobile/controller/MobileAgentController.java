@@ -24,6 +24,7 @@ import com.tiandu.article.service.TdArticleCategoryService;
 import com.tiandu.article.service.TdArticleContentService;
 import com.tiandu.article.service.TdArticleTitleService;
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.custom.entity.TdAgent;
 import com.tiandu.custom.entity.TdExperienceStore;
 import com.tiandu.custom.entity.TdUser;
@@ -92,6 +93,7 @@ public class MobileAgentController extends BaseController{
 				
 		TdAgentProductSearchCriteria sc = new TdAgentProductSearchCriteria();
 		sc.setFlag(false);
+		sc.setSortBy(1);
 		map.addAttribute("agentList", tdAgentProductService.findBySearchCriteria(sc));
 		
 		return "/mobile/agent/list";
@@ -116,6 +118,10 @@ public class MobileAgentController extends BaseController{
 //		{
 //			return "/mobile/agent/company";
 //		}
+		//供应商
+		if(ConstantsUtils.AGENT_GROUPID_SUPPLIER.equals(agent.getGroupId())){
+			return "/mobile/agent/supplier";
+		}
 		if(agent.getLevel() == 4)
 		{
 			TdProductTypeCriteria sc = new TdProductTypeCriteria();
@@ -380,20 +386,21 @@ public class MobileAgentController extends BaseController{
 		// 系统配置
 		map.addAttribute("system", getSystem());
 		
-		map.addAttribute("agent", tdAgentProductService.findOne(agentId));
+		TdAgentProduct agent = tdAgentProductService.findOne(agentId);
+		map.addAttribute("agent", agent);
 		map.addAttribute("regionId", regionId);
 		map.addAttribute("typeId", typeId);
 		
 		//是否有礼品包
-		Boolean haspackage = false;
-		if(agentId==4){//区县单类代理产品
+		Boolean haspackage = agent.getGift();
+		/*if(agentId==4){//区县单类代理产品
 			//系统是否启用区县单类代理产品领取礼品包
 			if(configUtil.isAgentProductUsePackage()){
 				haspackage = true;
 			}
 		}else if(agentId==1){
 			haspackage = true;
-		}
+		}*/
 		map.addAttribute("haspackage", haspackage);
 		
 		return "/mobile/agent/agent";

@@ -12,6 +12,8 @@
     <result column="level" property="level" jdbcType="INTEGER" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="gift" property="gift" jdbcType="BIT" />
     <!-- 更新人信息 -->
 	<association property="updateUser" resultMap="updateUserResult"/>
   </resultMap>
@@ -22,7 +24,7 @@
   </resultMap>
   
   <sql id="Base_Column_List" >
-    p.id, p.title, p.note, p.image_url, p.supplier_price, p.sales_price, p.group_id, p.level, p.update_time, p.update_by
+    p.id, p.title, p.note, p.image_url, p.supplier_price, p.sales_price, p.group_id, p.level, p.update_time, p.update_by,p.sort,p.gift
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -41,6 +43,17 @@
         left join td_user b on b.uid= p.update_by
     </if>
     where 1=1 
+    <choose>
+    	<when test="sortBy != null and sortBy==1">
+    		order by p.sort asc,p.id asc
+    	</when>
+    	<when test="sortBy != null and sortBy==2">
+    		order by p.sort desc,p.id asc
+    	</when>
+    	<otherwise>
+    		order by p.id asc
+    	</otherwise>
+    </choose>
   </select>
   
   <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.product.search.TdAgentProductSearchCriteria" >
@@ -59,11 +72,11 @@
     </selectKey>
     insert into td_agent_product (title, note, image_url, 
       supplier_price, sales_price, group_id, 
-      level, update_time, update_by
+      level, update_time, update_by, sort, gift
       )
     values (#{title,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, #{imageUrl,jdbcType=VARCHAR}, 
       #{supplierPrice,jdbcType=DECIMAL}, #{salesPrice,jdbcType=DECIMAL}, #{groupId,jdbcType=INTEGER}, 
-      #{level,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}
+      #{level,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, #{gift,jdbcType=BIT}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.tiandu.product.entity.TdAgentProduct" >
@@ -99,6 +112,12 @@
       <if test="updateBy != null" >
         update_by,
       </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="gift != null" >
+        gift,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="title != null" >
@@ -127,6 +146,12 @@
       </if>
       <if test="updateBy != null" >
         #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="gift != null" >
+        #{gift,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -160,6 +185,12 @@
       <if test="updateBy != null" >
         update_by = #{updateBy,jdbcType=INTEGER},
       </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="gift != null" >
+        gift = #{gift,jdbcType=BIT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -173,7 +204,9 @@
       <!-- group_id = #{groupId,jdbcType=INTEGER},
       level = #{level,jdbcType=INTEGER}, -->
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      update_by = #{updateBy,jdbcType=INTEGER}
+      update_by = #{updateBy,jdbcType=INTEGER},
+      sort = #{sort,jdbcType=INTEGER},
+      gift = #{gift,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -90,7 +90,8 @@ public class MProductPackageController extends BaseController {
 	 * 商品包列表页
 	 */
 	@RequestMapping("/list")
-	public String list(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	public String list(TdProductCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		modelMap.addAttribute("sc", sc);
 	    return "/mobile/package/list";
 	}
 	/*

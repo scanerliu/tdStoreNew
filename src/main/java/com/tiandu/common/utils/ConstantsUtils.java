@@ -70,17 +70,21 @@ public class ConstantsUtils {
 	
 	/**********************代理类型*********************************/
 	/**
-	 * 代理类型-1 单类代理  2 分公司 3-三级分销
+	 * 代理类型-1 单类代理  2 分公司 3-三级分销,4-供应商
 	 */
 	public static final Integer AGENT_GROUPID_AGENT = 1;
 	/**
-	 * 代理类型-1 单类代理  2 分公司 3-三级分销
+	 * 代理类型-1 单类代理  2 分公司 3-三级分销,4-供应商
 	 */
 	public static final Integer AGENT_GROUPID_BRANCH = 2;
 	/**
-	 * 代理类型-1 单类代理  2 分公司 3-三级分销
+	 * 代理类型-1 单类代理  2 分公司 3-三级分销,4-供应商
 	 */
 	public static final Integer AGENT_GROUPID_DISTRIBUTION = 3;
+	/**
+	 * 代理类型-1 单类代理  2 分公司 3-三级分销,4-供应商
+	 */
+	public static final Integer AGENT_GROUPID_SUPPLIER = 4;
 	
 	/**
 	 * 分润类型1-区县单类代理(代金券、供应商和分销商)
