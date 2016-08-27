@@ -460,6 +460,7 @@ public class MShoppingcartController extends BaseController {
 		if(orderForm.getProductType()==2){
 			cart.setPtype(2);
 			TdAgentProduct agentproduct = tdAgentProductService.findOne(orderForm.getAgentProductId());
+			cart.setNeedShipment(agentproduct.getGift());
 			if(null!=agentproduct && null!=agentproduct.getId()){
 				cart.setAgentProduct(agentproduct);
 				//代理产品类型 1-单代
@@ -472,35 +473,6 @@ public class MShoppingcartController extends BaseController {
 					cart.setPtype(2);
 					cart.setAgent(agent);
 					cart.setTotalcount(1);
-					if(agentproduct.getId().equals(1)||(agentproduct.getId().equals(4)&&canuserpackage)&& null!=orderForm.getProductId()){//代金券产品
-						//添加礼品包
-						TdProduct productpack = tdProductService.findOne(orderForm.getProductId());
-						if(null==productpack|| !productpack.getOnshelf() || !productpack.getStatus().equals(Byte.valueOf("1"))){
-							throw new Exception("下单失败，礼品包不存在或已经下架！");
-						}
-						cart.setProductPackage(productpack);
-						//礼品包详细列表
-						List<TdShoppingcartItem> itemList = new ArrayList<TdShoppingcartItem>();
-						TdProductPackageItemSearchCriteria psc = new TdProductPackageItemSearchCriteria();
-						psc.setFlag(false);
-						psc.setProductId(orderForm.getProductId());
-						List<TdProductPackageItem> packList = tdProductPackageItemService.findBySearchCriteria(psc);
-						if(null!=packList){
-							for(TdProductPackageItem pack : packList){
-								TdShoppingcartItem item = new TdShoppingcartItem();
-								item.setItemType(ConstantsUtils.PRODUCT_KIND_PACKAGE.intValue());
-								item.setPostage(BigDecimal.ZERO);
-								item.setPrice(pack.getPrice());
-								item.setProductId(pack.getProductId());
-								item.setProductSkuId(pack.getSkuId());
-								item.setProductPackageItem(pack);
-								item.setQuantity(pack.getQuantity());								
-								itemList.add(item);
-							}
-						}
-						cart.setItemList(itemList);
-						cart.setNeedShipment(true);//需要发货
-					}
 					//2-分公司
 				}else if(ConstantsUtils.AGENT_GROUPID_BRANCH.equals(agentproduct.getGroupId())){
 					TdBrancheCompany branche = new TdBrancheCompany();
@@ -510,8 +482,40 @@ public class MShoppingcartController extends BaseController {
 					cart.setPtype(3);
 					cart.setBranch(branche);
 					cart.setTotalcount(1);
+					//4-供应商
+				}else if(ConstantsUtils.AGENT_GROUPID_SUPPLIER.equals(agentproduct.getGroupId())){
+					cart.setPtype(5);
+					cart.setTotalcount(1);
 				}else{
 					throw new Exception("下单失败，代理产品不存在或已经下架！");
+				}
+				if(agentproduct.getGift()&& null!=orderForm.getProductId()){//代金券产品
+					//添加礼品包
+					TdProduct productpack = tdProductService.findOne(orderForm.getProductId());
+					if(null==productpack|| !productpack.getOnshelf() || !productpack.getStatus().equals(Byte.valueOf("1"))){
+						throw new Exception("下单失败，礼品包不存在或已经下架！");
+					}
+					cart.setProductPackage(productpack);
+					//礼品包详细列表
+					List<TdShoppingcartItem> itemList = new ArrayList<TdShoppingcartItem>();
+					TdProductPackageItemSearchCriteria psc = new TdProductPackageItemSearchCriteria();
+					psc.setFlag(false);
+					psc.setProductId(orderForm.getProductId());
+					List<TdProductPackageItem> packList = tdProductPackageItemService.findBySearchCriteria(psc);
+					if(null!=packList){
+						for(TdProductPackageItem pack : packList){
+							TdShoppingcartItem item = new TdShoppingcartItem();
+							item.setItemType(ConstantsUtils.PRODUCT_KIND_PACKAGE.intValue());
+							item.setPostage(BigDecimal.ZERO);
+							item.setPrice(pack.getPrice());
+							item.setProductId(pack.getProductId());
+							item.setProductSkuId(pack.getSkuId());
+							item.setProductPackageItem(pack);
+							item.setQuantity(pack.getQuantity());								
+							itemList.add(item);
+						}
+					}
+					cart.setItemList(itemList);
 				}
 				cart.setTotalAmount(agentproduct.getSalesPrice());
 				cart.setTotalProductAmount(agentproduct.getSalesPrice());

@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/common.css"/>
     <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/main.css"/>
     <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/index.css"/>
+    <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/x_pc.css"/>
     <script src="${app.basePath}/static/js/jquery-1.12.3.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="${app.basePath}/static/js/mobile/common.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/js/mobile/core.js"></script>
@@ -31,7 +32,7 @@
 <body class="body_gray">
   <!-- header_top -->
   <div class="top_heater">
-    <a href="${app.basePath}/mobile/shoppingcart/list" title="" class="hleft hback"></a>
+    <a href="${app.basePath}/mobile/index" title="" class="hleft hback"></a>
     <span>下单失败</span>
   </div>
   <!-- header_top end -->
@@ -40,8 +41,8 @@
   <section class="container evaluate-success">
     <img class="icon-success" src="${app.basePath}/static/default/mobile/images/f-fail.png" alt="">
     <div class="div1">对不起！下单失败</div>
-    <div class="div2">${order.errMsg!''}</div>
-    <a class="btn-share" href="${app.basePath}/mobile/shoppingcart/list" title="">点击返回购物车</a>
+    <div class="div2"><h3>${order.errMsg!''}</h3></div>
+    <a class="btn-share" href="${app.basePath}/mobile/index" title="">点击返回首页</a>
   </section>
   <!-- Center End -->
 <script>

@@ -32,9 +32,10 @@ function saveUserInfoCallback(data){
 	var result = eval("("+data+")");
 	alert('消息提醒' + result.msg);
 	if(result.code == 1){
-		$("#myspreadavatar").attr("src",basePath+$("#cuavatar").val());
-		$("#myspreadnick").html($("#csnick").val());
-		$("#myspreadcontent").html($("#cscontent").val());
+//		$("#myspreadavatar").attr("src",basePath+$("#cuavatar").val());
+//		$("#myspreadnick").html($("#csnick").val());
+//		$("#myspreadcontent").html($("#cscontent").val());
+		$("#imgcode").attr("src",basePath+"/mobile/user/mySpread/qrcode?title="+$("#cscontent").val()+"&t="+Math.random());
 		returnQcodeList();
 	}
 }

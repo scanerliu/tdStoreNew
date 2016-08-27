@@ -2,6 +2,7 @@ package com.tiandu.common.tencent.common;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
@@ -36,6 +38,8 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.tiandu.common.utils.ConstantsUtils;
+import com.tiandu.common.utils.DateUtil;
+import com.tiandu.common.utils.QRCodeImageUtils;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.service.TdUserService;
 import com.tiandu.system.entity.TdSystemConfig;
@@ -218,7 +222,13 @@ public class TdUserQRcodeTools {
      * @param size 二维码大小，像素值
      * @param response
      */
-    public void getQRCode(String content, int size, HttpServletResponse response) {
+    public void getQRCode(String content, String title, TdUser user, int size, HttpServletRequest request,HttpServletResponse response) {
+    	//项目跟路径
+    	String rootPath = request.getServletContext().getRealPath("/");
+    	//推广背景图片
+    	String targetImg = rootPath+"/static/default/images/shareback.jpg";
+    	
+    	//生成二维码图片
         Map<EncodeHintType, Object> hints = new HashMap<EncodeHintType, Object>();
         
         hints.put(EncodeHintType.MARGIN, 0);
@@ -241,9 +251,35 @@ public class TdUserQRcodeTools {
                    Color.BLACK.getRGB():Color.WHITE.getRGB());
             }
         }
-        
+       
         try {
-            ImageIO.write(image, "png", response.getOutputStream());//将内存中的图片通过流动形式输出到客户端
+	        //过期时间
+	        Date expireDate = DateUtil.getAddDay(user.getQrcodeUpdate(), 29);
+			String expire = DateUtil.convertDateToString(expireDate);
+			//头像
+			BufferedImage headimage = null;
+			if(StringUtils.isBlank(user.getUavatar())){
+				user.setUavatar(ConstantsUtils.DEFAULT_USER_AVATAR);
+			}
+			if(user.getUavatar().indexOf("http:")==0){
+				headimage = ImageIO.read(new URL(user.getUavatar()));
+			}else{
+				try {
+					headimage = ImageIO.read(new File(rootPath+user.getUavatar()));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+//					e.printStackTrace();
+					headimage = ImageIO.read(new File(rootPath+ConstantsUtils.DEFAULT_USER_AVATAR));
+				}
+			}
+			//标题
+			if(StringUtils.isBlank(title)){
+				title = "邀您来创客，创业就是这么简单，大众创业，万众创新";
+			}
+			//生成推广图片
+	        BufferedImage spreadimage = QRCodeImageUtils.genernateQRCodeImage(headimage, image, targetImg, user.getUnick(), title, expire);
+	        //输出图片
+            ImageIO.write(spreadimage, "png", response.getOutputStream());//将内存中的图片通过流动形式输出到客户端
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -284,10 +320,32 @@ public class TdUserQRcodeTools {
     	return qrcodeUrl;
     }
     
-    public void QRcodeByUidAndResponse(Integer uId,HttpServletResponse response) throws UnsupportedEncodingException, JSONException
+    public void QRcodeByUidAndResponse(Integer uId, String title, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, JSONException
     {
-    	String QRcodeUrl = this.validQRcodeUrl(uId);
-    	this.getQRCode(QRcodeUrl, pictureSize, response);
+//    	String QRcodeUrl = this.validQRcodeUrl(uId);
+//    	this.getQRCode(QRcodeUrl, pictureSize, response);
+    	String qrcodeUrl = null;
+    	if(uId != null && uId >0)
+    	{
+    		TdUser user = tdUserService.findOne(uId);
+    		if(user != null)
+        	{
+    			if(isValidDate(user.getQrcodeUpdate()))
+            	{
+            		qrcodeUrl = user.getQrcodeUrl();
+            	}
+            	else
+            	{
+            		qrcodeUrl = this.getQRcodeUrl(this.validAccessToken(), uId);
+            		user.setQrcodeUrl(qrcodeUrl);
+            		user.setQrcodeUpdate(new Date());
+            		tdUserService.saveCustomer(user);
+            	}
+    			this.getQRCode(qrcodeUrl, title, user, pictureSize,request, response);
+        	}
+    		
+    	}
+    	
     }
     
     

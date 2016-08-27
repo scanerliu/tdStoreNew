@@ -32,7 +32,7 @@
         //ul_li(color_ul);
         //ul_li(size_ul);
         //acare();
-        iswiper();
+       // iswiper();
     }
 </script>
 <style>
@@ -200,7 +200,7 @@
     </div>
     <div class="detail5">
         <a href="${app.basePath}/mobile/product/describe/1/${product.id}" title="">图文详情</a>
-        <a href="${app.basePath}/mobile/product/comment${product.id}" title="">评价晒单</a>
+        <!--<a href="${app.basePath}/mobile/product/comment${product.id}" title="">评价晒单</a>-->
         <a href="${app.basePath}/mobile/product/describe/2/${product.id}" title="">包装与配送</a>
         <a href="${app.basePath}/mobile/product/describe/3/${product.id}" title="">售后服务</a>
     </div>

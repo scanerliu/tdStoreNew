@@ -120,6 +120,7 @@ public class MobileAgentController extends BaseController{
 //		}
 		//供应商
 		if(ConstantsUtils.AGENT_GROUPID_SUPPLIER.equals(agent.getGroupId())){
+			
 			return "/mobile/agent/supplier";
 		}
 		if(agent.getLevel() == 4)

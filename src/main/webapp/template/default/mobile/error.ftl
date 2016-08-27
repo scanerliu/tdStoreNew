@@ -32,7 +32,7 @@
 <body class="body_gray">
   <!-- header_top -->
   <div class="top_heater">
-    <a href="${app.basePath}/mobile/shoppingcart/list" title="" class="hleft hback"></a>
+    <a href="${app.basePath}/mobile/index" title="" class="hleft hback"></a>
     <span>操作失败</span>
   </div>
   <!-- header_top end -->

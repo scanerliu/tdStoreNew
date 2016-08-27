@@ -735,16 +735,16 @@ public class MUserController extends BaseController {
 		res.put("msg", "个人信息修改失败！");
 		TdUser currentUser = this.getCurrentUser();
 		String avatar = user.getUavatar();
-		if(!avatar.equals("")){
-			avatar = avatar.replaceFirst("/", "");
-			avatar = avatar.substring(avatar.indexOf("/"));			
+		if(StringUtils.isNotBlank(avatar)){
+			user.setUavatar(avatar);
+		}else{
+			user.setUavatar(null);
 		}
 		/*currentUser.setUavatar(avatar);
 		currentUser.setUnick(user.getUnick());
 		currentUser.setUgenter(user.getUgenter());
 		currentUser.setUbirthday(user.getUbirthday());
 		currentUser.setUtel(user.getUtel());*/
-		user.setUavatar(avatar);
 		user.setUid(currentUser.getUid());
 		if(tdUserService.saveUserInfo(user) == 1){
 			res.put("msg", "个人信息修改成功！");
@@ -1297,7 +1297,7 @@ public class MUserController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/mySpread/qrcode")
-	public void spreadQRcode(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, JSONException
+	public void spreadQRcode(String title, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, JSONException
 	{
 		TdUser currentUser = this.getCurrentUser();
 //		if(null==currentUser){
@@ -1311,7 +1311,7 @@ public class MUserController extends BaseController {
 //		}
 //		tdUserQRcodeTools.QRcodeByUidAndResponse(currentUser.getUid(), response);
 //		TdUserQRcodeTools QRcodeTools = new TdUserQRcodeTools();
-		tdUserQRcodeTools.QRcodeByUidAndResponse(currentUser.getUid(), response);
+		tdUserQRcodeTools.QRcodeByUidAndResponse(currentUser.getUid(), title, request, response);
 	}
 	
 	/*

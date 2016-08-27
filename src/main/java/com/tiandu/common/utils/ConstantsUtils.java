@@ -307,5 +307,9 @@ public class ConstantsUtils {
 	 *会员统计通知短信模板id
 	 */
 	public static final String SMS_TEMPLATE_CUSTOMERCOUNT = "106246";
+	/**
+	 * 默认头像
+	 */
+	public static final String DEFAULT_USER_AVATAR = "/static/default/images/defaultimg.jpg";
 	
 }
