@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/common.css"/>
     <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/main.css"/>
     <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/index.css"/>
+    <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/x_pc.css"/>
     <script src="${app.basePath}/static/js/jquery-1.12.3.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="${app.basePath}/static/js/mobile/common.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/js/mobile/core.js"></script>
@@ -28,8 +29,22 @@
     <span>投诉</span>
   </div>
   <!-- header_top end -->
-	<section class="container zizhirenzheng">
-	    ${result.failMsg!''}
-	</section>
+	<!-- Center Start -->
+	<#if result.flag>
+	  <section class="container evaluate-success">
+	    <img class="icon-success" src="${app.basePath}/static/default/mobile/images/f-success.png" alt="">
+	    <div class="div1">操作成功</div>
+	    <div class="div2"><h3>${result.failMsg!''}</h3></div>
+	    <a class="btn-share" href="${app.basePath}/mobile/order/list" title="">点击返回</a>
+	  </section>
+	 <#else>
+	 	<section class="container evaluate-success">
+		    <img class="icon-success" src="${app.basePath}/static/default/mobile/images/f-fail.png" alt="">
+		    <div class="div1">操作失败</div>
+		    <div class="div2"><h3>${result.failMsg!''}</h3></div>
+		    <a class="btn-share" href="${app.basePath}/mobile/order/list" title="">点击返回</a>
+		  </section>
+	 </#if>
+  <!-- Center End -->
 </body>
 </html>

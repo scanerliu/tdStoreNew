@@ -430,6 +430,9 @@ public class TdOrderServiceImpl implements TdOrderService{
 			}else if(shoppingcart.getPtype()==4){//图片美化订单
 				TdOrder order = this.insertImageOrder(currUser, orderForm, shoppingcart, torder, now);
 //				torder.setJno(order.getOrderNo());
+			}else if(shoppingcart.getPtype()==5){//供应商订单
+				TdOrder order = this.insertAgentOrder(currUser, orderForm, shoppingcart, torder, now);
+//				torder.setJno(order.getOrderNo());
 			}
 			
 //			tdJointOrderMapper.updateByPrimaryKey(torder);
@@ -508,6 +511,8 @@ public class TdOrderServiceImpl implements TdOrderService{
 			tdOrderSkuMapper.insert(sku);
 			//更新货品库存
 			tdProductSkuService.updateStock(item.getProductSkuId(),-item.getQuantity());
+			//更新总库存
+			tdProductService.updateStock(item.getProductId(),-item.getQuantity());
 			
 			// 更新销量
 			tdProductStatService.updateByCount(item.getProductId(), item.getQuantity());
@@ -645,7 +650,6 @@ public class TdOrderServiceImpl implements TdOrderService{
 	 * @return
 	 */
 	private TdOrder insertAgentOrder(TdUser currUser, OrderForm orderForm, ShoppingcartVO shoppingcart,TdJointOrder torder, Date now) throws RuntimeException {
-		Boolean canuserpackage = configUtil.isAgentProductUsePackage();//是否启用700元的单类代理领取商品包
 		TdOrder order = new TdOrder();
 		order.setCreateTime(now);
 		order.setGainPoints(shoppingcart.getGainPoints());
@@ -704,7 +708,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 		orderproduct.setAttachment(shoppingcart.getAgentProduct().getImageUrl());
 		tdOrderProductMapper.insert(orderproduct);
 		//保存订单货品
-		if(null!=shoppingcart.getItemList() && orderForm.getAgentProductId().equals(1)||( orderForm.getAgentProductId().equals(4)&&canuserpackage)&& null!=orderForm.getProductId()){
+		if(null!=shoppingcart.getItemList() && shoppingcart.getAgentProduct().getGift() && null!=orderForm.getProductId()){
 			//保存商品包信息到订单详情
 			TdOrderProduct orderproduct2 = new TdOrderProduct();
 			orderproduct2.setItemType(Byte.valueOf("2"));
@@ -733,6 +737,118 @@ public class TdOrderServiceImpl implements TdOrderService{
 				sku.setQuantity(item.getQuantity());
 				tdOrderSkuMapper.insert(sku);
 			}
+			//更新总库存
+			tdProductService.updateStock(shoppingcart.getProductPackage().getId(),-1);
+			//保存收货地址
+			if(null!=orderForm.getUserAddress()){
+				TdUserAddress address = orderForm.getUserAddress();
+				TdOrderAddress orderAddress = new TdOrderAddress();
+				orderAddress.setOrderId(order.getOrderId());
+				orderAddress.setAddress(address.getAddress());
+				orderAddress.setCustomerName(address.getName());
+				orderAddress.setRegionFullName(address.getFullAddress());
+				orderAddress.setTelphone(address.getTelphone());
+				orderAddress.setRegionId(address.getRegionId());
+				tdOrderAddressMapper.insert(orderAddress);			
+			}
+		}
+		//保存日志
+		
+		return order;
+	}
+	/**
+	 * 生成供应商订单
+	 * @param currUser
+	 * @param orderForm
+	 * @param shoppingcart
+	 * @param torder
+	 * @param now
+	 * @return
+	 */
+	private TdOrder insertSuppilerOrder(TdUser currUser, OrderForm orderForm, ShoppingcartVO shoppingcart,TdJointOrder torder, Date now) throws RuntimeException {
+		TdOrder order = new TdOrder();
+		order.setCreateTime(now);
+		order.setGainPoints(shoppingcart.getGainPoints());
+		order.setCommented(true);
+		order.setBenefited(1);
+		order.setItemNum(shoppingcart.getTotalcount());
+		order.setJointId(torder.getId());//联合订单
+		order.setOrderNo(WebUtils.generateOrderNo());
+		order.setOrderStatus(ConstantsUtils.ORDER_STATUS_NEW);
+		order.setOrderType(ConstantsUtils.ORDER_KIND_AGENTPRODUCT);
+		order.setPaymentId(orderForm.getPaymentId());
+		if(orderForm.getUsePoints()){
+			order.setUsedPoint(shoppingcart.getTotalPointsUsed());
+			order.setPointAmount(shoppingcart.getTotalPointAmount());
+			order.setPayAmount(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount()));
+		}else{
+			order.setUsedPoint(0);
+			order.setPointAmount(BigDecimal.ZERO);
+			order.setPayAmount(shoppingcart.getTotalAmount());
+		}
+		order.setPostage(shoppingcart.getTotalPostage());
+		order.setPayStatus(ConstantsUtils.ORDER_PAY_STATUS_UNPAY);
+		order.setPaymentId(orderForm.getPaymentId());
+		order.setProductAmount(shoppingcart.getTotalProductAmount());
+		order.setRefundAmount(BigDecimal.ZERO);
+		order.setBenefitAmount(BigDecimal.ZERO);
+		order.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_UNSHIPPED);
+		order.setTotalAmount(shoppingcart.getTotalAmount());
+		order.setUpdateBy(currUser.getUid());
+		order.setUpdateTime(now);
+		order.setUserId(currUser.getUid());
+		order.setUserMessage(orderForm.getUserMsg());
+		order.setSupplierId(1);
+		//保存订单详情
+		if(currUser.getSupplierType()>0){
+			throw new RuntimeException("用户已经拥有供应商，不能重复购买!");
+		}
+		this.save(order);
+		TdOrderProduct orderproduct = new TdOrderProduct();
+		orderproduct.setItemType(Byte.valueOf("1"));
+		orderproduct.setItemId(orderForm.getAgentProductId());
+		orderproduct.setItemPrice(shoppingcart.getAgentProduct().getSalesPrice());
+		orderproduct.setSupplierPrice(shoppingcart.getAgentProduct().getSupplierPrice());
+		orderproduct.setRegionId(null);
+		orderproduct.setLevel(null);
+		orderproduct.setQuantity(1);
+		orderproduct.setTitle(shoppingcart.getAgentProduct().getTitle());
+		orderproduct.setProductTypeId(null);
+		orderproduct.setOrderId(order.getOrderId());
+		orderproduct.setAttachment(shoppingcart.getAgentProduct().getImageUrl());
+		tdOrderProductMapper.insert(orderproduct);
+		//保存订单货品
+		if(null!=shoppingcart.getItemList() && shoppingcart.getAgentProduct().getGift() && null!=orderForm.getProductId()){
+			//保存商品包信息到订单详情
+			TdOrderProduct orderproduct2 = new TdOrderProduct();
+			orderproduct2.setItemType(Byte.valueOf("2"));
+			orderproduct2.setItemId(orderForm.getProductId());
+			orderproduct2.setItemPrice(shoppingcart.getProductPackage().getPrice());
+			orderproduct2.setSupplierPrice(BigDecimal.ZERO);
+			orderproduct2.setRegionId(0);
+			orderproduct2.setLevel(0);
+			orderproduct2.setQuantity(1);
+			orderproduct2.setTitle(shoppingcart.getProductPackage().getName());
+			orderproduct2.setProductTypeId(0);
+			orderproduct2.setOrderId(order.getOrderId());
+			tdOrderProductMapper.insert(orderproduct2);
+			//保存商品包详情
+			for(TdShoppingcartItem item : shoppingcart.getItemList()){
+				TdOrderSku sku = new TdOrderSku();
+				sku.setDisplaySpecifications(item.getProductPackageItem().getProductSku().getSpecifications());
+				sku.setItemType(item.getItemType().byteValue());
+				sku.setOrderId(order.getOrderId());
+				sku.setProductSkuId(item.getProductSkuId());
+				sku.setProductId(item.getProductId());
+				sku.setPrice(item.getProductPackageItem().getPrice());
+				sku.setSupplierPrice(BigDecimal.ZERO);
+				sku.setProductName(item.getProductPackageItem().getProductName());
+				sku.setProductSkuCode(item.getProductPackageItem().getProductSku().getSkuCode());
+				sku.setQuantity(item.getQuantity());
+				tdOrderSkuMapper.insert(sku);
+			}
+			//更新总库存
+			tdProductService.updateStock(shoppingcart.getProductPackage().getId(),-1);
 			//保存收货地址
 			if(null!=orderForm.getUserAddress()){
 				TdUserAddress address = orderForm.getUserAddress();
@@ -816,6 +932,51 @@ public class TdOrderServiceImpl implements TdOrderService{
 		orderproduct.setTitle(shoppingcart.getAgentProduct().getTitle());
 		orderproduct.setAttachment(shoppingcart.getAgentProduct().getImageUrl());
 		tdOrderProductMapper.insert(orderproduct);
+		//保存订单货品
+		if(null!=shoppingcart.getItemList() && shoppingcart.getAgentProduct().getGift() && null!=orderForm.getProductId()){
+			//保存商品包信息到订单详情
+			TdOrderProduct orderproduct2 = new TdOrderProduct();
+			orderproduct2.setItemType(Byte.valueOf("2"));
+			orderproduct2.setItemId(orderForm.getProductId());
+			orderproduct2.setItemPrice(shoppingcart.getProductPackage().getPrice());
+			orderproduct2.setSupplierPrice(BigDecimal.ZERO);
+			orderproduct2.setRegionId(0);
+			orderproduct2.setLevel(0);
+			orderproduct2.setQuantity(1);
+			orderproduct2.setTitle(shoppingcart.getProductPackage().getName());
+			orderproduct2.setProductTypeId(0);
+			orderproduct2.setOrderId(order.getOrderId());
+			tdOrderProductMapper.insert(orderproduct2);
+			//保存商品包详情
+			for(TdShoppingcartItem item : shoppingcart.getItemList()){
+				TdOrderSku sku = new TdOrderSku();
+				sku.setDisplaySpecifications(item.getProductPackageItem().getProductSku().getSpecifications());
+				sku.setItemType(item.getItemType().byteValue());
+				sku.setOrderId(order.getOrderId());
+				sku.setProductSkuId(item.getProductSkuId());
+				sku.setProductId(item.getProductId());
+				sku.setPrice(item.getProductPackageItem().getPrice());
+				sku.setSupplierPrice(BigDecimal.ZERO);
+				sku.setProductName(item.getProductPackageItem().getProductName());
+				sku.setProductSkuCode(item.getProductPackageItem().getProductSku().getSkuCode());
+				sku.setQuantity(item.getQuantity());
+				tdOrderSkuMapper.insert(sku);
+			}
+			//更新总库存
+			tdProductService.updateStock(shoppingcart.getProductPackage().getId(),-1);
+			//保存收货地址
+			if(null!=orderForm.getUserAddress()){
+				TdUserAddress address = orderForm.getUserAddress();
+				TdOrderAddress orderAddress = new TdOrderAddress();
+				orderAddress.setOrderId(order.getOrderId());
+				orderAddress.setAddress(address.getAddress());
+				orderAddress.setCustomerName(address.getName());
+				orderAddress.setRegionFullName(address.getFullAddress());
+				orderAddress.setTelphone(address.getTelphone());
+				orderAddress.setRegionId(address.getRegionId());
+				tdOrderAddressMapper.insert(orderAddress);			
+			}
+		}
 		return order;
 	}
 
@@ -1140,6 +1301,16 @@ public class TdOrderServiceImpl implements TdOrderService{
 								log2.setNote("订单生成分公司操作成功。");
 							}							
 						}
+					}else if(ConstantsUtils.AGENT_GROUPID_SUPPLIER.equals(agentProduct.getGroupId())){//供应商
+						//检查用户是否已经是供应商资格
+						TdUser user = tdUserService.findOne(order.getUserId());
+						if(null!=user && user.getSupplierType().equals(Byte.valueOf("0"))){
+							TdUser upuser = new TdUser();
+							upuser.setSupplierType(Byte.valueOf("3"));
+							tdUserService.updateByPrimaryKeySelective(upuser);
+						}else{
+							log2.setNote("订单生成供应商失败，购买用户已经具有供应商资格，不能重复购买！");
+						}
 					}
 				}else{
 					log2.setNote("订单生成代理操作失败：代理产品未找到!");
@@ -1197,19 +1368,44 @@ public class TdOrderServiceImpl implements TdOrderService{
 				sc.setFlag(false);
 				sc.setTypeId(8);
 				List<TdBenefit> benefitList = tdBenefitService.findBySearchCriteria(sc);
+				//零元商品分润设置
+				sc.setFlag(false);
+				sc.setTypeId(9);
+				List<TdBenefit> zerobenefitList = tdBenefitService.findBySearchCriteria(sc);
+				
+				//获取零元三级分润金额
+				BigDecimal zeroAmount = configUtil.getZeroProductBenefitAmount();
 				
 				List<TdOrderSku> orderSkuList = tdOrderSkuMapper.findByOrderId(order.getOrderId());
 				if(null!=orderSkuList && orderSkuList.size()>0){
 					//单类代理分润
 					for(TdOrderSku ordersku : orderSkuList){
-						if(BigDecimal.ZERO.compareTo(ordersku.getBenefitAmount())<0){//有利润空间才分润
-							BigDecimal amount = ordersku.getBenefitAmount();
-							if(BigDecimal.ZERO.compareTo(amount)<0){
-								orderBenefitAmount = orderBenefitAmount.add(amount);
-								//单类代理分润
-								BigDecimal agentBenefitAmount = displayCommonProductAgentBenefit(amount, order, ordersku, orderUser, benefitList, 4, now);
-								totalBenefitAmount = totalBenefitAmount.add(agentBenefitAmount);								
+						if(!ordersku.getItemType().equals(Byte.valueOf("3"))){//普通商品分润
+							if(BigDecimal.ZERO.compareTo(ordersku.getBenefitAmount())<0){//有利润空间才分润
+								BigDecimal amount = ordersku.getBenefitAmount();
+								if(BigDecimal.ZERO.compareTo(amount)<0){
+									orderBenefitAmount = orderBenefitAmount.add(amount);
+									//单类代理分润
+									BigDecimal agentBenefitAmount = displayCommonProductAgentBenefit(amount, order, ordersku, orderUser, benefitList, 4, now);
+									totalBenefitAmount = totalBenefitAmount.add(agentBenefitAmount);								
+								}
 							}
+						}else{//零元商品分润，不再参与普通商品分润
+							if(BigDecimal.ZERO.compareTo(ordersku.getBenefitAmount())<0){//有利润空间才分润
+								BigDecimal amount = ordersku.getBenefitAmount();
+								if(zeroAmount.compareTo(amount)<0){
+									//三级分销分润
+									BigDecimal distBenefitAmount = displayDistributionBenefit(zeroAmount, order, orderUser, zerobenefitList, 4, now);
+									totalBenefitAmount = totalBenefitAmount.add(distBenefitAmount);	
+									amount = amount.subtract(zeroAmount);
+									
+									if(BigDecimal.ZERO.compareTo(amount)<0){
+										//分公司分润
+										BigDecimal branchBenefitAmount = displayBranchBenefit(amount, order, orderUser, zerobenefitList, 3, now);
+										totalBenefitAmount = totalBenefitAmount.add(branchBenefitAmount);
+									}
+								}
+							}							
 						}
 					}
 					if(BigDecimal.ZERO.compareTo(orderBenefitAmount)<0){

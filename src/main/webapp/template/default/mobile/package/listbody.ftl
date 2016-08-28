@@ -5,8 +5,8 @@
             <img src="${app.basePath}${item.imageUrl!''}" alt="${item.name!''}">
             <p class="p1">${item.name!''}</p>
             <p class="p2">
-                <label class="lab1">¥700.00</label>
-                <label class="lab2">￥<#if item.price??>${item.price?string('0.00')}</#if></label>
+                <label class="lab1">¥<#if item.price??>${item.price?string('0.00')}</#if></label>
+                <label class="lab2"></label>
             </p>
         </a>
 	</#list>

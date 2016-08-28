@@ -27,4 +27,6 @@ public interface TdProductMapper {
      * @return
      */
     Integer updateBatch(Map map);
+
+	int updateStock(TdProduct product);
 }

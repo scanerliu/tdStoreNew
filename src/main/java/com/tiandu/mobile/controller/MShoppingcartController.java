@@ -484,6 +484,13 @@ public class MShoppingcartController extends BaseController {
 					cart.setTotalcount(1);
 					//4-供应商
 				}else if(ConstantsUtils.AGENT_GROUPID_SUPPLIER.equals(agentproduct.getGroupId())){
+					//检查用户是否已经是供应商资格
+					TdUser user = tdUserService.findOne(uid);
+					if(null!=user && user.getSupplierType().equals(Byte.valueOf("0"))){
+						
+					}else{
+						throw new Exception("下单失败，您已经具有供应商资格，不能重复购买！");
+					}
 					cart.setPtype(5);
 					cart.setTotalcount(1);
 				}else{

@@ -215,6 +215,15 @@ public class TdProductServiceImpl implements TdProductService{
 		}
 		
 	}
+
+	@Override
+	public int updateStock(Integer productId, int i) {
+		TdProduct product = new TdProduct(); 
+		product.setId(productId);
+		product.setQuantum(i);
+		return tdProductMapper.updateStock(product);
+		
+	}
 	
 	
 	

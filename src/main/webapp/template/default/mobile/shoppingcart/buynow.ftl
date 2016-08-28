@@ -56,6 +56,18 @@
 	
 	    <!-- order_detail_title -->
 	    <ul class="order_goods">
+	    <#if shoppingcart?? && shoppingcart.ptype?? && shoppingcart.ptype !=1 && shoppingcart.agentProduct??>
+	    	<li class="goods_box p">
+	            <img alt="图片" src="${app.basePath}${shoppingcart.agentProduct.imageUrl!''}"/>
+	            <section>
+	                <h3>${shoppingcart.agentProduct.title!''}</h3>
+	                <div>
+		                <span><label for="">数量：</label><font>1</font></span>
+	                </div>
+	                <p>￥${shoppingcart.agentProduct.salesPrice!'0'}</p>
+	            </section>
+	        </li>
+	    </#if>
 	    <#if shoppingcart?? && shoppingcart.itemList??>
         	<#list shoppingcart.itemList as item>
         	<#if item.itemType==2>
@@ -180,10 +192,10 @@
 	</section>
 </form>
 	<!-- Footer Start -->
-	<footer>
+	<footer onclick="genernateOrder2()">
 	    <div class="gopay">
 	        <span class="totalprice">总计：<font color="red" id="totalAmountdv">￥${shoppingcart.totalAmount!''}</font></span>
-	        <a href="javascript:;" onclick="genernateOrder2()" class="a-pay" title="">提交订单</a>
+	        <a href="javascript:;"  class="a-pay" title="">提交订单</a>
 	    </div>
 	    <span class="footclear"></span>
 	</footer>

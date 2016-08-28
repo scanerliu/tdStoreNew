@@ -61,15 +61,16 @@
 	    <a href="javascript:;" onclick="window.history.go(-1)" title="" class="hleft hback"></a>
 	    <span>礼品包</span>
 	</div>
-    <div class="strenth">
+    <!--<div class="strenth">
         <aside class="">
             <select name="" id="">
                 <option value="">700元礼包</option>
             </select>
         </aside>
-    </div>
+    </div>-->
 	<form id="searchForm" autocomplete="false">
 		<input type="hidden" name="pageNo" id="pageNo" value="0"/>
+		<input type="hidden" name="acpe" value="<#if sc.acpe??>${sc.acpe!''}</#if>"/>
 	</form>
 	<div class="hot">
         <section class="sec2" id="results">

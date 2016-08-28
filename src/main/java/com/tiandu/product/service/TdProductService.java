@@ -53,5 +53,12 @@ public interface TdProductService {
 	 *
 	 */
 	public void seckillProduct();
+
+	/**
+	 * 更新商品总库存
+	 * @param productId
+	 * @param i
+	 */
+	public int updateStock(Integer productId, int i);
 	
 }

@@ -228,7 +228,9 @@ public class ProductPackageController extends BaseController{
 				PackageItemEntity pie = new PackageItemEntity();
 				pie.setPrice(prices[i]);
 				productImages[i] = productImages[i].replaceFirst("/", "");
-				productImages[i] = productImages[i].substring(productImages[i].indexOf("/"));
+				if(productImages[i].indexOf("/")>=0){
+					productImages[i] = productImages[i].substring(productImages[i].indexOf("/"));
+				}
 				pie.setProductImage(productImages[i]);
 				pie.setProductName(productNames[i]);
 				pie.setSpec(specs[i]);

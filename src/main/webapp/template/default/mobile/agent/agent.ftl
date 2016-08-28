@@ -12,7 +12,7 @@
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <meta content="telephone=no" name="format-detection">
-    <title>分公司申请</title>
+    <title>创业中心</title>
     <!-- css -->
     <link rel="stylesheet" href="${app.basePath}/static/touch/css/common.css" type="text/css" />
     <link rel="stylesheet" href="${app.basePath}/static/touch/css/main.css" type="text/css" />
@@ -50,7 +50,7 @@ $(document).ready(function(){
 <!-- header_top -->
 <div class="top_heater">
     <a href="javascript:history.go(-1);" title="返回" class="hleft hback"></a>
-    <span>成为代理</span>
+    <span>创业中心</span>
 </div>
 <!-- header_top end -->
 
@@ -104,7 +104,7 @@ $(document).ready(function(){
         	<input type="hidden" name="productType" id="productType" value="2"/>
         	<input type="hidden" name="productTypeId" id="productTypeId" value="${typeId!''}"/>
         	<input type="hidden" name="regionId" id="regionId" value="${regionId!''}"/>
-        	<input type="hidden" id="isAgentProductUsePackage" value="${system.isAgentProductUsePackage!'false'}"/>
+        	<input type="hidden" id="isAgentProductUsePackage" value="${agent.gift?c}"/>
         </form>
     </div>
 </section>
@@ -119,8 +119,8 @@ function buyNow(){
 	var productType = $("#productType").val();
 	
 	if(agentProductId>0){
-		if(agentProductId==1||(agentProductId==4 && isAgentProductUsePackage=="true")){
-			var agent = '{"agentProductId":'+agentProductId+',"regionId":'+regionId+',"productTypeId":'+productTypeId+',"productType":'+productType+'}';
+		if(isAgentProductUsePackage=="true"){
+			var agent = '{"agentProductId":"'+agentProductId+'","regionId":"'+regionId+'","productTypeId":"'+productTypeId+'","productType":"'+productType+'"}';
 			setCookie("agentpackage", agent, 30);
 			url = basePath+"/mobile/package/list?acpe=${agent.salesPrice!''}";
 			window.location.href=url;

@@ -72,8 +72,8 @@
     <tr>
         <th>是否送礼包：</th>
         <td>
-            <label><input type="checkbox" name="gift" value="true" <#if product.gift?? && product.gift==true>checked="true"</#if>>是</label>
-            <label><input type="checkbox" name="gift" value="false" <#if !product.gift?? || product.gift?? && product.gift==false>checked="true"</#if>>否</label>
+            <label><input type="radio" name="gift" value="true" <#if product.gift?? && product.gift==true>checked="true"</#if>>是</label>
+            <label><input type="radio" name="gift" value="false" <#if !product.gift?? || product.gift?? && product.gift==false>checked="true"</#if>>否</label>
         </td>
     </tr>
     <tr>

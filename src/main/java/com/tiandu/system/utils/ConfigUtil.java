@@ -1,5 +1,6 @@
 package com.tiandu.system.utils;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -296,6 +297,24 @@ public class ConfigUtil {
 		co.put("campaignagentnum", campaignagentnum);
 		co.put("campaigncompanysuppliernum", campaigncompanysuppliernum);
 		return co;
+	}
+
+	/**
+	 *获取零元三级分润金额
+	 * @return
+	 */
+	public BigDecimal getZeroProductBenefitAmount() {
+		BigDecimal amount = new BigDecimal(1);
+		String amt = getConfig("zeroproductbenefitamount");
+		if(StringUtils.isBlank(amt)){
+			try {
+				amount = new BigDecimal(amt).setScale(2, BigDecimal.ROUND_FLOOR);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return amount;
 	}
 
 }

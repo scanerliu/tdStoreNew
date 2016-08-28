@@ -427,6 +427,9 @@
     <if test="isNormalProduct != null and isNormalProduct == true">
     	and p.kind != 2
     </if>
+    <if test="acpe != null">
+    	and p.price = #{acpe,jdbcType=DECIMAL}
+    </if>
     <choose>
     	<when test="typeIdTree != null">
     		and p.type_id_tree like CONCAT('%',#{typeIdTree,jdbcType=VARCHAR},'%')
@@ -565,6 +568,9 @@
     <if test="kind == null">
     	and p.kind != 2
     </if>
+    <if test="acpe != null">
+    	and p.price = #{acpe,jdbcType=DECIMAL}
+    </if>
     <if test="orderBy != null">
     	order by ${orderBy}
     </if>
@@ -610,5 +616,11 @@
         	#{item,jdbcType=INTEGER}
         </foreach>  
   </update>  
+  
+  <update id="updateStock" parameterType="com.tiandu.product.entity.TdProduct" >
+    update td_product
+    set quantum = quantum+#{quantum,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
   
 </mapper>
