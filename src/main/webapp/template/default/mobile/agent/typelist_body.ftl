@@ -83,7 +83,7 @@
 		                    	<#list stype.subList as etype>
 		                    	
 		                        <a t=${etype.id?c}  href="javascript:;" title="${etype.name!''}" <#if !experTypeIds?? || !experTypeIds?contains('['+etype.id?c+']')>class="active"</#if>>
-		                            <img src="${etype.imageUrl!''}" alt="${etype.name!''}">
+		                            <img src="<#if etype.imageUrl?? && etype.imageUrl!="">${etype.imageUrl!''}<#else>${app.basePath}/static/default/images/noimg.png</#if>" alt="${etype.name!''}">
 		                            <p>${etype.name!''}</p>
 		                            
 		                            <i></i>

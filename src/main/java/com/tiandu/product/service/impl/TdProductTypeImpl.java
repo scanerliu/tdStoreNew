@@ -126,7 +126,17 @@ public class TdProductTypeImpl implements TdProductTypeService{
 
 	@Override
 	public List<TdProductType> findByParentId(Integer id) {
-		return tdProduceTypeMapper.findByParentId(id);
+		List<TdProductType> typeList = new ArrayList<>();
+		
+		typeList = tdProduceTypeMapper.findByParentId(id);
+		
+		if(id != 0){
+			for (TdProductType tdProductType : typeList) {
+				tdProductType.setSubList(tdProduceTypeMapper.findByParentId(tdProductType.getId()));
+			}
+		}
+		
+ 		return typeList;
 	}
 	
 	/**

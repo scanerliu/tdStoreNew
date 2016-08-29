@@ -1,4 +1,5 @@
 <#import "/common/app.ftl" as app>
+<#include "/common/common.ftl" />
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,15 +22,24 @@
     <script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script> 
     <script type="text/javascript" src="${app.basePath}/static/touch/js/common.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/touch/js/index.js"></script>
-</head>
-
-<script>
+    
+    <script>
+		
 Rich.pageSize();
-    window.onload=function(){
+$(document).ready(function(){
+	
         left_right2();
         cleft_height2();
-    }
+});
+ window.onload=function(){
+    
+        
+ }
+		
 </script>
+</head>
+
+
 
 <body class="body_bg">
 
@@ -39,7 +49,22 @@ Rich.pageSize();
     <span>分类列表</span>
 </div>
 <!-- header_top end -->
+<script>
 
+$(function(){
+
+	<#if typeList?? && typeList?size gt 0>
+	searchSubtype(${typeList[0].id});
+	</#if>
+})
+	
+function searchSubtype(typeId){
+	var url = basePath + "/mobile/productType/search";
+	var loadData = {"typeId":typeId};
+	
+	$("#subType").load(url,loadData);
+}
+</script>
 <!-- Center Start -->
 <section class="container">
     <div class="classify" id="classify">
@@ -47,38 +72,14 @@ Rich.pageSize();
             <aside>
             	<#if typeList?? && typeList?size gt 0>
             	<#list typeList as type>
-                <a href="javascript:;" title="${type.name!''}" <#if type_index==0>class="active"</#if>>${type.name!''}</a>
+                <a href="javascript:searchSubtype(${type.id});" title="${type.name!''}" <#if type_index==0>class="active"</#if>>${type.name!''}</a>
                 </#list>
                 </#if>
             </aside>
         </section>
-        <section class="cla_right2 fr" id="cla_right">
-            <#if typeList?? && typeList?size gt 0>
-        	<#list typeList as type>
-	            <ul <#if type_index==0>class="active"</#if>>
-        			<#if type.subList??>
-        			<#list type.subList as stype>
-		                <li <#if stype_index==0>class="active"</#if>>
-		                    <menu>${stype.name!''}</menu>
-		                    <aside class="as2">
-		                    	<#if stype.subList??>
-		                    	<#list stype.subList as etype>
-		                        <a href="${app.basePath}/mobile/product/list/${etype.id?c}" title="${etype.name!''}" class="active">
-		                            <img src="<#if etype.imageUrl!="">${etype.imageUrl!''}<#else>${app.basePath}/static/default/images/noimg.png</#if>" alt="${etype.name!''}">
-		                            <p>${etype.name!''}</p>
-		                        </a>
-		                        </#list>
-		                        </#if>
-		                    </aside>
-		                </li>
-		         	</#list>
-		         	</#if>
-	             </ul>
-		    </#list>
-		   	</#if>
-		   	
-            
-        </section>
+        <div id="subType">
+            <#include "/mobile/product/sub_type_list.ftl">
+        </div>
     </div>
 </section>
 <!-- Center End -->

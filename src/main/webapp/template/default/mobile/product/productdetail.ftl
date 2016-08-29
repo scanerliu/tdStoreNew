@@ -114,6 +114,7 @@
         	 <label for="" id="timeLeft" class="fr">离结束：<span>00</span>天 <span>00</span>时<span>00</span>分<span>00</span>秒</label>
 <script>
 $(document).ready(function(){
+    timer();
     setInterval("timer()",1000);
 });
 
