@@ -923,7 +923,7 @@ public class MUserController extends BaseController {
 	public String productManage(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser currUser = this.getCurrentUser();
 		Byte supplierType = currUser.getSupplierType();
-		if(supplierType == null || supplierType.equals(Byte.valueOf("0"))){
+		if(supplierType == null || supplierType.compareTo(Byte.valueOf("0"))==0){
 			modelMap.addAttribute("isSupplier", false);
 		}else{
 			modelMap.addAttribute("isSupplier", true);

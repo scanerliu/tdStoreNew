@@ -576,7 +576,11 @@ public class MShoppingcartController extends BaseController {
 				item.setProductSkuId(sku.getId());
 				item.setProduct(sku.getProduct());
 				item.setProductSku(sku);
-				item.setQuantity(orderForm.getQuantity());
+				if(sku.getProduct().getKind().equals(Byte.valueOf("3"))){//零元购数量固定为1
+					item.setQuantity(1);
+				}else{
+					item.setQuantity(orderForm.getQuantity());
+				}
 			}else{
 				throw new Exception("下单失败，商品不存在或已经下架！");
 			}

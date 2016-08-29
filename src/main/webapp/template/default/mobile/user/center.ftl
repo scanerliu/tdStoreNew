@@ -165,11 +165,13 @@
         <label>下载app</label>
         <i class="icon-next"></i>
       </a>
+      <#if currentUser.supplierType gt 0>
       <a href="${app.basePath}/mobile/user/supplierApply" title="供应商资质认证">
         <i class="icon bg_icon_12"></i>
         <label>供应商资质认证</label>
         <i class="icon-next"></i>
       </a>
+      </#if>
       <a href="${app.basePath}/mobile/experience/list" title="附近门店">
         <i class="icon bg_icon_13"></i>
         <label>附近门店</label>

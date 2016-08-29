@@ -21,8 +21,8 @@
 	        <td align="center" data="productImage"><img src="${app.basePath}${sku.product.imageUrl!''}" style="width:50px;height:50px;"></td>
 	        <td align="center" data="price">${sku.product.price?c}</td>
 	        <td align="center">${sku.stock?c}</td>
-	        <td align="center" data="specStr">${sku.specStr!''}</td>
-	        <td align="center">${sku.statusStr!''}</td>
+	        <td align="center">${sku.specStr!''}</td>
+	        <td align="center">${sku.statusStr!''}<span data="specStr" style="display:none;">${sku.specKey!''}</span></td>
 	        <input type="hidden" value="${sku.id?c}">
 	    </tr>
 	</#list>
@@ -41,7 +41,7 @@
 		var productName = $(theTr).find("td[data='productName']").text();
 		var productImage = $(theTr).find("td[data='productImage'] img").attr("src");
 		var price = $(theTr).find("td[data='price']").text();
-		var specStr = $(theTr).find("td[data='specStr']").text();
+		var specStr = $(theTr).find("span[data='specStr']").text();
 		var theId = $(theTr).find("input").val();
 		$("#selectedSkuDiv").append("<label onclick='$(this).remove()' specStr='"+specStr+"' price='"+price+"' productImage='"+productImage+"'  productName='"+productName+"' theId='"+ theId +"'>[" + productName + "]</label>");
 	}

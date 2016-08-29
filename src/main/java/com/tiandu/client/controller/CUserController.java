@@ -1444,7 +1444,7 @@ public class CUserController extends BaseController {
 		TdUser currentUser = this.getCurrentUser();
 //		tdUserQRcodeTools.QRcodeByUidAndResponse(currentUser.getUid(), response);
 //		TdUserQRcodeTools QRcodeTools = new TdUserQRcodeTools();
-		tdUserQRcodeTools.QRcodeByUidAndResponse(currentUser.getUid(), response);
+		//tdUserQRcodeTools.QRcodeByUidAndResponse(currentUser.getUid(), response);
 	}
 	
 	/*
