@@ -41,7 +41,7 @@
 								<div>
 									商品名称：<label id="productName">${ppi.productName!''}</label><br>
 									销售价：<label id="price"><#if ppi.price??>${ppi.price?c}</#if></label><br>
-									<input type="hidden" id="specifications" value="${ppi.specifications!'' }">
+									<input type="hidden" id="specifications" value="${ppi.specKey!'' }">
 								</div>
 							</div>
 						</#list> 

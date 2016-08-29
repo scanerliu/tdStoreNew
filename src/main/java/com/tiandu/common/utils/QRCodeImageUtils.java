@@ -14,10 +14,14 @@ import java.io.FileOutputStream;
 
 import javax.imageio.ImageIO;
 
+import org.apache.log4j.Logger;
+
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import com.tiandu.common.tencent.common.TdUserQRcodeTools;
 
 public class QRCodeImageUtils {
+	private final static Logger logger = Logger.getLogger(QRCodeImageUtils.class);
 
 	/**
 	 * 生成用户推广二维码合成图片
@@ -83,6 +87,7 @@ public class QRCodeImageUtils {
             g.drawImage(src_biao, 118, 250, wideth_biao, height_biao, null);
             //水印文件结束
             g.dispose();
+            logger.error("genernateQRCodeImage: [unick="+unick+"][title="+title+"]");
             return image;
 //            FileOutputStream out = new FileOutputStream(targetImg);
 //            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);

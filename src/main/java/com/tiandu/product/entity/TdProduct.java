@@ -33,6 +33,8 @@ public class TdProduct {
 
 	private Boolean specification = false;
 	
+	private String specificationats;
+	
 	private Boolean onshelf = false;
 
 	private Byte status = 1;
@@ -186,6 +188,14 @@ public class TdProduct {
 
 	public void setSpecification(Boolean specification) {
 		this.specification = specification;
+	}
+	
+	public String getSpecificationats() {
+		return specificationats;
+	}
+
+	public void setSpecificationats(String specificationats) {
+		this.specificationats = specificationats;
 	}
 
 	public Boolean getOnshelf() {

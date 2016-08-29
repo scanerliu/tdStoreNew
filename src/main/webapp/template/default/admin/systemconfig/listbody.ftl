@@ -55,7 +55,7 @@
             <td align="right">热门搜索关键词:</td><td><input type="hidden" name="configKey" value="hotsearchword"/><input type="text" name="hotsearchword" id="hotsearchword" value="${configMap.hotsearchword!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="length[1,100]"/>（热门搜索关键词，多个用英文逗号隔开，如：花茶,红酒,蜂蜜 ）</td>
         </tr>
         <tr>
-            <td align="right">700元的单类代理启用商品包:</td><td><label><input type="hidden" name="configKey" value="agentproductusepackage"/><input type="radio" name="agentproductusepackage" value="1" <#if configMap.agentproductusepackage?? && configMap.agentproductusepackage=="1">checked=checked</#if> />启用</label> <input type="radio" name="agentproductusepackage" value="2" <#if configMap.agentproductusepackage?? && configMap.agentproductusepackage=="2">checked=checked</#if>  />禁用</label>（启用此项，购买700元区县单类代理时可以领取一个700元礼包）</td>
+            <td align="right">零元商品三级分润金额:</td><td><input type="hidden" name="configKey" value="zeroproductbenefitamount"/><input type="text" name="zeroproductbenefitamount" id="zeroproductbenefitamount" value="${configMap.zeroproductbenefitamount!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="length[1,100]"/>（如三级分润总共分得1元，此项填1）</td>
         </tr>
         </table>
     </div>

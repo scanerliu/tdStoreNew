@@ -431,7 +431,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 				TdOrder order = this.insertImageOrder(currUser, orderForm, shoppingcart, torder, now);
 //				torder.setJno(order.getOrderNo());
 			}else if(shoppingcart.getPtype()==5){//供应商订单
-				TdOrder order = this.insertAgentOrder(currUser, orderForm, shoppingcart, torder, now);
+				TdOrder order = this.insertSuppilerOrder(currUser, orderForm, shoppingcart, torder, now);
 //				torder.setJno(order.getOrderNo());
 			}
 			
