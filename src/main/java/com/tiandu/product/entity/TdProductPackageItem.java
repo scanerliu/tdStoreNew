@@ -23,6 +23,8 @@ public class TdProductPackageItem {
     
     private String specifications;
     
+    private String skuCode;
+    
     private TdProduct prouduct;
     private TdProduct preProuduct;
     
@@ -134,7 +136,13 @@ public class TdProductPackageItem {
 	public void setSpecifications(String specifications) {
 		this.specifications = specifications;
 	}
-    
-	
+
+	public String getSkuCode() {
+		return skuCode;
+	}
+
+	public void setSkuCode(String skuCode) {
+		this.skuCode = skuCode;
+	}
     
 }

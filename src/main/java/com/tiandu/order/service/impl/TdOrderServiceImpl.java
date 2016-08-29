@@ -721,11 +721,14 @@ public class TdOrderServiceImpl implements TdOrderService{
 			orderproduct2.setTitle(shoppingcart.getProductPackage().getName());
 			orderproduct2.setProductTypeId(0);
 			orderproduct2.setOrderId(order.getOrderId());
+			orderproduct2.setAttachment(shoppingcart.getProductPackage().getImageUrl());
 			tdOrderProductMapper.insert(orderproduct2);
 			//保存商品包详情
 			for(TdShoppingcartItem item : shoppingcart.getItemList()){
 				TdOrderSku sku = new TdOrderSku();
-				sku.setDisplaySpecifications(item.getProductPackageItem().getProductSku().getSpecifications());
+				if(null!=item.getProductPackageItem().getProductSku().getSpecifications()){
+					sku.setDisplaySpecifications(item.getProductPackageItem().getProductSku().getSpecifications());
+				}
 				sku.setItemType(item.getItemType().byteValue());
 				sku.setOrderId(order.getOrderId());
 				sku.setProductSkuId(item.getProductSkuId());

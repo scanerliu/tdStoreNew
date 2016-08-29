@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -252,7 +253,7 @@ public class ProductPackageController extends BaseController{
 				
 				ppi.setProductName(pie.getProductName());
 				ppi.setProductImage(pie.getProductImage());
-				ppi.setSpecifications(pie.getSpec());
+				ppi.setSpecifications(pie.getSpecialJsonBySpecialKey(pie.getSpec()));
 				ppi.setPrice(new BigDecimal(pie.getPrice()));
 				tdProductPackageItemService.save(ppi);
 			}
@@ -444,8 +445,30 @@ class PackageItemEntity{
 			return false;
 		return true;
 	}
-	
-	
+	/**
+	 * 由key值转换为json字符串
+	 * 如：尺码_1.8米床用|颜色_蓝色 => {"尺码":"1.8米床用","颜色":"蓝色"}
+	 * @param special
+	 * @return
+	 */
+	public String getSpecialJsonBySpecialKey(String special){
+		StringBuffer sb = new StringBuffer();
+		if(StringUtils.isNotBlank(special)){
+			String[] arr = special.split("\\|");
+			int i = 0;
+			for(String str : arr){
+				String[] names = str.split("_");
+				if(i==0){
+					sb.append("\""+names[0]+"\":\""+names[1]+"\"");
+				}else{
+					sb.append(","+"\""+names[0]+"\":\""+names[1]+"\"");
+				}
+				i++;
+			}
+			return '{'+sb.toString()+'}';
+		}
+		return "";
+	}
 	
 	
 }

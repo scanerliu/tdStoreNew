@@ -69,7 +69,7 @@ public class QRCodeImageUtils {
             //title水印
             g.setColor(Color.DARK_GRAY);
             g.setFont(new Font("微软雅黑", Font.PLAIN, 22));
-            g.drawString(title, 90, 185);
+            g.drawString(title, 60, 185);
             //expireDate水印
             g.setColor(Color.GRAY);
             g.setFont(new Font("微软雅黑", Font.BOLD,16));

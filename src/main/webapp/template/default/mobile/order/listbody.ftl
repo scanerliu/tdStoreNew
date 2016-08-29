@@ -36,7 +36,7 @@
 	        <h3>${product.title!''} ${product.getItemTypeStr()!''}</h3>
 	        <p>
 	          <label class="lab1">￥${product.itemPrice!'0'}</label>
-	          <label class="lab2">x<span>${product.quantity!'0'}</span></label>
+	          <label class="lab2"><span>${product.quantity!'0'}</span></label>
 	        </p>
 			</div>
     	</div>
@@ -57,7 +57,7 @@
 	        </div>
 	        <p>
 	          <label class="lab1">￥${sku.price!'0'}</label>
-	          <label class="lab2">x<span>${sku.quantity!'0'}</span></label>
+	          <label class="lab2"><span>${sku.quantity!'0'}</span></label>
 	        </p>
 	      </div>
 	    </div>

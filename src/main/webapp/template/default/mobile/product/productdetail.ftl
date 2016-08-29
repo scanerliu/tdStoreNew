@@ -222,6 +222,15 @@ function timer()
         </#if>
         </#list>
         </#if>
+        <#if product.kind==3>
+        <section class="sec4">
+            <label class="">数量</label>
+            <aside class="">
+                1
+                <input type="hidden" value="1" id="prodquantity" >
+            </aside>
+        </section>
+        <#else>
         <section class="sec4">
             <label class="">数量</label>
             <aside class="">
@@ -230,6 +239,7 @@ function timer()
                 <span onclick="additem(1)">+</span>
             </aside>
         </section>
+        </#if>
         <input type="hidden" id="skustock" value="0">
         <input type="hidden" id="skuId" value="0">
         <input type="hidden" id="skuPrice" value="0">
@@ -282,7 +292,7 @@ function timer()
 <footer>
     <div class="gopay">
         <a href="javascript:addCollect(${product.id?c})" class="<#if collect?? && collect ==true>acare2<#else>acare</#if>" id="acare">关注</a>
-        <a href="javascript:;" class="ajoin" id="addCart" onclick="addToShoppingcart();">加入购物车</a>
+        <#if product.kind!=3><a href="javascript:;" class="ajoin" id="addCart" onclick="addToShoppingcart();">加入购物车</a></#if>
         <a href="javascript:;" class="apayfor" id="buyNow" title="立即购买" onclick="buyNow();">立即购买</a>
     </div>
     <span class="footclear"></span>
