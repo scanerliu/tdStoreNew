@@ -87,6 +87,7 @@
                 </a>
 <script>
 $(document).ready(function(){
+	timer${item_index}();
     setInterval("timer${item_index}()",1000);
 });
 
@@ -176,6 +177,7 @@ function timer${item_index}()
                 </a>
 <script>
 $(document).ready(function(){
+	timer${item.id?c}()
     setInterval("timer${item.id?c}()",1000);
 });
 

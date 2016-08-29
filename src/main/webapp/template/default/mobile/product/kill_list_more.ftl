@@ -12,6 +12,7 @@
 </a>
 <script>
 $(document).ready(function(){
+	timer${item_index}();
     setInterval("timer${item_index}()",1000);
 });
 
