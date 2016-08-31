@@ -360,10 +360,12 @@ public class MobileController extends BaseController {
 			RestTemplate restTemplate = new RestTemplate();
 			try {
 				ResponseEntity<String> codesponse = restTemplate.getForEntity(wechat_access_token_url, String.class);
-				System.out.println(codesponse.getBody());
 				logger.error("wechat login response:"+codesponse.getBody());
 				Gson gson = new Gson();
 				WeChatCodeResponse codeResponse = gson.fromJson(codesponse.getBody(), WeChatCodeResponse.class);
+				
+//				WeChatCodeResponse codeResponse = new WeChatCodeResponse();
+//				codeResponse.setOpenid("oS3MPvwqj8BQs3IH2nNrwcyUsuJw");
 				if(null!=codeResponse&&null!=codeResponse.getOpenid()){//获取openid
 					TdUser cuser = tdUserService.findByJoinCode(codeResponse.getOpenid());
 					if(null!=cuser){//匹配到用户
@@ -373,9 +375,9 @@ public class MobileController extends BaseController {
 							String wechat_user_info_url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token="+access_tocken+"&openid="+codeResponse.getOpenid()+"&lang=zh_CN";
 							logger.error("wechat get userinfo url:"+wechat_user_info_url);
 							ResponseEntity<String> userinfosponse = restTemplate.getForEntity(wechat_user_info_url, String.class);
-							System.out.println(userinfosponse.getBody());
-							logger.error("wechat get userinfo response:"+userinfosponse.getBody());
-							WeChatUserInfoResponse uinfoResponse = gson.fromJson(userinfosponse.getBody(), WeChatUserInfoResponse.class);
+							String responsebody = new String(userinfosponse.getBody().getBytes("ISO-8859-1"),"UTF-8");
+							logger.error("wechat get userinfo response:"+responsebody);
+							WeChatUserInfoResponse uinfoResponse = gson.fromJson(responsebody, WeChatUserInfoResponse.class);
 							if(null!=uinfoResponse&&null!=uinfoResponse.getOpenid()){
 								updateuserinfo = true;
 								cuser.setUnick(uinfoResponse.getNickname());

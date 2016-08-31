@@ -1,3 +1,4 @@
+var __SELFCONFIGINDEX = 100000;
 //查询商品列表
 var __skuinex = 1;
 function searchProducts(flag){
@@ -65,6 +66,68 @@ function changeType(obj){
 	clearSkuTable();
 }
 
+/**
+ * 检查自定义属性值的合法性及后续操作
+ */
+function checkAttribute(obj){
+	var patt1 = new RegExp("^([u4e00-u9fa5]|[0-9a-zA-Z]|[\x21-\x7e]])+$");
+	var val = $(obj).val();
+	if(val==""){//输入为空时
+		if($(obj).hasClass("selfconf")){//新增属性
+			return false;
+		}else{//已有输入框
+			$(obj).parent().remove();
+			flushTable();
+		}
+	}else{//输入不为空时
+		if(patt1.test(val)){
+		}else{
+			alert("请正确填写自定义规格值，只能输入文字、字母、数字");
+			$(obj).focus();
+			return false;
+		}
+		//检查是否有重复的值
+		var attrs = $(obj).parent().parent().parent().find('input[name="avs"]');
+		var i=0;
+		attrs.each(function(){
+			var slib = $(this).val();
+			if(slib==val){
+				i++;
+			}
+		});
+		
+		if(i>1){
+			alert("属性值重复，请修改！");
+			$(obj).focus();
+			return false;
+		}
+		
+		if($(obj).hasClass("selfconf")){
+			var addhtml = '<li><input class="fl chk" type="checkbox" name="'+$(obj).siblings(":first").attr("name")+'" value="'+__SELFCONFIGINDEX+'"><input type="text" name="avs" value="" class="fl selfconf" placeholder="自定义值" maxlength="20" keyup="checkAttribute(this)" onblur="checkAttribute(this)"></li>';
+			__SELFCONFIGINDEX++;
+			$(obj).parent().parent().append(addhtml);
+			$(obj).removeClass("selfconf");
+			$(obj).siblings(":first").prop("checked",true);
+			$(obj).siblings(":first").on("click",function(){
+				checkAttributeSelect(this);
+			});
+		}
+		
+		flushTable();
+	}
+}
+/**
+ * 勾选自定义属性值事件
+ */
+function checkAttributeSelect(obj){
+	var jobj = $(obj);
+	if(jobj.prop("checked")){
+		
+	}else{
+		jobj.parent().remove();
+	}
+	flushTable();
+}
 function flushTable(){
 	var selectUL = $("#attrList .slect");
 	var idkey = new Array();
@@ -77,7 +140,8 @@ function flushTable(){
 		}else{
 			var attributes = new Array();
 			sected.each(function(){
-				attributes.push($(this).attr("name")+"_"+$(this).attr("value"));
+				var slib = $(this).siblings(":first").val();
+				attributes.push($(this).attr("name")+"_"+$(this).siblings(":first").val());
 			});
 			idkey.push(attributes);
 		}

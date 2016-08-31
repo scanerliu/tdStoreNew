@@ -727,7 +727,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 			for(TdShoppingcartItem item : shoppingcart.getItemList()){
 				TdOrderSku sku = new TdOrderSku();
 				if(null!=item.getProductPackageItem().getProductSku().getSpecifications()){
-					sku.setDisplaySpecifications(item.getProductPackageItem().getProductSku().getSpecifications());
+					sku.setDisplaySpecifications(item.getProductPackageItem().getSpecifications());
 				}
 				sku.setItemType(item.getItemType().byteValue());
 				sku.setOrderId(order.getOrderId());
@@ -736,8 +736,9 @@ public class TdOrderServiceImpl implements TdOrderService{
 				sku.setPrice(item.getProductPackageItem().getPrice());
 				sku.setSupplierPrice(BigDecimal.ZERO);
 				sku.setProductName(item.getProductPackageItem().getProductName());
-				sku.setProductSkuCode(item.getProductPackageItem().getProductSku().getSkuCode());
+				sku.setProductSkuCode("");
 				sku.setQuantity(item.getQuantity());
+				sku.setProductImage(item.getProductPackageItem().getProductImage());
 				tdOrderSkuMapper.insert(sku);
 			}
 			//更新总库存
@@ -834,11 +835,12 @@ public class TdOrderServiceImpl implements TdOrderService{
 			orderproduct2.setTitle(shoppingcart.getProductPackage().getName());
 			orderproduct2.setProductTypeId(0);
 			orderproduct2.setOrderId(order.getOrderId());
+			orderproduct2.setAttachment(shoppingcart.getProductPackage().getImageUrl());
 			tdOrderProductMapper.insert(orderproduct2);
 			//保存商品包详情
 			for(TdShoppingcartItem item : shoppingcart.getItemList()){
 				TdOrderSku sku = new TdOrderSku();
-				sku.setDisplaySpecifications(item.getProductPackageItem().getProductSku().getSpecifications());
+				sku.setDisplaySpecifications(item.getProductPackageItem().getSpecifications());
 				sku.setItemType(item.getItemType().byteValue());
 				sku.setOrderId(order.getOrderId());
 				sku.setProductSkuId(item.getProductSkuId());
@@ -846,8 +848,9 @@ public class TdOrderServiceImpl implements TdOrderService{
 				sku.setPrice(item.getProductPackageItem().getPrice());
 				sku.setSupplierPrice(BigDecimal.ZERO);
 				sku.setProductName(item.getProductPackageItem().getProductName());
-				sku.setProductSkuCode(item.getProductPackageItem().getProductSku().getSkuCode());
+				sku.setProductSkuCode("");
 				sku.setQuantity(item.getQuantity());
+				sku.setProductImage(item.getProductPackageItem().getProductImage());
 				tdOrderSkuMapper.insert(sku);
 			}
 			//更新总库存
@@ -949,11 +952,12 @@ public class TdOrderServiceImpl implements TdOrderService{
 			orderproduct2.setTitle(shoppingcart.getProductPackage().getName());
 			orderproduct2.setProductTypeId(0);
 			orderproduct2.setOrderId(order.getOrderId());
+			orderproduct2.setAttachment(shoppingcart.getProductPackage().getImageUrl());
 			tdOrderProductMapper.insert(orderproduct2);
 			//保存商品包详情
 			for(TdShoppingcartItem item : shoppingcart.getItemList()){
 				TdOrderSku sku = new TdOrderSku();
-				sku.setDisplaySpecifications(item.getProductPackageItem().getProductSku().getSpecifications());
+				sku.setDisplaySpecifications(item.getProductPackageItem().getSpecifications());
 				sku.setItemType(item.getItemType().byteValue());
 				sku.setOrderId(order.getOrderId());
 				sku.setProductSkuId(item.getProductSkuId());
@@ -961,8 +965,9 @@ public class TdOrderServiceImpl implements TdOrderService{
 				sku.setPrice(item.getProductPackageItem().getPrice());
 				sku.setSupplierPrice(BigDecimal.ZERO);
 				sku.setProductName(item.getProductPackageItem().getProductName());
-				sku.setProductSkuCode(item.getProductPackageItem().getProductSku().getSkuCode());
+				sku.setProductSkuCode("");
 				sku.setQuantity(item.getQuantity());
+				sku.setProductImage(item.getProductPackageItem().getProductImage());
 				tdOrderSkuMapper.insert(sku);
 			}
 			//更新总库存
@@ -1310,7 +1315,10 @@ public class TdOrderServiceImpl implements TdOrderService{
 						if(null!=user && user.getSupplierType().equals(Byte.valueOf("0"))){
 							TdUser upuser = new TdUser();
 							upuser.setSupplierType(Byte.valueOf("3"));
+							upuser.setUid(user.getUid());
 							tdUserService.updateByPrimaryKeySelective(upuser);
+							addagent = true;
+							log2.setNote("订单生成供应商操作成功。");
 						}else{
 							log2.setNote("订单生成供应商失败，购买用户已经具有供应商资格，不能重复购买！");
 						}

@@ -1957,7 +1957,7 @@
 }
 .become .sec1{
 	padding:0;
-	height:8rem;
+	/* height:8rem; */
 	text-align:center;
 }
 .become .sec1 img{

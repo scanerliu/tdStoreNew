@@ -108,7 +108,6 @@
 	            	<#if isWx?? && isWx==true>
 	            	<option value="2">微信支付</option>
 	            	<#else>
-	            	<option value="2">微信支付</option>
 	            	<option value="1">支付宝支付</option>
 	            	</#if>
 	            	<#--<option value="3">银联支付</option>-->

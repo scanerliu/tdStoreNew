@@ -233,9 +233,9 @@
 </form>
 <div style="height:0.1rem"></div>
 <!-- Footer Start -->
-<footer>
+<footer onclick="buyNow();">
     <div class="gopay">
-        <a href="javascript:;" class="apayfor" id="buyNow" title="立即购买" onclick="buyNow();">立即购买</a>
+        <a href="javascript:;" class="apayfor" id="buyNow" title="立即购买">立即购买</a>
     </div>
     <span class="footclear"></span>
 </footer>

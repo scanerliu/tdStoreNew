@@ -1439,12 +1439,12 @@ public class CUserController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/mySpread/qrcode")
-	public void spreadQRcode(HttpServletResponse response) throws UnsupportedEncodingException, JSONException
+	public void spreadQRcode(String title, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, JSONException
 	{
 		TdUser currentUser = this.getCurrentUser();
 //		tdUserQRcodeTools.QRcodeByUidAndResponse(currentUser.getUid(), response);
 //		TdUserQRcodeTools QRcodeTools = new TdUserQRcodeTools();
-		//tdUserQRcodeTools.QRcodeByUidAndResponse(currentUser.getUid(), response);
+		tdUserQRcodeTools.QRcodeByUidAndResponse(currentUser.getUid(), title, request, response);
 	}
 	
 	/*
