@@ -37,6 +37,7 @@
     	   $(this).addClass("active");
     	   $('#two2_match').children('div').stop().hide();
     	   $('#two2_match').children('div:eq('+$(this).index()+')').stop().fadeIn();
+    	   
        });
     }
     
@@ -46,6 +47,7 @@
 	var aA=cc.getElementsByTagName('a');
 	if(aA[0].className=='active'){
 		$('#kill_list').refresh(url+"?kind=6","#kill_list",0);
+		$('#one_div').css({"display":"block"});
 	}
 	if(aA[1].className=='active'){
 		$('#persell_list').refresh(url+"?kind=5","#persell_list",0);
@@ -71,7 +73,7 @@
     </div>
     <!-- 热销推荐 -->
     <div class="two2_match" id="two2_match">
-        <div class="hot">
+        <div class="hot" id="one_div">
             
             	<#if killList?? && killList?size gt 0>
             	<section class="sec2" id="kill_list">
