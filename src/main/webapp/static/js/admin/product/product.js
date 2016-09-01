@@ -212,3 +212,220 @@ function showSeckill(){
 function hideSeckill(){
 	$(".seckill").hide();
 }
+
+function removeImg(id)
+{
+	
+	$.ajax({
+		type : "post",
+		data : {"attId":id},
+		url : basePath+"/admin/product/deleteImg",
+		success:function(data){
+		} 
+	})
+	
+	$("#attId"+id).remove();
+	$("#img"+id).remove();
+}
+
+var __SELFCONFIGINDEX = 100000;
+/**
+ * 改变商品分类
+ */
+function changeType(obj){
+	var typeId = $(obj).val();
+	if(typeId!=""){
+		var url = basePath + "/admin/product/producttypeattributes";
+		var loadData = {"id":typeId};
+		$("#attrList").loading().load(url,loadData);
+	}else{
+		$("#attrList").html("");
+	}
+	clearSkuTable();
+}
+
+/**
+ * 检查自定义属性值的合法性及后续操作
+ */
+function checkAttribute(obj){
+	var patt1 = new RegExp("^([u4e00-u9fa5]|[0-9a-zA-Z]|[\x21-\x7e]])+$");
+	var val = $(obj).val();
+	if(val==""){//输入为空时
+		if($(obj).hasClass("selfconf")){//新增属性
+			return false;
+		}else{//已有输入框
+			$(obj).parent().remove();
+			flushTable();
+		}
+	}else{//输入不为空时
+		if(patt1.test(val)){
+		}else{
+			alert("请正确填写自定义规格值，只能输入文字、字母、数字");
+			$(obj).focus();
+			return false;
+		}
+		//检查是否有重复的值
+		var attrs = $(obj).parent().parent().parent().find('input[name="avs"]');
+		var i=0;
+		attrs.each(function(){
+			var slib = $(this).val();
+			if(slib==val){
+				i++;
+			}
+		});
+		
+		if(i>1){
+			alert("属性值重复，请修改！");
+			$(obj).focus();
+			return false;
+		}
+		
+		if($(obj).hasClass("selfconf")){
+			var addhtml = '<li><input class="fl chk" type="checkbox" name="'+$(obj).siblings(":first").attr("name")+'" value="'+__SELFCONFIGINDEX+'"><input type="text" name="avs" value="" class="fl selfconf" placeholder="自定义值" maxlength="20" keyup="checkAttribute(this)" onblur="checkAttribute(this)"></li>';
+			__SELFCONFIGINDEX++;
+			$(obj).parent().parent().append(addhtml);
+			$(obj).removeClass("selfconf");
+			$(obj).siblings(":first").removeClass("selfconf");
+			$(obj).siblings(":first").prop("checked",true);
+			$(obj).siblings(":first").on("click",function(){
+				checkAttributeSelect(this);
+			});
+		}
+		
+		flushTable();
+	}
+}
+/**
+ * 勾选自定义属性值事件
+ */
+function checkAttributeSelect(obj){
+	var jobj = $(obj);
+	if(jobj.prop("checked")){
+		
+	}else if(jobj.hasClass("selfconf")){
+	}else{		
+		jobj.parent().remove();
+		flushTable();
+	}
+}
+function flushTable(){
+	var selectUL = $("#attrList .slect");
+	var idkey = new Array();
+	var selected = true;
+	selectUL.each(function(){
+		var sected = $(this).find("input[type='checkbox']:checked");
+		if(sected.length==0){
+			selected = false;
+			return false;
+		}else{
+			var attributes = new Array();
+			sected.each(function(){
+				var slib = $(this).siblings(":first").val();
+				console.log($(this).attr("name")+"_"+$(this).siblings(":first").val());
+				attributes.push($(this).attr("name")+"_"+$(this).siblings(":first").val());
+			});
+			idkey.push(attributes);
+		}
+	});
+	idkey.sort();
+	var alen = idkey.length;
+	var result = new Array();
+	if(selected && alen>0){
+		if(alen == 1){
+			result = idkey[0];
+		}else{
+			// result是所有属性按照规格顺序的全排列
+			result = twoArrayAssembleToTrIds(idkey[0],idkey[1]);
+			var i=2;
+			while(i<alen){
+				result = twoArrayAssembleToTrIds(result,idkey[i]);
+				i++;
+			}
+		}
+		//组装table数据
+		var preskukeys = new Array();
+		var preskuattris = $("#skuTable .skuspec");
+		preskuattris.each(function(){
+			var ake = $(this).attr("tid");
+			if($.inArray(ake, result)<0){
+				$(this).remove();
+			}else{
+				preskukeys.push(ake);
+			}
+		});
+		//console.log(result);
+		if(result.length>0){
+			var html = "";
+			var kind =  $('input[name="kind"]:checked ').val();
+			$.each(result,function(i,o){
+				if($.inArray(o, preskukeys)<0){
+					var keystr = getkeystr(o);
+					var specifications = getspecifications(o);
+					html+='<tr tid="'+o+'" class="skuspec"><td>'+keystr+'</td>';
+					html+='<td><input type="text" name="skuList['+__skuinex+'].skuCode" value="" datatype="n4-10" nullmsg="请填写货品编号！" errormsg="货品编号格式错误！只能填写4-10个数字"></td>';
+					html+='<td><input type="text" name="skuList['+__skuinex+'].supplierPrice" value="" datatype="/(^[1-9]\\d{0,7}(\\.\\d{1,2})?$)|(^0(\\.\\d{1,2})?$)/i" nullmsg="请填写供应商价！" errormsg="供应商价格式错误！"></td>';
+					if(kind==3){
+						html+='<td><input type="text" name="skuList['+__skuinex+'].salesPrice" value="0" readonly="readonly" datatype="/(^[1-9]\\d{0,7}(\\.\\d{1,2})?$)|(^0(\\.\\d{1,2})?$)/i" nullmsg="请填写零售价！" errormsg="零售价格式错误！"></td>';
+					}else{
+						html+='<td><input type="text" name="skuList['+__skuinex+'].salesPrice" value="" datatype="/(^[1-9]\\d{0,7}(\\.\\d{1,2})?$)|(^0(\\.\\d{1,2})?$)/i" nullmsg="请填写零售价！" errormsg="零售价格式错误！"></td>';
+					}
+					html+='<td><input type="text" name="skuList['+__skuinex+'].marketPrice" value="" datatype="/(^[1-9]\\d{0,7}(\\.\\d{1,2})?$)|(^0(\\.\\d{1,2})?$)/i" nullmsg="请填写市场价！" errormsg="市场价格式错误！"></td>';
+					html+='<td><input type="text" name="skuList['+__skuinex+'].highPrice" value="" datatype="/(^[1-9]\\d{0,7}(\\.\\d{1,2})?$)|(^0(\\.\\d{1,2})?$)/i" nullmsg="请填写最高价！" errormsg="最高价格式错误！"></td>';
+					html+='<td><input type="text" name="skuList['+__skuinex+'].lowPrice" value="" datatype="/(^[1-9]\\d{0,7}(\\.\\d{1,2})?$)|(^0(\\.\\d{1,2})?$)/i" nullmsg="请填写最低价！" errormsg="最低价格式错误！"></td>';
+					html+='<td><input type="text" name="skuList['+__skuinex+'].stock" value="" datatype="n1-7" nullmsg="请填写库存！" errormsg="库存格式错误，只能填写1-7位数字！"></td>';
+					html+='<input type="hidden" name="skuList['+__skuinex+'].specifications" value="'+o+'">';
+					html+='</tr>';
+					__skuinex++;
+				}
+			});
+			$("#skuTable").append(html);
+			//validateproductform();//添加验证
+		}
+	}else{
+		clearSkuTable();
+	}
+}
+//清空货品表
+function clearSkuTable(){
+	$("#skuTable .skuspec").remove();
+}
+
+//二维数组全排列
+function twoArrayAssembleToTrIds(arr1,arr2){
+	var arra = Array();
+	for(var m in arr1){
+		for(var n in arr2){
+			arra.push(arr1[m]+"|"+arr2[n]);
+		}
+	}
+	return arra;
+}
+
+//获取规格显示名称
+function getkeystr(str){
+	var arr = str.split("|");
+	var res = "";
+	$.each(arr,function(i,o){
+		var names = o.split("_");
+		if(i==0){
+			res = names[0]+"("+names[1]+")";
+		}else{
+			res += ","+names[0]+"("+names[1]+")";
+		}
+	});
+	return res;
+}
+//获取规格键值对json
+function getspecifications(str){
+	var arr = str.split("|");
+	var res = "";
+	$.each(arr,function(i,o){
+		var names = o.split("_");
+		if(i==0){
+			res = '"'+names[0]+'":"'+names[1]+'"';
+		}else{
+			res += ','+'"'+names[0]+'":"'+names[1]+'"';
+		}
+	});
+	return '{'+res+'}';
+}

@@ -156,8 +156,8 @@ function addToShoppingcart(){
 	var quantity = $("#prodquantity").val();
 	var itemType = $("#productKind").val();
 	var skustock = $("#skustock").val();
-	if(skuId>0){
-		if(skustock>quantity){
+	if(Number(skuId)>0){
+		if(Number(skustock)>Number(quantity)){
 			var url = basePath+"/mobile/shoppingcart/addsku";
 			var postData = {"productId":productId,"productSkuId":skuId,"price":skuPrice,"postage":postage,"quantity":quantity,"itemType":itemType};
 			$.post(url,postData,addToShoppingcartCallback,"text");

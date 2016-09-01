@@ -2,10 +2,12 @@ package com.tiandu.product.service;
 
 import java.util.List;
 
+import com.tiandu.order.vo.SkuSpecialVO;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductSku;
 import com.tiandu.product.entity.TdProductTypeAttribute;
 import com.tiandu.product.search.TdProductCriteria;
+import com.tiandu.product.vo.AttributeOptionsVO;
 import com.tiandu.product.vo.ProductJsonVO;
 
 public interface TdProductService {
@@ -60,5 +62,25 @@ public interface TdProductService {
 	 * @param i
 	 */
 	public int updateStock(Integer productId, int i);
+
+	/**
+	 * 获取商品规格选择项json
+	 * @param specialList
+	 * @return
+	 */
+	public String getSpecificationatsJsonString(List<SkuSpecialVO> specialList);
+
+	/**
+	 * 合并自定义规格值
+	 * @param product
+	 * @param taList
+	 */
+	public void joinSelfAttributeOption(TdProduct product, List<TdProductTypeAttribute> taList);
+	/**
+	 * 获取商品规格和值
+	 * @param product
+	 * @param taList
+	 */
+	public List<AttributeOptionsVO> getProductAttributeWithOptions(TdProduct product);
 	
 }

@@ -18,10 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.tiandu.article.entity.TdArticleCategory;
-import com.tiandu.article.entity.TdArticleTitle;
-import com.tiandu.article.search.TdArticleCategorySearchCriteria;
-import com.tiandu.article.search.TdArticleTitleSearchCriteria;
 import com.tiandu.article.service.TdArticleCategoryService;
 import com.tiandu.article.service.TdArticleTitleService;
 import com.tiandu.comment.entity.TdProductComment;
@@ -42,7 +38,6 @@ import com.tiandu.product.entity.TdProductDescription;
 import com.tiandu.product.entity.TdProductSku;
 import com.tiandu.product.entity.TdProductStat;
 import com.tiandu.product.entity.TdProductType;
-import com.tiandu.product.entity.TdProductTypeAttribute;
 import com.tiandu.product.search.TdBrandSearchCriteria;
 import com.tiandu.product.search.TdProductCriteria;
 import com.tiandu.product.search.TdProductDescriptionCriteria;
@@ -57,6 +52,7 @@ import com.tiandu.product.service.TdProductSkuService;
 import com.tiandu.product.service.TdProductStatService;
 import com.tiandu.product.service.TdProductTypeAttributeService;
 import com.tiandu.product.service.TdProductTypeService;
+import com.tiandu.product.vo.AttributeOptionsVO;
 import com.tiandu.system.utils.ConfigUtil;
 
 /**
@@ -237,11 +233,12 @@ public class CProductController extends BaseController {
 		List<TdProductSku> skuList = tdProductSkuService.findByProductId(id);
 		if(skuList.size()>0){
 			//商品类型规格
-			List<TdProductTypeAttribute> taList = tdProductTypeAttributeService.findByTypeIdWithOptions(product.getTypeId());
+			/*List<TdProductTypeAttribute> taList = tdProductTypeAttributeService.findByTypeIdWithOptions(product.getTypeId());
 			if(taList.size()>0){
 				//匹配货品库存状态
 				tdProductService.matchSkuStockWithAttributeOption(skuList,taList);
-			}
+			}*/
+			List<AttributeOptionsVO> taList = tdProductService.getProductAttributeWithOptions(product);
 			map.addAttribute("taList", taList);
 		}
 		//货品规格库存json

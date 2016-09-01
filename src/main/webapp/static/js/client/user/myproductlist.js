@@ -17,6 +17,43 @@ function fnGotoPageProducts(num){
 	searchProducts(false);
 }
 /**
+ * 初始化商品一口价设置
+ */
+function initProductCommon(){
+	var skucode = $("#skuTable input[name$='.skuCode']:first").val();
+	var supplierPrice = $("#skuTable input[name$='.supplierPrice']:first").val();
+	var salesPrice = 0;
+	var marketPrice = $("#skuTable input[name$='.marketPrice']:first").val();
+	var highPrice = $("#skuTable input[name$='.highPrice']:first").val();
+	var lowPrice = $("#skuTable input[name$='.lowPrice']:first").val();
+	var stock = 0;
+	//计算供商品价格最低销售价
+	var i=0;
+	$("#skuTable input[name$='.salesPrice']").each(function(){
+		if(i==0){
+			salesPrice = Number($(this).val());
+		}else{
+			var sprice = Number($(this).val());
+			if(salesPrice > sprice){
+				salesPrice = sprice;
+			}
+		}
+		i++;
+	});
+	//计算总库存
+	$("#skuTable input[name$='.stock']").each(function(){
+			stock = stock + Number($(this).val());
+	});
+	//赋值
+	$("#comprodTab #cskuCode").val(skucode);
+	$("#comprodTab #csupplierPrice").val(supplierPrice);
+	$("#comprodTab #cprice").val(salesPrice);
+	$("#comprodTab #cmarketPrice").val(marketPrice);
+	$("#comprodTab #chighPrice").val(highPrice);
+	$("#comprodTab #clowPrice").val(lowPrice);
+	$("#comprodTab #cquantum").val(stock);
+}
+/**
  * tab选择项
  */
 function selectTab(id){
@@ -107,6 +144,7 @@ function checkAttribute(obj){
 			__SELFCONFIGINDEX++;
 			$(obj).parent().parent().append(addhtml);
 			$(obj).removeClass("selfconf");
+			$(obj).siblings(":first").removeClass("selfconf");
 			$(obj).siblings(":first").prop("checked",true);
 			$(obj).siblings(":first").on("click",function(){
 				checkAttributeSelect(this);
@@ -123,10 +161,11 @@ function checkAttributeSelect(obj){
 	var jobj = $(obj);
 	if(jobj.prop("checked")){
 		
-	}else{
+	}else if(jobj.hasClass("selfconf")){
+	}else{		
 		jobj.parent().remove();
+		flushTable();
 	}
-	flushTable();
 }
 function flushTable(){
 	var selectUL = $("#attrList .slect");
@@ -146,6 +185,7 @@ function flushTable(){
 			idkey.push(attributes);
 		}
 	});
+	idkey.sort();
 	var alen = idkey.length;
 	var result = new Array();
 	if(selected && alen>0){
@@ -264,6 +304,7 @@ function validateproductform(){
 		beforeCheck:function(curform){
 			var url = $("#imglist img:first").attr("presrc");
 			$("#main_image_url").val(url);
+			initProductCommon();
 		},
 		beforeSubmit:function(curform){
 		 	//验证货品

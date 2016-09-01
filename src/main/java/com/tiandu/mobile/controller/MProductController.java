@@ -45,6 +45,7 @@ import com.tiandu.product.service.TdProductSkuService;
 import com.tiandu.product.service.TdProductStatService;
 import com.tiandu.product.service.TdProductTypeAttributeService;
 import com.tiandu.product.service.TdProductTypeService;
+import com.tiandu.product.vo.AttributeOptionsVO;
 import com.tiandu.system.utils.ConfigUtil;
 
 /**
@@ -145,11 +146,12 @@ public class MProductController extends BaseController {
 		List<TdProductSku> skuList = tdProductSkuService.findByProductId(id);
 		if(skuList.size()>0){
 			//商品类型规格
-			List<TdProductTypeAttribute> taList = tdProductTypeAttributeService.findByTypeIdWithOptions(product.getTypeId());
+			/*List<TdProductTypeAttribute> taList = tdProductTypeAttributeService.findByTypeIdWithOptions(product.getTypeId());
 			if(taList.size()>0){
 				//匹配货品库存状态
 				tdProductService.matchSkuStockWithAttributeOption(skuList,taList);
-			}
+			}*/
+			List<AttributeOptionsVO> taList = tdProductService.getProductAttributeWithOptions(product);
 			map.addAttribute("taList", taList);
 		}
 		//货品规格库存json

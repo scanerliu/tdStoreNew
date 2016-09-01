@@ -198,19 +198,18 @@ function timer()
         </section>
         <#if taList??>
         <#list taList as typeatt>
-        <#if typeatt.attribute??>
         <section class="sec1">
-            <label class="">${typeatt.attribute.name}</label>
-            <ul class="slect" id="attul_${typeatt.attribute.attriId}">
-            	<#if typeatt.attribute.tdProductAttributeOptionList??>
-            	<#list typeatt.attribute.tdProductAttributeOptionList as option>
-                <li attri="${option.id}" <#if option.status==0>class="ogray"</#if>>${option.name}</li>
+            <label class="">${typeatt.sname}</label>
+            <ul class="slect" id="attul_${typeatt.sname}">
+            	<#if typeatt.soptions??>
+            	<#list typeatt.soptions as option>
+                <li attri="${option}">${option}</li>
                 </#list>
         		</#if>
             </ul>
             <script>
 				$(function(){
-				    $("#attul_"+${typeatt.attribute.attriId}).on("click","li",function(){
+				    $("#attul_${typeatt.sname}").on("click","li",function(){
 				    	if(this.className!="ogray"){
 							$(this).siblings().removeClass("active");
 							$(this).addClass("active");
@@ -220,7 +219,6 @@ function timer()
 				});
 			</script>
         </section>
-        </#if>
         </#list>
         </#if>
         <#if product.kind==3>

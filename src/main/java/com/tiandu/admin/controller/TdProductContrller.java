@@ -136,7 +136,7 @@ public class TdProductContrller extends BaseController{
 			
 			map.addAttribute("productStat", tdProductStatService.findOne(id));
 			// 商品规格
-			TdProductType productType =  tdProductTypeService.findOne(product.getTypeId());
+			/*TdProductType productType =  tdProductTypeService.findOne(product.getTypeId());
 			List<TdProductTypeAttribute> typeAttributeList = tdProductTypeAttributeService.findByTypeId(productType.getId());
 			List<TdProductAttribute> attributeList = new ArrayList<TdProductAttribute>();
 			for(TdProductTypeAttribute ta : typeAttributeList){
@@ -156,12 +156,20 @@ public class TdProductContrller extends BaseController{
 						pa.setTdProductAttributeOptionList(aoList);
 					}
 				}
+			}*/
+			//商品类型规格
+			List<TdProductTypeAttribute> attributeList = tdProductTypeAttributeService.findByTypeIdWithOptions(product.getTypeId());
+			if(attributeList.size()>0){
+				//匹配货品库存状态
+				if(product.getSpecification()){//开启规格，合并自定义属性
+					tdProductService.joinSelfAttributeOption(product,attributeList);
+				}
 			}
-			map.addAttribute("attributeList", attributeList);
+			map.addAttribute("taList", attributeList);
 			// 商品对应的货品
 			List<TdProductSku> productSkuList = tdProductSkuService.findByProductId(id);
 			// 商品key=value字符串
-			String keyValueStr = "";
+			/*String keyValueStr = "";
 			for(TdProductSku ps : productSkuList){
 				String jsonStr = ps.getSpecifications(); // 数据格式{"颜色":"白色", "尺码":"39"};
 				JSONObject json=new JSONObject(jsonStr);
@@ -173,7 +181,20 @@ public class TdProductContrller extends BaseController{
 			map.addAttribute("keyValueStr", keyValueStr);
 			// 货品表Json数据
 			JSONObject tableJsonData = this.getJsonFromSku(attributeList, productSkuList, map);
-			map.addAttribute("tableJsonData", tableJsonData);
+			map.addAttribute("tableJsonData", tableJsonData);*/
+			if(!product.getSpecification() && null!=productSkuList && productSkuList.size()>0){//未开启规格
+				TdProductSku sku = productSkuList.get(0);
+				product.setSkuCode(sku.getSkuCode());
+				product.setHighPrice(sku.getHighPrice());
+				product.setLowPrice(sku.getLowPrice());
+				product.setMarketPrice(sku.getMarketPrice());
+				product.setSupplierPrice(sku.getSupplierPrice());
+			}else{
+				
+			}
+		}else{
+			TdProduct product = new TdProduct();
+			map.addAttribute("tdProduct", product);
 		}
 		
 		//品牌数据
@@ -644,6 +665,17 @@ public class TdProductContrller extends BaseController{
 			res.put("msg", "操作失败：操作非法！");
 			return res;
 		}
+	}
+	
+	@RequestMapping("/producttypeattributes")
+	public String producttypeattributes(Integer id, HttpServletRequest request, HttpServletResponse response, ModelMap map) {
+		if(null != id && id != 0)
+		{
+			//商品类型规格
+			List<TdProductTypeAttribute> taList = tdProductTypeAttributeService.findByTypeIdWithOptions(id);
+			map.addAttribute("taList", taList);
+		}
+		return "/admin/product/productTypeAttributes";	
 	}
 }
 

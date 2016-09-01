@@ -77,7 +77,16 @@ public class TdProduct {
 	 * 积分兑换所需积分数量
 	 */
 	private Integer exchangepoints;
-
+	
+	/**
+	 * 一口价参数接收 
+	 */
+	private String skuCode = "";
+    private BigDecimal supplierPrice;
+    private BigDecimal marketPrice;
+    private BigDecimal highPrice;
+    private BigDecimal lowPrice;
+    
 	public Integer getId() {
 		return id;
 	}
@@ -232,6 +241,46 @@ public class TdProduct {
 
 	public Date getCreateTime() {
 		return createTime;
+	}
+
+	public String getSkuCode() {
+		return skuCode;
+	}
+
+	public void setSkuCode(String skuCode) {
+		this.skuCode = skuCode;
+	}
+
+	public BigDecimal getSupplierPrice() {
+		return supplierPrice;
+	}
+
+	public void setSupplierPrice(BigDecimal supplierPrice) {
+		this.supplierPrice = supplierPrice;
+	}
+
+	public BigDecimal getMarketPrice() {
+		return marketPrice;
+	}
+
+	public void setMarketPrice(BigDecimal marketPrice) {
+		this.marketPrice = marketPrice;
+	}
+
+	public BigDecimal getHighPrice() {
+		return highPrice;
+	}
+
+	public void setHighPrice(BigDecimal highPrice) {
+		this.highPrice = highPrice;
+	}
+
+	public BigDecimal getLowPrice() {
+		return lowPrice;
+	}
+
+	public void setLowPrice(BigDecimal lowPrice) {
+		this.lowPrice = lowPrice;
 	}
 
 	public void setCreateTime(Date createTime) {

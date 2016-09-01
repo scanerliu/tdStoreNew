@@ -3,8 +3,11 @@ package com.tiandu.product.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
@@ -13,7 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.tiandu.common.utils.ConstantsUtils;
+import com.tiandu.order.vo.SkuSpecialVO;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductAttribute;
 import com.tiandu.product.entity.TdProductAttributeOption;
@@ -22,6 +29,7 @@ import com.tiandu.product.entity.TdProductTypeAttribute;
 import com.tiandu.product.entity.mapper.TdProductMapper;
 import com.tiandu.product.search.TdProductCriteria;
 import com.tiandu.product.service.TdProductService;
+import com.tiandu.product.vo.AttributeOptionsVO;
 import com.tiandu.product.vo.ProductJsonVO;
 import com.tiandu.product.vo.TdProductSkuVO;
 
@@ -224,7 +232,114 @@ public class TdProductServiceImpl implements TdProductService{
 		return tdProductMapper.updateStock(product);
 		
 	}
-	
+
+	@Override
+	public String getSpecificationatsJsonString(List<SkuSpecialVO> specialList) {
+		if(null!=specialList && specialList.size()>0){
+			//去重排序
+			List<SkuSpecialVO> listTemp= new ArrayList<SkuSpecialVO>();  
+			Iterator<SkuSpecialVO> it=specialList.iterator();
+			while(it.hasNext()){  
+				SkuSpecialVO a=it.next();  
+				if(listTemp.contains(a)){  
+					it.remove();  
+				}else{  
+					listTemp.add(a);  
+				}  
+			}
+			Map<String,Set<String>> speas = new HashMap<String,Set<String>>();
+			for(SkuSpecialVO sp : specialList){
+				Set<String> gt = speas.get(sp.getSname());
+				if(null!=gt){
+					gt.add(sp.getSoption());
+				}else{
+					Set<String> options = new HashSet<String>();
+					options.add(sp.getSoption());
+					speas.put(sp.getSname(), options);
+				}
+			}
+			List<AttributeOptionsVO> aos = new ArrayList<AttributeOptionsVO>();
+			for (Map.Entry<String,Set<String>> entry : speas.entrySet()) {  
+				AttributeOptionsVO ao = new AttributeOptionsVO();
+				ao.setSname(entry.getKey());
+				ao.setSoptions(entry.getValue());
+				aos.add(ao);
+			}
+			Gson gson = new Gson();
+			return gson.toJson(aos);
+		}
+		return "";
+	}
+
+	@Override
+	public void joinSelfAttributeOption(TdProduct product, List<TdProductTypeAttribute> taList) {
+		if(StringUtils.isNotBlank(product.getSpecificationats())){
+			Gson gson = new Gson();
+			AttributeOptionsVO  aos = null;
+			JsonParser parser = new JsonParser();
+			JsonElement element = parser.parse(product.getSpecificationats());
+			JsonArray sarr = element.getAsJsonArray();
+			Iterator it = sarr.iterator();
+			while(it.hasNext()){
+				JsonElement e = (JsonElement)it.next();
+				aos = gson.fromJson(e, AttributeOptionsVO.class);
+				for(TdProductTypeAttribute typeatrr : taList){
+					TdProductAttribute atrribute = typeatrr.getAttribute(); //
+					if(null!=atrribute && atrribute.getName().equals(aos.getSname())){
+						List<TdProductAttributeOption> optionList = null;
+						if(null!= atrribute.getTdProductAttributeOptionList()){
+							optionList = atrribute.getTdProductAttributeOptionList();//获取系统规格选项值
+							for(String aoption : aos.getSoptions()){//循环商品已有选项值
+								Boolean exist = false;
+								for(TdProductAttributeOption option : optionList){//循环系统规格选项值
+									if(option.equals(aoption)){//如果系统中存在相同的，则跳出
+										exist = true;
+										break;
+									}
+								}
+								if(!exist){//如果系统选择值不存在，则添加进去
+									TdProductAttributeOption otp = new TdProductAttributeOption();
+									otp.setName(aoption);
+									otp.setStatus(Byte.valueOf("1"));
+									optionList.add(otp);
+								}
+							}
+						}else{
+							optionList = new ArrayList<TdProductAttributeOption>();
+							for(String aoption : aos.getSoptions()){//循环商品已有选项值
+								TdProductAttributeOption otp = new TdProductAttributeOption();
+								otp.setName(aoption);
+								otp.setStatus(Byte.valueOf("1"));
+								optionList.add(otp);
+							}
+						}
+						
+					}
+				}
+			}
+			
+		}		
+	}
+
+	@Override
+	public List<AttributeOptionsVO> getProductAttributeWithOptions(TdProduct product) {
+		List<AttributeOptionsVO> aosList = new ArrayList<AttributeOptionsVO>();
+		if(StringUtils.isNotBlank(product.getSpecificationats())){
+			Gson gson = new Gson();
+			AttributeOptionsVO  aos = null;
+			JsonParser parser = new JsonParser();
+			JsonElement element = parser.parse(product.getSpecificationats());
+			JsonArray sarr = element.getAsJsonArray();
+			Iterator it = sarr.iterator();
+			while(it.hasNext()){
+				JsonElement e = (JsonElement)it.next();
+				aos = gson.fromJson(e, AttributeOptionsVO.class);
+				aosList.add(aos);
+			}
+			
+		}
+		return aosList;
+	}
 	
 	
 }

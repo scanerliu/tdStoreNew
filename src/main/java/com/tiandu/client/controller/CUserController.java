@@ -10,8 +10,10 @@ import java.security.UnrecoverableKeyException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -85,6 +87,7 @@ import com.tiandu.order.entity.TdShoppingcartItem;
 import com.tiandu.order.search.TdShoppingcartSearchCriteria;
 import com.tiandu.order.service.TdShoppingcartItemService;
 import com.tiandu.order.vo.ShoppingcartVO;
+import com.tiandu.order.vo.SkuSpecialVO;
 import com.tiandu.product.entity.TdBrand;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductAttachment;
@@ -1232,11 +1235,6 @@ public class CUserController extends BaseController {
 		Map<String,String> res = new HashMap<String,String>();
 		TdUser currentUser = this.getCurrentUser();
 		try{
-			if(null==product.getSkuList()||product.getSkuList().size()<1){
-				res.put("code", "0");
-				res.put("msg", "商品保存失败:商品规格不能为空!");
-				return res;
-			}
 			// 商品
 			Date now = new Date();
 			TdUser user = getCurrentUser();
@@ -1276,19 +1274,48 @@ public class CUserController extends BaseController {
 			Integer totalStock = 0;
 			BigDecimal lowPrice = BigDecimal.ZERO;
 			int i=0;
-			for(TdProductSku ps : product.getSkuList()){
-				if(null!=ps.getStock()&&null!=ps.getSalesPrice()){
-					totalStock = totalStock + ps.getStock();
-					if(i==0){
-						lowPrice = ps.getSalesPrice();
-					}else if(lowPrice.compareTo(ps.getSalesPrice())>0){
-						lowPrice = ps.getSalesPrice();
+			if(null!=product.getSkuList()&&product.getSkuList().size()>0){//开启规格
+				List<SkuSpecialVO> specialList = new ArrayList<SkuSpecialVO>();
+				for(TdProductSku ps : product.getSkuList()){
+					if(null!=ps.getStock()&&null!=ps.getSalesPrice()){
+						totalStock = totalStock + ps.getStock();
+						if(i==0){
+							lowPrice = ps.getSalesPrice();
+						}else if(lowPrice.compareTo(ps.getSalesPrice())>0){
+							lowPrice = ps.getSalesPrice();
+						}
+						i++;
+						//计算规格及属性值
+						ps.setSpecifications(ps.getSpecialJsonBySpecialKey(ps.getSpecifications()));
+						specialList.addAll(ps.getSpecialList());
 					}
-					i++;
 				}
+				//获取规格选择项
+				String specifiations = tdProductService.getSpecificationatsJsonString(specialList);
+				product.setSpecificationats(specifiations);
+				product.setPrice(lowPrice);
+				product.setQuantum(totalStock);
+				product.setSpecification(true);
+			}else{//关闭规格
+				if(null==product.getPrice()||null==product.getHighPrice()||null==product.getLowPrice()||null==product.getSupplierPrice()){
+					res.put("code", "0");
+					res.put("msg", "商品保存失败:请正确设置商品价格！");
+					return res;
+				}
+				product.setSpecification(false);
+				List<TdProductSku> skuList = new ArrayList<TdProductSku>();
+				TdProductSku sku = new TdProductSku();
+				sku.setHighPrice(product.getHighPrice());
+				sku.setLowPrice(product.getLowPrice());
+				sku.setSalesPrice(product.getPrice());
+				sku.setSkuCode(product.getSkuCode());
+				sku.setMarketPrice(product.getMarketPrice());
+				sku.setSupplierPrice(product.getSupplierPrice());
+				sku.setStock(product.getQuantum());
+				sku.setSpecifications("");
+				skuList.add(sku);
+				product.setSkuList(skuList);
 			}
-			product.setPrice(lowPrice);
-			product.setQuantum(totalStock);
 			
 			tdProductService.save(product);
 			// 货品	atrributeArray格式：规格1=gv1,规格2=gv21	 保存规格格式：{"颜色":"红色","尺码":"38"}
@@ -1298,7 +1325,7 @@ public class CUserController extends BaseController {
 					ps.setStatus(Byte.valueOf("1"));
 					ps.setUpdateBy(currentUser.getUid());
 					ps.setUpdateTime(now);
-					ps.setSpecifications(ps.getSpecialJsonBySpecialKey(ps.getSpecifications()));
+					//ps.setSpecifications(ps.getSpecialJsonBySpecialKey(ps.getSpecifications()));
 					tdProductSkuService.save(ps);
 				}
 			}
@@ -1593,8 +1620,21 @@ public class CUserController extends BaseController {
 			if(taList.size()>0){
 				//匹配货品库存状态
 				tdProductService.matchSkuStockWithAttributeOption(productSkuList,taList);
+				if(product.getSpecification()){//开启规格，合并自定义属性
+					tdProductService.joinSelfAttributeOption(product,taList);
+				}
 			}
 			map.addAttribute("taList", taList);
+			if(!product.getSpecification() && null!=productSkuList && productSkuList.size()>0){//未开启规格
+				TdProductSku sku = productSkuList.get(0);
+				product.setSkuCode(sku.getSkuCode());
+				product.setHighPrice(sku.getHighPrice());
+				product.setLowPrice(sku.getLowPrice());
+				product.setMarketPrice(sku.getMarketPrice());
+				product.setSupplierPrice(sku.getSupplierPrice());
+			}else{
+				
+			}
 		}else{
 			TdProduct product = new TdProduct();
 			if(null!=ktype && ktype.equals(2)){

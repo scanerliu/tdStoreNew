@@ -165,7 +165,7 @@ public class TdProductSku {
 			return specialList;
 		}
 		List<SkuSpecialVO> slist = new ArrayList<SkuSpecialVO>();
-		if(StringUtils.isNotEmpty(this.getSpecifications())){
+		if(StringUtils.isNotBlank(this.getSpecifications())){
 			String opt = this.getSpecifications();
 			JSONObject json;
 			try {

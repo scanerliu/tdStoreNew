@@ -7,7 +7,7 @@
 <div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="returnList()"><em>返回列表</em></a>&#12288;</div></div>
 <div class="pad_lr_10">
 <form id="productForm" action="${app.basePath}/admin/product/save" class="easyui-form" method="post" data-options="novalidate:true">
-<input type="hidden" name="productId" value="<#if tdProduct??>${tdProduct.id?c}</#if>">
+<input type="hidden" name="productId" value="<#if tdProduct??>${tdProduct.id!''}</#if>">
 <div class="easyui-tabs" style="width:100%； height:750px;">
 		<div title="商品信息" style="padding:10px">
 			<table class="table_form" width="100%;hright:700px;">
@@ -30,16 +30,16 @@
 		        			</#if>	
 		        		</#list>
 		        		</#if>
-		        		<input type="hidden" name="typeId" value="<#if tdProduct??>${tdProduct.typeId?c}</#if>">
+		        		<input type="hidden" name="typeId" value="<#if tdProduct??>${tdProduct.typeId!''}</#if>">
 		        	<#else>
-		        	<select id="productTypeSelections" name="typeId" style="width:200px;" onchange="flushHpgg(this)">
-		        		<option value="0" <#if !tdProduct?? || tdProduct.typeId == 0>selected="selected"</#if>>无上级分类</option>
+		        	<select id="productTypeSelections" name="typeId" style="width:200px;" onchange="changeType(this)">
+		        		<option value="" >--请选择--</option>
 		        		<#if productTypeList ??>
 		        		<#list productTypeList as pro>
-		        			<option value="${pro.id?c}" <#if !pro.subList?? || pro.subList?size == 0>isLastLevel="yes"</#if> <#if tdProduct?? && tdProduct.typeId == pro.id>selected="selected"</#if>>${pro.name!''}</option>
+		        			<option value="${pro.id?c}" disabled="">${pro.name!''}</option>
 		        			<#if pro.subList??>
 		        			<#list pro.subList as spro>
-		        				<option value="${spro.id?c}" <#if !spro.subList?? || spro.subList?size == 0>isLastLevel="yes"</#if> <#if tdProduct?? && tdProduct.typeId == spro.id>selected="selected"</#if>>├ ${spro.name!''}</option>
+		        				<option value="${spro.id?c}" disabled="">├ ${spro.name!''}</option>
 		        				<#if spro.subList??>
 			        			<#list spro.subList as tpro>
 			        				<option value="${tpro.id?c}" <#if !tpro.subList?? || tpro.subList?size == 0>isLastLevel="yes"</#if> <#if tdProduct?? && tdProduct.typeId == tpro.id>selected="selected"</#if>>&emsp;├ ${tpro.name!''}</option>
@@ -55,20 +55,39 @@
 		    </tr>
 		    <tr>
 		    	<th>货品规格：</th>
-		    	<td id="hpgg">
-		    		<#if attributeList??>
-			    		<#list attributeList as attribute>
-			    			<#if attribute??>
-			    			<#if (attribute_index != 0) && (attribute_index lt attributeList?size)><br/></#if>
-			    			<label>${attribute.name!''}：<label>
-			    			<#if attribute.tdProductAttributeOptionList??>
-			    				<#list attribute.tdProductAttributeOptionList as option>
-			    					${option.name!''}<input type="checkbox" onchange="flushTable()" id="spe_${attribute.name!''}_${option.name!''}" name="${attribute.name!''}" <#if keyValueStr?? && keyValueStr?contains(attribute.name + "=" + option.name)>checked</#if>>&nbsp;&nbsp;&nbsp;
-								</#list>
-							</#if>
-							</#if>
-			    		</#list>	
-					</#if>
+		    	<td>
+		    		<#assign selindex = 1>
+			        <div id="attrList">
+			        	<#if taList??>
+				    		<#list taList as attr>
+				    			<#if (attr_index != 0) && (attr_index lt taList?size)><br/></#if>
+				    			<div class="fig fig5 slect">
+					            <label for="" class="lab1 fl"><span>*</span>${attr.attribute.name!''}</label>
+					            <section class="sig fl">
+					                <ul>
+					                	<#if attr.attribute.tdProductAttributeOptionList??>
+						    				<#list attr.attribute.tdProductAttributeOptionList as option>
+						    					<li>
+						    						<input class="fl chk" type="checkbox" onchange="flushTable()" id="spe_${attr.attribute.name!''}_${option.name!''}" name="${attr.attribute.name!''}" value="${option.name!''}" <#if option.status?? && option.status==1>checked</#if>>
+						    						<input type="text" value="${option.name!''}" class="fl" readonly="readonly">
+						    					</li>
+						    					<#assign selindex = selindex+1>
+											</#list>
+										</#if>
+					                    <li>
+					                </ul>
+					                <ul>
+										<li>
+											<input class="fl chk selfconf" type="checkbox" name="${attr.attribute.name!''}" value="${selindex}" onclick="checkAttributeSelect(this)">
+											<input type="text" name="avs" value="" class="fl selfconf" placeholder="自定义值" maxlength="20" keyup="checkAttribute(this)" onblur="checkAttribute(this)">
+											<#assign selindex = selindex+1>
+										</li>
+						            </ul>
+					            </section>
+					        	</div>
+				    		</#list>	
+						</#if>
+			        </div>
 		    	</td>
 		    </tr>
 		    <tr>
@@ -78,11 +97,36 @@
 		    	</td>
 		    </tr>
 		    <tr>
+		    	<th>一口价和总库存：</th>
+		    	<td>
+		    		<table class="table1">
+		                <tr style="background:#ddd;">
+		                	<td>货品编号</td>
+		                    <td>供应商价</td>
+		                    <td>零售价</td>
+		                    <td>市场价</td>
+		                    <td>最高价</td>
+		                    <td>最低价</td>
+		                    <td>商品总库存</td>
+		                </tr>
+		        		<tr class="skuspec">
+		        			<td><input type="text" id="cskuCode" name="skuCode" value="${tdProduct.skuCode!''}" datatype="n4-10" nullmsg="请填写货品编号！" errormsg="货品编号格式错误！只能填写4-10个数字"></td>
+		                    <td><input type="text" id="csupplierPrice" name="supplierPrice" value="${tdProduct.supplierPrice!''}" datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写供应商价！" errormsg="供应商价格式错误！"></td>
+		                    <td><input type="text" id="cprice" name="price" value="${tdProduct.price!''}" <#if tdProduct.kind?? && tdProduct.kind==3>readonly="readonly" </#if> datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写零售价！" errormsg="零售价格式错误！"></td>
+		                    <td><input type="text" id="cmarketPrice" name="marketPrice" value="${tdProduct.marketPrice!''}" datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写市场价！" errormsg="市场价格式错误！"></td>
+		                    <td><input type="text" id="chighPrice" name="highPrice" value="${tdProduct.highPrice!''}" datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写最高价！" errormsg="最高价格式错误！"></td>
+		                    <td><input type="text" id="clowPrice" name="lowPrice" value="${tdProduct.lowPrice!''}" datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写最低价！" errormsg="最低价格式错误！"></td>
+		                    <td><input type="text" id="cquantum" name="quantum" value="${tdProduct.quantum!''}" datatype="n1-7" nullmsg="请填写库存！" errormsg="库存格式错误，只能填写1-7位数字！"></td>
+		                </tr>
+		            </table>
+		    	</td>
+		    </tr>
+		    <tr>
 		        <th>商品类型：</th>
 		        <td>
 		            <input type="radio" name="kind" onclick="changekind(1)" value="1" <#if !tdProduct?? || (tdProduct.kind?? && tdProduct.kind==1)>checked</#if>>普通商品&emsp;
 		            <input type="radio" name="kind" onclick="changekind(this.value)" value="3" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==3>checked</#if>>0元购&emsp;
-		            <input type="radio" name="kind" onclick="changekind(this.value)" value="4" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==4>checked</#if>>10元购&emsp;
+		            <!--<input type="radio" name="kind" onclick="changekind(this.value)" value="4" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==4>checked</#if>>10元购&emsp;-->
 		            <input type="radio" name="kind" onclick="changekind(this.value)" value="5" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==5>checked</#if>>预售&emsp;
 		            <input type="radio" name="kind" onclick="changekind(this.value)" value="6" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==6>checked</#if>>秒杀&emsp;
 		            <input type="radio" name="kind" onclick="changekind(this.value)" value="7" <#if tdProduct?? && tdProduct.kind?? && tdProduct.kind==7>checked</#if>>全积分兑换&emsp;
@@ -116,27 +160,17 @@
 		        <td><input type="text" name="code" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.code!''}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="length[2,20]"></td>
 		    </tr>
 		    <tr>
-		        <th width="150">参考价：</th>
-		        
-		        <td><input type="text" name="price" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.price?string('0.00')}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="currency"></td>
-		    </tr>
-		    <tr>
 		        <th width="150">运费：</th>
 		        
-		        <td><input type="text" name="postage" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.postage?string('0.00')}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="currency"></td>
+		        <td><input type="text" name="postage" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.postage!'0'}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="currency"></td>
 		    </tr>
-		    <tr>
-		        <th width="150">库存：</th>
-		        
-		        <td><input type="text" name="quantum" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.quantum!'0'}</#if>"  style="width:200px;height:30px" data-options="required:true" ></td>
-		    </tr>
-		    <tr class="seckill" <#if (tdProduct?? && tdProduct.kind == 5) || (tdProduct?? && tdProduct.kind == 6)>style="display: table-row;"<#else>style="display:none"</#if>>
+		    <tr class="seckill" <#if (tdProduct?? && tdProduct.kind?? && tdProduct.kind == 5) || (tdProduct?? && tdProduct.kind?? &&tdProduct.kind == 6)>style="display: table-row;"<#else>style="display:none"</#if>>
 		        <th  width="150">开始时间：</th>
 		        <td>
 	            	<input type="text" name="startTime" class="easyui-datetimebox" value="<#if tdProduct?? && tdProduct.startTime??>${tdProduct.startTime?string('yyyy-MM-dd HH:mm:ss')}</#if>" style="width:200px;height:30px"  data-options="showSeconds:true">
 		        </td>
 		    </tr>
-		     <tr class="seckill" <#if (tdProduct?? && tdProduct.kind == 5) || (tdProduct?? && tdProduct.kind == 6)>style="display: table-row;"<#else>style="display:none"</#if>>
+		     <tr class="seckill" <#if (tdProduct?? && tdProduct.kind?? && tdProduct.kind == 5) || (tdProduct?? && tdProduct.kind?? && tdProduct.kind  == 6)>style="display: table-row;"<#else>style="display:none"</#if>>
 		        <th  width="150">结算时间：</th>
 		        <td>
 		            <input type="text" name="endTime" class="easyui-datetimebox" value="<#if tdProduct?? && tdProduct.endTime??>${tdProduct.endTime?string('yyyy-MM-dd HH:mm:ss')}</#if>" style="width:200px;height:30px" data-options="showSeconds:true" >
@@ -334,12 +368,9 @@
 <script>
 var psize = 0;
 	$(function(){
-		psize =$("#speSize").val();
-		<#if tdProduct??>
-			makeTable(${tableJsonData}, "skuAssemble");
-			<#if specifiactionNum??>
-				//editText("skuAssemble", ${specifiactionNum});	
-			</#if>
+		//初始化商品一口价设置
+		<#if tdProduct?? && tdProduct.id?? && tdProduct.specification==true>
+			initProductCommon();
 		</#if>
 		
 		// 图片上传
@@ -383,20 +414,6 @@ var psize = 0;
 		});
 	});
 
-function removeImg(id)
-{
-	
-	$.ajax({
-		type : "post",
-		data : {"attId":id},
-		url : basePath+"/admin/product/deleteImg",
-		success:function(data){
-		} 
-	})
-	
-	$("#attId"+id).remove();
-	$("#img"+id).remove();
-}
 
 // 根据数据产生表
 function makeTable(data, divId){

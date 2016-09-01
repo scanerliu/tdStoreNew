@@ -130,24 +130,20 @@
 	                    <p>由<strong>${region.name!''}<#if productType??>${productType.name!''}</#if>代理</strong> 发货并负责售后服务。</p>
 	
 	                </div>
-	                <#if taList??>
+	                <#if taList?? && taList?size gt 0>
 				    <#list taList as typeatt>
 				    <div class="program1">
-	                    <span>${typeatt.attribute.name}:</span>
-				        <div class="para slect" id="attul_${typeatt.attribute.attriId}">
-				        	<#if typeatt.attribute.tdProductAttributeOptionList??>
-				        	<#list typeatt.attribute.tdProductAttributeOptionList as option>
-				        	<#if option.status==0>
-				        	<label class="ogray" title="无货">${option.name}</label>
-				        	<#else>
-				        	<span attri="${option.id}">${option.name}</span>
-				        	</#if>
+	                    <span>${typeatt.sname}:</span>
+				        <div class="para slect" id="attul_${typeatt.sname}">
+				        	<#if typeatt.soptions??>
+				        	<#list typeatt.soptions as option>
+				        	<span attri="${option}">${option}</span>
 				            </#list>
 				    		</#if>
 				        </div>
 				        <script>
 							$(function(){
-							    $("#attul_"+${typeatt.attribute.attriId}).on("click","span",function(){
+							    $("#attul_${typeatt.sname}").on("click","span",function(){
 							    	if(this.className!="ogray"){
 										$(this).siblings().removeClass("checked");
 										$(this).addClass("checked");
