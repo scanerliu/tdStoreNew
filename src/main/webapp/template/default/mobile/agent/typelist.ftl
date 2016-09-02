@@ -22,13 +22,14 @@
     <script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script> 
     <script type="text/javascript" src="${app.basePath}/static/touch/js/common.js"></script>
     
-    <script src="${app.basePath}/static/js/mobile/agent/agent.js" type="text/javascript"></script>
+	<script src="${app.basePath}/static/js/mobile/agent/agent.js" type="text/javascript"></script>
 </head>
 <body class="body_bg">
 <div id="results"></div>
 <script type="text/javascript">
 	$(function(){
-	    searcAgent(${agent.id?c});
+	  searcAgent(${agent.id?c});
+      //cleft_height();
 	});
 	
 </script>
