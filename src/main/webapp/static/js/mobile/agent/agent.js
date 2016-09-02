@@ -5,6 +5,14 @@ function searcAgent(agentId){
 	$("#results").load(url,loadData);
 }
 
+function searchAgentType(parentId,regionId){
+	var url = basePath + "/mobile/agent/search/subtype";
+	var loadData = {"parentId":parentId,"regionId":regionId};
+	
+	$("#sub_type_list").load(url,loadData);
+}
+
+
 function searchDis()
 {
 	var url = basePath + "/mobile/agent/search/distric";

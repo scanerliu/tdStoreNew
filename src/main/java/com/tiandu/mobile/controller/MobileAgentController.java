@@ -296,17 +296,18 @@ public class MobileAgentController extends BaseController{
 		
 		if(agent.getGroupId() ==1){
 			// 查找所有分类
-			TdProductTypeCriteria tsc = new TdProductTypeCriteria();
-			tsc.setStatus((byte)1);
-			tsc.setOrderBy("2");
-			map.addAttribute("typeList", tdProductTypeService.findAll(tsc));
+//			TdProductTypeCriteria tsc = new TdProductTypeCriteria();
+//			tsc.setStatus((byte)1);
+//			tsc.setOrderBy("2");
+//			map.addAttribute("typeList", tdProductTypeService.findAll(tsc));
+			map.addAttribute("typeList", tdProductTypeService.findByParentId(0));
 		}
 		
 		
 		TdDistrict district = new TdDistrict();
 		
 		// 代理查询条件
-		TdAgentSearchCriteria asc = new TdAgentSearchCriteria();
+//		TdAgentSearchCriteria asc = new TdAgentSearchCriteria();
 		
 		// 一级地区
 		sc.setFlag(false);
@@ -314,14 +315,14 @@ public class MobileAgentController extends BaseController{
 		map.addAttribute("districtList", tdDistrictService.findBySearchCriteria(sc));
 		map.addAttribute("dissc", sc);
 		
-		
+		Integer regionId = 0;
 		if(agent.getLevel() == 1)
 		{
 			// 如果选择为全国代理，并且选择地区，信息提示
 			if(null != sc.getProvinceId())
 			{
 				map.addAttribute("msg", "当前选择为全国代理，无需选择下级地区");
-				asc.setRegionId(0);
+//				asc.setRegionId(0);
 			}
 		}
 		else
@@ -334,7 +335,8 @@ public class MobileAgentController extends BaseController{
 				district = tdDistrictService.findOne(sc.getProvinceId());
 				
 				map.addAttribute("province", district);
-				asc.setRegionId(sc.getProvinceId());
+//				asc.setRegionId(sc.getProvinceId());
+				regionId =sc.getProvinceId();
 			}
 		}
 			
@@ -357,28 +359,51 @@ public class MobileAgentController extends BaseController{
 				district = tdDistrictService.findOne(sc.getCityId());
 				
 				map.addAttribute("city",district);
-				asc.setRegionId(sc.getCityId());
+//				asc.setRegionId(sc.getCityId());
+				regionId =sc.getCityId();
 			}
 			
 			// 选择区县级，复制代理查询地区ID参数
 			if(null != sc.getRegionId())
 			{
 				district = tdDistrictService.findOne(sc.getRegionId());
-				asc.setRegionId(sc.getRegionId());
+//				asc.setRegionId(sc.getRegionId());
 				map.addAttribute("regin",district);
+				regionId =sc.getRegionId();
 			}
 		}
 		
-		// 查找当前选择地区已的所有代理
-		asc.setFlag(false);
-		
-		List<TdAgent> agentList = tdAgentService.findBySearchCriteria(asc);
-		
-		map.addAttribute("experTypeIds",getExperTypeIds(agentList));
+//		// 查找当前选择地区已的所有代理
+//		asc.setFlag(false);
+//		
+//		List<TdAgent> agentList = tdAgentService.findBySearchCriteria(asc);
+//		
+//		map.addAttribute("experTypeIds",getExperTypeIds(agentList));
 		map.addAttribute("district", district);
+		map.addAttribute("regionId", regionId);
 		
 		return "/mobile/agent/typelist_body";
 	}
+	
+	@RequestMapping(value = "/search/subtype",method= RequestMethod.POST)
+	public String agentType(Integer parentId,Integer regionId,HttpServletRequest req,ModelMap map)
+	{
+		if(null != parentId){
+			map.addAttribute("subtypeList", tdProductTypeService.findByParentId(parentId));
+		}
+		
+		// 代理查询条件
+		TdAgentSearchCriteria asc = new TdAgentSearchCriteria();
+		// 查找当前选择地区已的所有代理
+		asc.setFlag(false);
+		asc.setRegionId(regionId);
+		List<TdAgent> agentList = tdAgentService.findBySearchCriteria(asc);
+		
+		map.addAttribute("experTypeIds",getExperTypeIds(agentList));
+		
+		return "/mobile/agent/agent_producttype";
+	}
+	
 	
 	@RequestMapping(value="/detail",method=RequestMethod.POST)
 	public String agentDetail(Integer agentId,Integer typeId,Integer regionId,

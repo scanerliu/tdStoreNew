@@ -2,8 +2,11 @@
 <script>
     $(function(){
         three_bing();
-        left_right();
-        cleft_height();
+       cleft_height();
+       left_right();
+         <#if typeList?? && typeList?size gt 0>
+    		searchAgentType(${typeList[0].id},${regionId!'0'});
+    	</#if>
     })
  <#if msg??>alert('${msg}');</#if>
 </script>
@@ -65,55 +68,26 @@
             <aside>
                 <#if typeList?? && typeList?size gt 0>
             	<#list typeList as type>
-                <a href="javascript:;" title="${type.name!''}" <#if type_index==0>class="active"</#if>>${type.name!''}</a>
+                <a href="javascript:searchAgentType(${type.id},${regionId!'0'});" title="${type.name!''}" <#if type_index==0>class="active"</#if>>${type.name!''}</a>
                 </#list>
                 </#if>
             </aside>
         </section>
+	    <form action = "${app.basePath}/mobile/agent/detail", method="post" id="sub_form">
         <section class="cla_right fr" id="cla_right">
-        	<#if typeList?? && typeList?size gt 0>
-        	<#list typeList as type>
-	            <ul <#if type_index==0>class="active"</#if>>
-        			<#if type.subList??>
-        			<#list type.subList as stype>
-		                <li <#if stype_index==0>class="active"</#if>>
-		                    <menu>${stype.name!''}</menu>
-		                    <aside class="as2">
-		                    	<#if stype.subList??>
-		                    	<#list stype.subList as etype>
-		                    	
-		                        <a t=${etype.id?c}  href="javascript:;" title="${etype.name!''}" <#if !experTypeIds?? || !experTypeIds?contains('['+etype.id?c+']')>class="active"</#if>>
-		                            <img src="<#if etype.imageUrl?? && etype.imageUrl!="">${etype.imageUrl!''}<#else>${app.basePath}/static/default/images/noimg.png</#if>" alt="${etype.name!''}">
-		                            <p>${etype.name!''}</p>
-		                            
-		                            <i></i>
-		                        </a>
-		                        </#list>
-		                        </#if>
-		                    </aside>
-		                </li>
-		         	</#list>
-		         	</#if>
-	             </ul>
-		    </#list>
-		   	</#if>
-		   	<script>
-		   		$(function(){
-		   			$('.cla_right a.active').click(function(){
-		   				$('#typeId').val($(this).attr('t'));
-		   			});
-		   		})
-		   	</script>
-            <div style="width:4.7rem;height:0.8rem"></div>
-            <form action = "${app.basePath}/mobile/agent/detail", method="post" id="sub_form">
-            	<input type="hidden" name="agentId" id="agentid" value="<#if agent??>${agent.id?c}</#if>" />
-	            <input type="hidden" name="typeId" value="" id="typeId" />
-	            <input type="hidden" name="regionId" id="regionId"  value="<#if district??>${district.id!'0'}</#if>"/>
-	            <input type="hidden" name="disLevel" id="disLevel"  value="<#if district??>${district.level!''}</#if>"/>
-	            <input type="hidden" name="level" id="level" value="${agent.level!''}">
-	            <input type="hidden" name="groupId" id="groupId" value="${agent.groupId!'0'}">
-            </form>
-	            <aside class="god_btn"><input type="button" onclick="subAgent()"  value="确定选择" /></aside>
-        </section>
+        <div id="sub_type_list">
+        </div>
+        
+   	
+	    <div style="width:4.7rem;height:0.8rem"></div>
+    	<input type="hidden" name="agentId" id="agentid" value="<#if agent??>${agent.id?c}</#if>" />
+        
+        <input type="hidden" name="regionId" id="regionId"  value="<#if district??>${district.id!'0'}</#if>"/>
+        <input type="hidden" name="disLevel" id="disLevel"  value="<#if district??>${district.level!''}</#if>"/>
+        <input type="hidden" name="level" id="level" value="${agent.level!''}">
+        <input type="hidden" name="groupId" id="groupId" value="${agent.groupId!'0'}">
+        <aside class="god_btn"><input type="button" onclick="subAgent()"  value="确定选择" /></aside>
+		</section>
+	    </form>
     </div>
 </section>

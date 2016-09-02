@@ -777,12 +777,20 @@ public class MOrderController extends BaseController {
 					result_code.contains("SUCCESS") && 
 					null != out_trade_no)
 			{
-				TdOrder order = tdOrderService.findByOrderNo(out_trade_no);
-
-				if (null != order)
-				{
-					 tdOrderService.AfterPaySuccess(order,respText.toString());
-				}
+				// 联合订单支付
+				if(out_trade_no.contains("J")){
+		        	TdJointOrder jointOrder = tdJointOrderService.findByJno(out_trade_no);
+		        	if (jointOrder == null) {
+		        		// 订单支付成功
+		        		tdOrderService.AfterJointPaySuccess(jointOrder,respText.toString());
+		        	}
+		        }else{
+		        	TdOrder order = tdOrderService.findByOrderNo(out_trade_no);
+		        	if (null != order)
+		        	{
+		        		tdOrderService.AfterPaySuccess(order,respText.toString());
+		        	}
+		        }
 				
 				String content = "<xml>\n"
 						+ "<result_code>SUCCESS</result_code>\n"
