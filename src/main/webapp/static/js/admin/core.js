@@ -48,3 +48,12 @@ function formatInputPrice(obj,min,max){
     }
     $(obj).val(txt);
 }
+
+//open waiting
+function openwaiting(){
+	$("#loaddiv").show();
+}
+//close waiting
+function closewaiting(){
+	$("#loaddiv").hide();
+}

@@ -7,7 +7,7 @@
 <div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="returnList()"><em>返回列表</em></a>&#12288;</div></div>
 <div class="pad_lr_10">
 <form id="productForm" action="${app.basePath}/admin/product/save" class="easyui-form" method="post" data-options="novalidate:true">
-<input type="hidden" name="productId" value="<#if tdProduct??>${tdProduct.id?c}</#if>">
+<input type="hidden" name="productId" value="<#if tdProduct??>${tdProduct.id!''}</#if>">
 <div class="easyui-tabs" style="width:100%； height:750px;">
 		<div title="商品信息" style="padding:10px">
 			<table class="table_form" width="100%;hright:700px;">
@@ -30,16 +30,16 @@
 		        			</#if>	
 		        		</#list>
 		        		</#if>
-		        		<input type="hidden" name="typeId" value="<#if tdProduct??>${tdProduct.typeId?c}</#if>">
+		        		<input type="hidden" name="typeId" value="<#if tdProduct??>${tdProduct.typeId!''}</#if>">
 		        	<#else>
-		        	<select id="productTypeSelections" name="typeId" style="width:200px;" onchange="flushHpgg(this)">
-		        		<option value="0" <#if !tdProduct?? || tdProduct.typeId == 0>selected="selected"</#if>>无上级分类</option>
+		        	<select id="productTypeSelections" name="typeId" style="width:200px;" onchange="changeType(this)">
+		        		<option value="" >--请选择--</option>
 		        		<#if productTypeList ??>
 		        		<#list productTypeList as pro>
-		        			<option value="${pro.id?c}" <#if !pro.subList?? || pro.subList?size == 0>isLastLevel="yes"</#if> <#if tdProduct?? && tdProduct.typeId == pro.id>selected="selected"</#if>>${pro.name!''}</option>
+		        			<option value="${pro.id?c}" disabled="">${pro.name!''}</option>
 		        			<#if pro.subList??>
 		        			<#list pro.subList as spro>
-		        				<option value="${spro.id?c}" <#if !spro.subList?? || spro.subList?size == 0>isLastLevel="yes"</#if> <#if tdProduct?? && tdProduct.typeId == spro.id>selected="selected"</#if>>├ ${spro.name!''}</option>
+		        				<option value="${spro.id?c}" disabled="">├ ${spro.name!''}</option>
 		        				<#if spro.subList??>
 			        			<#list spro.subList as tpro>
 			        				<option value="${tpro.id?c}" <#if !tpro.subList?? || tpro.subList?size == 0>isLastLevel="yes"</#if> <#if tdProduct?? && tdProduct.typeId == tpro.id>selected="selected"</#if>>&emsp;├ ${tpro.name!''}</option>
@@ -55,68 +55,69 @@
 		    </tr>
 		    <tr>
 		    	<th>货品规格：</th>
-		    	<td id="attrList">
+		    	<td>
 		    		<#assign selindex = 1>
-		    		<#if taList??>
-			    		<#list taList as attr>
-			    			<#if (attr_index != 0) && (attr_index lt taList?size)><br/></#if>
-			    			<div class="fig fig5 slect">
-				            <label for="" class="lab1 fl"><span>*</span>${attr.attribute.name!''}</label>
-				            <section class="sig fl">
-				                <ul>
-				                	<#if attr.attribute.tdProductAttributeOptionList??>
-					    				<#list attr.attribute.tdProductAttributeOptionList as option>
-					    					<li>
-					    						<input class="fl chk" type="checkbox" onchange="flushTable()" id="spe_${attr.attribute.name!''}_${option.name!''}" name="${attr.attribute.name!''}" value="${option.name!''}" <#if option.status?? && option.status==1>checked</#if>>
-					    						<input type="text" value="${option.name!''}" class="fl" readonly="readonly">
-					    					</li>
-					    					<#assign selindex = selindex+1>
-										</#list>
-									</#if>
-				                    <li>
-				                </ul>
-				                <ul>
-									<li>
-										<input class="fl chk selfconf" type="checkbox" name="${attr.attribute.name!''}" value="${selindex}" onclick="checkAttributeSelect(this)">
-										<input type="text" name="avs" value="" class="fl selfconf" placeholder="自定义值" maxlength="20" keyup="checkAttribute(this)" onblur="checkAttribute(this)">
-										<#assign selindex = selindex+1>
-									</li>
-					            </ul>
-				            </section>
-				        	</div>
-			    		</#list>	
-					</#if>
+			        <div id="attrList">
+			        	<#if taList??>
+				    		<#list taList as attr>
+				    			<#if (attr_index != 0) && (attr_index lt taList?size)><br/></#if>
+				    			<div class="fig fig5 slect">
+					            <label for="" class="lab1 fl"><span>*</span>${attr.attribute.name!''}</label>
+					            <section class="sig fl">
+					                <ul>
+					                	<#if attr.attribute.tdProductAttributeOptionList??>
+						    				<#list attr.attribute.tdProductAttributeOptionList as option>
+						    					<li>
+						    						<input class="fl chk" type="checkbox" onchange="flushTable()" id="spe_${attr.attribute.name!''}_${option.name!''}" name="${attr.attribute.name!''}" value="${option.name!''}" <#if option.status?? && option.status==1>checked</#if>>
+						    						<input type="text" value="${option.name!''}" class="fl" readonly="readonly">
+						    					</li>
+						    					<#assign selindex = selindex+1>
+											</#list>
+										</#if>
+					                    <li>
+					                </ul>
+					                <ul>
+										<li>
+											<input class="fl chk selfconf" type="checkbox" name="${attr.attribute.name!''}" value="${selindex}" onclick="checkAttributeSelect(this)">
+											<input type="text" name="avs" value="" class="fl selfconf" placeholder="自定义值" maxlength="20" keyup="checkAttribute(this)" onblur="checkAttribute(this)">
+											<#assign selindex = selindex+1>
+										</li>
+						            </ul>
+					            </section>
+					        	</div>
+				    		</#list>	
+						</#if>
+			        </div>
 		    	</td>
 		    </tr>
 		    <tr>
 		    	<th>货品组合：</th>
 		    	<td>
-		    		<table class="table1" id="skuTable">
+		    		<div id="skuAssemble"></div>
+		    	</td>
+		    </tr>
+		    <tr>
+		    	<th>一口价和总库存：</th>
+		    	<td>
+		    		<table class="table1">
 		                <tr style="background:#ddd;">
-		                    <td>规格值</td>
-		                    <td>货品编号</td>
+		                	<td>货品编号</td>
 		                    <td>供应商价</td>
 		                    <td>零售价</td>
 		                    <td>市场价</td>
 		                    <td>最高价</td>
 		                    <td>最低价</td>
-		                    <td>商品库存</td>
+		                    <td>商品总库存</td>
 		                </tr>
-		                <#if productSkuList?? && tdProduct.specification?? && tdProduct.specification==true>
-		                	<#list productSkuList as sku>
-		                		<tr tid="${sku.specKey!''}" class="skuspec">
-				                    <td>${sku.specOptionsKey!''}</td>
-				                    <td><input type="text" name="skuList[${sku_index}].skuCode" value="${sku.skuCode!''}" datatype="n4-10" nullmsg="请填写货品编号！" errormsg="货品编号格式错误！只能填写4-10个数字"></td>
-				                    <td><input type="text" name="skuList[${sku_index}].supplierPrice" value="${sku.supplierPrice!'0'}" datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写供应商价！" errormsg="供应商价格式错误！"></td>
-				                    <td><input type="text" name="skuList[${sku_index}].salesPrice" value="${sku.salesPrice!'0'}" <#if tdProduct.kind?? && tdProduct.kind==3>readonly="readonly" </#if> datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写零售价！" errormsg="零售价格式错误！"></td>
-				                    <td><input type="text" name="skuList[${sku_index}].marketPrice" value="${sku.marketPrice!'0'}" datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写市场价！" errormsg="市场价格式错误！"></td>
-				                    <td><input type="text" name="skuList[${sku_index}].highPrice" value="${sku.highPrice!'0'}" datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写最高价！" errormsg="最高价格式错误！"></td>
-				                    <td><input type="text" name="skuList[${sku_index}].lowPrice" value="${sku.lowPrice!'0'}" datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写最低价！" errormsg="最低价格式错误！"></td>
-				                    <td><input type="text" name="skuList[${sku_index}].stock" value="${sku.stock!'0'}" datatype="n1-7" nullmsg="请填写库存！" errormsg="库存格式错误，只能填写1-7位数字！"></td>
-				                    <input type="hidden" name="skuList[${sku_index}].specifications" value="${sku.specKey!''}">
-				                </tr>
-		                	</#list>
-		                </#if>
+		        		<tr class="skuspec">
+		        			<td><input type="text" id="cskuCode" name="skuCode" value="${tdProduct.skuCode!''}" datatype="n4-10" nullmsg="请填写货品编号！" errormsg="货品编号格式错误！只能填写4-10个数字"></td>
+		                    <td><input type="text" id="csupplierPrice" name="supplierPrice" value="${tdProduct.supplierPrice!''}" datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写供应商价！" errormsg="供应商价格式错误！"></td>
+		                    <td><input type="text" id="cprice" name="price" value="${tdProduct.price!''}" <#if tdProduct.kind?? && tdProduct.kind==3>readonly="readonly" </#if> datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写零售价！" errormsg="零售价格式错误！"></td>
+		                    <td><input type="text" id="cmarketPrice" name="marketPrice" value="${tdProduct.marketPrice!''}" datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写市场价！" errormsg="市场价格式错误！"></td>
+		                    <td><input type="text" id="chighPrice" name="highPrice" value="${tdProduct.highPrice!''}" datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写最高价！" errormsg="最高价格式错误！"></td>
+		                    <td><input type="text" id="clowPrice" name="lowPrice" value="${tdProduct.lowPrice!''}" datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写最低价！" errormsg="最低价格式错误！"></td>
+		                    <td><input type="text" id="cquantum" name="quantum" value="${tdProduct.quantum!''}" datatype="n1-7" nullmsg="请填写库存！" errormsg="库存格式错误，只能填写1-7位数字！"></td>
+		                </tr>
 		            </table>
 		    	</td>
 		    </tr>
@@ -159,27 +160,17 @@
 		        <td><input type="text" name="code" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.code!''}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="length[2,20]"></td>
 		    </tr>
 		    <tr>
-		        <th width="150">参考价：</th>
-		        
-		        <td><input type="text" name="price" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.price?string('0.00')}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="currency"></td>
-		    </tr>
-		    <tr>
 		        <th width="150">运费：</th>
 		        
-		        <td><input type="text" name="postage" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.postage?string('0.00')}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="currency"></td>
+		        <td><input type="text" name="postage" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.postage!'0'}</#if>"  style="width:200px;height:30px" data-options="required:true" validType="currency"></td>
 		    </tr>
-		    <tr>
-		        <th width="150">库存：</th>
-		        
-		        <td><input type="text" name="quantum" class="easyui-textbox" value="<#if tdProduct??>${tdProduct.quantum!'0'}</#if>"  style="width:200px;height:30px" data-options="required:true" ></td>
-		    </tr>
-		    <tr class="seckill" <#if (tdProduct?? && tdProduct.kind == 5) || (tdProduct?? && tdProduct.kind == 6)>style="display: table-row;"<#else>style="display:none"</#if>>
+		    <tr class="seckill" <#if (tdProduct?? && tdProduct.kind?? && tdProduct.kind == 5) || (tdProduct?? && tdProduct.kind?? &&tdProduct.kind == 6)>style="display: table-row;"<#else>style="display:none"</#if>>
 		        <th  width="150">开始时间：</th>
 		        <td>
 	            	<input type="text" name="startTime" class="easyui-datetimebox" value="<#if tdProduct?? && tdProduct.startTime??>${tdProduct.startTime?string('yyyy-MM-dd HH:mm:ss')}</#if>" style="width:200px;height:30px"  data-options="showSeconds:true">
 		        </td>
 		    </tr>
-		     <tr class="seckill" <#if (tdProduct?? && tdProduct.kind == 5) || (tdProduct?? && tdProduct.kind == 6)>style="display: table-row;"<#else>style="display:none"</#if>>
+		     <tr class="seckill" <#if (tdProduct?? && tdProduct.kind?? && tdProduct.kind == 5) || (tdProduct?? && tdProduct.kind?? && tdProduct.kind  == 6)>style="display: table-row;"<#else>style="display:none"</#if>>
 		        <th  width="150">结算时间：</th>
 		        <td>
 		            <input type="text" name="endTime" class="easyui-datetimebox" value="<#if tdProduct?? && tdProduct.endTime??>${tdProduct.endTime?string('yyyy-MM-dd HH:mm:ss')}</#if>" style="width:200px;height:30px" data-options="showSeconds:true" >
@@ -377,12 +368,9 @@
 <script>
 var psize = 0;
 	$(function(){
-		psize =$("#speSize").val();
-		<#if tdProduct??>
-			makeTable(${tableJsonData}, "skuAssemble");
-			<#if specifiactionNum??>
-				//editText("skuAssemble", ${specifiactionNum});	
-			</#if>
+		//初始化商品一口价设置
+		<#if tdProduct?? && tdProduct.id?? && tdProduct.specification==true>
+			initProductCommon();
 		</#if>
 		
 		// 图片上传
@@ -425,6 +413,344 @@ var psize = 0;
 		        }
 		});
 	});
+
+
+// 根据数据产生表
+function makeTable(data, divId){
+	var content = "<table><thead>";
+	// 添加表头
+	content = content + "<tr>";
+	for(var i = 0; i < data.tableHead.length; i ++){
+		content = content + "<th>"+data.tableHead[i]+"</th>";
+	}
+	content = content + "</tr></thead><tbody>";
+	
+	// 添加表体
+	for(var i = 0; i < data.tableContent.length; i ++){
+		content = content + "<tr id='"+ data.tableContent[i].trId +"'>";
+		for(var j = 0; j < data.tableContent[i].trData.length; j ++){
+			if(j < psize){
+				content = content + "<td>"+data.tableContent[i].trData[j]+"</td>";
+			}else{
+				content = content + "<td><input type='text' value="+data.tableContent[i].trData[j]+">"+"</td>";				
+			}
+		}
+		content = content + "</tr>";
+	}
+	content = content + "</tbody></table>";
+	// 添加表
+	$("#" + divId).append(content);
+}
+
+// 获取表中的数据
+function getTableData(divId){
+	var headData = $("#" + divId).find("table thead tr th");
+	var rowData = $("#" + divId).find("table tbody tr");
+	var tableData = "{'tableHead':[";
+	// 获取表头数据
+	for(var i = 0; i < headData.length; i ++){
+		if(i == headData.length - 1){
+			tableData = tableData + "'" + headData.eq(i).text() + "'";
+		}else{
+			tableData = tableData + "'" + headData.eq(i).text() + "',";
+		}
+	}
+	tableData = tableData + "],";
+	// 获取表体数据
+	tableData = tableData + "'tableContent':[";
+	for(var i = 0; i < rowData.length; i ++){
+		if(i == rowData.length - 1){
+			var trId = rowData.eq(i).attr("id");
+			tableData = tableData + "{'trId':'" + trId + "','trData':[";
+			var oneRow =  rowData.eq(i).find("td");
+			for(var j = 0; j < headData.length; j ++){
+				if(j == headData.length - 1){
+					if(j < psize){
+						tableData = tableData + "'" + oneRow.eq(j).text() + "'";						
+					}else{
+						tableData = tableData + "'" + $(oneRow.eq(j)).find("input").val() + "'";
+					}
+				}else{
+					if(j < psize){
+						tableData = tableData + "'" + oneRow.eq(j).text() + "',";
+					}else{
+						tableData = tableData + "'" + $(oneRow.eq(j)).find("input").val() + "',";	
+					}
+				}
+			}
+			tableData = tableData + "]}";
+		}else{
+			var trId = rowData.eq(i).attr("id");
+			tableData = tableData + "{'trId':'" + trId + "','trData':[";
+			var oneRow =  rowData.eq(i).find("td");
+			for(var j = 0; j < headData.length; j ++){
+				if(j == headData.length - 1){
+					if(j < psize){
+						tableData = tableData + "'" + oneRow.eq(j).text() + "'";						
+					}else{
+						tableData = tableData + "'" + $(oneRow.eq(j)).find("input").val() + "'";
+					}
+				}else{
+					if(j < psize){
+						tableData = tableData + "'" + oneRow.eq(j).text() + "',";
+					}else{
+						tableData = tableData + "'" + $(oneRow.eq(j)).find("input").val() + "',";	
+					}
+					
+				}
+			}
+			tableData = tableData + "]},";
+		}
+	}
+	tableData = tableData + "]}";
+	//alert(tableData);
+	console.log(tableData);
+	return tableData;
+}
+
+/* 双击修改表格内容 */
+function editText(theId, num){
+	$("#"+theId).on("dblclick","td",function(){
+		if($(this).index() < num || $(this).html().indexOf("input") >= 0){
+			//alert(num);
+			return;
+		}else{
+			var tdText = $(this).text();
+			var tdWidth = $(this).width();
+			var tdHeight = $(this).height();
+			$(this).html("<input type=\"text\" value=\""+tdText+"\" style=\"height:"+tdHeight+"px;line-height:"+tdHeight+"px;width:"+tdWidth+"px;\">");
+			// 获得焦点
+			$(this).find("input").focus();
+			//失去焦点
+			$("#"+theId).find("table tbody tr input").blur(function(){
+				$(this).parent().text($(this).val());
+			});
+		}
+	});
+}
+
+//提交前触发该函数可确保表中的input全部消失
+function changeInputToText(tableId){
+	var theInputs = $("#"+tableId).find("input");
+	for(var i = 0; i < theInputs.length; i ++){
+		var inputValue = theInputs.eq(i).val();
+		theInputs.eq(i).parent().text(inputValue);
+	}
+}
+
+// 选择规格后刷新表
+function flushTable(){
+	var checkedSpe = $("#hpgg").find("input:checked");
+	var ids = "";
+	for(var i = 0; i < checkedSpe.length; i ++){
+		ids = ids + checkedSpe.eq(i).attr("id");
+		if(i < checkedSpe.length - 1){
+			ids = ids + ",";
+		}
+	}
+	var idsArrayWithSuffix = ids.split(",");
+	var keyValueStr = "";
+	for(var i = 0; i < idsArrayWithSuffix.length; i ++){
+		keyValueStr += idsArrayWithSuffix[i].substr(4);
+		if(i < idsArrayWithSuffix.length - 1){
+			keyValueStr += ",";
+		}
+	}
+	var keyValueArray = keyValueStr.split(",");
+	console.log("keyValueArray:" + keyValueArray);
+	// 规格类别 格式：类别1_类别2_类别3_
+	var keyStr = "";
+	for(var i = 0; i < keyValueArray.length; i ++){
+		var kv = keyValueArray[i].split("_");
+		var k = kv[0];
+		if(keyStr.indexOf(k) < 0){
+			keyStr = keyStr + k + "_";
+		}
+	}
+	keyStr = keyStr.substr(0, keyStr.length-1);
+	console.log("keyStr:" + keyStr);
+	// 利用keyStr判断每类规格均处于至少选中一个的状态
+	var isAllSpecSelected = 0;
+	var theSpeOrder = $("#speOrder").val();
+	console.log("theSpeOrder:" + theSpeOrder);
+	if(theSpeOrder == keyStr){
+		isAllSpecSelected = 1;
+	}
+	// 若没所有规格类别没有至少选中一个则返回
+	if(isAllSpecSelected == 0){
+		return;
+	}
+	var keyArray = keyStr.split("_");
+	console.log("keyArray:" + keyArray);
+	
+	// 希望得到数据格式["颜色_黑色_白色", "尺寸_39_40_41"]
+	for(var i = 0; i < keyArray.length; i ++){
+		var theKey = keyArray[i];
+		for(var j = 0; j < keyValueArray.length; j ++){
+			var kv = keyValueArray[j].split("_");
+			var k = kv[0];
+			var v = kv[1];
+			if(theKey == k){
+				keyArray[i] = keyArray[i] + "_" + v;
+			}
+		}
+	}
+	var ka = Array();
+	// 调整规格顺序和后台的规格顺序一致
+	var speOrder = $("#speOrder").val();
+	var speOrderArray = speOrder.split("_");
+	console.log("speOrder:");
+	console.log(speOrder);
+	for(var i = 0; i < speOrderArray.length; i ++){
+		var spe = speOrderArray[i];
+		for(var j = 0; j < keyArray.length; j ++){
+			if(keyArray[j].indexOf(spe) >= 0){
+				ka.push(keyArray[j]);
+			}
+		}
+	}
+	console.log("ka:" + ka);
+	keyArray = ka;
+	console.log(keyArray);
+	var rearaay = Array();
+	// 格式调整为["黑色_白色", "39_40_41"]
+	for(var i = 0; i < keyArray.length; i ++){
+		keyArray[i] = keyArray[i].substr(keyArray[i].indexOf("_") + 1);
+		var temp = keyArray[i].split("_");
+		rearaay.push(temp);
+	}
+		
+	console.log(rearaay);
+	
+	arr = rearaay;
+	var alen = arr.length;
+	var result;
+	if(alen == 1){
+		result = arr[0];
+	}else{
+		// result是所有属性按照规格顺序的全排列
+		result = twoArrayAssembleToTrIds(arr[0],arr[1]);
+		var i=2;
+		while(i<alen){
+			result = twoArrayAssembleToTrIds(result,arr[i]);
+			i++;
+		}
+	}
+	
+	console.log("result:" + result);
+	// 原表中的trIds
+	var tableTrIdsArray = preparedStrIdsArray("skuAssemble", result);
+	console.log("tableTrIdsArray:");
+	console.log(tableTrIdsArray);
+	// 根据result产生新的tableTr
+	var newTableStr = "";
+	for(var i = 0; i < result.length; i ++){
+		var r = result[i].toString();
+		var isExist = 0;
+		for(var j = 0; j < tableTrIdsArray.length; j ++){
+			if(tableTrIdsArray[j].toString() == r){
+				// 原表中存在该tr
+				var originalStr = $("[id='" + r + "']").html();
+				newTableStr = newTableStr + "<tr id="+ r +">" + originalStr + "</tr>";
+				isExist = 1;
+				break;
+			}
+		}
+		// 原表中不存在该tr
+		if(isExist == 0){
+			var newStr = "";
+			var speStrArray = r.split("_");
+			for(var k = 0; k < speStrArray.length; k ++){
+				newStr = newStr + "<td>"+ speStrArray[k] +"</td>";
+			}
+			newStr = newStr + "<td><input type='text' value=''></td><td><input type='text' value=''></td><td><input type='text' value=''></td><td><input type='text' value=''></td><td><input type='text' value=''></td><td><input type='text' value=''></td><td><input type='text' value=''></td>";
+			newTableStr = newTableStr + "<tr id="+ r +">" + newStr + "</tr>";
+		}
+	}
+	console.log("newTableStr:" + newTableStr);
+	$("#skuAssemble table tbody tr").remove();
+	$("#skuAssemble table tbody").html(newTableStr);
+	
+	//var ssize = $("#speSize").val();
+	
+	return result;
+}
+
+// 二维数组全排列
+function twoArrayAssembleToTrIds(arr1,arr2){
+	var arra = Array();
+	for(var m in arr1){
+		for(var n in arr2){
+			arra.push(arr1[m]+"_"+arr2[n]);
+		}
+	}
+	return arra;
+}
+
+// 产生table tbody 内容的tr字符串
+function preparedStrIdsArray(divId, assembledStrIds){
+	// 获取原表中的所有trId
+	var trIds = Array();
+	var trs = $("#" + divId).find("table tbody tr");
+	for(var i = 0; i < trs.length; i ++){
+		trIds.push(trs.eq(i).attr("id"));
+	}
+	console.log("trIds:");
+	console.log(trIds);
+	return trIds;
+}
+
+// 根据选中的类别刷新货品规格
+function flushHpgg(optionValue){
+	var selectedOption = $("#productTypeSelections").find("option:selected");
+	var isLastLevel = $(selectedOption).attr("isLastLevel");
+	if(isLastLevel == "yes"){
+		var theId = $(selectedOption).val();
+		var loadData = {"typeId": theId};
+		var url = basePath+"/admin/product/getHpggPage";
+		// 刷新货品规格
+		$("#hpgg").load(url,loadData);
+		// 刷新货品表
+		$("#skuAssemble").html("");
+		var url2 = basePath+"/admin/product/getTableHead";
+		loadData2={"typeId":theId};
+		$.post(url2,loadData2,tableHeadCallback,"text");
+	}
+}
+
+// 刷新货品规格后根据数据产生表头，并修改对应的规格顺序
+function makeTableHead(data, divId){
+	var content = "<table><thead>";
+	// 添加表头
+	content = content + "<tr>";
+	for(var i = 0; i < data.tableHead.length; i ++){
+		content = content + "<th>"+data.tableHead[i]+"</th>";
+	}
+	content = content + "</tr></thead><tbody></tbody></table>";
+	// 添加表
+	$("#" + divId).html(content);
+}
+
+function tableHeadCallback(data){
+	var result = eval("("+data+")");
+	var ssize = result.specSize;
+	var sorder = result.specOrder;
+	var hjson = eval("("+result.headJson+")");
+	if(ssize == 0){
+		$.messager.alert('消息提醒','该商品类别未设置规格!');	
+		return;
+	}
+	
+	console.log(result);
+	console.log(hjson);
+	$("#speOrder").val(sorder);
+	$("#speSize").val(ssize);
+	makeTableHead(hjson, "skuAssemble");
+	if($("#skuAssemble").find("td").size>0){
+		$("#skuAssemble").find("td").die("dblclick");
+	}
+	editText("skuAssemble", ssize);
+}
 </script>
 <style type="text/css">
 	#skuAssemble table tbody tr td input{

@@ -107,7 +107,7 @@ function changeType(obj){
  * 检查自定义属性值的合法性及后续操作
  */
 function checkAttribute(obj){
-	var patt1 = new RegExp("^([u4e00-u9fa5]|[0-9a-zA-Z]|[\x21-\x7e]])+$");
+	var patt1 = new RegExp("^([\u4E00-\uFA29]*[a-z]*[A-Z]*[0-9]*)+$");
 	var val = $(obj).val();
 	if(val==""){//输入为空时
 		if($(obj).hasClass("selfconf")){//新增属性

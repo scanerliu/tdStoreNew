@@ -229,6 +229,48 @@ function removeImg(id)
 }
 
 var __SELFCONFIGINDEX = 100000;
+//查询商品列表
+var __skuinex = 1;
+/**
+ * 初始化商品一口价设置
+ */
+function initProductCommon(){
+	if($("#skuTable input[name$='.skuCode']").length<=0){
+		return false;
+	}
+	var skucode = $("#skuTable input[name$='.skuCode']:first").val();
+	var supplierPrice = $("#skuTable input[name$='.supplierPrice']:first").val();
+	var salesPrice = 0;
+	var marketPrice = $("#skuTable input[name$='.marketPrice']:first").val();
+	var highPrice = $("#skuTable input[name$='.highPrice']:first").val();
+	var lowPrice = $("#skuTable input[name$='.lowPrice']:first").val();
+	var stock = 0;
+	//计算供商品价格最低销售价
+	var i=0;
+	$("#skuTable input[name$='.salesPrice']").each(function(){
+		if(i==0){
+			salesPrice = Number($(this).val());
+		}else{
+			var sprice = Number($(this).val());
+			if(salesPrice > sprice){
+				salesPrice = sprice;
+			}
+		}
+		i++;
+	});
+	//计算总库存
+	$("#skuTable input[name$='.stock']").each(function(){
+			stock = stock + Number($(this).val());
+	});
+	//赋值
+	$("#comprodTab #cskuCode").val(skucode);
+	$("#comprodTab #csupplierPrice").val(supplierPrice);
+	$("#comprodTab #cprice").val(salesPrice);
+	$("#comprodTab #cmarketPrice").val(marketPrice);
+	$("#comprodTab #chighPrice").val(highPrice);
+	$("#comprodTab #clowPrice").val(lowPrice);
+	$("#comprodTab #cquantum").val(stock);
+}
 /**
  * 改变商品分类
  */
@@ -248,7 +290,7 @@ function changeType(obj){
  * 检查自定义属性值的合法性及后续操作
  */
 function checkAttribute(obj){
-	var patt1 = new RegExp("^([u4e00-u9fa5]|[0-9a-zA-Z]|[\x21-\x7e]])+$");
+	var patt1 = new RegExp("^([\u4E00-\uFA29]*[a-z]*[A-Z]*[0-9]*)+$");
 	var val = $(obj).val();
 	if(val==""){//输入为空时
 		if($(obj).hasClass("selfconf")){//新增属性
@@ -260,7 +302,7 @@ function checkAttribute(obj){
 	}else{//输入不为空时
 		if(patt1.test(val)){
 		}else{
-			alert("请正确填写自定义规格值，只能输入文字、字母、数字");
+			$.messager.alert('消息提醒',"请正确填写自定义规格值，只能输入文字、字母、数字");
 			$(obj).focus();
 			return false;
 		}
@@ -275,7 +317,7 @@ function checkAttribute(obj){
 		});
 		
 		if(i>1){
-			alert("属性值重复，请修改！");
+			$.messager.alert('消息提醒',"属性值重复，请修改！");
 			$(obj).focus();
 			return false;
 		}
@@ -321,7 +363,6 @@ function flushTable(){
 			var attributes = new Array();
 			sected.each(function(){
 				var slib = $(this).siblings(":first").val();
-				console.log($(this).attr("name")+"_"+$(this).siblings(":first").val());
 				attributes.push($(this).attr("name")+"_"+$(this).siblings(":first").val());
 			});
 			idkey.push(attributes);
@@ -379,11 +420,45 @@ function flushTable(){
 				}
 			});
 			$("#skuTable").append(html);
-			//validateproductform();//添加验证
+			validateproductform();//添加验证
 		}
 	}else{
 		clearSkuTable();
 	}
+}
+function validateproductform(){
+	$("#productForm").Validform({
+		tiptype:function(msg,o,cssctl){
+		    //msg：提示信息;
+		    //o:{obj:*,type:*,curform:*},
+		    //obj指向的是当前验证的表单元素（或表单对象，验证全部验证通过，提交表单时o.obj为该表单对象），
+		    //type指示提示的状态，值为1、2、3、4， 1：正在检测/提交数据，2：通过验证，3：验证失败，4：提示ignore状态, 
+		    //curform为当前form对象;
+		    //cssctl:内置的提示信息样式控制函数，该函数需传入两个参数：显示提示信息的对象 和 当前提示的状态（既形参o中的type）;
+		    if(o.type == 3){
+		    	$.messager.alert('消息提醒',msg);
+		    }
+		},
+		beforeCheck:function(curform){
+			initProductCommon();
+		},
+		beforeSubmit:function(curform){
+			openwaiting();
+		},
+		postonce:true, // 开启二次提交防御
+		ajaxPost:true, 
+		callback:function(data){
+			//返回数据data是json对象，{"msg":"demo info","code":"1"}
+			//info: 输出提示信息;
+			//status: 返回提交数据的状态,是否提交成功。如可以用"y"表示提交成功，"n"表示提交失败，在ajax_post.php文件返回数据里自定字符，主要用在callback函数里根据该值执行相应的回调操作;
+			closewaiting();
+			$.messager.alert('消息提醒',data.msg);
+			if(data.code == 1){
+				returnList();
+				refreshList();
+			}
+		}
+	});
 }
 //清空货品表
 function clearSkuTable(){

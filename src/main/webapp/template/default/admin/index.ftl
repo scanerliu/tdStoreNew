@@ -57,6 +57,9 @@
         </div>
     </div>
 </div>
+<div class="load-container" id="loaddiv" style="display:none;">
+	<div class="loader" style="z-index: 1000;position:fixed;left:0;top:0;width:100%;height:100%;background:url('${app.basePath}/static/default/client/images/opa1.png');text-align:center;"><img style="position:relative;top:50%;margin-top:-18px;" src="${app.basePath}/static/default/client/images/loading.gif"></div>
+</div>
 <script>
 $(function(){
     var set_h = function(){

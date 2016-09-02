@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.custom.entity.TdUser;
+import com.tiandu.order.vo.SkuSpecialVO;
 import com.tiandu.product.entity.TdBrand;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductAttachment;
@@ -168,6 +169,7 @@ public class TdProductContrller extends BaseController{
 			map.addAttribute("taList", attributeList);
 			// 商品对应的货品
 			List<TdProductSku> productSkuList = tdProductSkuService.findByProductId(id);
+			map.addAttribute("productSkuList", productSkuList);
 			// 商品key=value字符串
 			/*String keyValueStr = "";
 			for(TdProductSku ps : productSkuList){
@@ -215,29 +217,12 @@ public class TdProductContrller extends BaseController{
 	{
 		Map<String, Object> res = new HashMap<String, Object>();
 		res.put("code", 0);
-		
+		Date now = new Date();
+		TdUser currentUser = this.getCurrentUser();
 		if(null != tdProduct)
 		{
-			if(null == tdProduct.getCreateTime())
-			{
-				tdProduct.setCreateTime(new Date());
-			}
-			TdUser user = getCurrentUser();
-			if(null != user)
-			{
-//				tdProduct.setBrandId(0);
-				tdProduct.setDefaultSkuId(0);
-				tdProduct.setSpecification(true);
-				tdProduct.setUpdateBy(user.getUid());
-			}
-			tdProduct.setUpdateTime(new Date());
-			
-			Integer typeId = tdProduct.getTypeId();
-			Integer attributeNum = null;
-			if(typeId != null){
-				List<TdProductTypeAttribute> taList = tdProductTypeAttributeService.findByTypeId(typeId);
-				attributeNum = taList.size();
-			}
+			tdProduct.setUpdateTime(now);
+			tdProduct.setUpdateBy(currentUser.getUid());
 			boolean isUpdate = false;
 			if(tdProduct.getId() != null){
 				isUpdate = true;
@@ -246,6 +231,14 @@ public class TdProductContrller extends BaseController{
 				tdProductSkuService.deleteByProductId(tdProduct.getId());
 			}else{
 				tdProduct.setUid(1);//添加供应商为平台系统
+				tdProduct.setCreateTime(now);
+				tdProduct.setOnshelf(false);
+				tdProduct.setFineRecommend(0);
+				tdProduct.setHotRecommend(0);
+				tdProduct.setNewRecommend(0);
+				tdProduct.setTypeRecommend(0);
+				tdProduct.setDefaultSkuId(0);
+				tdProduct.setSpecification(true);
 				//保存商品类型Tree
 				if(null!=tdProduct.getTypeId()&&tdProduct.getTypeId()>0){
 					TdProductType type = tdProductTypeService.findOneWithParents(tdProduct.getTypeId());
@@ -253,68 +246,66 @@ public class TdProductContrller extends BaseController{
 					tdProduct.setTypeIdTree(typeIdTree);
 				}
 			}
-			tdProductService.save(tdProduct);
-			
-			Integer defautsku = null;
-			
-			//--------保存货品表------------
-			if(tableData != null && !tableData.equals("") && attributeNum != null){
-				JSONObject trJson = new JSONObject(tableData);
-				
-				String[] keys = trJson.getNames(trJson);
-				JSONArray contentJsonArray = trJson.getJSONArray("tableContent");
-				String tableHeadDataStr =  trJson.get("tableHead").toString();
-				tableHeadDataStr = tableHeadDataStr.replace("[", "");
-				tableHeadDataStr = tableHeadDataStr.replace("]", "");
-				String[] tableHeadDataArray = tableHeadDataStr.split(",");
-				for(int i = 0; i < tableHeadDataArray.length; i ++){
-					tableHeadDataArray[i] = tableHeadDataArray[i].replace("\"", "");	
-				}
-				
-				for(int i = 0; i < contentJsonArray.length(); i ++){
-					JSONObject jo = contentJsonArray.getJSONObject(i);
-					String trDataStr = jo.get("trData").toString();
-					trDataStr = trDataStr.replace("[", "");
-					trDataStr = trDataStr.replace("]", "");
-					String[] trDataArray = trDataStr.split(",");
-					for(int ii = 0; ii < trDataArray.length; ii ++){
-						trDataArray[ii] = trDataArray[ii].replace("\"", "");	
+			//设置库存，价格
+			Integer totalStock = 0;
+			BigDecimal lowPrice = BigDecimal.ZERO;
+			int i=0;
+			if(null!=tdProduct.getSkuList()&&tdProduct.getSkuList().size()>0){//开启规格
+				List<SkuSpecialVO> specialList = new ArrayList<SkuSpecialVO>();
+				for(TdProductSku ps : tdProduct.getSkuList()){
+					if(null!=ps.getStock()&&null!=ps.getSalesPrice()){
+						totalStock = totalStock + ps.getStock();
+						if(i==0){
+							lowPrice = ps.getSalesPrice();
+						}else if(lowPrice.compareTo(ps.getSalesPrice())>0){
+							lowPrice = ps.getSalesPrice();
+						}
+						i++;
+						//计算规格及属性值
+						ps.setSpecifications(ps.getSpecialJsonBySpecialKey(ps.getSpecifications()));
+						specialList.addAll(ps.getSpecialList());
 					}
-					String specificationStr = "";
-					JSONObject jsonObject = new JSONObject();
-					for(int j = 0; j < attributeNum; j ++){
-						jsonObject.put(tableHeadDataArray[j], trDataArray[j]);
-					}
-					TdProductSku sku = new TdProductSku();
-					sku.setSpecifications(jsonObject.toString());
-					sku.setSkuCode(trDataArray[attributeNum]);
-					Double supplierPrice = Double.parseDouble(trDataArray[attributeNum+1]);
-					sku.setSupplierPrice(BigDecimal.valueOf(supplierPrice));
-					Double SalesPrice = Double.parseDouble(trDataArray[attributeNum+2]);
-					sku.setSalesPrice(BigDecimal.valueOf(SalesPrice));
-					Double marketPrice = Double.parseDouble(trDataArray[attributeNum+3]);
-					sku.setMarketPrice(BigDecimal.valueOf(marketPrice));
-					Double highPrice = Double.parseDouble(trDataArray[attributeNum+4]);
-					sku.setHighPrice(BigDecimal.valueOf(highPrice));
-					Double lowPrice = Double.parseDouble(trDataArray[attributeNum+5]);
-					sku.setLowPrice(BigDecimal.valueOf(lowPrice));
-					sku.setStock(Integer.parseInt(trDataArray[attributeNum+6]));
-					sku.setProductId(tdProduct.getId());
-					sku.setUpdateTime(new Date());
-					sku.setUpdateBy(this.getCurrentUser().getUid());
-					sku.setStatus(Byte.valueOf("1"));
-					tdProductSkuService.save(sku);
-					
-					if(defautsku == null){defautsku = sku.getId();} 
 				}
-				
+				//获取规格选择项
+				String specifiations = tdProductService.getSpecificationatsJsonString(specialList);
+				tdProduct.setSpecificationats(specifiations);
+				tdProduct.setPrice(lowPrice);
+				tdProduct.setQuantum(totalStock);
+				tdProduct.setSpecification(true);
+			}else{//关闭规格
+				if(null==tdProduct.getPrice()||null==tdProduct.getHighPrice()||null==tdProduct.getLowPrice()||null==tdProduct.getSupplierPrice()){
+					res.put("code", "0");
+					res.put("msg", "商品保存失败:请正确设置商品价格！");
+					return res;
+				}
+				tdProduct.setSpecification(false);
+				List<TdProductSku> skuList = new ArrayList<TdProductSku>();
+				TdProductSku sku = new TdProductSku();
+				sku.setHighPrice(tdProduct.getHighPrice());
+				sku.setLowPrice(tdProduct.getLowPrice());
+				sku.setSalesPrice(tdProduct.getPrice());
+				sku.setSkuCode(tdProduct.getSkuCode());
+				sku.setMarketPrice(tdProduct.getMarketPrice());
+				sku.setSupplierPrice(tdProduct.getSupplierPrice());
+				sku.setStock(tdProduct.getQuantum());
+				sku.setSpecifications("");
+				skuList.add(sku);
+				tdProduct.setSkuList(skuList);
 			}
-			//--------------------
-			
-			// 默认货品ID
-			tdProduct.setDefaultSkuId(defautsku);
-			
 			tdProductService.save(tdProduct);
+			
+			
+			// 货品	atrributeArray格式：规格1=gv1,规格2=gv21	 保存规格格式：{"颜色":"红色","尺码":"38"}
+			for(TdProductSku ps : tdProduct.getSkuList()){
+				if(null!=ps.getStock()&&null!=ps.getSalesPrice()){
+					ps.setProductId(tdProduct.getId());
+					ps.setStatus(Byte.valueOf("1"));
+					ps.setUpdateBy(currentUser.getUid());
+					ps.setUpdateTime(now);
+					//ps.setSpecifications(ps.getSpecialJsonBySpecialKey(ps.getSpecifications()));
+					tdProductSkuService.save(ps);
+				}
+			}
 			
 			// 修改展示图片
 			if(null != attId)
@@ -340,8 +331,8 @@ public class TdProductContrller extends BaseController{
 				imgDetail.setType((byte) 1);
 			}
 			imgDetail.setDescription(detail);
-			imgDetail.setUpdateBy(user.getUid());
-			imgDetail.setUpdateTime(new Date());
+			imgDetail.setUpdateBy(currentUser.getUid());
+			imgDetail.setUpdateTime(now);
 			
 			// 包装配送
 			sc.setType(2);
@@ -353,8 +344,8 @@ public class TdProductContrller extends BaseController{
 				packdetail.setType((byte) 2);
 			}
 			packdetail.setDescription(packDetail);
-			packdetail.setUpdateBy(user.getUid());
-			packdetail.setUpdateTime(new Date());
+			packdetail.setUpdateBy(currentUser.getUid());
+			packdetail.setUpdateTime(now);
 			
 			// 售后说明
 			sc.setType(3);
@@ -367,8 +358,8 @@ public class TdProductContrller extends BaseController{
 				afterSaleDetail.setType((byte) 3);
 			}
 			afterSaleDetail.setDescription(afterSale);
-			afterSaleDetail.setUpdateBy(user.getUid());
-			afterSaleDetail.setUpdateTime(new Date());
+			afterSaleDetail.setUpdateBy(currentUser.getUid());
+			afterSaleDetail.setUpdateTime(now);
 			
 			tdProductDescriptionService.save(imgDetail);
 			tdProductDescriptionService.save(packdetail);
@@ -393,6 +384,7 @@ public class TdProductContrller extends BaseController{
 			tdProductStatService.Insert(stat);
 			
 			res.put("code", 1);
+			res.put("msg", "商品保存成功。");
 		}
 		
 		

@@ -68,7 +68,7 @@
 				/order/**=user
 				/mobile/shoppingcart/**=user
 				<!-- 微信异步通知 -->
-				/mobile/order/pay/wx_notify**=anon
+				/mobile/order/wx_notify**=anon
 				<!-- 支付宝异步通知 -->
 				/mobile/order/pay/notify_alipay**=anon
 				<!-- 支付宝返回 -->

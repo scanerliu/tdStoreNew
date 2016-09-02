@@ -1237,11 +1237,10 @@ public class CUserController extends BaseController {
 		try{
 			// 商品
 			Date now = new Date();
-			TdUser user = getCurrentUser();
-			if(null != user)
+			if(null != currentUser)
 			{
 //				tdProduct.setBrandId(0);
-				product.setUpdateBy(user.getUid());
+				product.setUpdateBy(currentUser.getUid());
 			}
 			product.setUpdateTime(now);
 			
@@ -1253,7 +1252,7 @@ public class CUserController extends BaseController {
 				tdProductSkuService.deleteByProductId(product.getId());
 			}else{
 				product.setCreateTime(now);
-				product.setUid(user.getUid());
+				product.setUid(currentUser.getUid());
 				product.setOnshelf(false);
 				product.setFineRecommend(0);
 				product.setHotRecommend(0);
@@ -1353,8 +1352,8 @@ public class CUserController extends BaseController {
 				imgDetail.setType((byte) 1);
 			}
 			imgDetail.setDescription(detail);
-			imgDetail.setUpdateBy(user.getUid());
-			imgDetail.setUpdateTime(new Date());
+			imgDetail.setUpdateBy(currentUser.getUid());
+			imgDetail.setUpdateTime(now);
 			
 			// 包装配送
 			sc.setType(2);
@@ -1366,8 +1365,8 @@ public class CUserController extends BaseController {
 				packdetail.setType((byte) 2);
 			}
 			packdetail.setDescription(packDetail);
-			packdetail.setUpdateBy(user.getUid());
-			packdetail.setUpdateTime(new Date());
+			packdetail.setUpdateBy(currentUser.getUid());
+			packdetail.setUpdateTime(now);
 			
 			// 售后说明
 			sc.setType(3);
@@ -1380,8 +1379,8 @@ public class CUserController extends BaseController {
 				afterSaleDetail.setType((byte) 3);
 			}
 			afterSaleDetail.setDescription(afterSale);
-			afterSaleDetail.setUpdateBy(user.getUid());
-			afterSaleDetail.setUpdateTime(new Date());
+			afterSaleDetail.setUpdateBy(currentUser.getUid());
+			afterSaleDetail.setUpdateTime(now);
 			
 			tdProductDescriptionService.save(imgDetail);
 			tdProductDescriptionService.save(packdetail);
