@@ -1723,7 +1723,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 	private BigDecimal displayAgentBenefit(BigDecimal amount, TdOrder order, TdUser orderUser, TdOrderProduct orderProduct, List<TdBenefit> benefitList, int size, Date now) {
 		BigDecimal totalBenefitAmount = BigDecimal.ZERO;//已分润金额
 		TdDistrict district = null;
-		if(orderProduct.getRegionId()>0){
+		if(null!=orderProduct.getRegionId() && orderProduct.getRegionId()>0){
 			district = tdDistrictService.findOneFull(orderProduct.getRegionId());
 		}
 		logger.info("订单"+order.getOrderNo()+" 全国单代分润:start");
@@ -1901,7 +1901,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 	 * @param now
 	 */
 	private BigDecimal saveBenefit(TdUserAccount account, TdUser orderUser, BigDecimal amount, TdOrder order, TdBenefit benefit, Date now, String note){
-		BigDecimal benefitAmount = amount.multiply(new BigDecimal(benefit.getPercent())).divide(ConstantsUtils.SYSTEM_BENEFIT_PERCENT_NUM);
+		BigDecimal benefitAmount = amount.multiply(new BigDecimal(benefit.getPercent())).divide(ConstantsUtils.SYSTEM_BENEFIT_PERCENT_NUM).setScale(2, BigDecimal.ROUND_HALF_UP);
 		account.setUpdateBy(1);
 		account.setUpdateTime(now);
 		TdUserAccountLog alog = new TdUserAccountLog();
