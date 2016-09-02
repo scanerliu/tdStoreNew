@@ -155,8 +155,8 @@
 				    </div>
 				    </#list>
 				    </#if>
-				    <input type="hidden" id="skustock" value="0">
-			        <input type="hidden" id="skuId" value="0">
+				    <input type="hidden" id="skustock" value="${product.quantum!'0'}">
+			        <input type="hidden" id="skuId" value="${product.defaultSkuId!'0'}">
 			        <input type="hidden" id="skuPrice" value="0">
 			        <input type="hidden" id="propostage" value="${product.postage!'0'}">
 			        <input type="hidden" id="productId" value="${product.id!''}">

@@ -20,6 +20,9 @@ function fnGotoPageProducts(num){
  * 初始化商品一口价设置
  */
 function initProductCommon(){
+	if($("#skuTable input[name$='.skuCode']").length<=0){
+		return false;
+	}
 	var skucode = $("#skuTable input[name$='.skuCode']:first").val();
 	var supplierPrice = $("#skuTable input[name$='.supplierPrice']:first").val();
 	var salesPrice = 0;

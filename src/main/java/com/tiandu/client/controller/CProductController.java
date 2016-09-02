@@ -240,6 +240,10 @@ public class CProductController extends BaseController {
 			}*/
 			List<AttributeOptionsVO> taList = tdProductService.getProductAttributeWithOptions(product);
 			map.addAttribute("taList", taList);
+			if(!product.getSpecification()){
+				product.setDefaultSkuId(skuList.get(0).getId());
+				product.setQuantum(skuList.get(0).getStock());
+			}
 		}
 		//货品规格库存json
 		String productjson = tdProductService.fromProductSkutoProductJsonString(skuList);
