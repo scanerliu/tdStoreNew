@@ -75,6 +75,7 @@ import com.tiandu.custom.service.TdUserCampaignService;
 import com.tiandu.custom.service.TdUserMessageService;
 import com.tiandu.custom.service.TdUserSignService;
 import com.tiandu.custom.service.TdUserSupplierService;
+import com.tiandu.custom.vo.WithDrawVO;
 import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.search.TdDistrictSearchCriteria;
 import com.tiandu.district.service.TdDistrictService;
@@ -696,6 +697,58 @@ public class MUserController extends BaseController {
 	    modelMap.addAttribute("sc", sc) ;
 		return "/mobile/user/account_listbody";
 	}
+	
+	/**
+	 * 用户提现
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping(value = "/withdraw")
+	public String withdraw(HttpServletRequest request, HttpServletResponse response, ModelMap map)
+	{
+		TdUser tdUser = this.getCurrentUser();
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		TdUserAccount userAccount = tdUserAccountService.findOne(tdUser.getUid());
+		if(userAccount == null)
+		{
+			map.addAttribute("errmsg", "数据错误，请重新操作！");
+			return "/mobile/error";
+		}
+		map.addAttribute("account",userAccount);
+		return "/mobile/user/withdraw";
+	}
+	/**
+	 * 用户提现
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping(value = "/dowithdraw", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> dowithdraw(WithDrawVO withDraw, HttpServletRequest request, HttpServletResponse response, ModelMap map)
+	{
+		Map<String,String> res = new HashMap<String,String>();
+		res.put("code", "0");
+		res.put("msg", "提现操作失败！");
+		TdUser tdUser = this.getCurrentUser();
+		// 系统配置
+		TdUserAccount userAccount = tdUserAccountService.findOne(tdUser.getUid());
+		if(userAccount == null)
+		{
+			res.put("msg", "提现操作失败：数据错误，请重新操作！");
+			return res;
+		}
+		if(userAccount.getAmount() == null || userAccount.getAmount().compareTo(withDraw.getAmount())<0)
+		{
+			res.put("msg", "提现操作失败：账户金额不足！");
+			return res;
+		}
+		//微信红包对接
+		if(withDraw.getType().equals(1)){
+			
+		}
+		return res;
+	}
 	/**
 	 * 用户收益
 	 * @param map
@@ -923,7 +976,7 @@ public class MUserController extends BaseController {
 	public String productManage(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser currUser = this.getCurrentUser();
 		Byte supplierType = currUser.getSupplierType();
-		if(supplierType == null || supplierType.compareTo(Byte.valueOf("0"))==0){
+		if(supplierType != null || supplierType.compareTo(Byte.valueOf("0"))>0){
 			modelMap.addAttribute("isSupplier", supplierType);
 		}else{
 			modelMap.addAttribute("isSupplier", 0);
@@ -1287,12 +1340,12 @@ public class MUserController extends BaseController {
 //			}
 //		}
 		modelMap.addAttribute("currentUser", currentUser);
-		String spreadUrl = "http://www.cqupt.edu.cn";
-		String imgName = UUID.randomUUID().toString() + ".png";
-		String spreadImgPath = request.getServletContext().getRealPath("/") + "static/imgs/spread" + imgName;
-		TwoDimensionCode tdc = new TwoDimensionCode();
-		tdc.encoderQRCode(spreadUrl, spreadImgPath, "png");
-		modelMap.addAttribute("spreadImg", "static/imgs/spread" + imgName);
+//		String spreadUrl = "http://www.cqupt.edu.cn";
+//		String imgName = UUID.randomUUID().toString() + ".png";
+//		String spreadImgPath = request.getServletContext().getRealPath("/") + "static/imgs/spread" + imgName;
+//		TwoDimensionCode tdc = new TwoDimensionCode();
+//		tdc.encoderQRCode(spreadUrl, spreadImgPath, "png");
+//		modelMap.addAttribute("spreadImg", "static/imgs/spread" + imgName);
 		return "/mobile/user/mySpread";
 	}
 	

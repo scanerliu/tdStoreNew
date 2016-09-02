@@ -41,7 +41,7 @@
         <div class="div1">￥<span><#if account??>${account.amount!''}</#if></span></div>
         <div class="div2">钱包余额</div>
       </section>
-      <a class="btn-withdraw" href="立即提现.html" title="">零钱提现</a>
+      <a class="btn-withdraw" href="${app.basePath}/mobile/user/withdraw" title="">零钱提现</a>
     </article><!-- top-balance end -->
     <article class="points-detail">
       <section>
