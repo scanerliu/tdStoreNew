@@ -924,9 +924,9 @@ public class MUserController extends BaseController {
 		TdUser currUser = this.getCurrentUser();
 		Byte supplierType = currUser.getSupplierType();
 		if(supplierType == null || supplierType.compareTo(Byte.valueOf("0"))==0){
-			modelMap.addAttribute("isSupplier", false);
+			modelMap.addAttribute("isSupplier", supplierType);
 		}else{
-			modelMap.addAttribute("isSupplier", true);
+			modelMap.addAttribute("isSupplier", 0);
 		}
 		TdAgent agent = tdAgentService.findByUid(currUser.getUid());
 		if(null!=agent){
