@@ -780,7 +780,7 @@ public class MOrderController extends BaseController {
 				// 联合订单支付
 				if(out_trade_no.contains("J")){
 		        	TdJointOrder jointOrder = tdJointOrderService.findByJno(out_trade_no);
-		        	if (jointOrder == null) {
+		        	if (jointOrder != null) {
 		        		// 订单支付成功
 		        		tdOrderService.AfterJointPaySuccess(jointOrder,respText.toString());
 		        	}

@@ -69,8 +69,10 @@ function subAgent()
 }
 
 
+
 function cleft_height(){
 	var dHeight=document.documentElement.clientHeight;
+	
 	var cla_left=document.getElementById('cla_left');
 	var cla_right=document.getElementById('cla_right');
 	var top_heater=document.getElementById('top_heater');
@@ -82,53 +84,53 @@ function cleft_height(){
 function left_right(){
 	var cla_left=document.getElementById('cla_left');
 	var oA=cla_left.getElementsByTagName('a');
-	var cla_right=document.getElementById('cla_right');
-	var arr_a=cla_right.getElementsByTagName('a');
-	var arr_i=cla_right.getElementsByTagName('i');
+	//var cla_right=document.getElementById('cla_right');
+	//var arr_a=cla_right.getElementsByTagName('a');
+	//var arr_i=cla_right.getElementsByTagName('i');
 	// alert(arr_i.length);
-	var oUl=cla_right.getElementsByTagName('ul');
-	var arr=[],oindex=[];
+	//var oUl=cla_right.getElementsByTagName('ul');
+	//var arr=[],oindex=[];
 	for(var i=0;i<oA.length;i++){
 		oA[i].index=i;
 		oA[i].onclick=function(){
 			for(var i=0;i<oA.length;i++){
 				oA[i].className='';
-				oUl[i].className='';
+				//oUl[i].className='';
 			}
 			this.className='active';
-			oUl[this.index].className='active';
+			//oUl[this.index].className='active';
 		}
 	}
-	for(i=0;i<arr_a.length;i++){
-		if(arr_a[i].className=='active'){
-			arr.push(arr_a[i]);
-			oindex.push(i);
-		}
-	}
-	for(var i=0;i<arr.length;i++){
-		arr[i].index=i;
-		arr[i].onclick=function(){
-			for(var i=0;i<arr.length;i++){
-				arr_i[i].style.display='none';
-			}
-			arr_i[oindex[this.index]].style.display='block';
-		}
-	}
-	// alert(arr.length);
-	for(i=0;i<oUl.length;i++){
-		var oLi=oUl[i].getElementsByTagName('li');
-		oLichange(oLi);
-	}
-	function oLichange(obj){
-		for(var j=0;j<obj.length;j++){
-			obj[j].onclick=function(){
-				for(j=0;j<obj.length;j++){
-					obj[j].className='';
-				}
-				this.className='active';
-			}
-		}
-	}
+//	for(i=0;i<arr_a.length;i++){
+//		if(arr_a[i].className=='active'){
+//			arr.push(arr_a[i]);
+//			oindex.push(i);
+//		}
+//	}
+//	for(var i=0;i<arr.length;i++){
+//		arr[i].index=i;
+//		arr[i].onclick=function(){
+//			for(var i=0;i<arr.length;i++){
+//				arr_i[i].style.display='none';
+//			}
+//			arr_i[oindex[this.index]].style.display='block';
+//		}
+//	}
+//	// alert(arr.length);
+//	for(i=0;i<oUl.length;i++){
+//		var oLi=oUl[i].getElementsByTagName('li');
+//		oLichange(oLi);
+//	}
+//	function oLichange(obj){
+//		for(var j=0;j<obj.length;j++){
+//			obj[j].onclick=function(){
+//				for(j=0;j<obj.length;j++){
+//					obj[j].className='';
+//				}
+//				this.className='active';
+//			}
+//		}
+//	}
 }
 
 function three_bing(){

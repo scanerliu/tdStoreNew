@@ -17,6 +17,7 @@ Rich.pageSize = function ()
 		if(deviceWidth>640){deviceWidth = 640;}  
 		document.documentElement.style.fontSize = deviceWidth / 6.4 + 'px';
 	}
+	
 	setRootSize();
 	window.addEventListener('resize', function () {
 	    setRootSize();

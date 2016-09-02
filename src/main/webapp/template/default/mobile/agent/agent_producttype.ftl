@@ -1,10 +1,16 @@
 <#import "/common/app.ftl" as app>
 
-<script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script>
  <script>
- Rich.pageSize();
+
 $(document).ready(function(){
-	 
+	 $("#type_ul").find("a.active").click(function(){
+	 	$("#type_ul").find("i").hide();
+	 	$(this).find("i").show();
+	 })
+	 $("#type_ul").find("menu").click(function(){
+	 	//$(this).parents("li").siblings().removeClass();
+	 	$(this).parents("li").toggleClass("active");
+	 })
 	 
     })
  </script>

@@ -2,13 +2,13 @@
 <script>
     $(function(){
         three_bing();
-       cleft_height();
        left_right();
          <#if typeList?? && typeList?size gt 0>
     		searchAgentType(${typeList[0].id},${regionId!'0'});
     	</#if>
     })
  <#if msg??>alert('${msg}');</#if>
+
 </script>
 
 <body class="body_bg">
