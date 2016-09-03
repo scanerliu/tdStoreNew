@@ -306,7 +306,31 @@ public class ConfigUtil {
 	public BigDecimal getZeroProductBenefitAmount() {
 		BigDecimal amount = new BigDecimal(1);
 		String amt = getConfig("zeroproductbenefitamount");
-		if(StringUtils.isBlank(amt)){
+		if(StringUtils.isNotBlank(amt)){
+			try {
+				amount = new BigDecimal(amt).setScale(2, BigDecimal.ROUND_FLOOR);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return amount;
+	}
+	/**
+	 * 获取提现手续费百分比
+	 * @return
+	 */
+	public Integer getWithDrawFee(){
+		return getConfig("withdrawfee",10);
+	}
+	/**
+	 * 获取提现手续费最低金额元
+	 * @return
+	 */
+	public BigDecimal getWithDrawFeeMin(){
+		BigDecimal amount = new BigDecimal(2);
+		String amt = getConfig("withdrawfeemin");
+		if(StringUtils.isNotBlank(amt)){
 			try {
 				amount = new BigDecimal(amt).setScale(2, BigDecimal.ROUND_FLOOR);
 			} catch (Exception e) {

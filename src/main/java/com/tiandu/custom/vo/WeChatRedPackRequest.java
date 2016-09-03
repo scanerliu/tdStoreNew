@@ -23,6 +23,10 @@ public class WeChatRedPackRequest {
 	 */
 	private String mch_id;
 	/**
+	 * 公众账号appid
+	 */
+	private String wxappid;
+	/**
 	 * 商户名称
 	 */
 	private String send_name;
@@ -141,10 +145,16 @@ public class WeChatRedPackRequest {
 	public void setNonce_str(String nonce_str) {
 		this.nonce_str = nonce_str;
 	}
+	public String getWxappid() {
+		return wxappid;
+	}
+	public void setWxappid(String wxappid) {
+		this.wxappid = wxappid;
+	}
 	@Override
 	public String toString() {
-		return "WeChatRedPackRequest [sign=" + sign + ", mch_billno=" + mch_billno + ", mch_id=" + mch_id
-				+ ", send_name=" + send_name + ", re_openid=" + re_openid + ", total_amount=" + total_amount
+		return "WeChatRedPackRequest [sign=" + sign + ", mch_billno=" + mch_billno + ", mch_id=" + mch_id + ", wxappid="
+				+ wxappid + ", send_name=" + send_name + ", re_openid=" + re_openid + ", total_amount=" + total_amount
 				+ ", total_num=" + total_num + ", wishing=" + wishing + ", client_ip=" + client_ip + ", act_name="
 				+ act_name + ", remark=" + remark + ", scene_id=" + scene_id + ", nonce_str=" + nonce_str + "]";
 	}

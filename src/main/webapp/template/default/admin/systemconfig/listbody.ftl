@@ -57,6 +57,12 @@
         <tr>
             <td align="right">零元商品三级分润金额:</td><td><input type="hidden" name="configKey" value="zeroproductbenefitamount"/><input type="text" name="zeroproductbenefitamount" id="zeroproductbenefitamount" value="${configMap.zeroproductbenefitamount!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="length[1,100]"/>（如三级分润总共分得1元，此项填1）</td>
         </tr>
+        <tr>
+            <td align="right">提现手续费:</td><td><input type="hidden" name="configKey" value="withdrawfee"/><input type="text" name="withdrawfee" id="withdrawfee" value="${configMap.withdrawfee!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="length[1,100]"/>（提现手续费百分比,如收取5%的手续费，此项填5）</td>
+        </tr>
+        <tr>
+            <td align="right">提现手续费最低金额:</td><td><input type="hidden" name="configKey" value="withdrawfeemin"/><input type="text" name="withdrawfeemin" id="withdrawfeemin" value="${configMap.withdrawfeemin!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="length[1,100]"/>（提现手续费最低金额，单位为元,如最低收取手续费2元，此项填2）</td>
+        </tr>
         </table>
     </div>
     <div title="网站属性设置" style="overflow:auto;padding:20px;">

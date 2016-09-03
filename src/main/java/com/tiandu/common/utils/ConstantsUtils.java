@@ -10,6 +10,10 @@ public class ConstantsUtils {
 	 */
 	public final static String WECHAT_APPID = "wx11561cd955e88296";
 	/**
+	 * 微信支付分配的商户号
+	 */
+	public final static String WECHAT_MCH_ID = "1362003202";
+	/**
 	 * 微信开发secret
 	 */
 	public final static String WECHAT_APPSECRET = "b7fc456a9d32cd7832d2c4d48e6ecc40";

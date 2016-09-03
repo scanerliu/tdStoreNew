@@ -15,6 +15,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
@@ -26,6 +27,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.tiandu.custom.vo.WeChatRedPackRequest;
+import com.tiandu.custom.vo.WeChatRedPackResponse;
 import com.tiandu.custom.vo.WithDrawVO;
 import com.tiandu.order.vo.OperResult;
 import com.tiandu.product.vo.AttributeOptionsVO;
@@ -36,9 +38,9 @@ public class WeChatRedPackUtils {
 	
 	private final static String sendredpackapi = "https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack";
 	private final static String wishing = "一路上有你，创业更轻松！";
-	private final static String act_name = "一路上（中国）创客联盟【盛大启航】";
+	private final static String act_name = "创客联盟";
 	private final static String remark = "一路上有你，创业更轻松！";
-	private final static String send_name = "一路上（中国）创客联盟";
+	private final static String send_name = "创客联盟";
 	private final static String scene_id = "PRODUCT_5";
 	
 	public static OperResult sendRedPack(WithDrawVO withDraw){
@@ -66,7 +68,8 @@ public class WeChatRedPackUtils {
 		request.setWishing(wishing);
 		request.setRemark(remark);
 		request.setMch_billno(WebUtils.generateOrderNo());
-		request.setMch_id(ConstantsUtils.WECHAT_APPID);
+		request.setWxappid(ConstantsUtils.WECHAT_APPID);
+		request.setMch_id(ConstantsUtils.WECHAT_MCH_ID);
 		request.setSend_name(send_name);
 		request.setRe_openid(withDraw.getOpenId());
 		request.setTotal_amount(withDraw.getAmount().multiply(new BigDecimal(100)).intValue());
@@ -74,13 +77,14 @@ public class WeChatRedPackUtils {
 		request.setWishing(wishing);
 		request.setClient_ip(withDraw.getClientIp());
 		request.setScene_id(scene_id);
+		request.setNonce_str(WebUtils.generateOrderNo());
 		String sign = getSign(request);
 		request.setSign(sign);
 		//s生成xmlstring
 		XStream xstream = new XStream(new XppDriver(new XmlFriendlyNameCoder("_-", "_"))); 
 		xstream.processAnnotations(request.getClass());
 		String xml = xstream.toXML(request);
-		System.out.println(xml);
+		logger.error("wechat redpack send request xml:"+xml);
 		//调微信接口
 		RestTemplate restTemplate = new RestTemplate();
 //		ResponseEntity<String> codesponse = restTemplate.getForEntity(sendredpackapi, String.class);
@@ -90,8 +94,34 @@ public class WeChatRedPackUtils {
         headers.setContentType(type);
         HttpEntity<String> formEntity = new HttpEntity<String>(xml, headers);
 
-        String response = restTemplate.postForObject(sendredpackapi, formEntity, String.class);
-		System.out.println(response);
+        String response = null;
+        try {
+			response = restTemplate.postForObject(sendredpackapi, formEntity, String.class);
+		} catch (RestClientException e) {
+			e.printStackTrace();
+			logger.error("wechat redpack send request error:"+e.getMessage() + " [xml]:"+xml);
+		}
+        if(null!=response){
+        	logger.error("wechat redpack send response xml:"+response);
+            //将xml装好为 WeChatRedPackResponse 对象
+            try {
+				xstream.processAnnotations(WeChatRedPackResponse.class);
+				WeChatRedPackResponse wprespose = (WeChatRedPackResponse) xstream.fromXML(response);
+				if(wprespose.getReturn_code().equals("SUCCESS")){//通信标识成功
+					if(wprespose.getResult_code().equals("SUCCESS")){
+						result.setFlag(true);
+					}else{
+						result.setFailMsg(wprespose.getErr_code_des());
+					}
+				}else{
+					result.setFailMsg("发送红包失败："+wprespose.getReturn_msg());
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				logger.error("wechat redpack response error:"+e.getMessage() + " [xml]:"+response);
+			}
+        }
 		return result;
 	}
 	

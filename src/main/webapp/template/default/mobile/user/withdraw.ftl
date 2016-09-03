@@ -49,7 +49,10 @@
 				<input class="withdraw-num" id="damount" name="amount" type="text" placeholder="输入提现金额，最低100元最高200元" datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写提现金额！" errormsg="提现金额格式错误！">
 				<div class="inpt">
 					<label>手续费</label>
-					<input type="text" value="10.00" disabled="disabled">
+					<input type="text" value="" disabled="disabled">
+				</div>
+				<div class="inpt">
+					${feetip!''}
 				</div>
 				<input type="hidden" name="type" value="1">
 				<button class="btn-now-withdraw" type="submit">立即提现</button>

@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
 import com.tiandu.article.entity.TdAdsense;
 import com.tiandu.article.search.TdAdvertisementSearchCriteria;
 import com.tiandu.article.service.TdAdsenseService;
@@ -40,7 +40,7 @@ import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.tencent.common.TdUserQRcodeTools;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.common.utils.MessageSender;
-import com.tiandu.common.utils.TwoDimensionCode;
+import com.tiandu.common.utils.WeChatRedPackUtils;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.complaint.search.TdComplaintCriteria;
 import com.tiandu.complaint.service.TdComplaintService;
@@ -75,6 +75,7 @@ import com.tiandu.custom.service.TdUserCampaignService;
 import com.tiandu.custom.service.TdUserMessageService;
 import com.tiandu.custom.service.TdUserSignService;
 import com.tiandu.custom.service.TdUserSupplierService;
+import com.tiandu.custom.vo.ProfitInfo;
 import com.tiandu.custom.vo.WithDrawVO;
 import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.search.TdDistrictSearchCriteria;
@@ -82,6 +83,7 @@ import com.tiandu.district.service.TdDistrictService;
 import com.tiandu.order.entity.TdShoppingcartItem;
 import com.tiandu.order.search.TdShoppingcartSearchCriteria;
 import com.tiandu.order.service.TdShoppingcartItemService;
+import com.tiandu.order.vo.OperResult;
 import com.tiandu.order.vo.ShoppingcartVO;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductAttachment;
@@ -103,6 +105,7 @@ import com.tiandu.product.service.TdProductSkuService;
 import com.tiandu.product.service.TdProductStatService;
 import com.tiandu.product.service.TdProductTypeAttributeService;
 import com.tiandu.product.service.TdProductTypeService;
+import com.tiandu.system.utils.ConfigUtil;
 
 /**
  * 
@@ -193,6 +196,8 @@ public class MUserController extends BaseController {
 	private TdUserAccountLogService tdUserAccountLogService;
 	@Autowired
 	private TdBrancheCompanyService tdBrancheCompanyService;
+	@Autowired
+	private ConfigUtil configUtil;
 	
 	// 个人中心
 	@RequestMapping("/center")
@@ -715,6 +720,10 @@ public class MUserController extends BaseController {
 			map.addAttribute("errmsg", "数据错误，请重新操作！");
 			return "/mobile/error";
 		}
+		Integer withdrawfee = configUtil.getWithDrawFee();
+		BigDecimal withdrawfeemin = configUtil.getWithDrawFeeMin();
+		String feetip = "按提现金额的"+withdrawfee+"%收取，最低收取"+withdrawfeemin+"元";
+		map.addAttribute("feetip", feetip);
 		map.addAttribute("account",userAccount);
 		return "/mobile/user/withdraw";
 	}
@@ -731,6 +740,7 @@ public class MUserController extends BaseController {
 		res.put("code", "0");
 		res.put("msg", "提现操作失败！");
 		TdUser tdUser = this.getCurrentUser();
+		Date now = new Date();
 		// 系统配置
 		TdUserAccount userAccount = tdUserAccountService.findOne(tdUser.getUid());
 		if(userAccount == null)
@@ -743,9 +753,40 @@ public class MUserController extends BaseController {
 			res.put("msg", "提现操作失败：账户金额不足！");
 			return res;
 		}
+		//提现手续费计算
+		Integer withdrawfee = configUtil.getWithDrawFee();
+		BigDecimal withdrawfeemin = configUtil.getWithDrawFeeMin();
+		BigDecimal amount = withDraw.getAmount();
+		BigDecimal fee = amount.multiply(new BigDecimal(withdrawfee)).divide(new BigDecimal(100));
+		if(fee.compareTo(withdrawfeemin)<0){//应收手续费小于最低手续费，以最低手续费为准
+			fee = withdrawfeemin;
+		}
+		if(fee.compareTo(amount)>=0){//手续费大于等于提现金额时，通知提现失败
+			res.put("msg", "提现操作失败：提现金额过小，不划算！");
+			return res;
+		}
+		withDraw.setAmount(amount.subtract(fee));
 		//微信红包对接
 		if(withDraw.getType().equals(1)){
-			
+			withDraw.setOpenId(tdUser.getJointId());
+			withDraw.setClientIp(request.getLocalAddr());
+			OperResult result = WeChatRedPackUtils.sendRedPack(withDraw);
+			if(result.isFlag()){
+				userAccount.setUpdateBy(1);
+				userAccount.setUpdateTime(now);
+				TdUserAccountLog alog = new TdUserAccountLog();
+				alog.setPreamount(userAccount.getAmount());
+				alog.setUid(userAccount.getUid());
+				alog.setUpamount(BigDecimal.ZERO.subtract(amount));
+				alog.setType(TdUserAccountLog.USERACCOUNTLOG_TYPE_WITHDRAWALS);
+		    	alog.setCreateTime(now);
+		    	alog.setNote("用户提现，提现金额："+amount+" 元，其中包含手续费："+fee+" 元");
+				tdUserAccountService.addAmount(userAccount, alog);
+				res.put("code", "1");
+				res.put("msg", "微信红包已经成功发送，请及时查收。");
+			}else{
+				res.put("msg", "微信红包发送失败："+result.getFailMsg());
+			}
 		}
 		return res;
 	}
