@@ -46,7 +46,7 @@
 					<label>账户余额</label>
 					<input type="text" id="aamount" value="${account.amount!''}" disabled="disabled">
 				</div>
-				<input class="withdraw-num" id="damount" name="amount" type="text" placeholder="输入提现金额，最低100元最高200元" datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写提现金额！" errormsg="提现金额格式错误！">
+				<input class="withdraw-num" id="damount" name="amount" type="text" placeholder="输入提现金额，最低10元最高200元" datatype="/(^[1-9]\d{0,7}(\.\d{1,2})?$)|(^0(\.\d{1,2})?$)/i" nullmsg="请填写提现金额！" errormsg="提现金额格式错误！">
 				<div class="inpt">
 					<label>手续费</label>
 					<input type="text" value="" disabled="disabled">
@@ -129,7 +129,7 @@
 							warning("提现金额过大，微信系统不支持！");
 							return false;
 						}
-						if(damount<100){
+						if(damount<10){
 							warning("提现金额过小，省点手续费吧！");
 							return false;
 						}

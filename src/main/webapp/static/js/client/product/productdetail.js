@@ -90,6 +90,7 @@ function changeProductSku(skus){
 	});
 	if(exist){
 		$("#skustock").val(stock);
+		$("#s_skustock").val(stock);
 		$("#skuId").val(skuId);
 		$("#skuPrice").val(price);
 		$("#prodprice").html(price);

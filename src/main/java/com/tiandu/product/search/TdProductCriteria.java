@@ -48,6 +48,8 @@ public class TdProductCriteria extends SearchCriteria {
 	private Integer enjoyrecommend; //猜你喜欢推荐
 	
 	private BigDecimal acpe; //匹配价格
+	
+	private Integer pointType; //积分兑换类型：1-全积分兑换，2-部分积分兑换
 
 	public String getName() {
 		return name;
@@ -255,6 +257,14 @@ public class TdProductCriteria extends SearchCriteria {
 
 	public void setAcpe(BigDecimal acpe) {
 		this.acpe = acpe;
+	}
+
+	public Integer getPointType() {
+		return pointType;
+	}
+
+	public void setPointType(Integer pointType) {
+		this.pointType = pointType;
 	}
 
 	// 列表页排序 1-综合升序，2-综合降序，3-销量升序，4-销量降序，5-价格升序，6,-价格降序。

@@ -45,6 +45,10 @@
 	<if test="type != null">
 		and type = #{type,jdbcType=TINYINT}
 	</if>
+	<choose>
+		<when test="incomeType != null and incomeType == 1">and upamount <![CDATA[ >= ]]> 0 </when>
+		<when test="incomeType != null and incomeType == 2">and upamount <![CDATA[ < ]]> 0 </when>
+	</choose>
     order by create_time desc
   </select>
   
@@ -66,6 +70,10 @@
 	<if test="type != null">
 		and type = #{type,jdbcType=TINYINT}
 	</if>
+	<choose>
+		<when test="incomeType != null and incomeType == 1">and upamount <![CDATA[ >= ]]> 0 </when>
+		<when test="incomeType != null and incomeType == 2">and upamount <![CDATA[ < ]]> 0 </when>
+	</choose>
   </select>
   
   <select id="countGroupByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.custom.search.TdUserAccountLogSearchCriteria" >

@@ -237,6 +237,7 @@ function timer()
                 <input type="text" placeholder="1" value="1" id="prodquantity" onKeyUp="formatInputSkuNum(this)">
                 <span onclick="additem(1)">+</span>
             </aside>
+             	库存:<i id="s_skustock">${product.quantum!'0'}</i>
         </section>
         </#if>
         <input type="hidden" id="skustock" value="${product.quantum!'0'}">

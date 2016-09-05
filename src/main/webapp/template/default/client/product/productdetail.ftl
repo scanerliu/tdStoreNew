@@ -170,6 +170,10 @@
 	                        <a class="add" onclick="additem(1)"><strong>+</strong></a>
 	                    </div>
 	                </div>
+	                <div class="program1">
+	                    <span>库&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存：</span>
+	                    <i id="s_skustock">${product.quantum!'0'}</i>
+	                </div>
 	                <div class="btnwrap">
 	                    <input type="button" value="立即购买" class="orange" onclick="buyNow();"/>
 	                    <input type="button" value="加入购物车" class="white" onclick="addToShoppingcart();"/>

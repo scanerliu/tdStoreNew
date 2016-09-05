@@ -9,16 +9,16 @@
 
         <p <#if menucode?? && menucode=="collect">class="active"</#if>><a href="${app.basePath}/user/collect/list" title="我的收藏">我的收藏</a></p>
 
-        <p><a href="${app.basePath}/" title="">浏览历史</a></p>
+        <!--<p><a href="${app.basePath}/" title="">浏览历史</a></p>-->
     </li>
     <li>
         <p class="p1">我的资产</p>
 
-        <p><a href="${app.basePath}/" title="">我的钱包</a></p>
+        <p <#if menucode?? && menucode=="account">class="active"</#if>><a href="${app.basePath}/user/account" title="">我的钱包</a></p>
 
-        <p><a href="${app.basePath}/" title="">我的积分</a></p>
+        <p <#if menucode?? && menucode=="point">class="active"</#if>><a href="${app.basePath}/user/point/list" title="">我的积分</a></p>
 
-        <p><a href="${app.basePath}/" title="">我的流水</a></p>
+        <p <#if menucode?? && menucode=="profit">class="active"</#if>><a href="${app.basePath}/user/profit" title="">我的流水</a></p>
     </li>
     <li>
         <p class="p1">联盟创客</p>

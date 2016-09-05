@@ -123,9 +123,9 @@
         <label>联盟创客</label>
         <i class="icon-next"></i>
       </a>
-      <a href="${app.basePath}/mobile/user/mySpread" title="我的推广">
+      <a href="${app.basePath}/mobile/user/mySpread" title="我的分享">
         <i class="icon bg_icon_5"></i>
-        <label>我的推广</label>
+        <label>我的分享</label>
         <i class="icon-next"></i>
       </a>
       <#if isbranch??>

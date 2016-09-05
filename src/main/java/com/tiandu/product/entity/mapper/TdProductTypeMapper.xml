@@ -191,7 +191,7 @@
     ,ta.type_id as ta_typeid
     ,ta.attri_id as ta_attriid
     from td_product_type as t LEFT OUTER JOIN td_product_type_attribute ta ON t.id=ta.type_id
-    where t.parent_id = #{parentId,jdbcType=INTEGER}
+    where t.parent_id = #{parentId,jdbcType=INTEGER} order by sort asc
   </select>
   
 </mapper>

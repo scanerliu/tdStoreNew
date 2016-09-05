@@ -67,7 +67,6 @@ import com.tiandu.order.vo.OrderRefund;
 import com.tiandu.order.vo.ShoppingcartVO;
 import com.tiandu.product.entity.TdAgentProduct;
 import com.tiandu.product.entity.TdProduct;
-import com.tiandu.product.entity.TdProductSku;
 import com.tiandu.product.service.TdAgentProductService;
 import com.tiandu.product.service.TdProductService;
 import com.tiandu.product.service.TdProductSkuService;
@@ -2022,6 +2021,36 @@ public class TdOrderServiceImpl implements TdOrderService{
 		if(!ConstantsUtils.ORDER_STATUS_NEW.equals(order.getOrderStatus())){
 			result.setFailMsg("订单的不能进行取消操作！");
 			return result;
+		}
+		//代理商、供应商、分公司的订单取消资格
+		if(ConstantsUtils.ORDER_KIND_AGENTPRODUCT.equals(order.getOrderType())){
+			TdOrderProduct orderProduct = tdOrderProductMapper.findByOrderIdAndTypeId(order.getOrderId(), Byte.valueOf("1"));
+			if(null!=orderProduct){
+				TdAgentProduct agentProduct = tdAgentProductService.findOne(orderProduct.getItemId());
+				if(null!=agentProduct){
+					if(ConstantsUtils.AGENT_GROUPID_AGENT.equals(agentProduct.getGroupId())){//单代代理
+						TdAgent agent = tdAgentService.findByUid(order.getUserId());
+						if(null!=agent){//用户已经购买代理
+							tdAgentService.delete(agent.getId());
+						}	
+						
+					}else if(ConstantsUtils.AGENT_GROUPID_BRANCH.equals(agentProduct.getGroupId())){//分公司
+						TdBrancheCompany branch = tdBrancheCompanyService.findByUid(order.getUserId());
+						if(null!=branch){//用户已经购买代理
+							tdBrancheCompanyService.delete(branch.getId());
+						}				
+					}else if(ConstantsUtils.AGENT_GROUPID_SUPPLIER.equals(agentProduct.getGroupId())){//供应商
+						//检查用户是否已经是供应商资格
+						TdUser orderuser = tdUserService.findOne(order.getUserId());
+						if(null!=orderuser && !orderuser.getSupplierType().equals(Byte.valueOf("0"))){
+							TdUser upuser = new TdUser();
+							upuser.setSupplierType(Byte.valueOf("0"));
+							upuser.setUid(user.getUid());
+							tdUserService.updateByPrimaryKeySelective(upuser);
+						}
+					}
+				}
+			}
 		}
 		//开始操作
 		Date now  = new Date();

@@ -382,5 +382,28 @@ public class CProductController extends BaseController {
 		return res;
 	}
 	
+	
+	//积分兑换列表
+	@RequestMapping("/point/list")
+	public String point(HttpServletRequest request, HttpServletResponse response,ModelMap map)
+	{
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		return "/client/product/point_list";
+	}
+	
+	//积分兑换列表内容
+	@RequestMapping("/point/search")
+	public String pointsearch(TdProductCriteria sc,HttpServletRequest request, HttpServletResponse response, ModelMap map)
+	{
+		sc.setOnshelf(true);
+		sc.setStatus(Byte.valueOf("1"));
+		if(null==sc.getPointType()){
+			sc.setPointType(0);
+		}
+		map.addAttribute("pointList", tdProductService.findBySearchCriteria(sc));
+		map.addAttribute("sc", sc);
+		return "/client/product/point_listbody";
+	}
 
 }

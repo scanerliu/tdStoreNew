@@ -11,7 +11,7 @@ public class OrderForm {
 
 	private Integer addressId;	//收货地址id
 	
-	private Byte paymentId = 1; //支付方式
+	private Byte paymentId = 2; //支付方式 ，默认微信支付
 	
 	private Boolean usePoints; //使用积分抵充金额
 	

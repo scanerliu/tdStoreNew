@@ -274,7 +274,7 @@ public class TdUserQRcodeTools {
 			}
 			//标题
 			if(StringUtils.isBlank(title)){
-				title = "邀您来创客，创业就是这么简单，大众创业，万众创新";
+				title = "一路上有你，让创业更轻松！";
 			}
 			//生成推广图片
 	        BufferedImage spreadimage = QRCodeImageUtils.genernateQRCodeImage(headimage, image, targetImg, user.getUnick(), title, expire);

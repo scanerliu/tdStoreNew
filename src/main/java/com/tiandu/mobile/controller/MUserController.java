@@ -722,7 +722,7 @@ public class MUserController extends BaseController {
 		}
 		Integer withdrawfee = configUtil.getWithDrawFee();
 		BigDecimal withdrawfeemin = configUtil.getWithDrawFeeMin();
-		String feetip = "按提现金额的"+withdrawfee+"%收取，最低收取"+withdrawfeemin+"元";
+		String feetip = "按提现金额的"+withdrawfee+"‰收取，最低收取"+withdrawfeemin+"元";
 		map.addAttribute("feetip", feetip);
 		map.addAttribute("account",userAccount);
 		return "/mobile/user/withdraw";
@@ -757,7 +757,7 @@ public class MUserController extends BaseController {
 		Integer withdrawfee = configUtil.getWithDrawFee();
 		BigDecimal withdrawfeemin = configUtil.getWithDrawFeeMin();
 		BigDecimal amount = withDraw.getAmount();
-		BigDecimal fee = amount.multiply(new BigDecimal(withdrawfee)).divide(new BigDecimal(100));
+		BigDecimal fee = amount.multiply(new BigDecimal(withdrawfee)).divide(new BigDecimal(1000));
 		if(fee.compareTo(withdrawfeemin)<0){//应收手续费小于最低手续费，以最低手续费为准
 			fee = withdrawfeemin;
 		}

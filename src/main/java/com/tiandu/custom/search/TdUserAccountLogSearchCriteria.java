@@ -11,6 +11,8 @@ public class TdUserAccountLogSearchCriteria extends SearchCriteria {
 	private Byte type; //操作类型 1-后台调整，2-分润收入，3-订单退货退款，4-用户提现
 	private Integer filterType = 0 ; //时间端  1-三天内，2-一周内
 	
+	private Integer incomeType;	//明细分类：1-收入，2-支出
+	
 	private String username;
 	
 	private Date beginDate;
@@ -73,6 +75,14 @@ public class TdUserAccountLogSearchCriteria extends SearchCriteria {
 
 	public void setFilterType(Integer filterType) {
 		this.filterType = filterType;
+	}
+
+	public Integer getIncomeType() {
+		return incomeType;
+	}
+
+	public void setIncomeType(Integer incomeType) {
+		this.incomeType = incomeType;
 	}
 	
 }

@@ -28,6 +28,10 @@
     <if test="uid != null" >
         and uid=#{uid,jdbcType=INTEGER}
     </if>
+    <choose>
+		<when test="incomeType != null and incomeType == 1">and integral <![CDATA[ >= ]]> 0 </when>
+		<when test="incomeType != null and incomeType == 2">and integral <![CDATA[ < ]]> 0 </when>
+	</choose>
     order by create_time desc
   </select>
   
@@ -38,6 +42,10 @@
     <if test="uid != null" >
         and uid=#{uid,jdbcType=INTEGER}
     </if>
+    <choose>
+		<when test="incomeType != null and incomeType == 1">and integral <![CDATA[ >= ]]> 0 </when>
+		<when test="incomeType != null and incomeType == 2">and integral <![CDATA[ < ]]> 0 </when>
+	</choose>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from td_user_integral_log

@@ -435,9 +435,23 @@
     <if test="kind != null">
     	and p.kind = #{kind,jdbcType=TINYINT}
     </if>
-    <if test="isNormalProduct != null and isNormalProduct == true">
-    	and p.kind != 2
-    </if>
+    <choose>
+    	<when test="null!=pointType and pointType==1">
+    		and p.kind = 7
+    	</when>
+    	<when test="null!=pointType and pointType==2">
+    		and p.kind = 8
+    	</when>
+    	<when test="null!=pointType and pointType==0">
+    		and (p.kind = 7 or p.kind=8)
+    	</when>
+    	<when test="isNormalProduct != null and isNormalProduct == true">
+	    	and p.kind != 2
+	    </when>    	
+    	<when test="kind == null">
+    		and p.kind != 2
+    	</when>
+    </choose>
     <if test="acpe != null">
     	and p.price = #{acpe,jdbcType=DECIMAL}
     </if>
@@ -556,9 +570,6 @@
     <if test="endPrice != null">
     	and p.price <![CDATA[ <=]]> #{endPrice,jdbcType=DECIMAL}
     </if>
-    <if test="isNormalProduct != null and isNormalProduct == true">
-    	and p.kind != 2
-    </if>
     <if test="productTypeIds != null">
     	and p.type_id in (
 	    <foreach collection="productTypeIds" item="ptid" index="index" separator="," >  
@@ -576,9 +587,23 @@
     <if test="kind != null">
     	and p.kind = #{kind,jdbcType=TINYINT}
     </if>
-    <if test="kind == null">
-    	and p.kind != 2
-    </if>
+    <choose>
+    	<when test="null!=pointType and pointType==1">
+    		and p.kind = 7
+    	</when>
+    	<when test="null!=pointType and pointType==2">
+    		and p.kind = 8
+    	</when>
+    	<when test="null!=pointType and pointType==0">
+    		and (p.kind = 7 or p.kind=8)
+    	</when>
+    	<when test="isNormalProduct != null and isNormalProduct == true">
+	    	and p.kind != 2
+	    </when>
+    	<when test="kind == null">
+    		and p.kind != 2
+    	</when>
+    </choose>
     <if test="acpe != null">
     	and p.price = #{acpe,jdbcType=DECIMAL}
     </if>
@@ -586,7 +611,7 @@
     	order by ${orderBy}
     </if>
     <if test="orderBy == null">
-    	order by p.create_time desc
+    	order by p.uid asc, p.create_time desc
     </if>
   </select>
   <update id="updateBatch" parameterType="Map">    
