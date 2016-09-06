@@ -626,6 +626,22 @@
 	line-height: 30px;
 	border: 1px solid #ddd;
 }
+.change_password .info-list .rinfo {
+	float: left;
+	padding: 0 10px;
+	width: 200px;
+	height: 28px;
+	line-height: 30px;
+	border: 1px solid #ddd;
+}
+.change_password .info-list input[type="password"] {
+	float: left;
+	padding: 0 10px;
+	width: 200px;
+	height: 28px;
+	line-height: 30px;
+	border: 1px solid #ddd;
+}
 .change_password .info-list span.tips {
 	float: left;
 	margin-left: 15px;

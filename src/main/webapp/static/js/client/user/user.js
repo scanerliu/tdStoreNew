@@ -32,7 +32,7 @@ function tipshide(obj){
 }
 
 function saveUserInfo(){
-	var url = basePath+"/mobile/user/saveInfo";
+	var url = basePath+"/user/saveInfo";
 	var loadData = $('#userInfoForm').serialize();
 	$.post(url, loadData, saveUserInfoCallback, "text");
 }
@@ -41,13 +41,13 @@ function saveUserInfoCallback(data){
 	var result = eval("("+data+")");
 	alert('消息提醒' + result.msg);
 	if(result.code == 1){
-		window.location.href=basePath+"/mobile/user/center";
+		window.location.href=basePath+"/user/center";
 	}
 }
 
 
 function verifyApply(id, status){
-	var url = basePath+"/mobile/user/verifyExperienceStoreApply";
+	var url = basePath+"/user/verifyExperienceStoreApply";
 	var loadData = {'id':id, 'status': status};
 	$.post(url, loadData, verifyApplyCallback, "text");
 }

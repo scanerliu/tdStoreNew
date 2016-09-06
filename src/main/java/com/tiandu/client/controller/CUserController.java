@@ -280,39 +280,6 @@ public class CUserController extends BaseController {
 		return res;
 	}
 	
-	// 保存修改密码
-	@RequestMapping(value="/savePassword", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String, String> sign(String oldPassword, String valideCode, String newPassword, HttpServletRequest request, HttpServletResponse response) {
-		Map<String,String> res = new HashMap<String,String>();
-		String changePasswordValidCode = (String) request.getSession().getAttribute("changePasswordValidCode");
-		if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
-			res.put("info", "验证码错误！");
-			res.put("status", "n");
-			request.getSession().removeAttribute("changePasswordValidCode");
-			return res;
-		}
-		
-		TdUser currentUser = this.getCurrentUser();
-		currentUser = tdUserService.findOne(currentUser.getUid());
-		String md5OldPassword = WebUtils.generatePassword(currentUser.getUname(), oldPassword);
-		if(!md5OldPassword.equals(currentUser.getUpassword())){
-			res.put("info", "原始密码错误！");
-			res.put("status", "n");
-			return res;
-		}
-		Date now = new Date();
-		currentUser.setUpdateBy(currentUser.getUid());
-		currentUser.setUpdateTime(now);
-		currentUser.setCreateTime(now);
-		currentUser.setUpassword(newPassword);
-    	tdUserService.saveUserPassword(currentUser);
-    	res.put("info", "密码修改成功！");
-		res.put("status", "y");
-		request.getSession().removeAttribute("changePasswordValidCode");
-		return res;
-	}
-	
 	@RequestMapping(value="/getChangeUserPasswordValidCode", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, String> getChangeUserPasswordValidCode(HttpServletRequest request) {
@@ -419,7 +386,41 @@ public class CUserController extends BaseController {
 	public String info(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser currentUser = this.getCurrentUser();
 		modelMap.addAttribute("currentUser", currentUser);
-		return "/mobile/user/info";		
+		// 系统配置
+		modelMap.addAttribute("system", getSystem());
+		return "/client/user/info";		
+	}
+	/**
+	 * 保存个人信息
+	 * @param user
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/saveInfo", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> saveInfo(TdUser user, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>();
+		res.put("code", "0");
+		res.put("msg", "个人信息修改失败！");
+		TdUser currentUser = this.getCurrentUser();
+		String avatar = user.getUavatar();
+		if(StringUtils.isNotBlank(avatar)){
+			user.setUavatar(avatar);
+		}else{
+			user.setUavatar(null);
+		}
+		/*currentUser.setUavatar(avatar);
+		currentUser.setUnick(user.getUnick());
+		currentUser.setUgenter(user.getUgenter());
+		currentUser.setUbirthday(user.getUbirthday());
+		currentUser.setUtel(user.getUtel());*/
+		user.setUid(currentUser.getUid());
+		if(tdUserService.saveUserInfo(user) == 1){
+			res.put("msg", "个人信息修改成功！");
+			res.put("code", "1");
+		}
+		return res;
 	}
 	
 	/*
@@ -427,9 +428,42 @@ public class CUserController extends BaseController {
 	 */
 	@RequestMapping("/changePassword")
 	public String changePassword(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		return "/mobile/user/changePassword";		
+		// 系统配置
+		modelMap.addAttribute("system", getSystem());
+		return "/client/user/changePassword";		
 	}
 	
+	// 保存修改密码
+	@RequestMapping(value="/savePassword", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> savePassword(String oldPassword, String valideCode, String newPassword, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>();
+		/*String changePasswordValidCode = (String) request.getSession().getAttribute("changePasswordValidCode");
+		if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
+			res.put("info", "验证码错误！");
+			res.put("status", "n");
+			request.getSession().removeAttribute("changePasswordValidCode");
+			return res;
+		}*/
+		
+		TdUser currentUser = this.getCurrentUser();
+		currentUser = tdUserService.findOne(currentUser.getUid());
+		String md5OldPassword = WebUtils.generatePassword(currentUser.getUname(), oldPassword);
+		if(!md5OldPassword.equals(currentUser.getUpassword())){
+			res.put("msg", "原始密码错误！");
+			res.put("code", "0");
+			return res;
+		}
+		Date now = new Date();
+		currentUser.setUpdateBy(currentUser.getUid());
+		currentUser.setUpdateTime(now);
+		currentUser.setCreateTime(now);
+		currentUser.setUpassword(newPassword);
+    	tdUserService.saveUserPassword(currentUser);
+    	res.put("msg", "密码修改成功！");
+		res.put("code", "1");
+		return res;
+	}
 	/*
 	 * 修改手机号
 	 */
@@ -865,31 +899,7 @@ public class CUserController extends BaseController {
 		modelMap.addAttribute("sc", sc) ;
 		return "/client/user/profit_listbody";
 	}
-	
-	@RequestMapping(value="/saveInfo", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String, String> saveInfo(TdUser user, HttpServletRequest request, HttpServletResponse response) {
-		Map<String,String> res = new HashMap<String,String>();
-		res.put("code", "0");
-		res.put("msg", "个人信息修改失败！");
-		TdUser currentUser = this.getCurrentUser();
-		String avatar = user.getUavatar();
-		if(!avatar.equals("")){
-			avatar = avatar.replaceFirst("/", "");
-			avatar = avatar.substring(avatar.indexOf("/"));			
-		}
-		currentUser.setUavatar(avatar);
-		currentUser.setUnick(user.getUnick());
-		currentUser.setUgenter(user.getUgenter());
-		currentUser.setUbirthday(user.getUbirthday());
-		currentUser.setUtel(user.getUtel());
-		if(tdUserService.saveUserInfo(currentUser) == 1){
-			res.put("msg", "个人信息修改成功！");
-			res.put("code", "1");
-		}
-		return res;
-	}
-	
+		
 	/*
 	 * 实体店消息审核
 	 */
