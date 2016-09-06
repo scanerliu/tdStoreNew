@@ -757,6 +757,8 @@ public class MOrderController extends BaseController {
 
 		try {
 			while ((line = br.readLine()) != null) {
+				System.out.print("Max: notify" + line + "\n");
+				
 				respText.append(line);
 				if (line.contains("<return_code>")) {
 					return_code = line.replaceAll("<return_code><\\!\\[CDATA\\[", "") .replaceAll("\\]\\]></return_code>", "");
@@ -766,9 +768,11 @@ public class MOrderController extends BaseController {
 					result_code = line.replaceAll("<result_code><\\!\\[CDATA\\[", "").replaceAll("\\]\\]></result_code>", "");
 				}
 			}
-			logger.error("wechat pay xml:"+respText.toString());
-			String resonx = new String(respText.toString().getBytes("ISO-8859-1"),"UTF-8");
-			logger.error("wechat pay xml:"+resonx);
+
+			System.out.println("Max: notify return_code: " + return_code + "\n");
+			System.out.println("Max: notify out_trade_no: " + out_trade_no + "\n");
+			System.out.println("Max: notify result_code: " + result_code + "\n");
+
 			if (return_code.contains("SUCCESS") && 
 					result_code.contains("SUCCESS") && 
 					null != out_trade_no)
@@ -778,13 +782,13 @@ public class MOrderController extends BaseController {
 		        	TdJointOrder jointOrder = tdJointOrderService.findByJno(out_trade_no);
 		        	if (jointOrder != null) {
 		        		// 订单支付成功
-		        		tdOrderService.AfterJointPaySuccess(jointOrder,resonx);
+		        		tdOrderService.AfterJointPaySuccess(jointOrder,respText.toString());
 		        	}
 		        }else{
 		        	TdOrder order = tdOrderService.findByOrderNo(out_trade_no);
 		        	if (null != order)
 		        	{
-		        		tdOrderService.AfterPaySuccess(order,resonx);
+		        		tdOrderService.AfterPaySuccess(order,respText.toString());
 		        	}
 		        }
 				
@@ -813,7 +817,6 @@ public class MOrderController extends BaseController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("wechat pay error:"+e.getMessage());
 		} finally {
 			br.close();
 		}

@@ -191,11 +191,13 @@ public class MobileProductListController extends BaseController{
 		
 		sc.setOnshelf(true);
 		
+		
 		// 0元购
 		if(sc.getKind() == 3)
 		{
 			int count = tdProductService.getTotalPageCount(sc);
 			if(count >= page){
+				sc.setPageNo(page);
 				map.addAttribute("zeroList", tdProductService.findBySearchCriteria(sc));
 			}
 			return "/mobile/product/zero_list_more";
