@@ -74,7 +74,6 @@
                 <div class="tabb obody">
                 	<form id="listForm" >
                     <ul class="active" id="results">
-                        <li class="li_title">
                     </ul>
                     </form>
                 </div>

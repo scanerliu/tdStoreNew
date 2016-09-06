@@ -86,6 +86,9 @@ public class SearchCriteria<T> implements Serializable {
 			if (pageNo > totalPageCount) {
 				pageNo = totalPageCount;
 			}
+			if(pageNo<1){
+				pageNo=1;
+			}
 			startIdx = (pageNo - 1) * pageSize;
 		} else {
 			totalPageCount = 1;

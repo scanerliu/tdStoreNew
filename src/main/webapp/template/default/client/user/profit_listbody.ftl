@@ -1,5 +1,7 @@
 <#import "/common/app.ftl" as app>
+<ul class="active" id="results">
 <li class="li_title">
+    <span class="fl">时间</span>
     <span class="fl">订单号</span>
     <span class="fl">买家名称</span>
     <span class="fl">总金额(元)</span>
@@ -8,6 +10,7 @@
 <#if logList?? && logList?size gt 0>
 	<#list logList as item>
 	<li>
+		<span class="fl">${item.createTime?string('yyyy-MM-dd')}</span>
 		<span class="fl">${item.profit.orderNo!''}</span>
 	    <span class="fl">${item.profit.buyUserName!''}</span>
 	    <span class="fl">${item.profit.totalAmount!''}</span>
@@ -21,6 +24,7 @@
   <span class="sp3 fl">&nbsp;</span>
 </li>
 </#if>
+</ul>
 <input type="hidden" value="${sc.incomeType!''}" name="incomeType">
 <#if logList?? && logList?size gt 0>
 <div class="goods-page-nums mt20 w100 txtr">

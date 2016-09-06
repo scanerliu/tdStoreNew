@@ -22,10 +22,9 @@
     </li>
     <li>
         <p class="p1">联盟创客</p>
-
-        <p><a href="${app.basePath}/" title="">我的盟友</a></p>
-
-        <p><a href="${app.basePath}/" title="">我的推广</a></p>
+        <p <#if menucode?? && menucode=="recommend">class="active"</#if>><a href="${app.basePath}/user/recommendPeople" title="">我的推荐人</a></p>
+        <p <#if menucode?? && menucode=="chirldren">class="active"</#if>><a href="${app.basePath}/user/downUserList" title="">我的盟友</a></p>
+        <p <#if menucode?? && menucode=="spreed">class="active"</#if>><a href="${app.basePath}/user/mySpread" title="">我的分享</a></p>
     </li>
     <li>
         <p class="p1">商家管理</p>

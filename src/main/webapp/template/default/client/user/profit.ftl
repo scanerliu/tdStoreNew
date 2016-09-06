@@ -26,11 +26,15 @@
     <script type="text/javascript" src="${app.basePath}/static/js/jquery-1.12.3.min.js"></script>
 	<script type="text/javascript" src="${app.basePath}/static/js/client/html5.js"></script>
 	<script type="text/javascript" src="${app.basePath}/static/js/client/library.js"></script>
-	<script type="text/javascript" src="${app.basePath}/static/js/client/user/point/point.js"></script>
 	<!--通用js-->
     <script type="text/javascript" src="${app.basePath}/static/js/client/core.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/js/client/common.js"></script>
 	<script src="${app.basePath}/static/js/client/user/account.js" type="text/javascript"></script>
+	<style>
+	.profit ul li span {
+		  width: 25%;
+		}
+	</style>
 </head>
 <body>
 <h1 style="display:none;"></h1>
@@ -49,8 +53,8 @@
         <div class="right-content get_reward">
             <!-- 明细 -->
             <div class="detail white_box">
-            	<form id="searchform">
-					<input type="hidden" id="sc_fliterType" name="filterType" value=""/>
+            	<form id="searchForm">
+					<input type="hidden" id="sc_fliterType" name="filterType" value="0"/>
 				</form>
                 <div class="otitle tabh" id="selecttab">
                     <a href="javascript:;" aid="0" title="" class="active">全部流水</a>
@@ -58,8 +62,8 @@
                     <a href="javascript:;" aid="2" title="" class="">一周以内</a>
                 </div>
                 <div class="tabb obody">
-                	<form id="listform" >
-                    <div id="results">
+                	<form id="listForm" >
+                    <div id="results" class="profit">
                     </div>
                     </form>
                 </div>

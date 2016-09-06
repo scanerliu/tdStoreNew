@@ -55,7 +55,7 @@ function selectProfitTab(id){
 		var oid = $(this).attr("aid");
 		$(this).addClass("active").siblings().removeClass("active");
 		if(oid==0){
-			$("#sc_fliterType").val("");
+			$("#sc_fliterType").val("0");
 		}else if(oid==1){
 			$("#sc_fliterType").val("1");
 		}else if(oid==2){

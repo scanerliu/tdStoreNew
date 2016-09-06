@@ -3,6 +3,7 @@ package com.tiandu.custom.entity;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.tiandu.district.entity.TdDistrict;
@@ -91,6 +92,19 @@ public class TdUser {
 	 * 账号等级，显示时候使用
 	 */
 	private TdMembership membership;
+	/**
+	 * 上级推荐人对象
+	 */
+	//private TdUser parent;
+	
+	/**
+	 * 下级集合
+	 */
+	//private List<TdUser> children;
+	/**
+	 * 下级会员级数
+	 */
+	private Integer clevel;
 
     public Integer getUid() {
         return uid;
@@ -348,6 +362,22 @@ public class TdUser {
 		this.membership = membership;
 	}
 
+	/*public TdUser getParent() {
+		return parent;
+	}
+
+	public void setParent(TdUser parent) {
+		this.parent = parent;
+	}
+
+	public List<TdUser> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<TdUser> children) {
+		this.children = children;
+	}*/
+
 	public Boolean isLocked(){
 		if(TdUser.USTATUS_FORBBIDEN==this.getUstatus()){
 			return true;
@@ -355,6 +385,14 @@ public class TdUser {
 		return false;
 	}
 	
+	public Integer getClevel() {
+		return clevel;
+	}
+
+	public void setClevel(Integer clevel) {
+		this.clevel = clevel;
+	}
+
 	public String getUgenderStr(){
 		if(this.getUgenter().equals(Byte.valueOf("1"))){
 			return "男";
@@ -407,6 +445,8 @@ public class TdUser {
 				sb.append("女");
 			}else if(this.getUgenter().equals(Byte.valueOf("1"))){
 				sb.append("男");
+			}else{
+				sb.append("保密");
 			}
 		}
 		if(null == this.getUgenter()){

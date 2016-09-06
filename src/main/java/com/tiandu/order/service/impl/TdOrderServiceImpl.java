@@ -1403,7 +1403,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 						}else{//零元商品分润，不再参与普通商品分润
 							if(BigDecimal.ZERO.compareTo(ordersku.getBenefitAmount())<0){//有利润空间才分润
 								BigDecimal amount = ordersku.getBenefitAmount();
-								if(zeroAmount.compareTo(amount)<0){
+								if(zeroAmount.compareTo(amount)<=0){
 									//三级分销分润
 									BigDecimal distBenefitAmount = displayDistributionBenefit(zeroAmount, order, orderUser, zerobenefitList, 4, now);
 									totalBenefitAmount = totalBenefitAmount.add(distBenefitAmount);	

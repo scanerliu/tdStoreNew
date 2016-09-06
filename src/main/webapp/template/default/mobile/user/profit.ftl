@@ -32,8 +32,8 @@
     <span>我的流水</span>
   </div>
   <!-- header_top end -->
-<form id="searchform">
-	<input type="hidden" id="sc_fliterType" name="filterType" value=""/>
+<form id="searchForm">
+	<input type="hidden" id="sc_fliterType" name="filterType" value="0"/>
 </form>
   <!-- Center Start -->
    <section class="container my-running-water">
@@ -46,9 +46,9 @@
 
     <ol>
       <!-- 全部流水 -->
-      <form id="listform">
+      <form id="listForm">
         <li id="results"></li>
-        <input type="hidden" name="filterType" id="filterType" value=""/>
+        <input type="hidden" name="filterType" id="filterType" value="0"/>
         <input type="hidden" name="pageNo" id="pageNo" value=""/>        
       </form>
     </ol>

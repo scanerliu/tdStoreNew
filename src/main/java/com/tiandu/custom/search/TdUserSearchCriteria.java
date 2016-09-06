@@ -24,6 +24,8 @@ public class TdUserSearchCriteria extends SearchCriteria {
 	private String jointId; //第三方Id
 	
 	private Integer uprovinceId; // 所属省id
+	
+	private Integer clevelType;	//下属类别查询，1-一级下属，2-二级下属，3-三级下属
 
 	public String getUname() {
 		return uname;
@@ -127,6 +129,14 @@ public class TdUserSearchCriteria extends SearchCriteria {
 
 	public void setUprovinceId(Integer uprovinceId) {
 		this.uprovinceId = uprovinceId;
+	}
+
+	public Integer getClevelType() {
+		return clevelType;
+	}
+
+	public void setClevelType(Integer clevelType) {
+		this.clevelType = clevelType;
 	}
 
 	

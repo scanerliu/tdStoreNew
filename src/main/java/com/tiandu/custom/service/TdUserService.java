@@ -109,5 +109,17 @@ public interface TdUserService {
 	 * @return
 	 */
 	public TdUser findByJoinCode(String openid);
+	/**
+	 * 根据当前账号uid查找上三级推荐人信息
+	 * @param uid
+	 * @return
+	 */
+//	public TdUser findParentTreeByUid(Integer uid);
+	/**
+	 * 根据当前账号uid查找下三级会员信息
+	 * @param uid
+	 * @return
+	 */
+//	public List<TdUser> findChildrenTreeByUid(Integer uid);
 		
 }

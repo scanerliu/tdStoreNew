@@ -34,4 +34,8 @@ public interface TdUserMapper {
 	public List<TdUser> selectByUtel(String utel);
 
 	List<TdUser> selectByJoinCode(String openid);
+	
+	public TdUser findParentTreeByUid(Integer uid);
+	
+	public List<TdUser> findChildrenTreeByUid(Integer uid);
 }

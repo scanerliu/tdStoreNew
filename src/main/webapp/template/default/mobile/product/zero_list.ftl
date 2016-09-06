@@ -32,14 +32,15 @@
     
  $(document).ready(function(){   
 	var url = '${app.basePath}/mobile/product/search/more';
-	var cc=document.getElementById('two2');
+	$('#kill_list').refresh(url+"?kind=3","#kill_list",1);
+	/*var cc=document.getElementById('two2');
 	var aA=cc.getElementsByTagName('a');
 	if(aA[0].className=='active'){
 		$('#kill_list').refresh(url+"?kind=3","#kill_list",0);
 	}
 	if(aA[1].className=='active'){
 		$('#persell_list').refresh(url+"?kind=4","#persell_list",0);
-	}
+	}*/
 })
   
 </script>

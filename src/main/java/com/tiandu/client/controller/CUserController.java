@@ -930,6 +930,11 @@ public class CUserController extends BaseController {
 				}
 			}
 		}
+		/*TdUser parent = tdUserService.findParentTreeByUid(currentUser.getUid());
+		modelMap.addAttribute("parent", parent);*/
+		modelMap.addAttribute("menucode", "recommend");
+		// 系统配置
+		modelMap.addAttribute("system", getSystem());
 		return "/client/user/recommendPeople";		
 	}
 	
@@ -1518,9 +1523,81 @@ public class CUserController extends BaseController {
 	 */
 	@RequestMapping("/downUserList")
 	public String downThreeUserList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		modelMap.addAttribute("isTheFirstTime", "yes");
-		modelMap.addAttribute("pageNo", "1");
+		modelMap.addAttribute("menucode", "chirldren");
+		// 系统配置
+		modelMap.addAttribute("system", getSystem());
 		return "/client/user/downUserList";	
+	}
+	
+	@RequestMapping(value="/getDownUsers")
+	public String getDownUsers(TdUserSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap){
+		TdUser currentUser = this.getCurrentUser();
+		String parentIdsStr = "["+ currentUser.getUid() +"]"; // 下一二三级的id
+		String oneIdsStr = ""; // 下一级的id
+		String twoIdsStr = ""; // 下二级的id
+		String threeIdsStr = "";// 下三级的id
+		sc.setFlag(false);
+		sc.setParentIdsStr(parentIdsStr);
+		List<TdUser> downOneUserList = tdUserService.findBySearchCriteria(sc);
+		//查询类别clevelType
+		if(null==sc.getClevelType()){
+			sc.setClevelType(0);
+		}
+		//查询条件id
+		StringBuffer queryParentIds = new StringBuffer();
+		if(sc.getClevelType().equals(0)||sc.getClevelType().equals(1)){
+			queryParentIds.append("["+ currentUser.getUid() +"]");
+		}
+		if(downOneUserList != null){
+			for(TdUser user : downOneUserList){
+				if(sc.getClevelType().equals(0)||sc.getClevelType().equals(2)){
+					queryParentIds.append("["+ user.getUid() +"]");
+				}
+				oneIdsStr += "["+ user.getUid() +"]";
+			}
+		}
+		if(StringUtils.isNotBlank(oneIdsStr)){
+			sc.setParentIdsStr(oneIdsStr);
+			List<TdUser> downTwoUserList = tdUserService.findBySearchCriteria(sc);
+			if(downTwoUserList != null){
+				for(TdUser user : downTwoUserList){
+					if(sc.getClevelType().equals(0)||sc.getClevelType().equals(3)){
+						queryParentIds.append("["+ user.getUid() +"]");
+					}
+					twoIdsStr += "["+ user.getUid() +"]";
+				}
+			}			
+		}
+		if(sc.getClevelType().equals(0)||sc.getClevelType().equals(3)){
+			if(StringUtils.isNotBlank(twoIdsStr)){
+				sc.setParentIdsStr(twoIdsStr);
+				List<TdUser> downThreeUserList = tdUserService.findBySearchCriteria(sc);
+				if(downThreeUserList != null){
+					for(TdUser user : downThreeUserList){
+						threeIdsStr += "["+ user.getUid() +"]";
+					}
+				}			
+			}
+		}
+		parentIdsStr = queryParentIds.toString();
+		sc.setParentIdsStr(parentIdsStr);
+		sc.setFlag(true);
+		List<TdUser> downUserList = new ArrayList<TdUser>();
+		if(StringUtils.isNotBlank(parentIdsStr)){
+			downUserList = tdUserService.findBySearchCriteria(sc); // 下一二三级分页会员			
+		}
+		for(TdUser user : downUserList){
+			if(oneIdsStr.contains(user.getUid().toString())){
+				user.setClevel(1);
+			}else if(twoIdsStr.contains(user.getUid().toString())){
+				user.setClevel(2);
+			}else if(threeIdsStr.contains(user.getUid().toString())){
+				user.setClevel(3);
+			}
+		}
+		modelMap.addAttribute("userList", downUserList);
+		modelMap.addAttribute("sc", sc);
+		return "/client/user/downUserListBody";
 	}
 	
 	/*
@@ -1551,12 +1628,15 @@ public class CUserController extends BaseController {
 	public String mySpread(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) throws UnrecoverableKeyException, KeyManagementException, NoSuchAlgorithmException, KeyStoreException, IOException, JSONException {
 		TdUser currentUser = this.getCurrentUser();
 		modelMap.addAttribute("currentUser", currentUser);
-		String spreadUrl = "http://www.cqupt.edu.cn";
+		/*String spreadUrl = "http://www.cqupt.edu.cn";
 		String imgName = UUID.randomUUID().toString() + ".png";
 		String spreadImgPath = request.getServletContext().getRealPath("/") + "static/imgs/spread" + imgName;
 		TwoDimensionCode tdc = new TwoDimensionCode();
 		tdc.encoderQRCode(spreadUrl, spreadImgPath, "png");
-		modelMap.addAttribute("spreadImg", "static/imgs/spread" + imgName);
+		modelMap.addAttribute("spreadImg", "static/imgs/spread" + imgName);*/
+		modelMap.addAttribute("menucode", "spreed");
+		// 系统配置
+		modelMap.addAttribute("system", getSystem());
 		return "/client/user/mySpread";
 	}
 	
@@ -1755,112 +1835,6 @@ public class CUserController extends BaseController {
 			map.addAttribute("taList", taList);
 		}
 		return "/client/user/productTypeAttributes";	
-	}
-	
-	
-	
-	@RequestMapping(value="/getDownUsers", method = RequestMethod.POST)
-	@ResponseBody
-	public String getDownUsers(Integer pageNo, HttpServletRequest request, HttpServletResponse response){
-		TdUser currentUser = this.getCurrentUser();
-		String parentIdsStr = "["+ currentUser.getUid() +"]"; // 下一二三级的id
-		String oneIdsStr = ""; // 下一级的id
-		String twoIdsStr = ""; // 下二级的id
-		String threeIdsStr = "";// 下三级的id
-		TdUserSearchCriteria sc = new TdUserSearchCriteria();
-		sc.setFlag(false);
-		sc.setParentIdsStr(parentIdsStr);
-		List<TdUser> downOneUserList = tdUserService.findBySearchCriteria(sc);
-		if(downOneUserList != null){
-			for(TdUser user : downOneUserList){
-				parentIdsStr += "["+ user.getUid() +"]";
-				oneIdsStr += "["+ user.getUid() +"]";
-			}
-		}
-		if(!oneIdsStr.equals("")){
-			sc.setParentIdsStr(oneIdsStr);
-			List<TdUser> downTwoUserList = tdUserService.findBySearchCriteria(sc);
-			if(downTwoUserList != null){
-				for(TdUser user : downTwoUserList){
-					parentIdsStr += "["+ user.getUid() +"]";
-					twoIdsStr += "["+ user.getUid() +"]";
-				}
-			}			
-		}
-		
-		if(!twoIdsStr.equals("")){
-			sc.setParentIdsStr(twoIdsStr);
-			List<TdUser> downThreeUserList = tdUserService.findBySearchCriteria(sc);
-			if(downThreeUserList != null){
-				for(TdUser user : downThreeUserList){
-					threeIdsStr += "["+ user.getUid() +"]";
-				}
-			}			
-		}
-		
-		sc.setParentIdsStr(parentIdsStr);
-		sc.setPageNo(pageNo);
-		sc.setFlag(true);
-		sc.setPageSize(3);
-		List<TdUser> downUserList = new ArrayList<>();
-		if(!parentIdsStr.equals("")){
-			downUserList = tdUserService.findBySearchCriteria(sc); // 下一二三级分页会员			
-		}
-		
-		// 生成json数据
-		JSONObject jsonData = new JSONObject();
-		try {
-			jsonData.put("hasData", "yes");
-			if(sc.getPageNo()!=pageNo){
-				jsonData.put("hasData", "no");
-				return jsonData.toString();
-			}else{
-				jsonData.put("totalCount", sc.getTotalCount());
-			}
-		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		JSONArray contentJsonArray = new JSONArray();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		for(TdUser user : downUserList){
-			JSONObject jsonObject = new JSONObject();
-			try {
-				jsonObject.put("uavatar", user.getUavatar()!=null?user.getUavatar():"");
-				jsonObject.put("unick", user.getUnick()!=null?user.getUnick():"");
-				jsonObject.put("ugenter", user.getUgenter()!=null?user.getUgenter().toString():"");
-				if(user.getUgenter() != null){
-					if(user.getUgenter().equals(Byte.valueOf("1"))){
-						jsonObject.put("gender", "man");
-					}else if(user.getUgenter().equals(Byte.valueOf("2"))){
-						jsonObject.put("gender", "woman");
-					}else{
-						jsonObject.put("gender", "");
-					}
-				}
-				jsonObject.put("ugenterStr", user.getUgenterStr());
-				jsonObject.put("uname", user.getUname());
-				jsonObject.put("ubirthday", user.getUbirthdayStr()!=null?user.getUbirthdayStr():"");
-				if(oneIdsStr.contains(user.getUid().toString())){
-					jsonObject.put("level", "1");
-				}else if(twoIdsStr.contains(user.getUid().toString())){
-					jsonObject.put("level", "2");
-				}else if(threeIdsStr.contains(user.getUid().toString())){
-					jsonObject.put("level", "3");
-				}
-			} catch (JSONException e) {
-				logger.error("下级会员解析失败");
-				e.printStackTrace();
-			}
-			contentJsonArray.put(jsonObject);
-		}
-		try {
-			jsonData.put("addedData", contentJsonArray);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return jsonData.toString();
 	}
 	
 	/*

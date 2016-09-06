@@ -403,6 +403,16 @@ public class TdUserServiceImpl implements TdUserService {
 		}
 		return null;
 	}
+
+	/*@Override
+	public TdUser findParentTreeByUid(Integer uid) {
+		return userMapper.findParentTreeByUid(uid);
+	}
+
+	@Override
+	public List<TdUser> findChildrenTreeByUid(Integer uid) {
+		return userMapper.findChildrenTreeByUid(uid);
+	}*/
 	
 	
 }
