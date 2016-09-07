@@ -34,8 +34,10 @@ function refreshList(){
 function saveCustomer(){
 	var f = $('#customerForm').form('enableValidation').form('validate');
 	if(f){
+		openwaiting();
 		$('#customerForm').form('submit',{
 			  success : function(data){
+				  closewaiting();
 				  var result = eval("("+data+")");
 				  if(result.code==1){
 					  $.messager.alert('消息提醒','会员保存成功。');
@@ -52,6 +54,7 @@ function saveCustomer(){
 function delCustomer(id){
 	$.messager.confirm('消息提醒', '确定要删掉该会员吗?', function(r){
 		if (r){
+			openwaiting();
 			var url = basePath+"/admin/customer/delete";
 			var loadData={"id":id};
 			$.post(url,loadData,delCustomerCallback,"text");
@@ -60,6 +63,7 @@ function delCustomer(id){
 }
 
 function delCustomerCallback(data){
+	closewaiting();
 	var result = eval("("+data+")");
 	if(result.code==1){
 		$.messager.alert('消息提醒','会员删除成功。');
@@ -92,11 +96,13 @@ function saveRoles(){
 		$.messager.alert('消息提醒','会员未选择，请重新操作!');
 		return ;
 	}
+	openwaiting();
 	var postData = {"uid":uId,"roleIds":s};
 	$.post(url,postData,saveRolesCallback,"text");
 }
 
 function saveRolesCallback(data){
+	closewaiting();
 	var result = eval("("+data+")");
 	if(result.code==1){
 		$.messager.alert('消息提醒','角色保存成功。');
@@ -115,9 +121,11 @@ function changePassword(id){
 function savePassword(id){
 	var f = $('#passwordForm').form('enableValidation').form('validate');
 	if(f){
+		openwaiting();
 		$('#passwordForm').form('submit',{
 			  success : function(data){
 				  var result = eval("("+data+")");
+				  closewaiting();
 				  if(result.code==1){
 					  $.messager.alert('消息提醒','密码修改成功。');
 					  returnList();
@@ -138,6 +146,7 @@ function activeCustomer(id){
 		$.messager.alert('消息提醒','会员未选择，请重新操作!');
 		return ;
 	}
+	openwaiting();
 	var postData = {"uid":id,"ustatus":1};
 	$.post(url,postData,updateCallback,"text");
 }
@@ -150,11 +159,48 @@ function forbiddenCustomer(id){
 		$.messager.alert('消息提醒','会员未选择，请重新操作!');
 		return ;
 	}
+	openwaiting();
 	var postData = {"uid":id,"ustatus":2};
 	$.post(url,postData,updateCallback,"text");
 }
 
+/**
+ * 授权零时供应商
+ */
+function tempsupplierCustomer(id){
+	var url = basePath+"/admin/customer/tempsupplier";
+	if(id==""||id==undefined){
+		$.messager.alert('消息提醒','会员未选择，请重新操作!');
+		return ;
+	}
+	$.messager.confirm('消息提醒', '确定要授权零时供应商吗?', function(r){
+		if (r){
+			openwaiting();
+			var postData = {"uid":id,"tempsupplier":1};
+			$.post(url,postData,updateCallback,"text");
+		}
+	});
+}
+/**
+ * 取消授权零时供应商
+ */
+function cancelTempsupplierCustomer(id){
+	var url = basePath+"/admin/customer/tempsupplier";
+	if(id==""||id==undefined){
+		$.messager.alert('消息提醒','会员未选择，请重新操作!');
+		return ;
+	}
+	$.messager.confirm('消息提醒', '确定要取消授权零时供应商吗?', function(r){
+		if (r){
+			openwaiting();
+			var postData = {"uid":id,"tempsupplier":0};
+			$.post(url,postData,updateCallback,"text");
+		}
+	});
+}
+
 function updateCallback(data){
+	closewaiting();
 	var result = eval("("+data+")");
 	if(result.code==1){
 		$.messager.alert('消息提醒','更新成功。');
@@ -239,6 +285,7 @@ function changeUserIntegral(){
 	}
 	$.messager.confirm('消息提醒', '确定要变更积分吗?', function(r){
 		if (r){
+			openwaiting();
 			var url = basePath+"/admin/customer/addintegral";
 			var postData = {"uid":uid,"integral":integral,"note":changenote};
 			$.post(url,postData,changeUserIntegralCallback,"text");
@@ -247,6 +294,7 @@ function changeUserIntegral(){
 }
 
 function changeUserIntegralCallback(data){
+	closewaiting();
 	var result = eval("("+data+")");
 	if(result.code==1){
 		$.messager.alert('消息提醒','更新成功。');
@@ -295,6 +343,7 @@ function changeUserAccount(){
 	}
 	$.messager.confirm('消息提醒', '确定要变更金额吗?', function(r){
 		if (r){
+			openwaiting();
 			var url = basePath+"/admin/customer/addamount";
 			var postData = {"uid":uid,"upamount":upamount,"note":changenote};
 			$.post(url,postData,changeUserAccountCallback,"text");
@@ -303,6 +352,7 @@ function changeUserAccount(){
 }
 
 function changeUserAccountCallback(data){
+	closewaiting();
 	var result = eval("("+data+")");
 	if(result.code==1){
 		$.messager.alert('消息提醒','更新成功。');
@@ -336,8 +386,10 @@ function saveUserMessage(){
 	$("#cc").html(content);
 	var f = $('#userMessage').form('enableValidation').form('validate');
 	if(f){
+		openwaiting();
 		$('#userMessage').form('submit',{
 			  success : function(data){
+				  closewaiting();
 				  var result = eval("("+data+")");
 				  $.messager.alert('消息提醒',result.msg);
 				  if(result.code==1){

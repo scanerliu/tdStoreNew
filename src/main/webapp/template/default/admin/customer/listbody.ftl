@@ -13,7 +13,7 @@
 <th align="left">登陆ip</th>
 <th align="left">更新时间</th>
 <th align="left">更新人</th>
-<th width="220">管理操作</th>
+<th width="320">管理操作</th>
 </tr>
 </thead>
 <tbody>
@@ -37,6 +37,11 @@
     			<a href="javascript:;" onclick="activeCustomer(${user.uid})">启用</a> | 
     		<#else>
     			<a href="javascript:;" onclick="forbiddenCustomer(${user.uid})">锁定</a> | 
+    		</#if>
+    		<#if user.tempsupplier==0>
+    			<a href="javascript:;" onclick="tempsupplierCustomer(${user.uid})">临时供应商</a> | 
+    		<#elseif user.tempsupplier==1>
+    			<a href="javascript:;" onclick="cancelTempsupplierCustomer(${user.uid})">取消零时供应商</a> | 
     		</#if> 
             <a href="javascript:;" onclick="editRoles(${user.uid})">授权</a> | 
             <a class="J_showdialog" href="javascript:;" onclick="editCustomer(${user.uid})">编辑</a> | 

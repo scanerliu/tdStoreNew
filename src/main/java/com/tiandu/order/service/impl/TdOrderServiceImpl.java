@@ -61,6 +61,7 @@ import com.tiandu.order.search.TdOrderSearchCriteria;
 import com.tiandu.order.service.TdOrderPayService;
 import com.tiandu.order.service.TdOrderService;
 import com.tiandu.order.vo.OperResult;
+import com.tiandu.order.vo.OrderCancel;
 import com.tiandu.order.vo.OrderForm;
 import com.tiandu.order.vo.OrderPay;
 import com.tiandu.order.vo.OrderRefund;
@@ -803,7 +804,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 		order.setUserMessage(orderForm.getUserMsg());
 		order.setSupplierId(1);
 		//保存订单详情
-		if(currUser.getSupplierType()>0){
+		if(ConstantsUtils.CUSTOMER_SUPPLIER_BUYED.equals(currUser.getTempsupplier())){
 			throw new RuntimeException("用户已经拥有供应商，不能重复购买!");
 		}
 		this.save(order);
@@ -1311,9 +1312,9 @@ public class TdOrderServiceImpl implements TdOrderService{
 					}else if(ConstantsUtils.AGENT_GROUPID_SUPPLIER.equals(agentProduct.getGroupId())){//供应商
 						//检查用户是否已经是供应商资格
 						TdUser user = tdUserService.findOne(order.getUserId());
-						if(null!=user && user.getSupplierType().equals(Byte.valueOf("0"))){
+						if(null!=user && !ConstantsUtils.CUSTOMER_SUPPLIER_BUYED.equals(user.getTempsupplier())){
 							TdUser upuser = new TdUser();
-							upuser.setSupplierType(Byte.valueOf("3"));
+							upuser.setTempsupplier(ConstantsUtils.CUSTOMER_SUPPLIER_BUYED);
 							upuser.setUid(user.getUid());
 							tdUserService.updateByPrimaryKeySelective(upuser);
 							addagent = true;
@@ -2042,10 +2043,10 @@ public class TdOrderServiceImpl implements TdOrderService{
 					}else if(ConstantsUtils.AGENT_GROUPID_SUPPLIER.equals(agentProduct.getGroupId())){//供应商
 						//检查用户是否已经是供应商资格
 						TdUser orderuser = tdUserService.findOne(order.getUserId());
-						if(null!=orderuser && !orderuser.getSupplierType().equals(Byte.valueOf("0"))){
+						if(null!=orderuser && ConstantsUtils.CUSTOMER_SUPPLIER_BUYED.equals(orderuser.getTempsupplier())){
 							TdUser upuser = new TdUser();
-							upuser.setSupplierType(Byte.valueOf("0"));
-							upuser.setUid(user.getUid());
+							upuser.setTempsupplier(ConstantsUtils.CUSTOMER_SUPPLIER_NONE);
+							upuser.setUid(orderuser.getUid());
 							tdUserService.updateByPrimaryKeySelective(upuser);
 						}
 					}
@@ -2068,6 +2069,77 @@ public class TdOrderServiceImpl implements TdOrderService{
 		log.setCreateTime(now);
 		log.setOperType(ConstantsUtils.ORDER_LOG_TYPE_CANCEL);
 		log.setNote("订单进行取消操作");
+		tdOrderLogMapper.insert(log);
+		
+		//返回货品库存
+		if(ConstantsUtils.ORDER_KIND_COMMON.equals(order.getOrderType())){
+			List<TdOrderSku> orderSkuList = tdOrderSkuMapper.findByOrderId(order.getOrderId());
+			if(null!=orderSkuList && orderSkuList.size()>0){
+				for(TdOrderSku ordersku : orderSkuList){
+					tdProductSkuService.updateStock(ordersku.getProductSkuId(), ordersku.getQuantity());//更新库存
+				}
+			}
+		}
+		
+		
+		result.setFlag(true);
+		return result;
+	}
+
+	
+	@Override
+	public OperResult cancelOrderByUser(TdOrder order, OrderCancel ordercancel) {
+		OperResult result = new OperResult();
+		//发货后的订单不能取消
+		if(ConstantsUtils.ORDER_STATUS_PAYED.compareTo(order.getOrderStatus())<0){
+			result.setFailMsg("订单的不能进行取消操作！");
+			return result;
+		}
+		//代理商、供应商、分公司的订单取消资格
+		if(ConstantsUtils.ORDER_KIND_AGENTPRODUCT.equals(order.getOrderType())){
+			TdOrderProduct orderProduct = tdOrderProductMapper.findByOrderIdAndTypeId(order.getOrderId(), Byte.valueOf("1"));
+			if(null!=orderProduct){
+				TdAgentProduct agentProduct = tdAgentProductService.findOne(orderProduct.getItemId());
+				if(null!=agentProduct){
+					if(ConstantsUtils.AGENT_GROUPID_AGENT.equals(agentProduct.getGroupId())){//单代代理
+						TdAgent agent = tdAgentService.findByUid(order.getUserId());
+						if(null!=agent){//用户已经购买代理
+							tdAgentService.delete(agent.getId());
+						}	
+						
+					}else if(ConstantsUtils.AGENT_GROUPID_BRANCH.equals(agentProduct.getGroupId())){//分公司
+						TdBrancheCompany branch = tdBrancheCompanyService.findByUid(order.getUserId());
+						if(null!=branch){//用户已经购买代理
+							tdBrancheCompanyService.delete(branch.getId());
+						}				
+					}else if(ConstantsUtils.AGENT_GROUPID_SUPPLIER.equals(agentProduct.getGroupId())){//供应商
+						//检查用户是否已经是供应商资格
+						TdUser orderuser = tdUserService.findOne(order.getUserId());
+						if(null!=orderuser && ConstantsUtils.CUSTOMER_SUPPLIER_BUYED.equals(orderuser.getTempsupplier())){
+							TdUser upuser = new TdUser();
+							upuser.setTempsupplier(ConstantsUtils.CUSTOMER_SUPPLIER_NONE);
+							upuser.setUid(orderuser.getUid());
+							tdUserService.updateByPrimaryKeySelective(upuser);
+						}
+					}
+				}
+			}
+		}
+		//开始操作
+		TdOrder uporder = new TdOrder();
+		uporder.setOrderId(order.getOrderId());
+		uporder.setUpdateBy(ordercancel.getOperBy());
+		uporder.setUpdateTime(ordercancel.getCreateTime());
+		uporder.setOrderStatus(ConstantsUtils.ORDER_STATUS_CANCEL);
+		tdOrderMapper.updateByPrimaryKeySelective(uporder);
+		
+		//订单操作日志
+		TdOrderLog log = new TdOrderLog();
+		log.setOrderId(order.getOrderId());
+		log.setCreateBy(ordercancel.getOperBy());
+		log.setCreateTime(ordercancel.getCreateTime());
+		log.setOperType(ConstantsUtils.ORDER_LOG_TYPE_CANCEL);
+		log.setNote("客户取消订单操作，取消原因："+ordercancel.getCancelReason());
 		tdOrderLogMapper.insert(log);
 		
 		//返回货品库存

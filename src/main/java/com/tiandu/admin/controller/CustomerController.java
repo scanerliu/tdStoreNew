@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.common.controller.BaseController;
+import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.custom.entity.TdRole;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserAccount;
@@ -251,6 +252,44 @@ public class CustomerController extends BaseController {
 		    	res.put("code", "0");
 		    	return res;
 		    }
+		}else{
+			res.put("code", "0");
+			return res;
+		}
+	}
+	
+	@RequestMapping(value="/tempsupplier", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> tempsupplier(TdUser manager, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>(); 
+		if(null!=manager&&null!=manager.getTempsupplier()&&null!=manager.getUid()){
+			try {
+				Date now = new Date();
+				TdUser currManager = this.getCurrentUser();
+				TdUser preuser = tdUserService.findOne(manager.getUid());
+				if(null!=preuser){
+					if(ConstantsUtils.CUSTOMER_SUPPLIER_BUYED.equals(preuser.getTempsupplier())){
+						res.put("code", "0");
+						return res;
+					}else if(!manager.getTempsupplier().equals(preuser.getTempsupplier())){
+						TdUser upuser = new TdUser();
+						upuser.setUid(preuser.getUid());
+						upuser.setTempsupplier(manager.getTempsupplier());
+						upuser.setUpdateBy(currManager.getUid());
+						upuser.setUpdateTime(now);
+						tdUserService.updateByPrimaryKeySelective(upuser);
+					}
+					res.put("code", "1");
+					return res;
+				}else{
+					res.put("code", "0");
+					return res;
+				}
+			}catch (Exception e) {
+				logger.error("操作失败错误信息:"+e);
+				res.put("code", "0");
+				return res;
+			}
 		}else{
 			res.put("code", "0");
 			return res;

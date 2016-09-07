@@ -70,6 +70,10 @@ public class TdUser {
     private String qrcodeUrl;
     
     private Date qrcodeUpdate;
+    /**
+     * 供应商类型 0-无供应商资格，1-零时供应商，2-购买供应商
+     */
+    private Integer tempsupplier;
     
     private Set<TdRole> roleSet = new HashSet<TdRole>();
     
@@ -377,6 +381,14 @@ public class TdUser {
 	public void setChildren(List<TdUser> children) {
 		this.children = children;
 	}*/
+
+	public Integer getTempsupplier() {
+		return tempsupplier;
+	}
+
+	public void setTempsupplier(Integer tempsupplier) {
+		this.tempsupplier = tempsupplier;
+	}
 
 	public Boolean isLocked(){
 		if(TdUser.USTATUS_FORBBIDEN==this.getUstatus()){

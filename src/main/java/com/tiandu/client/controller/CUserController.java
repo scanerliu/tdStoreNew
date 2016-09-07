@@ -954,12 +954,7 @@ public class CUserController extends BaseController {
 	@RequestMapping("/productmanage")
 	public String productManage(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser currUser = this.getCurrentUser();
-		Byte supplierType = currUser.getSupplierType();
-		if(supplierType == null || supplierType.equals(Byte.valueOf("0"))){
-			modelMap.addAttribute("isSupplier", false);
-		}else{
-			modelMap.addAttribute("isSupplier", true);
-		}
+		modelMap.addAttribute("customer", currUser);
 		TdAgent agent = tdAgentService.findByUid(currUser.getUid());
 		if(null!=agent){
 			modelMap.addAttribute("isAgent", true);

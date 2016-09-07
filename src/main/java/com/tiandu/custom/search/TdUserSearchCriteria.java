@@ -9,7 +9,8 @@ public class TdUserSearchCriteria extends SearchCriteria {
 	private Byte ustatus; // 用户状态，1-正常，2-屏蔽
 
 	private Byte utype; // 用户类型，1-普通会员，2-平台用户
-	private Byte supplierType; // 供应商类型，0-未认证，1-个人资质供应商，2-公司资质供应商
+	private Byte supplierType; // 供应商资质认证，0-未认证，1-个人资质供应商，2-公司资质供应商
+	private Integer tempsupplier; //供应商类型：0-未购买，1-零时供应商，2-购买供应商
 	private Byte uverification; // 验证状态:1-已验证，2-未验证
 	private Boolean branch = false; // 分公司
 	private Boolean agent = false; // 单类代理
@@ -139,5 +140,12 @@ public class TdUserSearchCriteria extends SearchCriteria {
 		this.clevelType = clevelType;
 	}
 
+	public Integer getTempsupplier() {
+		return tempsupplier;
+	}
+
+	public void setTempsupplier(Integer tempsupplier) {
+		this.tempsupplier = tempsupplier;
+	}
 	
 }

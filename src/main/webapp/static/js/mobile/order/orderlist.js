@@ -91,3 +91,26 @@ function receiptOrderCallback(data){
 		alert(result.msg);
 	}
 }
+
+/**
+ * 取消订单
+ */
+function cancelOrder(){
+	if(confirm("确定要取消订单？")){
+		wait();
+		var url = basePath+"/mobile/order/ordercancel";
+		var postData = $("#cancelForm").serializeArray();
+		$.post(url,postData,cancelOrderCallback,'text');
+	}	
+}
+/**
+ * 录入物流单号返回处理函数
+ */
+function cancelOrderCallback(data){
+	close(1);
+	var result = eval("("+data+")");
+	alert(result.msg);
+	if(result.code==1){
+		window.location.href=basePath+"/mobile/order/list";
+	}
+}

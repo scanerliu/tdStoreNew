@@ -28,6 +28,13 @@
 						<option value="2">未认证</option>
 					</select>
 					&nbsp;&nbsp;
+					<select name="tempsupplier">
+						<option value="">-供应商资格-</option>
+						<option value="0">未获得</option>
+						<option value="1">临时供应商</option>
+						<option value="2">付费供应商</option>
+					</select>
+					&nbsp;&nbsp;
 					<select name="supplierType">
 						<option value="">-供应商认证-</option>
 						<option value="0">未认证</option>

@@ -316,4 +316,18 @@ public class ConstantsUtils {
 	 */
 	public static final String DEFAULT_USER_AVATAR = "/static/default/images/defaultimg.jpg";
 	
+	/**供应商类型**/
+	/**
+	 * 没有供应商资格
+	 */
+	public static final Integer CUSTOMER_SUPPLIER_NONE = 0;
+	/**
+	 * 临时供应商
+	 */
+	public static final Integer CUSTOMER_SUPPLIER_TEMP = 1;
+	/**
+	 * 付费供应商
+	 */
+	public static final Integer CUSTOMER_SUPPLIER_BUYED = 2;
+	
 }

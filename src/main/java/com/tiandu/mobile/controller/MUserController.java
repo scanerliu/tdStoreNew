@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.Gson;
 import com.tiandu.article.entity.TdAdsense;
 import com.tiandu.article.search.TdAdvertisementSearchCriteria;
 import com.tiandu.article.service.TdAdsenseService;
@@ -75,7 +74,6 @@ import com.tiandu.custom.service.TdUserCampaignService;
 import com.tiandu.custom.service.TdUserMessageService;
 import com.tiandu.custom.service.TdUserSignService;
 import com.tiandu.custom.service.TdUserSupplierService;
-import com.tiandu.custom.vo.ProfitInfo;
 import com.tiandu.custom.vo.WithDrawVO;
 import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.search.TdDistrictSearchCriteria;
@@ -1016,12 +1014,8 @@ public class MUserController extends BaseController {
 	@RequestMapping("/productManage")
 	public String productManage(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser currUser = this.getCurrentUser();
-		Byte supplierType = currUser.getSupplierType();
-		if(supplierType != null || supplierType.compareTo(Byte.valueOf("0"))>0){
-			modelMap.addAttribute("isSupplier", supplierType);
-		}else{
-			modelMap.addAttribute("isSupplier", 0);
-		}
+		modelMap.addAttribute("customer", currUser);
+		
 		TdAgent agent = tdAgentService.findByUid(currUser.getUid());
 		if(null!=agent){
 			modelMap.addAttribute("isAgent", true);

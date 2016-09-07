@@ -9,6 +9,7 @@ import com.tiandu.order.entity.TdOrder;
 import com.tiandu.order.entity.TdOrderShipment;
 import com.tiandu.order.search.TdOrderSearchCriteria;
 import com.tiandu.order.vo.OperResult;
+import com.tiandu.order.vo.OrderCancel;
 import com.tiandu.order.vo.OrderForm;
 import com.tiandu.order.vo.OrderPay;
 import com.tiandu.order.vo.OrderRefund;
@@ -143,4 +144,12 @@ public interface TdOrderService {
 	 * @return
 	 */
 	public OperResult cancelOrder(TdOrder order, TdUser user);
+
+	/**
+	 * 客户取消订单
+	 * @param order
+	 * @param ordercancel
+	 * @return
+	 */
+	public OperResult cancelOrderByUser(TdOrder order, OrderCancel ordercancel);
 }

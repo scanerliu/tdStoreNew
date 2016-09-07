@@ -67,8 +67,13 @@
 	      	共 <span>${order.itemNum!'0'}</span> 件商品  合计<strong class="price">￥<span>${order.totalAmount!'0'}</span></strong>（含运费：<strong>￥<span>${order.postage!'0'}</span></strong>）
 	    </div>
 	    <div class="btn-group">
-	      <#if order.payStatus==2><a href="${app.basePath}/mobile/order/dopay${order.orderId!'0'}" class="active" title="">立即付款</a></#if>
-	      <#if order.payStatus==1&& order.shipmentStatus==1><a class="active" href="javascript:;" onclick="receiptOrder(${order.orderId!'0'})" title="">确认收货</a></#if>
+	      <#if order.payStatus==2><a href="${app.basePath}/mobile/order/dopay${order.orderId!'0'}" class="active" title="立即付款">立即付款</a></#if>
+	      <#if order.orderType==1||order.orderStatus==3>
+	      		<#if order.orderStatus==1||order.orderStatus==2><a class="active" href="${app.basePath}/mobile/order/cancelorder${order.orderId!'0'}"  title="取消订单">取消订单</a></#if>
+	      <#elseif order.orderType==2>
+	      		<#if order.orderStatus==1><a class="active" href="${app.basePath}/mobile/order/cancelorder${order.orderId!'0'}"  title="取消订单">取消订单</a></#if>
+	      </#if>
+	      <#if order.orderStatus==3><a class="active" href="javascript:;" onclick="receiptOrder(${order.orderId!'0'})" title="确认收货">确认收货</a></#if>
 	      <#if order.orderStatus==4 && order.commented==false><a class="active" href="${app.basePath}/mobile/user/comment/${order.orderId!'0'}" title="去评价">去评价</a></#if>
 	      <a href="${app.basePath}/mobile/order/detail${order.orderId!'0'}" title="">查看订单</a>
 	    </div>
