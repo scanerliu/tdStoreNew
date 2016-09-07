@@ -56,6 +56,11 @@
             			<td>${sku.price!''}</td>
             			<td>${sku.quantity!''}</td>
             		</tr>
+            		<tr>
+            			<td colspan="4">
+	            			<img src="${app.basePath}${sku.productImage!''}" alt="图片" width="60"/>
+        				</td>
+        			</tr>
             		</#list>
             		</#if>
             	</table>

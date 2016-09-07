@@ -25,6 +25,11 @@ public class WithDrawVO {
 	 */
 	private String clientIp;
 	
+	/**
+	 * 微信ca证书文件地址
+	 */
+	private String capath;
+	
 	public Integer getType() {
 		return type;
 	}
@@ -48,6 +53,12 @@ public class WithDrawVO {
 	}
 	public void setClientIp(String clientIp) {
 		this.clientIp = clientIp;
+	}
+	public String getCapath() {
+		return capath;
+	}
+	public void setCapath(String capath) {
+		this.capath = capath;
 	}
 	
 }

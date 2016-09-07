@@ -22,6 +22,10 @@ public class ConstantsUtils {
 	 */
 	public final static String WECHAT_LOGIN_STAT = "";
 	/**
+	 * 微信交易证书文件地址
+	 */
+	public final static String WECHAT_CHARGE_CACERT = "/static/default/images/apiclient_cert.p12";
+	/**
 	 * 系统后台过滤地址
 	 */
 	public final static String TDSTORE_ADMIN_FILTER = "/admin/";

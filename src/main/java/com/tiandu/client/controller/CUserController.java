@@ -472,7 +472,7 @@ public class CUserController extends BaseController {
 		TdUser currentUser = this.getCurrentUser();
 		List<Integer> reginIds = new ArrayList<>();
 		if(currentUser.getUregionId() != null){
-			TdDistrict dis = tdDistrictService.findOne(currentUser.getUregionId());
+			/*TdDistrict dis = tdDistrictService.findOne(currentUser.getUregionId());
 			reginIds.add(dis.getId());
 			if(!dis.getLevel().equals(Byte.valueOf("1"))){
 				dis = tdDistrictService.findOne(dis.getUpid());
@@ -481,10 +481,12 @@ public class CUserController extends BaseController {
 					dis = tdDistrictService.findOne(dis.getUpid());
 					reginIds.add(dis.getId());
 				}
-			}
+			}*/
+			Map<String, Object> regionMap = tdUserAddressService.getUserDistrictIdByRegionId(new HashMap<String,Object>(),currentUser.getUregionId());
+			modelMap.addAllAttributes(regionMap);
 		}
 		// 为没有地区的会员默认初始化为北京
-		if(reginIds.size() == 0){
+		/*if(reginIds.size() == 0){
 			reginIds.add(1);
 		}
 		if(reginIds.size() > 0){
@@ -498,10 +500,57 @@ public class CUserController extends BaseController {
 				}
 			}
 			modelMap.addAttribute("disIdStr", disIdStr);
-		}
-		return "/mobile/user/changePhoneNum";		
+		}*/
+		// 系统配置
+		modelMap.addAttribute("system", getSystem());
+		return "/client/user/changePhoneNum";		
 	}
 	
+	/*
+	 * 修改手机号及地区
+	 */
+	@RequestMapping("/savePhoneNum")
+	@ResponseBody
+	public Map<String, String> savePhoneNum(TdUser user, String valideCode, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		Map<String, String> res = new HashMap<>();
+		try{
+			String changePasswordValidCode = (String) request.getSession().getAttribute("changePasswordValidCode");
+			if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
+				res.put("msg", "验证码错误！");
+				res.put("status", "0");
+				return res;
+			}
+			StringBuffer sb = new StringBuffer();
+			sb.append("["+user.getUprovinceId()+"]");
+			sb.append("["+user.getUcityId()+"]");
+			if(null==user.getUregionId()){
+				user.setUregionId(user.getUcityId());
+			}else{
+				sb.append("["+user.getUregionId()+"]");
+			}			
+			
+			TdUser currentUser = this.getCurrentUser();
+			TdUser u = new TdUser();
+			u.setUid(currentUser.getUid());
+			u.setUtel(user.getUtel());
+			u.setUregionId(user.getUregionId());
+			u.setUverification(Byte.valueOf("1"));
+			u.setUprovinceId(user.getUprovinceId());
+			u.setUregionPath(sb.toString());
+			tdUserService.saveUserInfo(u);
+		} catch(Exception e){
+			res.put("status", "n");
+			res.put("info", "保存失败！");
+			logger.error("用户修改手机号及地区失败！");
+			request.getSession().removeAttribute("changePasswordValidCode");
+			e.printStackTrace();
+			return res;
+		}
+		res.put("status", "y");
+		res.put("info", "修改成功！");
+		request.getSession().removeAttribute("changePasswordValidCode");
+		return res;
+	}
 	/**
 	 * 收货地址
 	 * @param request
@@ -846,8 +895,10 @@ public class CUserController extends BaseController {
 		withDraw.setAmount(amount.subtract(fee));
 		//微信红包对接
 		if(withDraw.getType().equals(1)){
+			String rootPath = request.getServletContext().getRealPath("/");
 			withDraw.setOpenId(tdUser.getJointId());
 			withDraw.setClientIp(request.getLocalAddr());
+			withDraw.setCapath(rootPath+ConstantsUtils.WECHAT_CHARGE_CACERT);
 			OperResult result = WeChatRedPackUtils.sendRedPack(withDraw);
 			if(result.isFlag()){
 				userAccount.setUpdateBy(1);
@@ -1693,44 +1744,6 @@ public class CUserController extends BaseController {
 			return res;
 		}
 	}
-	/*
-	 * 修改手机号及地区
-	 */
-	@RequestMapping("/savePhoneNum")
-	@ResponseBody
-	public Map<String, String> savePhoneNum(TdUser user, String valideCode, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		Map<String, String> res = new HashMap<>();
-		try{
-			String changePasswordValidCode = (String) request.getSession().getAttribute("changePasswordValidCode");
-			
-			if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
-				res.put("info", "验证码错误！");
-				res.put("status", "n");
-				request.getSession().removeAttribute("changePasswordValidCode");
-				return res;
-			}
-			
-			TdUser currentUser = this.getCurrentUser();
-			TdUser u = new TdUser();
-			u.setUid(currentUser.getUid());
-			u.setUtel(user.getUtel());
-			u.setUregionId(user.getUregionId());
-			u.setUverification(Byte.valueOf("1"));
-			tdUserService.saveUserInfo(u);
-		} catch(Exception e){
-			res.put("status", "n");
-			res.put("info", "保存失败！");
-			logger.error("用户修改手机号及地区失败！");
-			request.getSession().removeAttribute("changePasswordValidCode");
-			e.printStackTrace();
-			return res;
-		}
-		res.put("status", "y");
-		res.put("info", "修改成功！");
-		request.getSession().removeAttribute("changePasswordValidCode");
-		return res;
-	}
-	
 	
 	/*
 	 * 加载对应商品类别的规格

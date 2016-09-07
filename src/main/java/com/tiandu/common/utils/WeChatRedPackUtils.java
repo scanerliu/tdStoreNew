@@ -1,20 +1,37 @@
 package com.tiandu.common.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.text.ParseException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.net.ssl.SSLContext;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -86,7 +103,36 @@ public class WeChatRedPackUtils {
 		String xml = xstream.toXML(request);
 		logger.error("wechat redpack send request xml:"+xml);
 		//调微信接口
-		RestTemplate restTemplate = new RestTemplate();
+		//RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = null;
+		try {
+			KeyStore keyStore  = KeyStore.getInstance("PKCS12");
+			FileInputStream instream = new FileInputStream(new File(withDraw.getCapath()));
+			try {
+			    keyStore.load(instream, ConstantsUtils.WECHAT_MCH_ID.toCharArray());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				logger.error("wechat redpack send request error:"+e.getMessage() + " [xml]:"+xml);
+				result.setFailMsg("发送红包失败："+e.getMessage());
+				return result;
+			}  finally {
+			    instream.close();
+			}
+			// Trust own CA and all self-signed certs
+			SSLContext sslcontext = SSLContexts.custom().loadKeyMaterial(keyStore, ConstantsUtils.WECHAT_MCH_ID.toCharArray()).build();
+			// Allow TLSv1 protocol only
+			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslcontext, new String[] { "TLSv1" }, null, SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+			CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+			HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+			requestFactory.setHttpClient(httpClient);
+			restTemplate = new RestTemplate(requestFactory);
+		}catch (Exception e1) {
+			e1.printStackTrace();
+			logger.error("wechat redpack send request error:"+e1.getMessage() + " [xml]:"+xml);
+			result.setFailMsg("发送红包失败："+e1.getMessage());
+			return result;
+		}
 //		ResponseEntity<String> codesponse = restTemplate.getForEntity(sendredpackapi, String.class);
 //		System.out.println(codesponse.getBody());
 		HttpHeaders headers = new HttpHeaders();
@@ -139,7 +185,11 @@ public class WeChatRedPackUtils {
 			try {
 				String upName = name.substring(0,1).toUpperCase()+name.substring(1);
 				Method m = request.getClass().getMethod("get"+upName);
-				String value = String.valueOf(m.invoke(request));
+				Object ovalue = m.invoke(request);
+				String value = "";
+				if(null!=ovalue){
+					value = String.valueOf(ovalue);
+				}
 				if(StringUtils.isNotBlank(value)){
 					map.put(name, value);
 				}
@@ -148,12 +198,14 @@ public class WeChatRedPackUtils {
 				logger.error("获取"+request.toString()+"加密参数错误："+e.getMessage());
 			}
 		}
+		//map.put("sign", "null");
 		Map<String, String> resultMap = sortMapByKey(map);	//按Key进行排序
 		for (Map.Entry<String, String> entry : resultMap.entrySet()) {
 			sb.append(entry.getKey() + "=" + entry.getValue());
 			sb.append("&");
 		}
 		sb.append("key="+ConstantsUtils.WECHAT_APPSECRET);
+		logger.error("wechat redpack send str:"+sb.toString());
 		String sign = MD5.md5(sb.toString()).toUpperCase();
 		return sign;
 	}
@@ -172,12 +224,13 @@ public class WeChatRedPackUtils {
 		return sortMap;
 	}
 	
-	public static void main(String[] args) throws ParseException {
+/*	public static void main(String[] args) throws ParseException {
 		WithDrawVO draw = new WithDrawVO();
-		draw.setOpenId("tests");
-		draw.setClientIp("testsip");
-		draw.setAmount(new BigDecimal(10));
+		draw.setOpenId("oS3MPv9J0tmRHP7SEDEHBPO2nitw");
+		draw.setClientIp("120.76.217.106");
+		draw.setAmount(new BigDecimal(9));
+		draw.setCapath("E:\\workspace3\\tdStore\\src\\main\\webapp\\static\\default\\images\\apiclient_cert.p12");
 		sendRedPack(draw);
-	}
+	}*/
 
 }

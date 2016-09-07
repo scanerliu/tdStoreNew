@@ -76,14 +76,21 @@
 			      		申请退款
 			      	<#elseif order.orderStatus==6>
 			      		交易完成
+			      	<#elseif order.orderStatus==-1>
+			      		已取消
 			    	</#if>
                 </p>
                 <p><a href="${app.basePath}/order/detail${order.orderId!'0'}" title="查看详情" target="_blank">订单详情</a></p>
             </div>
             <div class="div7 w89 fl">
-            <#if order.payStatus==2><P><a href="${app.basePath}/mobile/order/dopay${order.orderId!'0'}" class="a_sure" title="">去付款</a></P></#if>
-	        <#if order.orderStatus==3><P><a class="a_sure" href="javascript:;" onclick="receiptOrder(${order.orderId!'0'})" title="">确认收货</a></P></#if>
-	        <#if order.orderStatus==4 && order.commented==false><P><a class="a_sure" href="${app.basePath}/mobile/user/comment/${order.orderId!'0'}" title="去评价">去评价</a></P></#if>
+            <#if order.orderStatus==1><P><a href="${app.basePath}/order/dopay${order.orderId!'0'}" class="a_sure" title="去付款">去付款</a></P></#if>
+            <#if order.orderType==1||order.orderStatus==3>
+	      		<#if order.orderStatus==1||order.orderStatus==2><a class="active" href="${app.basePath}/order/cancelorder${order.orderId!'0'}"  title="取消订单">取消订单</a></#if>
+		    <#elseif order.orderType==2>
+		      	<#if order.orderStatus==1><a class="active" href="${app.basePath}/order/cancelorder${order.orderId!'0'}"  title="取消订单">取消订单</a></#if>
+		    </#if>
+	        <#if order.orderStatus==3><P><a class="a_sure" href="javascript:;" onclick="receiptOrder(${order.orderId!'0'})" title="确认收货">确认收货</a></P></#if>
+	        <#if order.orderStatus==4 && order.commented==false><P><a class="a_sure" href="${app.basePath}/user/comment/${order.orderId!'0'}" title="去评价">去评价</a></P></#if>
             </div>
         </div>
     </li>

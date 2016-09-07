@@ -766,8 +766,10 @@ public class MUserController extends BaseController {
 		withDraw.setAmount(amount.subtract(fee));
 		//微信红包对接
 		if(withDraw.getType().equals(1)){
+			String rootPath = request.getServletContext().getRealPath("/");
 			withDraw.setOpenId(tdUser.getJointId());
 			withDraw.setClientIp(request.getLocalAddr());
+			withDraw.setCapath(rootPath+ConstantsUtils.WECHAT_CHARGE_CACERT);
 			OperResult result = WeChatRedPackUtils.sendRedPack(withDraw);
 			if(result.isFlag()){
 				userAccount.setUpdateBy(1);

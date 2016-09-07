@@ -17,6 +17,8 @@
 			      		申请退款
 			      	<#elseif order.orderStatus==6>
 			      		交易完成
+			      	<#elseif order.orderStatus==-1>
+			      		已取消
 			    	</#if>
 	      </span></p>
 	    </div>
@@ -67,7 +69,7 @@
 	      	共 <span>${order.itemNum!'0'}</span> 件商品  合计<strong class="price">￥<span>${order.totalAmount!'0'}</span></strong>（含运费：<strong>￥<span>${order.postage!'0'}</span></strong>）
 	    </div>
 	    <div class="btn-group">
-	      <#if order.payStatus==2><a href="${app.basePath}/mobile/order/dopay${order.orderId!'0'}" class="active" title="立即付款">立即付款</a></#if>
+	      <#if order.orderStatus==1><a href="${app.basePath}/mobile/order/dopay${order.orderId!'0'}" class="active" title="立即付款">立即付款</a></#if>
 	      <#if order.orderType==1||order.orderStatus==3>
 	      		<#if order.orderStatus==1||order.orderStatus==2><a class="active" href="${app.basePath}/mobile/order/cancelorder${order.orderId!'0'}"  title="取消订单">取消订单</a></#if>
 	      <#elseif order.orderType==2>

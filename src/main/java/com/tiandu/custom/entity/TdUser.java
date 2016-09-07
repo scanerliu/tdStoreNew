@@ -54,6 +54,10 @@ public class TdUser {
     private Integer uregionId;
 
     private Integer uprovinceId;
+    /**
+     * 城市id，数据库无此字段，页面保存使用
+     */
+    private Integer ucityId;
 
     private String uregionPath;
 
@@ -326,6 +330,14 @@ public class TdUser {
 		this.roleSet = roleSet;
 	}
 	
+	public Integer getUcityId() {
+		return ucityId;
+	}
+
+	public void setUcityId(Integer ucityId) {
+		this.ucityId = ucityId;
+	}
+
 	public String getRoleIds() {
 		return roleIds;
 	}

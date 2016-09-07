@@ -60,6 +60,8 @@
 			      		申请退款
 			      	<#elseif order.orderStatus==6>
 			      		交易完成
+			      	<#elseif order.orderStatus==-1>
+			      		已取消
 			    	</#if>
 				</span>
 			</p>

@@ -41,6 +41,7 @@ function applyComplaint(){
 		alert("请正确填写投诉内容：10至100个文字！");
 		return ;
 	}
+	openwaiting();
 	$("#complaintForm").submit();
 }
 /**
@@ -71,6 +72,7 @@ function refundtract(){
 		alert("请正确填写物流单号！");
 		return ;
 	}
+	openwaiting();
 	var url = basePath+"/order/savetract";
 	var postData = $("#tractForm").serializeArray();
 	$.post(url,postData,refundtractCallback,'text');
@@ -80,6 +82,7 @@ function refundtract(){
  * 录入物流单号返回处理函数
  */
 function refundtractCallback(data){
+	closewaiting();
 	var result = eval("("+data+")");
 	if(result.code==1){
 		alert("物流单号录入成功。");
@@ -94,6 +97,7 @@ function refundtractCallback(data){
 function receiptOrder(orderid){
 	if(orderid!=""){
 		if(confirm("确定要确认收货？")){
+			openwaiting();
 			var url = basePath+"/order/receiptorder";
 			var postData = {"orderId":orderid};
 			$.post(url,postData,receiptOrderCallback,'text');
@@ -104,6 +108,7 @@ function receiptOrder(orderid){
  * 确认收货返回函数
  */
 function receiptOrderCallback(data){
+	closewaiting();
 	var result = eval("("+data+")");
 	if(result.code==1){
 		alert("操作成功。");
@@ -119,6 +124,7 @@ function receiptOrderCallback(data){
 function receiptOrder2(orderid){
 	if(orderid!=""){
 		if(confirm("确定要确认收货？")){
+			openwaiting();
 			var url = basePath+"/order/receiptorder";
 			var postData = {"orderId":orderid};
 			$.post(url,postData,receiptOrder2Callback,'text');
@@ -129,11 +135,35 @@ function receiptOrder2(orderid){
  * 确认收货返回函数
  */
 function receiptOrder2Callback(data){
+	closewaiting();
 	var result = eval("("+data+")");
 	if(result.code==1){
 		alert("操作成功。");
 		location.reload();
 	}else{
 		alert(result.msg);
+	}
+}
+
+/**
+ * 取消订单
+ */
+function cancelOrder(){
+	if(confirm("确定要取消订单？")){
+		openwaiting();
+		var url = basePath+"/order/ordercancel";
+		var postData = $("#cancelForm").serializeArray();
+		$.post(url,postData,cancelOrderCallback,'text');
+	}	
+}
+/**
+ * 录入物流单号返回处理函数
+ */
+function cancelOrderCallback(data){
+	closewaiting();
+	var result = eval("("+data+")");
+	alert(result.msg);
+	if(result.code==1){
+		window.location.href=basePath+"/order/list";
 	}
 }

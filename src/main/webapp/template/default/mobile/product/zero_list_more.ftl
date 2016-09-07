@@ -6,7 +6,7 @@
 	    <p class="p1">${item.name!''}</p>
 	    <p class="p2">
 	        <label class="lab1">¥<#if item.price??>${item.price?string('0.00')}</#if></label>
-	        <label class="lab2">￥188.00</label>
+	        <label class="lab3 fr" style="font-size:.2rem;color:#999;">运费￥<#if item.postage??>${item.postage?string('0.00')}</#if></label>
 	    </p>
 	</a>
 </#list>

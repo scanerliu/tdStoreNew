@@ -52,6 +52,7 @@ import com.tiandu.order.service.TdOrderService;
 import com.tiandu.order.service.TdOrderShipmentService;
 import com.tiandu.order.service.TdOrderSkuService;
 import com.tiandu.order.vo.OperResult;
+import com.tiandu.order.vo.OrderCancel;
 import com.tiandu.payment.alipay.AlipayConfig;
 import com.tiandu.payment.alipay.Constants;
 import com.tiandu.payment.alipay.PaymentChannelAlipay;
@@ -146,6 +147,60 @@ public class COrderController extends BaseController {
 		// 系统配置
 		modelMap.addAttribute("system", getSystem());
 		return "/client/order/detail";
+	}
+	
+	@RequestMapping("/cancelorder{orderId}")
+	public String cancelorder(@PathVariable("orderId") Integer orderId, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currUser = this.getCurrentUser();
+		TdOrder order = null;
+		if(null!=orderId && orderId>0){
+			order = tdOrderService.findDetail(orderId);
+		}
+		if(null==order || !order.getUserId().equals(currUser.getUid())){
+			modelMap.addAttribute("errmsg", "订单未找到！") ;
+		    return "/client/error";
+		}
+		modelMap.addAttribute("order", order) ;
+		// 系统配置
+		modelMap.addAttribute("system", getSystem());
+		modelMap.addAttribute("menucode", "order") ;//菜单code
+		return "/client/order/cancelorder";
+	}
+	@RequestMapping("/ordercancel")
+	@ResponseBody
+	public Map<String,String> ordercancel(OrderCancel ordercancel, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		Map<String, String> map = new HashMap<String, String>();
+		TdUser currUser = this.getCurrentUser();
+		TdOrder order = null;
+		if(null!=ordercancel.getOrderId() && ordercancel.getOrderId()>0){
+			order = tdOrderService.findOne(ordercancel.getOrderId());
+		}
+		if(null==order || !order.getUserId().equals(currUser.getUid())){
+			map.put("code", "0");
+			map.put("msg", "订单未找到！");
+			return map;
+		}
+		if(ConstantsUtils.ORDER_STATUS_PAYED.compareTo(order.getOrderStatus())<0){//进入发货流程后的订单不能取消
+			map.put("code", "0");
+			map.put("msg", "订单已经发货，不能取消！");
+			return map;
+		}
+		if(ConstantsUtils.ORDER_KIND_AGENTPRODUCT.equals(order.getOrderType()) && ConstantsUtils.ORDER_STATUS_PAYED.compareTo(order.getOrderStatus())<=0){//代理产品支付后不能取消
+			map.put("code", "0");
+			map.put("msg", "代理订单，不能取消！");
+			return map;
+		}
+		ordercancel.setOperBy(currUser.getUid());
+		ordercancel.setCreateTime(new Date());
+		OperResult result = tdOrderService.cancelOrderByUser(order, ordercancel);
+		if(result.isFlag()){
+			map.put("code", "1");
+			map.put("msg", "订单取消成功。");
+		}else{
+			map.put("code", "0");
+			map.put("msg", "订单取消失败:"+result.getFailMsg());
+		}
+		return map;
 	}
 	
 	@RequestMapping("/applyrefund{orderId}")

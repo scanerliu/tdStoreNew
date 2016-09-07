@@ -68,7 +68,7 @@
               <div class="info-list" style="margin-top:30px;">
                 <label>手机号</label>
                 <span class="rinfo">${currentUser.utel!''}</span>
-                <span class="tips"><a href="#">修改手机号</a></span>
+                <span class="tips"><a href="${app.basePath}/user/changePhoneNum">修改手机号</a></span>
               </div>
               <div class="info-list" style="margin-top:30px;">
                 <label>昵称</label>

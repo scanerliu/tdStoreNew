@@ -50,10 +50,12 @@
 				      		申请退款
 				      	<#elseif order.orderStatus==6>
 				      		交易完成
+				      	<#elseif order.orderStatus==-1>
+			      			已取消
 				    	</#if>
 	                </strong>
 	                <label>订单号：${order.orderNo!''}</label>
-	                <#if order.payStatus==2><a href="${app.basePath}/order/dopay${order.orderId!'0'}" class="a-pay" title="">点击去付款</a></#if>
+	                <#if order.orderStatus==1><a href="${app.basePath}/order/dopay${order.orderId!'0'}" class="a-pay" title="">点击去付款</a></#if>
 			        <#if order.orderStatus==3><a class="a-pay" href="javascript:;" onclick="receiptOrder2(${order.orderId!'0'})" title="">点击确认收货</a></#if>
 			        <#if order.orderStatus==4 && order.commented==false><a class="a-pay" href="${app.basePath}/user/comment/${order.orderId!'0'}" title="去评价">点击去评价</a></#if>
 	            </div>
