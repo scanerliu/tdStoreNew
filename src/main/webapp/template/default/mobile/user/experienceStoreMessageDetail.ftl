@@ -51,7 +51,7 @@
             <aside>
             	<#if experienceStore.storeImages??>
             		<#list experienceStore.storeImages?split(":") as storeImg>
-		                <a href="#" title=""><img src="${storeImg!''}" alt="图片不存在"></a>            		
+		                <a href="#" title=""><img src="${app.basePath}${storeImg!''}" alt="图片不存在"></a>            		
 					</#list>
 				</#if>
             </aside>

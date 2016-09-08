@@ -405,5 +405,82 @@ public class CProductController extends BaseController {
 		map.addAttribute("sc", sc);
 		return "/client/product/point_listbody";
 	}
+	
+	/*
+	 * 零元购列表页
+	 */
+	@RequestMapping("/zerolist")
+	public String zerolist(TdProductCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		modelMap.addAttribute("system", this.getSystem());
+		modelMap.addAttribute("sc", sc);
+		modelMap.addAttribute("articleList", tdArticleCategoryService.getFooterArticleCategory());
+	    return "/client/product/zerolist";
+	}
+	/*
+	 * 零元购列表数据页
+	 */
+	@RequestMapping("/zerosearch")
+	public String zerosearch(TdProductCriteria sc,HttpServletRequest req,ModelMap map)
+	{
+		sc.setKind(ConstantsUtils.PRODUCT_KIND_ZEROBUY);
+		sc.setStatus(Byte.valueOf("1"));
+		sc.setOnshelf(true);
+		map.addAttribute("productList", tdProductService.findBySearchCriteria(sc));
+		map.addAttribute("sc", sc);
+		return "/client/product/zerolistbody";
+	}
+	/*
+	 * 新品列表页
+	 */
+	@RequestMapping("/newlist")
+	public String newlist(TdProductCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		modelMap.addAttribute("system", this.getSystem());
+		modelMap.addAttribute("sc", sc);
+		modelMap.addAttribute("articleList", tdArticleCategoryService.getFooterArticleCategory());
+		return "/client/product/newlist";
+	}
+	/*
+	 * 新品列表数据页
+	 */
+	@RequestMapping("/newsearch")
+	public String newsearch(TdProductCriteria sc,HttpServletRequest req,ModelMap map)
+	{
+		sc.setKind(ConstantsUtils.PRODUCT_KIND_COMMON);
+		sc.setNewRecommend(1);
+		sc.setStatus(Byte.valueOf("1"));
+		sc.setOnshelf(true);
+		map.addAttribute("productList", tdProductService.findBySearchCriteria(sc));
+		map.addAttribute("sc", sc);
+		return "/client/product/newlistbody";
+	}
+	
+	/*
+	 * 新品列表页
+	 */
+	@RequestMapping("/killlist")
+	public String killlist(TdProductCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		modelMap.addAttribute("system", this.getSystem());
+		modelMap.addAttribute("sc", sc);
+		modelMap.addAttribute("articleList", tdArticleCategoryService.getFooterArticleCategory());
+		return "/client/product/killlist";
+	}
+	/*
+	 * 新品列表数据页
+	 */
+	@RequestMapping("/killsearch")
+	public String killsearch(TdProductCriteria sc,HttpServletRequest req,ModelMap map)
+	{
+		Date now = new Date();
+		if(null==sc.getKind()){
+			sc.setKind(ConstantsUtils.PRODUCT_KIND_SECKILL);
+		}
+		sc.setStatus(Byte.valueOf("1"));
+		sc.setOnshelf(true);
+		sc.setStartTime(now);
+		sc.setEndTime(now);
+		map.addAttribute("productList", tdProductService.findBySearchCriteria(sc));
+		map.addAttribute("sc", sc);
+		return "/client/product/killlistbody";
+	}
 
 }

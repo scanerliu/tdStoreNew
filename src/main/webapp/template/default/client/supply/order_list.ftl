@@ -71,6 +71,8 @@
 			      		申请退款
 			      	<#elseif order.orderStatus==6>
 			      		交易完成
+			      	<#elseif order.orderStatus==-1>
+			      		已取消
 			    	</#if>
                 </p>
                 <p><a href="${app.basePath}/supply/order/detail${order.orderId!'0'}" title="查看详情" target="_blank">订单详情</a></p>

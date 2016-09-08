@@ -68,11 +68,11 @@
 
                         });
                     </script>
-                    <div class="div3">
+                    <!-- <div class="div3">
                         <div>账户安全</div>
                         <div class="div2"><p></p></div>
                         <div>较低</div>
-                    </div>
+                    </div>-->
                 </div>
                 <div class="myinfo">
                     <div class="ininfo">
@@ -85,19 +85,17 @@
                     </div>
 
                     <div class="t-nav">
-                        <a href="#" title="">
+                        <a href="${app.basePath}/order/list?fliterType=1" title="">
                             <img src="${app.basePath}/static/default/client/images/icon_pc_nav_1.png" alt=""/>
-
-                            <p>待付款<span>0</span></p>
+                            <p>待付款<span id="waitingpaycount"></span></p>
                         </a>
-                        <a href="#" title="">
+                        <a href="${app.basePath}/order/list?fliterType=3" title="">
                             <img src="${app.basePath}/static/default/client/images/icon_pc_nav_2.png" alt=""/>
-
-                            <p>待收货<span>0</span></p>
+                            <p>待收货<span id="waitingreceiptcount"></span></p>
                         </a>
-                        <a href="#" title="">
+                        <a href="${app.basePath}/order/list?fliterType=4" title="">
                             <img src="${app.basePath}/static/default/client/images/icon_pc_nav_3.png" alt=""/>
-                            <p>待评价<span>0</span></p>
+                            <p>待评价<span id="waitingcommentcount"></span></p>
                         </a>
                     </div>
                 </div>
@@ -105,6 +103,7 @@
 
             </div>
             <!-- 我的订单 -->
+            <!--
             <div class="my-orders">
                 <div class="top-line">
                     <p class="p1">我的订单</p>
@@ -212,7 +211,7 @@
                     <i></i><label class="lbltips">这里都是空空的，快去挑选合适的商品吧！</label>
                 </div>
             </div>
-
+			-->
             <!--猜您喜欢-->
             <form id="enjoyForm">
 			<input type="hidden" name="pageNo" id="enjoysc_pageNo" value="1">
@@ -242,6 +241,7 @@
 <script>
 	$(function(){
 		getenjoyproducts();
+		getordercounts();
 	});
 </script>
 </body>

@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,6 +72,9 @@ public class CSupplyController extends BaseController{
 		TdUser user = getCurrentUser();
 		sc.setSupplierId(user.getUid());
 		sc.setGetProductSku(true);
+		if(StringUtils.isBlank(sc.getKeyword())){
+			sc.setKeyword(null);
+		}
 		modelMap.addAttribute("orderList", tdOrderService.findBySearchCriteria(sc));
 		modelMap.addAttribute("sc", sc);
 		return "/client/supply/order_list";

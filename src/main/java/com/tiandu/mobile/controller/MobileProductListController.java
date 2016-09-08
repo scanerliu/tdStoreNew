@@ -163,7 +163,7 @@ public class MobileProductListController extends BaseController{
 		sc.setStartTime(new Date());
 		sc.setEndTime(new Date());
 		sc.setOnshelf(true);
-		
+		sc.setStatus(Byte.valueOf("1"));
 		// 秒杀
 		sc.setKind((byte)6);
 		map.addAttribute("killList", tdProductService.findBySearchCriteria(sc));
@@ -190,7 +190,7 @@ public class MobileProductListController extends BaseController{
 		map.addAttribute("system", getSystem());
 		
 		sc.setOnshelf(true);
-		
+		sc.setStatus(Byte.valueOf("1"));
 		
 		// 0元购
 		if(sc.getKind() == 3)
@@ -238,7 +238,7 @@ public class MobileProductListController extends BaseController{
 		// 系统配置
 		map.addAttribute("system", getSystem());
 		sc.setOnshelf(true);
-		
+		sc.setStatus(Byte.valueOf("1"));
 		// 秒杀
 		sc.setKind((byte)3);
 		map.addAttribute("zeroList", tdProductService.findBySearchCriteria(sc));
@@ -263,6 +263,7 @@ public class MobileProductListController extends BaseController{
 	public String newSearch(TdProductCriteria sc,HttpServletRequest req,ModelMap map)
 	{
 		sc.setOnshelf(true);
+		sc.setStatus(Byte.valueOf("1"));
 		if(null == sc.getOrderby())
 		{
 			sc.setOrderby(1);
@@ -284,6 +285,7 @@ public class MobileProductListController extends BaseController{
 	{
 		
 		sc.setOnshelf(true);
+		sc.setStatus(Byte.valueOf("1"));
 		if(null == sc.getOrderby())
 		{
 			sc.setOrderby(1);
@@ -317,7 +319,6 @@ public class MobileProductListController extends BaseController{
 	{
 		sc.setOnshelf(true);
 		sc.setStatus(Byte.valueOf("1"));
-		sc.setStatus(Byte.valueOf("1"));		
 		map.addAttribute("pointList", tdProductService.findBySearchCriteria(sc));
 		map.addAttribute("sc", sc);
 		return "/mobile/product/point_listbody";

@@ -336,46 +336,51 @@ public class CUserController extends BaseController {
 	 * 消息列表
 	 */
 	@RequestMapping("/messageList")
-	public String messageList(Byte msgType, String active, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	public String messageList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser currentUser = this.getCurrentUser();
-		if(msgType == null){
-			//获取购物车
-			Map<String, List<TdUserMessage>> messageMap = tdUserService.getMessageList(currentUser.getUid());
-			List<TdUserMessage> systemMessageList = messageMap.get("systemMessageList");
-			List<TdUserMessage> orderMessageList = messageMap.get("orderMessageList");
-			List<TdUserMessage> experienceStoreMessageList = messageMap.get("experienceStoreMessageList");
-			modelMap.addAttribute("systemMessageList", systemMessageList);
-			modelMap.addAttribute("orderMessageList", orderMessageList);
-			modelMap.addAttribute("experienceStoreMessageList", experienceStoreMessageList);
-		}
-		if(active != null && !active.equals("")){
-			modelMap.addAttribute("active", active);			
-		}
-	    return "/mobile/user/MessageList";
+		modelMap.addAttribute("currentUser", currentUser);
+		// 系统配置
+		modelMap.addAttribute("system", getSystem());
+	    return "/client/user/messageList";
+	}
+	
+	/*
+	 * 消息列表
+	 */
+	@RequestMapping("/searchmessages")
+	public String searchmessages(TdUserMessageSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currentUser = this.getCurrentUser();
+		sc.setUid(currentUser.getUid());
+		List<TdUserMessage> messageList = tdUserMessageService.findBySearchCriteria(sc);
+		modelMap.addAttribute("messageList", messageList);
+		modelMap.addAttribute("sc", sc);
+		return "/client/user/messageListBody";
 	}
 	
 	/*
 	 * 消息详情
 	 */
 	@RequestMapping("/messageDetail")
-	public String messageDetail(Integer messageId, String active, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	public String messageDetail(Integer messageId, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser currentUser = this.getCurrentUser();
-		if(active != null && !active.equals("")){
-			modelMap.addAttribute("active", active);
-		}
 		TdUserMessage message = tdUserMessageService.findOne(messageId);
+		if(null==message || message.getUid()!=currentUser.getUid()){
+			modelMap.addAttribute("errmsg", "数据错误，请重新操作！");
+			return "/client/error";
+		}
 		if(message.getStatus().equals(Byte.valueOf("1"))){
 			message.setStatus(Byte.valueOf("2"));
 			tdUserMessageService.save(message);			
 		}
-		modelMap.addAttribute("message", tdUserMessageService.findOne(messageId));
+		// 系统配置
+		modelMap.addAttribute("system", getSystem());
+		modelMap.addAttribute("message", message);
 		if(!message.getMsgType().equals(Byte.valueOf("3"))){
-			return "/mobile/user/systemOrOrderMessageDetail";		
+			return "/client/user/systemOrOrderMessageDetail";		
 		}else{
 			TdExperienceStore experienceStore = tdExperienceStoreService.findOne(message.getRelateId());
-			
 			modelMap.addAttribute("experienceStore", experienceStore);
-			return "/mobile/user/experienceStoreMessageDetail";
+			return "/client/user/experienceStoreMessageDetail";
 		}
 	}
 	
@@ -1674,7 +1679,54 @@ public class CUserController extends BaseController {
 			String[] imgList = userSupplierList.get(0).getImages().split(":");
 			modelMap.addAttribute("imgList", imgList);
 		}
+		// 系统配置
+		modelMap.addAttribute("system", getSystem());
 		return "/client/user/supplierApply";	
+	}
+	
+	/*
+	 * 保存供应商资质认证申请
+	 */
+	@RequestMapping("/saveUserSupplierApply")
+	@ResponseBody
+	public Map<String, String> saveUserSupplierApply(TdUserSupplier userSupplier, String[] attachments,  HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		Map<String, String> res = new HashMap<>();
+		try{
+			Date now = new Date();
+			TdUser currentUser = this.getCurrentUser();
+			if(null==userSupplier.getId()){
+				userSupplier.setCreateTime(now);
+				userSupplier.setUid(currentUser.getUid());
+			}else{
+				TdUserSupplier presuppiler = tdUserSupplierService.findOne(userSupplier.getId());
+				if(null==presuppiler || !presuppiler.getUid().equals(currentUser.getUid())){
+					res.put("code", "0");
+					res.put("msg", "资质认证更新失败：未找到数据！");
+					return res;
+				}
+			}
+			userSupplier.setUpdateTime(now);
+			userSupplier.setUpdateBy(currentUser.getUid());
+			String images = "";
+			if(null!=attachments && attachments.length>0){
+				for(int i = 0; i < attachments.length; i ++){
+					images = images + attachments[i];
+					if(i < attachments.length - 1){
+						images = images + ":";
+					}
+				}
+			}
+			userSupplier.setImages(images);
+			tdUserSupplierService.save(userSupplier);				
+			res.put("code", "1");
+			res.put("msg", "资质上传成功！");
+			return res;
+		} catch(Exception e){
+			res.put("code", "0");
+			res.put("msg", "资质上传失败！");
+			logger.error("供应商资质上传保存失败！");
+			return res;
+		}
 	}
 	
 	/*
@@ -1703,46 +1755,6 @@ public class CUserController extends BaseController {
 //		tdUserQRcodeTools.QRcodeByUidAndResponse(currentUser.getUid(), response);
 //		TdUserQRcodeTools QRcodeTools = new TdUserQRcodeTools();
 		tdUserQRcodeTools.QRcodeByUidAndResponse(currentUser.getUid(), title, request, response);
-	}
-	
-	/*
-	 * 保存供应商资质认证申请
-	 */
-	@RequestMapping("/saveUserSupplierApply")
-	@ResponseBody
-	public Map<String, String> saveUserSupplierApply(TdUserSupplier userSupplier, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		Map<String, String> res = new HashMap<>();
-		try{
-			TdUser currentUser = this.getCurrentUser();
-			userSupplier.setUid(currentUser.getUid());
-			userSupplier.setCreateTime(new Date());
-			userSupplier.setUpdateTime(new Date());
-			userSupplier.setUpdateBy(currentUser.getUid());
-			String imgs[] = userSupplier.getImages().split(":");
-			String images = "";
-			for(int i = 0; i < imgs.length; i ++){
-				imgs[i] = imgs[i].replaceFirst("/", "");
-				imgs[i] = imgs[i].substring(imgs[i].indexOf("/"));
-				images = images + imgs[i];
-				if(i < imgs.length - 1){
-					images = images + ":";
-				}
-			}
-			userSupplier.setImages(images);
-			if(userSupplier.getId() == null){
-				tdUserSupplierService.save(userSupplier);				
-			}else{
-				tdUserSupplierService.save(userSupplier);
-			}
-			res.put("code", "1");
-			res.put("msg", "资质上传成功！");
-			return res;
-		} catch(Exception e){
-			res.put("code", "0");
-			res.put("msg", "资质上传失败！");
-			logger.error("供应商资质上传保存失败！");
-			return res;
-		}
 	}
 	
 	/*

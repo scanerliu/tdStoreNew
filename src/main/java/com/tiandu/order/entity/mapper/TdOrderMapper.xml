@@ -46,13 +46,15 @@
 		<result property="productImage" column="product_image"/>
 	</collection>
 	<!-- 订单详情集合 -->
-	<collection property="productList" column="orderId" ofType="com.tiandu.order.entity.TdOrderProduct">
+	<!-- <collection property="productList" column="orderId" ofType="com.tiandu.order.entity.TdOrderProduct">
 		<id property="id" column="id"/>
 		<result property="title" column="product_title"/>
 		<result property="quantity" column="product_quantity"/>
 		<result property="itemPrice" column="product_price"/>
 		<result property="attachment" column="product_attachment"/>
 		<result property="itemType" column="product_itemType"/>
+	</collection> -->
+	<collection property="productList" column="order_id" select="com.tiandu.order.entity.mapper.TdOrderProductMapper.findByOrderId">
 	</collection>
   </resultMap>
   
@@ -107,7 +109,7 @@
     </if>
     <if test="getProductSku" >
         , s.order_sku_id, s.product_id, s.product_name, s.display_specifications, s.price, s.quantity,s.product_image
-        , p.title as product_title, p.quantity as product_quantity, p.item_price as product_price, p.attachment as product_attachment, p.item_type as product_itemType
+        <!-- , p.title as product_title, p.quantity as product_quantity, p.item_price as product_price, p.attachment as product_attachment, p.item_type as product_itemType -->
     </if>
     from td_order o
     <if test="getUpdateUser" >
@@ -115,7 +117,6 @@
     </if>
     <if test="getProductSku" >
         left join td_order_sku s on s.order_id= o.order_id
-        left join td_order_product p on p.order_id = o.order_id
     </if>
     where 1=1 
     <if test="orderNo != null and orderNo!=''" >

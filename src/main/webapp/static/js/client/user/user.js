@@ -47,13 +47,18 @@ function saveUserInfoCallback(data){
 
 
 function verifyApply(id, status){
-	var url = basePath+"/user/verifyExperienceStoreApply";
-	var loadData = {'id':id, 'status': status};
-	$.post(url, loadData, verifyApplyCallback, "text");
+	if(confirm("确定进行此操作吗？")){
+		openwaiting();
+		var url = basePath+"/user/verifyExperienceStoreApply";
+		var loadData = {'id':id, 'status': status};
+		$.post(url, loadData, verifyApplyCallback, "text");
+	}
 }
 
 function verifyApplyCallback(data){
+	
 	var result = eval("("+data+")");
+	closewaiting();
 	alert('消息提醒'+result.msg);
 	if(result.code == 1){
 		window.location.reload();
@@ -173,4 +178,17 @@ function waitSecondsForPhoneNum(o) {
         	waitSecondsForPhoneNum(o)
         }, 1000);
     }
+}
+
+function getordercounts(){
+	var url = basePath + "/order/ordercount";
+	$.post(url,null,function(data){
+		var result = eval("("+data+")");
+		if(result.code==1){
+			$("#waitingpaycount").html(result.waitingpaycount);
+			$("#waitingreceiptcount").html(result.waitingreceiptcount);
+			$("#waitingcommentcount").html(result.waitingcommentcount);
+		}
+	},'text');
+	
 }

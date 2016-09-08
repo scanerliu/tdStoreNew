@@ -373,6 +373,10 @@ public class MUserController extends BaseController {
 			modelMap.addAttribute("active", active);
 		}
 		TdUserMessage message = tdUserMessageService.findOne(messageId);
+		if(null==message || message.getUid()!=currentUser.getUid()){
+			modelMap.addAttribute("errmsg", "数据错误，请重新操作！");
+			return "/mobile/error";
+		}
 		if(message.getStatus().equals(Byte.valueOf("1"))){
 			message.setStatus(Byte.valueOf("2"));
 			tdUserMessageService.save(message);			
@@ -1409,30 +1413,35 @@ public class MUserController extends BaseController {
 	 */
 	@RequestMapping("/saveUserSupplierApply")
 	@ResponseBody
-	public Map<String, String> saveUserSupplierApply(TdUserSupplier userSupplier, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	public Map<String, String> saveUserSupplierApply(TdUserSupplier userSupplier, String[] attachments, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		Map<String, String> res = new HashMap<>();
 		try{
+			Date now = new Date();
 			TdUser currentUser = this.getCurrentUser();
-			userSupplier.setUid(currentUser.getUid());
-			userSupplier.setCreateTime(new Date());
-			userSupplier.setUpdateTime(new Date());
+			if(null==userSupplier.getId()){
+				userSupplier.setCreateTime(now);
+				userSupplier.setUid(currentUser.getUid());
+			}else{
+				TdUserSupplier presuppiler = tdUserSupplierService.findOne(userSupplier.getId());
+				if(null==presuppiler || !presuppiler.getUid().equals(currentUser.getUid())){
+					res.put("code", "0");
+					res.put("msg", "资质认证更新失败：未找到数据！");
+					return res;
+				}
+			}
+			userSupplier.setUpdateTime(now);
 			userSupplier.setUpdateBy(currentUser.getUid());
-			String imgs[] = userSupplier.getImages().split(":");
 			String images = "";
-			for(int i = 0; i < imgs.length; i ++){
-				imgs[i] = imgs[i].replaceFirst("/", "");
-				imgs[i] = imgs[i].substring(imgs[i].indexOf("/"));
-				images = images + imgs[i];
-				if(i < imgs.length - 1){
-					images = images + ":";
+			if(null!=attachments && attachments.length>0){
+				for(int i = 0; i < attachments.length; i ++){
+					images = images + attachments[i];
+					if(i < attachments.length - 1){
+						images = images + ":";
+					}
 				}
 			}
 			userSupplier.setImages(images);
-			if(userSupplier.getId() == null){
-				tdUserSupplierService.save(userSupplier);				
-			}else{
-				tdUserSupplierService.save(userSupplier);
-			}
+			tdUserSupplierService.save(userSupplier);	
 			res.put("code", "1");
 			res.put("msg", "资质上传成功！");
 			return res;

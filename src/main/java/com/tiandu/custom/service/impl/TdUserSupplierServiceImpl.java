@@ -67,7 +67,7 @@ public class TdUserSupplierServiceImpl implements TdUserSupplierService {
 	public Integer save(TdUserSupplier userSupplier) {
 		if(null!=userSupplier){
 			if(null!=userSupplier.getId()){//更新
-				return userSupplierMapper.updateByPrimaryKey(userSupplier);
+				return userSupplierMapper.updateByPrimaryKeySelective(userSupplier);
 			}else{
 				return userSupplierMapper.insert(userSupplier);
 			}

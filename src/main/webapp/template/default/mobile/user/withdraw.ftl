@@ -138,10 +138,12 @@
 					postonce:true, // 开启二次提交防御
 					ajaxPost:true, 
 					callback:function(data){
-						close(1);
 						warning(data.msg);
+						close(1000);
 						if(data.code == 1){
-							window.location.reload();
+							var rl = setTimeout(function(){
+				           		window.location.reload();
+				            },1000);
 						}
 					}
 				});

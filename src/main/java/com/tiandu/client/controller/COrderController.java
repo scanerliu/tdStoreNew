@@ -17,12 +17,14 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.alipay.util.AlipayNotify;
@@ -104,10 +106,35 @@ public class COrderController extends BaseController {
 		//获取主菜单
 		sc.setUid(currUser.getUid());
 		sc.setGetProductSku(true);
+		if(StringUtils.isBlank(sc.getKeyword())){
+			sc.setKeyword(null);
+		}
 		List<TdOrder> orderList = tdOrderService.findBySearchCriteria(sc);
 	    modelMap.addAttribute("orderList", orderList) ;
 	    modelMap.addAttribute("sc", sc) ;
 		return "/client/order/listbody";
+	}
+	@RequestMapping(value="/ordercount", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> ordercount(TdOrderSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currUser = this.getCurrentUser();
+		Map<String,String> res = new HashMap<String,String>(); 
+		//获取主菜单
+		sc.setUid(currUser.getUid());
+		sc.setFliterType(1); 
+		//待支付订单数量
+		Integer waitingpaycount = tdOrderService.countByCriteria(sc);
+		//待收货订单数量
+		sc.setFliterType(3); 
+		Integer waitingreceiptcount = tdOrderService.countByCriteria(sc);
+		//待评价订单数量
+		sc.setFliterType(4); 
+		Integer waitingcommentcount = tdOrderService.countByCriteria(sc);
+		res.put("code", "1");
+		res.put("waitingpaycount", waitingpaycount.toString());
+		res.put("waitingreceiptcount", waitingreceiptcount.toString());
+		res.put("waitingcommentcount", waitingcommentcount.toString());
+		return res;
 	}
 	
 	

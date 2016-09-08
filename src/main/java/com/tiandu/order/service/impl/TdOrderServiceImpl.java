@@ -198,6 +198,11 @@ public class TdOrderServiceImpl implements TdOrderService{
 	}
 
 	@Override
+	public Integer countByCriteria(TdOrderSearchCriteria sc) {
+		return tdOrderMapper.countByCriteria(sc);
+	}
+
+	@Override
 	public OperResult shiporder(TdOrderShipment shipment) {
 		OperResult result = new OperResult();
 		TdOrder order = this.findOrderWithOrderSku(shipment.getOrderId());

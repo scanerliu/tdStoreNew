@@ -43,6 +43,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
 import com.thoughtworks.xstream.io.xml.XppDriver;
+import com.tiandu.common.tencent.common.Configure;
 import com.tiandu.custom.vo.WeChatRedPackRequest;
 import com.tiandu.custom.vo.WeChatRedPackResponse;
 import com.tiandu.custom.vo.WithDrawVO;
@@ -54,9 +55,9 @@ public class WeChatRedPackUtils {
 	private final static Logger logger = Logger.getLogger(WeChatRedPackUtils.class);
 	
 	private final static String sendredpackapi = "https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack";
-	private final static String wishing = "一路上有你，创业更轻松！";
+	private final static String wishing = "一路上有你,创业更轻松!";
 	private final static String act_name = "创客联盟";
-	private final static String remark = "一路上有你，创业更轻松！";
+	private final static String remark = "一路上有你,创业更轻松!";
 	private final static String send_name = "创客联盟";
 	private final static String scene_id = "PRODUCT_5";
 	
@@ -138,6 +139,7 @@ public class WeChatRedPackUtils {
 		HttpHeaders headers = new HttpHeaders();
 		MediaType type = MediaType.parseMediaType("text/html;charset=utf-8");
         headers.setContentType(type);
+        headers.add("Accept", MediaType.APPLICATION_XML_VALUE);
         HttpEntity<String> formEntity = new HttpEntity<String>(xml, headers);
 
         String response = null;
@@ -204,7 +206,7 @@ public class WeChatRedPackUtils {
 			sb.append(entry.getKey() + "=" + entry.getValue());
 			sb.append("&");
 		}
-		sb.append("key="+ConstantsUtils.WECHAT_APPSECRET);
+		sb.append("key="+Configure.getKey());
 		logger.error("wechat redpack send str:"+sb.toString());
 		String sign = MD5.md5(sb.toString()).toUpperCase();
 		return sign;

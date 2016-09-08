@@ -42,15 +42,15 @@
 	            <!-- 全部订单、待评价分类 -->
 	            <div class="box1">
 	            	<form id="searchform">
-						<input type="hidden" id="sc_fliterType" name="fliterType" value="0"/>
+						<input type="hidden" id="sc_fliterType" name="fliterType" value="${sc.fliterType!'0'}"/>
 					
 	                <div class="div1 fl">我的订单</div>
 	                <div class="div2 fl" id="orderTab">
-	                    <a href="javascript:;" title="" tid="0" class="active">全部订单</a>
-	                    <a href="javascript:;" title="" tid="1">待付款</a>
-	                    <a href="javascript:;" title="" tid="2">待发货</a>
-	                    <a href="javascript:;" title="" tid="3">待收货</a>
-	                    <a href="javascript:;" title="" tid="4">待评价</a>
+	                    <a href="javascript:;" title="" tid="0" <#if !sc.fliterType??||(sc.fliterType?? && sc.fliterType==0)>class="active"</#if>>全部订单</a>
+	                    <a href="javascript:;" title="" tid="1" <#if sc.fliterType?? && sc.fliterType==1>class="active"</#if>>待付款</a>
+	                    <a href="javascript:;" title="" tid="2" <#if sc.fliterType?? && sc.fliterType==2>class="active"</#if>>待发货</a>
+	                    <a href="javascript:;" title="" tid="3" <#if sc.fliterType?? && sc.fliterType==3>class="active"</#if>>待收货</a>
+	                    <a href="javascript:;" title="" tid="4" <#if sc.fliterType?? && sc.fliterType==4>class="active"</#if>>待评价</a>
 	                </div>
 	                <div class="search_box_right fr">
 	                    <a href="javascript:;" title="" class="fr" onclick="searchOrders(true)">搜索</a>

@@ -25,6 +25,7 @@ public interface TdOrderService {
 	public TdOrder findOrderWithOrderSku(Integer id);
 	
 	public List<TdOrder> findBySearchCriteria(TdOrderSearchCriteria sc);
+	public Integer countByCriteria(TdOrderSearchCriteria sc);
 	
 	TdOrder findByOrderNo(String orderNo);
 	

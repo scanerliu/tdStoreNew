@@ -38,7 +38,7 @@
         <ul>
             <li><a class="nav1" href="${app.basePath}/" title="">首页</a></li>
             <li class="li2">
-                <a class="nav1" href="#" title="">账户设置 <span>V</span></a>
+                <a class="nav1" href="javascript:;" title="">账户设置 <span>V</span></a>
                 <div class="drop-down">
                     <p>
                         <label>安全设置</label>
@@ -52,7 +52,7 @@
                     </p>
                 </div>
             </li>
-            <li><a class="nav1" href="#" title="">消息</a></li>
+            <li><a class="nav1" href="${app.basePath}/user/messageList" title="">消息</a></li>
         </ul>
         <!-- 搜索框 -->
         <div class="search-box">

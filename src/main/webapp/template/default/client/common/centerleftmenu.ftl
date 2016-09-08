@@ -28,10 +28,10 @@
     </li>
     <li>
         <p class="p1">商家管理</p>
-        <p><a href="${app.basePath}/user/productmanage" <#if menucode?? && menucode=="productmanager">class="active"</#if> title="商品管理">商品管理</a></p>
-        <p><a href="${app.basePath}/" title="">供应商资质认证</a></p>
-        <p><a href="${app.basePath}/supply/order" <#if menucode?? && menucode=="shipment">class="active"</#if> title="发货管理">发货管理</a></p>
-        <p><a href="${app.basePath}/supply/refundlist" <#if menucode?? && menucode=="refundlist">class="active"</#if> title="退货管理">退货管理</a></p>
+        <p <#if menucode?? && menucode=="productmanager">class="active"</#if>><a href="${app.basePath}/user/productmanage" title="商品管理">商品管理</a></p>
+        <p <#if menucode?? && menucode=="supplierApply">class="active"</#if> ><a href="${app.basePath}/user/supplierApply" title="供应商资质认证">供应商资质认证</a></p>
+        <p <#if menucode?? && menucode=="shipment">class="active"</#if>><a href="${app.basePath}/supply/order" title="发货管理">发货管理</a></p>
+        <p <#if menucode?? && menucode=="refundlist">class="active"</#if>><a href="${app.basePath}/supply/refundlist" title="退货管理">退货管理</a></p>
     </li>
     <li>
         <p class="p1">附近门店</p>
