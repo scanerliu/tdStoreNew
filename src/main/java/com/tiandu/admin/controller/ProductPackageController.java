@@ -259,6 +259,22 @@ public class ProductPackageController extends BaseController{
 				ppi.setPrice(new BigDecimal(pie.getPrice()));
 				tdProductPackageItemService.save(ppi);
 			}
+			//商品统计
+			TdProductStat stat = tdProductStatService.findOne(product.getId());
+			if(null==stat){
+				stat = new TdProductStat();
+				stat.setBuyCount(0);
+				stat.setBuyTimes(0);
+				stat.setNegativeRate(0);
+				stat.setNeutralRate(0);
+				stat.setPositiveRate(0);
+				stat.setProductId(product.getId());
+				stat.setReviewCount(0);
+				stat.setReviewScore(new BigDecimal(0));
+				stat.setShowreviewCount(0);
+				stat.setViewCount(0);
+				tdProductStatService.Insert(stat);
+			}
 			
 		}catch(Exception e){
 			res.put("code", "0");

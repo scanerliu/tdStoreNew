@@ -380,8 +380,8 @@ public class TdProductContrller extends BaseController{
 				stat.setReviewScore(new BigDecimal(0));
 				stat.setShowreviewCount(0);
 				stat.setViewCount(0);
+				tdProductStatService.Insert(stat);
 			}
-			tdProductStatService.Insert(stat);
 			
 			res.put("code", 1);
 			res.put("msg", "商品保存成功。");

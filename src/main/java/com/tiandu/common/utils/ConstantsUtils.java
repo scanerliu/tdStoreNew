@@ -322,15 +322,15 @@ public class ConstantsUtils {
 	
 	/**供应商类型**/
 	/**
-	 * 没有供应商资格
+	 * 没有供应商资格 0
 	 */
 	public static final Integer CUSTOMER_SUPPLIER_NONE = 0;
 	/**
-	 * 临时供应商
+	 * 临时供应商 1
 	 */
 	public static final Integer CUSTOMER_SUPPLIER_TEMP = 1;
 	/**
-	 * 付费供应商
+	 * 付费供应商 2
 	 */
 	public static final Integer CUSTOMER_SUPPLIER_BUYED = 2;
 	

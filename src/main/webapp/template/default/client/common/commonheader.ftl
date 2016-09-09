@@ -57,8 +57,8 @@
 			</dl>
 			<nav class="nav_div fl">
 				<a href="${app.basePath}/" title="" class="fl">首页</a>
-				<!--<a href="${app.basePath}/agent/list" title="" class="fl">创业中心</a>
-				<a href="${app.basePath}/campaign/list" title="" class="fl">股东竞选</a>-->
+				<a href="${app.basePath}/agent/list" title="" class="fl">创业中心</a>
+				<a href="${app.basePath}/campaign/list" title="" class="fl">股东竞选</a>
 				<a href="${app.basePath}/product/killlist" title="" class="fl">秒杀专区</a>
 				<a href="${app.basePath}/product/zerolist" title="" class="fl">0元专区</a>
 				<a href="${app.basePath}/product/newlist" title="" class="fl">新品专区</a>

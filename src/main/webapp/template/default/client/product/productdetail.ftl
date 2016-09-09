@@ -170,13 +170,104 @@
 	                        <a class="add" onclick="additem(1)"><strong>+</strong></a>
 	                    </div>
 	                </div>
+	                <#if product.kind ==5 || product.kind ==6>
+	                <div class="program1">
+	                    <span class="red">剩余时间：</span>
+	                    <div class="timeout" id="timeLeft">
+	                        <span>00</span>
+	                        <label>天</label>
+	                        <span>00</span>
+	                        <label>时</label>
+	                        <span>00</span>
+	                        <label>分</label>
+	                        <span>00</span>
+	                        <label>秒</label>
+	                    </div>
+	                    <script>
+							$(document).ready(function(){
+							    timer();
+							    setInterval("timer()",1000);
+							});
+							
+							function checkTime(i)  
+							{  
+							    if (i < 10) {  
+							        i = "0" + i;  
+							    }  
+							    return i;  
+							}
+							
+							function timer()
+							{
+								    var ts = (new Date(${product.endTime?string("yyyy")}, 
+							                parseInt(${product.endTime?string("MM")}, 10)-1, 
+							                ${product.endTime?string("dd")}, 
+							                ${product.endTime?string("HH")}, 
+							                ${product.endTime?string("mm")}, 
+							                ${product.endTime?string("ss")})) - (new Date());//计算剩余的毫秒数
+							  
+							    var allts = (new Date(${product.endTime?string("yyyy")}, 
+							                parseInt(${product.endTime?string("MM")}, 10)-1, 
+							                ${product.endTime?string("dd")}, 
+							                ${product.endTime?string("HH")}, 
+							                ${product.endTime?string("mm")}, 
+							                ${product.endTime?string("ss")}))
+							               - (new Date(${product.startTime?string("yyyy")}, 
+							                parseInt(${product.startTime?string("MM")}, 10)-1, 
+							                ${product.startTime?string("dd")}, 
+							                ${product.startTime?string("HH")}, 
+							                ${product.startTime?string("mm")}, 
+							                ${product.startTime?string("ss")}));//总共的毫秒数 
+							    
+							    if (0 == ts)
+							    {
+							        window.location.reload();
+							    }
+							  
+							    var date = new Date();
+							    var dd = parseInt(ts / 1000 / 60 / 60 / 24, 10);//计算剩余的天数
+							    var hh = parseInt(ts / 1000 / 60 / 60 % 24, 10);//计算剩余的小时数
+							    var mm = parseInt(ts / 1000 / 60 % 60, 10);//计算剩余的分钟数
+							    var ss = parseInt(ts / 1000 % 60, 10);//计算剩余的秒数
+							     if(ss < 0){
+							    	ss = 0;
+							    }
+							    if(mm < 0){
+							    	mm = 0;
+							    }
+							    if(hh < 0){
+							    	hh = 0;
+							    }
+							    if(dd < 0){
+							    	dd = 0;
+							    }
+							    dd = checkTime(dd);
+							    hh = checkTime(hh);
+							    mm = checkTime(mm);
+							    ss = checkTime(ss);
+							    $("#timeLeft").html("<span>"+dd+"</span><label>天</label><span>"+hh+"</span><label>时</label><span>"+mm+"</span><label>分</label><span>"+ss+"</span><label>秒</label>");
+							    
+							    // 结束
+							    if(dd == 0 && hh == 0 && mm == 0 && ss == 0){
+							    	$("#addCart").removeAttr("onclick");
+							    	$("#buyNow").removeAttr("onclick");
+							    	$("#addCart").css("background","#ddd")
+							    	$("#buyNow").css("background","#ddd")
+							    }
+							}
+						</script> 
+	                </div>
+	                </#if>
 	                <div class="program1">
 	                    <span>库&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存：</span>
 	                    <i id="s_skustock">${product.quantum!'0'}</i>
 	                </div>
 	                <div class="btnwrap">
-	                    <input type="button" value="立即购买" class="orange" onclick="buyNow();"/>
-	                    <input type="button" value="加入购物车" class="white" onclick="addToShoppingcart();"/>
+	                    <input type="button" value="立即购买"  id="buyNow" class="orange" onclick="buyNow();"/>
+	                    <#if product.kind==2 || product.kind==3>
+	                    <#else>
+	                    <input type="button" value="加入购物车" id="addCart" class="white" onclick="addToShoppingcart();"/>
+	                    </#if>
 	                </div>
 	            </div>
 	        </div>

@@ -94,8 +94,49 @@
 	                    <p class="p4">数量</p>
 	                    <p class="p3">商品邮费（元）</p>
 	                </div>
+	                <#if shoppingcart?? && shoppingcart.ptype?? && shoppingcart.ptype !=1 && shoppingcart.agentProduct??>
+				        <ul>
+		                    <li class="li1">
+		                        <div class="img">
+		                            <img src="${app.basePath}${shoppingcart.agentProduct.imageUrl!''}" alt="${shoppingcart.agentProduct.title!''}" />
+		                        </div>
+		                        ${shoppingcart.agentProduct.title!''}
+		                    </li>
+		                    <li class="li2">
+		                    	&nbsp;
+		                    </li>
+		                    <li class="li3">${shoppingcart.agentProduct.salesPrice!'0'}</li>
+		                    <li class="li4">
+		                        1
+		                    </li>
+		                    <li class="li3 last"></li>
+		                </ul>
+				    </#if>
 					<#if shoppingcart?? && shoppingcart.itemList??>
 		        	<#list shoppingcart.itemList as item>
+		        	<#if item.itemType==2>
+			        <ul>
+	                    <li class="li1">
+	                        <div class="img">
+	                            <img src="${app.basePath}<#if item.productPackageItem??>${item.productPackageItem.productImage!''}</#if>" alt="${item.productPackageItem.productName!''}" />
+	                        </div>
+	                        ${item.productPackageItem.productName!''}
+	                    </li>
+	                    <li class="li2">
+	                    	<#if item.productPackageItem.productSku?? && item.productPackageItem.productSku.specialList??>
+				              	<#list item.productPackageItem.productSku.specialList as special>
+				              	<span><label for="">${special.sname!''}：</label><font>${special.soption!''}</font></span>
+				                </#list>
+			                </#if>
+			                &nbsp;
+	                    </li>
+	                    <li class="li3">${item.productPackageItem.price!'0'}</li>
+	                    <li class="li4">
+	                        ${item.quantity!'0'}
+	                    </li>
+	                    <li class="li3 last"></li>
+	                </ul>
+		        	<#else>
 		        	<ul>
 	                    <li class="li1">
 	                        <div class="img">
@@ -116,6 +157,7 @@
 	                    </li>
 	                    <li class="li3 last">${item.postage!'0'}</li>
 	                </ul>
+	                </#if>
 			        </#list>
 			     </#if>
 	            </div>

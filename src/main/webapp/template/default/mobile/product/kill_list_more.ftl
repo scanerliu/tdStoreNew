@@ -7,7 +7,7 @@
     <aside class="overtime" id="timeLeft${item_index}"><span>00</span>天<span>00</span>时<span>00</span>分<span>00</span>秒</aside>
     <p class="p2">
         <label class="lab1">¥<#if item.price??>${item.price?string('0.00')}</#if></label>
-        <label class="lab2">￥188.00</label>
+        <label class="lab2"></label>
     </p>
 </a>
 <script>

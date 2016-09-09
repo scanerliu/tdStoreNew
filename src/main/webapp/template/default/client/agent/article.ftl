@@ -8,50 +8,37 @@
     <meta name="description" content="${system.webdescription!''}">
     <meta name="copyright" content="${system.webcopyright!''}" />
     <link rel="shortcut icon" href="${app.basePath}/static/default/images/icon.ico" />
+    
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1">
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <meta content="telephone=no" name="format-detection">
-    <title>创业中心</title>
+    <title>成为代理 - 加盟公司 -代理条款</title>
     <!-- css -->
     <link rel="stylesheet" href="${app.basePath}/static/touch/css/common.css" type="text/css" />
     <link rel="stylesheet" href="${app.basePath}/static/touch/css/main.css" type="text/css" />
-    <link rel="stylesheet" href="${app.basePath}/static/touch/css/swipe.css" />
-    <link rel="stylesheet" href="${app.basePath}/static/touch/css/swiper.min.css" />
     <link rel="stylesheet" href="${app.basePath}/static/touch/css/index.css">
     <!-- js -->
     <script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script> 
-    <script type="text/javascript" src="${app.basePath}/static/touch/js/swipe.js"></script> 
-    <script type="text/javascript" src="${app.basePath}/static/touch/js/swiper.min.js"></script> 
     <script type="text/javascript" src="${app.basePath}/static/touch/js/common.js"></script>
-    <script type="text/javascript" src="${app.basePath}/static/touch/js/index.js"></script>
 </head>
-<body class="bg2">
+<body class="">
 
 <!-- header_top -->
 <div class="top_heater">
     <a href="javascript:history.go(-1);" title="返回" class="hleft hback"></a>
-    <span>创业中心</span>
+    <span>阅读代理条款</span>
 </div>
 <!-- header_top end -->
 
 <!-- Center Start -->
-<!-- <section class="container"> -->
-    <!-- 热销推荐 -->
-    <div class="become_list">
-    	<#if agentList??>
-    	<#list agentList as ag>
-        <a href="${app.basePath}/mobile/agent/producttype?agentId=${ag.id?c}" title="${ag.title!''}" class="">
-            <img src="${app.basePath}${ag.imageUrl!''}" alt="${ag.title!''}">
-            <p class="p1">${ag.title!''}</p>
-            <p class="p2">￥<span><#if ag.salesPrice??>${ag.salesPrice?string('0.00')}</#if></span></p>
-        </a>
-        </#list>
-        </#if>
+<section class="container">
+    <div class="reg_txt">
+        <!-- 文本编辑器，可以放图片进来 -->
+        <#if article??>${article.articleContent!''}</#if>
     </div>
-    <!-- 热销推荐-结束 -->
-<!-- </section> -->
-<!-- Center end -->
-
+    <div class="a_btn"><a href="javascript:history.go(-1);" title="返回">返回</a></div>
+</section>
+<!-- Center End -->
 </body>
 </html>

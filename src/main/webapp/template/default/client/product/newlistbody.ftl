@@ -25,9 +25,9 @@
 <input type="hidden" value="${sc.postage!''}" name="postage">
 <input type="hidden" value="${sc.startPrice!''}" name="startPrice">
 <input type="hidden" value="${sc.endPrice!''}" name="endPrice">
-
+<#if productList?? && productList?size gt 0>
 <section class="page" style="margin:0 auto;margin-top:30px;width:1200px;">
-<#assign pageId="ZeroProducts" />
+<#assign pageId="NewProducts" />
 <#include "../common/commonpostpage.ftl" />
 </section>
 <script>
@@ -35,3 +35,4 @@
 		
 	});
 </script>
+</#if>

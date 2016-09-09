@@ -34,7 +34,7 @@
             		<tr>
             			<td colspan="4">
         				<#list product.attachments as atta>
-	            			<a href="${app.basePath}${atta}" target="_blank"><img src="${app.basePath}${atta}" alt="图片" width="60"/></a>
+	            			<a href="${app.basePath}${atta}" target="_blank"><img src="${app.basePath}${atta}" alt="图片" width="120"/></a>
 	            		</#list>            				
         				</td>
         			</tr>
@@ -58,7 +58,7 @@
             		</tr>
             		<tr>
             			<td colspan="4">
-	            			<img src="${app.basePath}${sku.productImage!''}" alt="图片" width="60"/>
+	            			<img src="${app.basePath}${sku.productImage!''}" alt="图片" width="120"/>
         				</td>
         			</tr>
             		</#list>
