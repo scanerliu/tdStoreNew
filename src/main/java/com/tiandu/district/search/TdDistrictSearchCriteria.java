@@ -8,6 +8,8 @@ public class TdDistrictSearchCriteria extends SearchCriteria {
 	private Integer provinceId;	//省id
 	private Integer cityId;	//市id
 	private Integer regionId; //区id
+	
+	private Integer totalLevel; //总共几级
 
 
 	public Integer getUpid() {
@@ -41,6 +43,14 @@ public class TdDistrictSearchCriteria extends SearchCriteria {
 
 	public void setRegionId(Integer regionId) {
 		this.regionId = regionId;
+	}
+
+	public Integer getTotalLevel() {
+		return totalLevel;
+	}
+
+	public void setTotalLevel(Integer totalLevel) {
+		this.totalLevel = totalLevel;
 	}
 
 	

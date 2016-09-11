@@ -23,28 +23,36 @@ function buyNow(){
 
 function getDistricts(settings){
 	settings = {obj:"",num:0,total:1,callback:""};
-	var url = basePath+"/district/regionselect";
+	var url = basePath+"/region/regionselect";
 	var loadData = "";
 	if(settings.num==0){
 		loadData = {'upid':0};
 		$("#provincespn").loading().load(url,loadData);
 		$("#cityspn").html("");
 		$("#regionspn").html("");
-		$("#uregionId").val("");
+		$("#regionId").val("");
 	}else if(settings.num==1){
 		var upid = $(obj).val();
-		loadData = {'upid':upid,'provinceId':upid};
-		$("#cityspn").loading().load(url,loadData);
-		$("#regionspn").html("");
-		$("#uregionId").val("");
+		if(total==1){
+			$("#uregionId").val(upid);
+		}else{
+			loadData = {'upid':upid,'provinceId':upid};
+			$("#cityspn").loading().load(url,loadData);
+			$("#regionspn").html("");
+			$("#regionId").val("");
+		}
 	}else if(settings.num==2){
 		var upid = $(obj).val();
-		var provinceid = $("#provinceId").val();
-		loadData = {'upid':upid,'provinceId':provinceid};
-		$("#regionspn").loading().load(url,loadData);
-		$("#uregionId").val("");
+		if(total==2){
+			$("#regionId").val(upid);
+		}else{
+			var provinceid = $("#provinceId").val();
+			loadData = {'upid':upid,'provinceId':provinceid};
+			$("#regionspn").loading().load(url,loadData);
+			$("#regionId").val("");
+		}
 	}else if(settings.num==3){
 		var upid = $(obj).val();
-		$("#uregionId").val(upid);
+		$("#regionId").val(upid);
 	}
 }

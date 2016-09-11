@@ -48,6 +48,7 @@ public class CDistrictController {
 		modelMap.addAttribute("regionList", regionList);
 		modelMap.addAttribute("parent", parent);
 		modelMap.addAttribute("province", province);
+		modelMap.addAttribute("sc", sc);
 		return "/client/region/regionselect";
 	}
 }

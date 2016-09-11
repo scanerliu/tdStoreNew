@@ -45,7 +45,7 @@
 	        	<span id="provincespn"></span>
 	        	<script>
 					$(function(){
-						
+						getDistricts({'obj':null,'num':0,'total':1});
 				    });
 				</script>
 	        	<#elseif agent.level==3>
@@ -58,10 +58,7 @@
 					$(function(){
 						$("#address").citySelect({
 					          nodata:"none",
-					          <#if province??>prov: "${province!''}",</#if>
-					          <#if city??>city: "${city!''}",</#if>
-					          <#if district??>dist: "${district!''}",</#if>
-					          required:false
+					          required:true
 					      });
 					    });
 					</script>
