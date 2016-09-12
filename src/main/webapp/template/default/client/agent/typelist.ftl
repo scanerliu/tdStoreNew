@@ -22,6 +22,55 @@
 	<script type="text/javascript" src="${app.basePath}/static/js/client/common.js"></script>
 	<script type="text/javascript" src="${app.basePath}/static/js/client/core.js"></script>
 	<script type="text/javascript" src="${app.basePath}/static/js/client/agent/agent.js"></script>
+	<script>
+	$(document).ready(function(){
+		$("#sub_btn").on("click",buyNow);
+	    $("#isCheck").change(function(){
+	        var check = document.getElementById("isCheck");
+	        if(check.checked){
+	            $("#sub_btn").css("background","#f23030");
+	            //$("#sub_btn").attr("href","${app.basePath}/mobile/agent/dopay?id="+${agent.id?c});
+	            $("#sub_btn").on("click",buyNow);
+	        }else{
+	            //$("#sub_btn").attr("href","javascript:;");
+	            $("#sub_btn").off("click");
+	            $("#sub_btn").css("background","#999999");
+	        }
+	     });
+	});
+	function buyNow(){
+		var agentlevel = ${agent.level};
+		var agentgroupId = ${agent.groupId};
+		var agentProductId = $("#agentProductId").val();
+		var regionId = $("#regionId").val();
+		var productTypeId = $("#productTypeId").val();
+		var isAgentProductUsePackage = $("#isAgentProductUsePackage").val();
+		var productType = $("#productType").val();
+		var price = $("#agentprice").val();
+		if(agentProductId>0){
+			if(agentlevel>1 && (regionId==""||regionId=="0")){
+				alert("请选择地区");
+				return false;
+			}
+			if(agentgroupId==1 && productTypeId==""){
+				alert("请选择代理单类");
+				return false;
+			}
+			if(isAgentProductUsePackage=="true"){
+				var agent = '{"agentProductId":"'+agentProductId+'","regionId":"'+regionId+'","productTypeId":"'+productTypeId+'","productType":"'+productType+'"}';
+				setCookie("agentpackage", agent, 30);
+				url = basePath+"/package/list?acpe="+price;
+				window.location.href=url;
+			}else{
+				var url = basePath+"/shoppingcart/singleorder";
+				$("#agentform").attr("action",url);
+				$("#agentform").submit();
+			}
+		}else{
+			alert("数据有误，请重新操作！");
+		}
+	}
+	</script>
 </head>
 <body>
 <h1 style="display:none;">创客</h1>
@@ -41,41 +90,47 @@
 	            </p>
 	        </div>
 	        <div class="forminfo">
+	        	<#if agent.level gt 1>
+	        	<div class="chooseitem" id="address">
+	        		<label>请选择地区:</label>
+	        		<span id="provincespn"></span><span id="cityspn"></span><span id="regionspn"></span>
+	        	</div>
 	        	<#if agent.level==2>
-	        	<span id="provincespn"></span>
 	        	<script>
 					$(function(){
+						<#if agent.groupId == 1>
+						getDistricts({'obj':null,'num':0,'total':1,'callback':'refreshtypelist'});
+						<#else>
 						getDistricts({'obj':null,'num':0,'total':1});
+						</#if>
 				    });
 				</script>
 	        	<#elseif agent.level==3>
-	            <div class="chooseitem" id="address">
-	                <label>请选择地区:</label>
-	                <select id="prov" name="provinceId" class="prov"></select>
-				    <select id="city" name="cityId" class="city"></select>
-				    <select id="dist" name="regionId" class="dist"></select>
-				    <script>
+	           	<script>
 					$(function(){
-						$("#address").citySelect({
-					          nodata:"none",
-					          required:true
-					      });
-					    });
-					</script>
-	            </div>
+						<#if agent.groupId == 1>
+							getDistricts({'obj':null,'num':0,'total':3,'callback':'refreshtypelist'});
+						<#else>
+							getDistricts({'obj':null,'num':0,'total':3});
+						</#if>
+						
+				    });
+				</script>
 	            </#if>
+	            </#if>
+	            <#if agent.groupId == 1>
 	            <div class="chooseitem">
 	                <label>想要代理的产品分类:</label>
-	                <select name="select1">
-	                    <option value="1">饰品</option>
-	                </select>
-	                <select name="select2">
-	                    <option value="1">饰品</option>
-	                </select>
-	                <select name="select3">
-	                    <option value="1">黄金</option>
-	                </select>
+	                <span id="onetypespn"></span><span id="twotypespn"></span><span id="typespn"></span>
 	            </div>
+	            <#if agent.level==1>
+	           	<script>
+					$(function(){
+						getTypes({'obj':null,'num':0})
+				    });
+				</script>
+	            </#if>
+	            </#if>
 	            <dl class="agreeinfo">
 	                <dt>
 	                    <strong>阅读创客代理条款</strong>
@@ -89,8 +144,8 @@
 	            <form id="agentform" method="post" action="">
 		        	<input type="hidden" name="agentProductId" id="agentProductId" value="${agent.id!''}"/>
 		        	<input type="hidden" name="productType" id="productType" value="2"/>
-		        	<input type="hidden" name="regionId" id="regionId" value="${regionId!''}"/>
-		        	<input type="hidden" name="productTypeId" id="productTypeId" value="${typeId!''}"/>
+		        	<input type="hidden" name="regionId" id="regionId" value="0"/>
+		        	<input type="hidden" name="productTypeId" id="productTypeId" value=""/>
 		        	<input type="hidden" id="isAgentProductUsePackage" value="${agent.gift?c}"/>
 		        	<input type="hidden" id="agentprice" value="${agent.salesPrice?c}"/>
 		        </form>

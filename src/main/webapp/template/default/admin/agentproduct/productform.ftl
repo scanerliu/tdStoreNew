@@ -60,7 +60,7 @@
     <tr>
         <th>产品描述：</th>
         <td>
-            <input type="text" name="note" class="easyui-textbox" value="${product.note!''}" style="width:800px;height:300px" data-options="multiline:true,required:true" validType="length[2,200]">
+            <input type="text" name="note" class="easyui-textbox" value="${product.note!''}" style="width:800px;height:300px" data-options="multiline:true,required:true" validType="length[2,5000]">
         </td>
     </tr>
     <tr>

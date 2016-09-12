@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -43,6 +44,8 @@ import com.tiandu.product.search.TdProductTypeCriteria;
 import com.tiandu.product.service.TdAgentProductService;
 import com.tiandu.product.service.TdProductTypeService;
 import com.tiandu.system.utils.ConfigUtil;
+
+import javafx.scene.Parent;
 
 /**
  * 创业中心
@@ -176,9 +179,7 @@ public class CAgentController extends BaseController{
 	 */
 	@RequestMapping(value= "/addagent", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> agentAdd(TdExperienceStore experience,
-				Integer provinceId,Integer cityId,Integer typeId,
-				HttpServletRequest req,ModelMap map)
+	public Map<String,Object> agentAdd(TdExperienceStore experience, Integer typeId, HttpServletRequest req,ModelMap map)
 	{
 		Map<String,Object> res = new HashMap<>();
 		res.put("code", 0);
@@ -195,10 +196,8 @@ public class CAgentController extends BaseController{
 		}
 		// 判断为选择三级地区，如选择了二级地区，则以二级地区为体验店地区
 		if(null == experience.getRegionId()){
-			if(null == cityId){
 				res.put("msg", "请正确选择地区");
 				return res;
-			}
 		}
 		if(null == experience.getAddress() || "".equals(experience.getAddress().trim())){
 			res.put("msg", "请输入信息地址");
@@ -212,35 +211,27 @@ public class CAgentController extends BaseController{
 			res.put("msg", "请选择代理类型");
 			return res;
 		}
+		if(null!=experience.getAttachments() && experience.getAttachments().length>0){
+			StringBuffer sb = new StringBuffer();
+			int i = 1;
+			for(String imag : experience.getAttachments()){
+				if(StringUtils.isNotBlank(imag)){
+					if(i==1){
+						sb.append(imag);
+					}else{
+						sb.append(":"+imag);
+					}
+					i++;
+				}
+			}
+			experience.setStoreImages(sb.toString());
+		}
 		TdProductType type = tdProductTypeService.findOne(typeId);
 		
 		experience.setUid(user.getUid());
-		TdDistrict province = tdDistrictService.findOne(provinceId);
-		TdDistrict city = tdDistrictService.findOne(cityId);
-		StringBuffer str = new StringBuffer();
-		if(null != province){
-			str.append(province.getName());
-			str.append(" ");
-		}
-		if(null != city){
-			str.append(city.getName());
-			str.append(" ");
-		}
-		if(province.gentralCity()){
-			experience.setRegionId(cityId);
-		}else{
-			TdDistrict district = tdDistrictService.findOne(experience.getRegionId());
-			if(null != district){
-				str.append(district.getName());
-			}
-		}
-		
-//		if(null != experience.getAddress()){
-//			str.append(experience.getAddress());
-//		}
-		// 详细地址
+		TdDistrict region = tdDistrictService.findOneFull(experience.getRegionId());
 		Date now = new Date();
-		experience.setRegionFullName(str.toString());
+		experience.setRegionFullName(region.getRegionFullName());
 		experience.setStatus((byte)2);
 		experience.setCreateTime(now);
 		experience.setSort(1);
@@ -263,7 +254,7 @@ public class CAgentController extends BaseController{
 			tdUserMessageService.save(userMessage);	
 		}
 		res.put("code", 1);
-		
+		res.put("msg", "体验店申请成功，请等待审核.");
 		return res;
 	}
 	
@@ -480,7 +471,59 @@ public class CAgentController extends BaseController{
 		return "";
 	}
 	
-	
+	@RequestMapping(value = "/producttypeselect")
+	public String producttypeselect(TdProductTypeCriteria sc, Integer regionId ,HttpServletRequest request,ModelMap map)
+	{
+		if(null != sc.getParentId()){
+			TdProductType parent = new TdProductType();
+			if(sc.getParentId().compareTo(0)>0){
+				parent = tdProductTypeService.findOne(sc.getParentId());
+				if(null!=parent && parent.getParentId()==0){
+					parent.setLevel(1);
+				}else if(null!=parent && parent.getParentId().compareTo(0)>0){
+					parent.setLevel(2);
+				}
+			}
+			sc.setFlag(false);
+			List<TdProductType> typeList = tdProductTypeService.findByParentId(sc.getParentId());
+			if(null!=parent && null!=parent.getLevel() && parent.getLevel()==2){
+				TdAgentSearchCriteria asc = new TdAgentSearchCriteria();
+				// 查找当前选择地区已的所有代理
+				asc.setFlag(false);
+				asc.setRegionId(regionId);
+				List<TdAgent> agentList = tdAgentService.findBySearchCriteria(asc);
+				String experTypeIds = getExperTypeIds(agentList);
+				map.addAttribute("experTypeIds", experTypeIds);
+			}
+				
+				
+			map.addAttribute("parent", parent);
+			map.addAttribute("typeList", typeList);
+			
+		}
+		return "/client/agent/producttypeselect";
+	}
+	@RequestMapping(value = "/producttypeallselect")
+	public String producttypeallselect(TdProductTypeCriteria sc,HttpServletRequest request,ModelMap map)
+	{
+		if(null != sc.getParentId()){
+			TdProductType parent = new TdProductType();
+			if(sc.getParentId().compareTo(0)>0){
+				parent = tdProductTypeService.findOne(sc.getParentId());
+				if(null!=parent && parent.getParentId()==0){
+					parent.setLevel(1);
+				}else if(null!=parent && parent.getParentId().compareTo(0)>0){
+					parent.setLevel(2);
+				}
+			}
+			sc.setFlag(false);
+			List<TdProductType> typeList = tdProductTypeService.findByParentId(sc.getParentId());
+			map.addAttribute("parent", parent);
+			map.addAttribute("typeList", typeList);
+			
+		}
+		return "/client/agent/producttypeallselect";
+	}
 	@RequestMapping("/dopay")
 	public String dopay(Integer id,HttpServletRequest req,ModelMap map)
 	{

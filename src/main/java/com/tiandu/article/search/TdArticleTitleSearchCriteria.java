@@ -5,6 +5,7 @@ import com.tiandu.common.search.SearchCriteria;
 public class TdArticleTitleSearchCriteria extends SearchCriteria {
 	private Integer cid;
 	private Byte status;
+	private Integer regionId;
 
 	public Integer getCid() {
 		return cid;
@@ -21,7 +22,13 @@ public class TdArticleTitleSearchCriteria extends SearchCriteria {
 	public void setStatus(Byte status) {
 		this.status = status;
 	}
-	
-	
 
+	public Integer getRegionId() {
+		return regionId;
+	}
+
+	public void setRegionId(Integer regionId) {
+		this.regionId = regionId;
+	}
+	
 }

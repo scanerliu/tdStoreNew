@@ -1,128 +1,162 @@
 <#import "/common/app.ftl" as app>
-<#include "/common/common.ftl" />
-<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
     <meta http-equiv="Content-Language" content="zh-CN">
     <meta name="keywords" content="${system.webkeywords!''}">
     <meta name="description" content="${system.webdescription!''}">
     <meta name="copyright" content="${system.webcopyright!''}" />
     <link rel="shortcut icon" href="${app.basePath}/static/default/images/icon.ico" />
-    <meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1">
-    <meta content="yes" name="apple-mobile-web-app-capable">
-    <meta content="black" name="apple-mobile-web-app-status-bar-style">
-    <meta content="telephone=no" name="format-detection">
-    <title>体验店申请</title>
+    <title>体验店申请 - ${system.webkeywords!''}</title>
     <!-- css -->
-    <link rel="stylesheet" href="${app.basePath}/static/touch/css/common.css" type="text/css" />
-    <link rel="stylesheet" href="${app.basePath}/static/touch/css/main.css" type="text/css" />
-    <link rel="stylesheet" href="${app.basePath}/static/touch/css/index.css">
-    <!-- js -->
-    <script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script>
-    <script type="text/javascript" src="${app.basePath}/static/touch/js/common.js"></script>
-    <script type="text/javascript" src="${app.basePath}/static/touch/js/index.js"></script>
-    <script src="${app.basePath}/static/js/mobile/agent/agent.js" type="text/javascript"></script>
-    <link rel="stylesheet" type="text/css" href="${app.basePath}/static/js/huploadify/Huploadify.css">
-<script src="${app.basePath}/static/js/huploadify/jquery.Huploadify.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="${app.basePath}/static/default/client/style/site.css" />
+	<link rel="stylesheet" href="${app.basePath}/static/default/client/style/index.css" />
+	<link rel="stylesheet" href="${app.basePath}/static/default/client/style/chuangkeftt.css" />
+	<link rel="stylesheet" href="${app.basePath}/static/default/client/style/lhead.css" />
+	<!-- js -->
+	<#include "/common/common.ftl" />
+	<script type="text/javascript" src="${app.basePath}/static/js/jquery-1.12.3.min.js"></script>
+	<script type="text/javascript" src="${app.basePath}/static/js/client/html5.js"></script>
+	<script type="text/javascript" src="${app.basePath}/static/js/client/library.js"></script>
+	<script type="text/javascript" src="${app.basePath}/static/js/client/index.js"></script>
+	<script type="text/javascript" src="${app.basePath}/static/js/client/common.js"></script>
+	<script type="text/javascript" src="${app.basePath}/static/js/client/core.js"></script>
+	<script type="text/javascript" src="${app.basePath}/static/js/client/agent/agent.js"></script>
+	<script src="${app.basePath}/static/js/uploadify/jquery.uploadify.js" type="text/javascript"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/Validform_v5.3.2_min.js"></script>
 </head>
-
-<script>
-    window.onload=function(){
-       // file_btn();
-         // warn_box();
-    }
-    
-    $(function(){
-	    searcAgentAddr();
-	});
-</script>
-
-<body class="bg_2">
-
-<!-- header_top -->
-<div class="top_heater">
-    <a href="javascript:history.go(-1);" title="返回" class="hleft hback"></a>
-    <span>体验店申请</span>
-</div>
-<!-- header_top end -->
-
-<!-- Center Start -->
-<section class="container">
-    <form class="store_askfor" id="form" >
-        <section class="sec1">填写地址</section>
-        <section class="sec2">
-        <!-- 三级联动2 -->
-        <div class="tarea" id="tarea">
-            
-        </div>
-        <!-- 三级联动2-结束 -->
-        </section>
-        <section class="sec4"><input type="text" name="address" placeholder="请填写详细地址"></section>
-        <section class="sec5"><input type="text" name="telphone" placeholder="请填写手机号码"></section>
-        <section class="sec6">体验中心的货架，装修设计平台可以提供支持，部分厂家。客服电话1389636888</section>
-        <div class="detail6">
-            <section class="title">图片展示</section>
-            <section class="upload">
-                <aside class="as1" id="showing">
-                    <div  id="file_btna"></div>
-                </aside>
-                <aside class="as2">小提示：<span>亲，体验店申请需要填写门店的详细信息，门店的图片，社区的图片等</span></aside>
-            </section>
-        </div>
-        <section class="sec7">
-            <label for="" class="fl">商品分类</label>
-            <select name="typeId" >
-            	<#if typeList??>
-            	<#list typeList as type>
-                <option value="${type.id?c}">${type.name!''}</option>
-                </#list>
-                </#if>
-            </select>
-        </section>
-        <input type="button" onclick="addAgent();" value="立即申请">
-    </form>
-<script>
-$(function(){
-		var num = 0;
-		$('#file_btna').Huploadify({
-				'multi': true, //
+<body>
+<h1 style="display:none;">创客</h1>
+	<!-- 头部 -->
+	<#include "../common/commonheader.ftl">
+	<!-- 头部 -->
+	<!-- 中间 -->
+	<div class="wrapper">
+	    <div class="become-agent">
+	        <div class="descinfo">
+	            <span class="title">${agent.title!''}</span>
+	            <p>
+	            	${agent.note!''}
+	            </p>
+	            <p>
+	            	￥<span><#if agent.salesPrice??>${agent.salesPrice?string('0.00')}</#if></span>
+	            </p>
+	        </div>
+        	<form id="agentform" method="post" action="${app.basePath}/agent/addagent" class="all_nation white_box" style="height:630px;">
+        	<div class="tabb obody" style="float:left;">
+	    		<div class="fig fig4">
+	                <label class="lab1 fl">地址地区:</label>
+	                <span id="provincespn"></span><span id="cityspn"></span><span id="regionspn"></span>
+	                <script>
+						$(function(){
+							getDistricts({'obj':null,'num':0,'total':3});
+					    });
+					</script>
+	            </div>
+	            <div class="fig fig1">
+	                <label class="lab1 fl Validform_label">详细地址:</label>
+	                <input type="text" name="address" placeholder="请填写详细地址" datatype="*2-50" nullmsg="请填写详细地址！">
+	            </div>
+	            <div class="fig fig1">
+	                <label class="lab1 fl Validform_label">手机号码:</label>
+	                <input type="text" name="telphone" placeholder="请填写手机号码" datatype="m" nullmsg="请填写手机号码！">
+	            </div>
+	            <div class="fig fig1">
+	                <label class="lab1 fl">想要代理的产品分类:</label>
+	                <span id="onetypespn"></span><span id="twotypespn"></span><span id="typespn"></span>
+	                <script>
+						$(function(){
+							getAllTypes({'obj':null,'num':0})
+					    });
+					</script>
+	            </div>
+	            <div class="fig fig2">
+	                <label for="" class="lab1 fl"><span>*</span>上传照片</label>
+	                <section class="sig fl">
+	                    <ul id="imglist">
+	                        <li class="li1">
+	                            <input type="file" id="file_uploads" style="width:1000px;"/>
+	                        </li>
+	                    </ul>
+	                    <p class="pig">小提示：亲，体验店申请需要填写门店的详细信息，门店的图片，社区的图片等</p>
+	                </section>
+	            </div>
+	            <input type="submit" id="sub_btn" class="btnjoin" value="立即申请" />
+	        	<input type="hidden" name="agentProductId" id="agentProductId" value="${agent.id!''}"/>
+	        	<input type="hidden" name="productType" id="productType" value="2"/>
+	        	<input type="hidden" name="regionId" id="regionId" value="" nullmsg="请选择所在地区！"/>
+	        	<input type="hidden" name="typeId" id="productTypeId" value="" nullmsg="请选择代理分类！"/>
+	        	<input type="hidden" id="isAgentProductUsePackage" value="${agent.gift?c}"/>
+	        	<input type="hidden" id="agentprice" value="${agent.salesPrice?c}"/>
+	        </div>
+	        </form>
+	    </div>
+	</div>
+	<!-- 中间-结束 -->
+	<script>
+	$(function(){
+		//初始化图片上传
+		$('#file_uploads').uploadify({
+				'multi': true, // 限制单图上传
 				'auto': true,
 				'formData' : {'type' : 'agent'},
 				'swf'      : basePath+'/static/js/uploadify/uploadify.swf', // swf存放的路径
 				'fileObjName' : 'file',
 				'uploader' : basePath+'/uploadify/upload/singleFile',    // 处理上传的Servlet
-				'buttonText' : '上传',
+				'buttonText' : '',
+				//'buttonImage': '${app.basePath}/static/touch/images/add_72px_1199462_easyicon.net.png',
 				'onUploadSuccess' : function(file, data, response) {
 					var result = eval("("+data+")");
-					$("#showing").append("<a href='javascript:;' id='img"+num+"' class='aimg'><img  src='"+basePath+result.savedFile+"' /><i onclick='removeImg("+num+")'></i></a>");
-					$("#showing").append("<input id='input"+num+"' type='hidden' name='storeImages' value='"+result.savedFile+"'>");
-					num++;
-					console.debug(num);
+					$("#imglist").append("<li><img src='"+ basePath+result.savedFile +"' alt='图片不存在'/><a 'javascript:;' title='删除图片' class='aclose' onclick='deleteimg(this)'></a> <input type='hidden' name='attachments' value='"+result.savedFile+"'/></li>");
 		        },
 		        'onUploadError' : function(file, errorCode, errorMsg, errorString) {
 		        	//alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
-		        	//$.messager.alert('消息提醒','上传失败。');
-		        	alert("头像上传失败。");
+		        	alert("图片上传失败。");
 		        }
 		});
 	});
-	
-function removeImg(id){
-	$("#img"+id).remove();
-	$("#input"+id).remove();
-}
+	$("#agentform").Validform({
+		tiptype:function(msg,o,cssctl){
+		    //msg：提示信息;
+		    //o:{obj:*,type:*,curform:*},
+		    //obj指向的是当前验证的表单元素（或表单对象，验证全部验证通过，提交表单时o.obj为该表单对象），
+		    //type指示提示的状态，值为1、2、3、4， 1：正在检测/提交数据，2：通过验证，3：验证失败，4：提示ignore状态, 
+		    //curform为当前form对象;
+		    //cssctl:内置的提示信息样式控制函数，该函数需传入两个参数：显示提示信息的对象 和 当前提示的状态（既形参o中的type）;
+		    if(o.type == 3){
+		    	alert(msg);
+		    }
+		},
+		beforeCheck:function(curform){
+		},
+		beforeSubmit:function(curform){
+		 	var images = $("#imglist img");
+		 	if(images.length==0){
+		 		alert("请上传资质照片！");
+		 		return false;
+		 	}
+		 	openwaiting();
+		},
+		postonce:true, // 开启二次提交防御
+		ajaxPost:true, 
+		callback:function(data){
+			//返回数据data是json对象，{"msg":"demo info","code":"1"}
+			//info: 输出提示信息;
+			//status: 返回提交数据的状态,是否提交成功。如可以用"y"表示提交成功，"n"表示提交失败，在ajax_post.php文件返回数据里自定字符，主要用在callback函数里根据该值执行相应的回调操作;
+			closewaiting();
+			alert(data.msg);
+			if(data.code == 1){
+				window.location.href=basePath+"/user/center";
+			}
+		}
+	});
+	function deleteimg(obj){
+		$(obj).parent().remove();
+	}
 </script>
-
-<div class="pay_warn" id="pay_warn" style="display:none">
-        <section class="warn_box" id="warn_box">
-            <p class="p1">提示信息</p>
-            <p class="p2">申请信息以提交到县级单类代理商。请等待审核结果。</p>
-           <a href="${app.basePath}/mobile" title="返回首页"></a>
-        </section>
-</div>
-
-</section>
-<!-- Center End -->
+	<!-- 底部 -->
+	<#include "../common/commonfooter.ftl">
+	<!-- 底部 -->
 </body>
 </html>

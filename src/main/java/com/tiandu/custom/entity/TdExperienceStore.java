@@ -3,6 +3,8 @@ package com.tiandu.custom.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+
 public class TdExperienceStore {
 	private Integer id;
 
@@ -39,6 +41,8 @@ public class TdExperienceStore {
 	private TdUser updatePerson;
 
 	private Integer sort = 99; // 默认排序为99
+	
+	private String[] attachments;
 
 	public Integer getId() {
 		return id;
@@ -182,6 +186,18 @@ public class TdExperienceStore {
 
 	public void setUpdatePerson(TdUser updatePerson) {
 		this.updatePerson = updatePerson;
+	}
+	public String[] getAttachments() {
+		if(null==attachments){
+			if(StringUtils.isNotBlank(getStoreImages())){
+				attachments = this.getStoreImages().split(":");
+			}
+		}
+		return attachments;
+	}
+
+	public void setAttachments(String[] attachments) {
+		this.attachments = attachments;
 	}
 
 	public String getStatusStr() {

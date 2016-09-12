@@ -32,6 +32,8 @@ public class TdProductType {
 	private List<TdProductAttribute> tdProductAttributeList;
 
 	private Integer specifiactionNum;
+	
+	private Integer level;
 
 	public Integer getId() {
 		return id;
@@ -143,6 +145,14 @@ public class TdProductType {
 
 	public void setParent(TdProductType parent) {
 		this.parent = parent;
+	}
+
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
 	}
 
 	/**

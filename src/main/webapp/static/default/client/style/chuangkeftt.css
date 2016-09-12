@@ -1241,6 +1241,19 @@
       border-radius: 22px;
       margin-top: 32px;
       outline: none; }
+    .become-agent .all_nation .btnjoin {
+      float: right;
+      width: 145px;
+      height: 45px;
+      background: #f23030;
+      color: #fff;
+      text-align: center;
+      font-size: 18px;
+      line-height: 45px;
+      border: 0;
+      border-radius: 22px;
+      margin-top: 32px;
+      outline: none; }
     .become-agent .forminfo .agreeinfo {
       float: left;
       width: 100%;
