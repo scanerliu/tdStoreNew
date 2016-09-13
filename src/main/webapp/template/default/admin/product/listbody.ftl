@@ -61,7 +61,7 @@
 </table>
 <input type="hidden" value="${sc.kind!''}" name="kind">
 <input type="hidden" value="${sc.status!''}" name="status">
-<input type="hidden" value="${sc.onshelf!''}" name="onshelf">
+<input type="hidden" value="<#if sc.onshelf??>${sc.onshelf?c}</#if>" name="onshelf">
 <input type="hidden" value="${sc.name!''}" name="name">
 <input type="hidden" value="${sc.uid!''}" name="uid">
 <input type="hidden" value="${sc.newRecommend!''}" name="newRecommend">

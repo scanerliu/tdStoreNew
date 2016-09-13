@@ -4,27 +4,34 @@
 	<#list commentList as comm>
 		<li>
             <span class="useravatar">
-                <img src="${app.basePath}/images/avatar.png" alt=""/>
-                <label>155*****11</label>
-                <span class="vip">V1</span>
+                <img src="<#if comm.commentUser.uavatar??><#if comm.commentUser.uavatar?index_of("http")==0><#else>${app.basePath}</#if>${comm.commentUser.uavatar!''}<#else>${app.basePath}/static/default/mobile/images/defaultavtar.png</#if>" alt=""/>
+                <label>${comm.commentUser.uname}</label>
+                <span class="vip">V<#if comm.commentUser.cmlevel??>${comm.commentUser.cmlevel!'1'}<#else>1</#if></span>
             </span>
             <div class="right">
                 <div class="star star1">
+                	<#list comm.score..1 as score>
                     <span class="s1"></span>
+                    </#list>
+                    <#if comm.score lt 5> 
+                    <#list 1..(5-comm.score) as score>
                     <span class="s2"></span>
+                    </#list>
+                    </#if>
                 </div>
                 <p>
                     ${comm.content!''}
                 </p>
                 <div class="item">
                     <label>${comm.specifications!''}</label>
-                    <label><#if comm.createTime??>${comm.createTime?string('yyyy-MM-dd H:i')}</#if></label>
+                    <label><#if comm.createTime??>${comm.createTime?string('yyyy-MM-dd HH:mm')}</#if></label>
                 </div>
             </div>
         </li>
     </#list>
 </#if>
 </ul>
+<input type="hidden" name="productId" value="${sc.productId!''}"/>
 <div class="page">
 	<#assign pageId="Comments" />
 	<#include "../common/commonpostpage.ftl" />   

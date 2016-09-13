@@ -90,7 +90,7 @@ $(document).ready(function(){
 	                    <label for="isCheck"><input type="checkbox" checked="checked" id="isCheck"/>我已同意《创客代理条款》</label>
 	                </dt>
 	                <dd>
-	                   
+	                   <p>sadfsadfsdafasdasdafsdaftessttdsfsdafasd但分撒旦撒打算打算的水水水水<br/></p>
 	                </dd>
 	            </dl>
 	            <input type="button" id="sub_btn" class="btnjoin" value="立即加入"/>

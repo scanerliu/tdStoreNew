@@ -269,7 +269,7 @@ public class TdProductCriteria extends SearchCriteria {
 
 	// 列表页排序 1-综合升序，2-综合降序，3-销量升序，4-销量降序，5-价格升序，6,-价格降序。
 	public String getOrderBySql() {
-		String orderBySql = null;
+		String orderBySql = "p.sort desc";
 
 		Integer orderType = this.orderby;
 		switch (orderType) {
@@ -292,16 +292,16 @@ public class TdProductCriteria extends SearchCriteria {
 			orderBySql = "p.price asc";
 			break;*/
 		case 1:
-			orderBySql = "s.positive_rate desc , s.buy_count desc";
+			orderBySql = orderBySql+",s.positive_rate desc , s.buy_count desc";
 			break;
 		case 2:
-			orderBySql = "s.positive_rate asc , s.buy_count asc";
+			orderBySql = orderBySql+",s.positive_rate asc , s.buy_count asc";
 			break;
 		case 3:
-			 orderBySql = "s.buy_count desc";
+			 orderBySql = orderBySql+",s.buy_count desc";
 			 break;
 		case 4:
-			orderBySql = "s.buy_count asc";
+			orderBySql = orderBySql+",s.buy_count asc";
 			break;
 		case 5:
 			orderBySql = "p.price desc";

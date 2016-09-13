@@ -60,6 +60,7 @@
 		    		<#assign selindex = 1>
 		    		<#if taList??>
 			    		<#list taList as attr>
+			    			<#if attr.attribute??>
 			    			<#if (attr_index != 0) && (attr_index lt taList?size)></#if>
 			    			<div class="fig fig5 slect">
 				            <label for="" class="lab1 fl"><span>*</span>${attr.attribute.name!''}</label>
@@ -85,6 +86,7 @@
 					            </ul>
 				            </section>
 				        	</div>
+				        	</#if>
 			    		</#list>	
 					</#if>
 		    	</td>
@@ -173,11 +175,11 @@
 		    </tr>
 		    <tr>
 		        <th width="150">名称：</th>
-		        <td><input type="text" name="name" value="<#if tdProduct??>${tdProduct.name!''}</#if>"  style="width:200px;height:30px" datatype="s3-60" nullmsg="请填写商品名称！"></td>
+		        <td><input type="text" name="name" value="<#if tdProduct??>${tdProduct.name!''}</#if>"  style="width:200px;height:30px" datatype="s1-60" nullmsg="请填写商品名称！"></td>
 		    </tr>
 		    <tr>
 		        <th width="150">副标题：</th>
-		        <td><input type="text" name="title" value="<#if tdProduct??>${tdProduct.title!''}</#if>"  style="width:200px;height:30px"  datatype="s3-30" nullmsg="请填写副标题！"></td>
+		        <td><input type="text" name="title" value="<#if tdProduct??>${tdProduct.title!''}</#if>"  style="width:200px;height:30px"  datatype="s1-50" nullmsg="请填写副标题！"></td>
 		    </tr>
 		    <tr>
 		        <th width="150">编号：</th>
@@ -222,7 +224,7 @@
 		    <tr>
 		        <th>关键字：</th>
 		        <td>
-	            	<input type="text" name="keyword" value="<#if tdProduct??>${tdProduct.keyword!''}</#if>" style="width:200px;height:30px" datatype="s0-20">
+	            	<input type="text" name="keyword" value="<#if tdProduct??>${tdProduct.keyword!''}</#if>" style="width:200px;height:30px" datatype="s1-50">
 		        </td>
 		    </tr>
 		    <tr>

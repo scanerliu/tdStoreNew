@@ -24,6 +24,8 @@
   <resultMap id="commentUserResult" type="com.tiandu.custom.entity.TdUser" >
   	<result column="com_uname" property="uname" jdbcType="VARCHAR" />
   	<result column="com_unick" property="unick" jdbcType="VARCHAR" />
+  	<result column="com_uavatar" property="uavatar" jdbcType="VARCHAR" />
+  	<result column="com_level" property="umlevel" jdbcType="INTEGER" />
   </resultMap>
   <resultMap id="productResult" type="com.tiandu.product.entity.TdProduct" >
   	<result column="p_name" property="name" jdbcType="VARCHAR" />
@@ -247,7 +249,7 @@
     ,
     <include refid="Blob_Column_List" />
     , p.name as p_name,p.image_url as p_img
-    , u.uname as com_uname,u.unick as com_unick
+    , u.uname as com_uname,u.unick as com_unick, u.uavatar as com_uavatar, m.level as com_level
     , o.order_no as order_no , o.item_num as order_num, o.product_amount as order_amou, o.postage as order_post
     
     from td_product_comment c
@@ -255,6 +257,7 @@
     left join td_product p on p.id = c.product_id
     left join td_user u on u.uid=  c.uid
     left join td_order o on o.order_id= c.order_id
+    left join td_membership m on m.id = u.membership_id
     where 1=1
     <if test="status != null" >
        and  c.status = #{status,jdbcType=TINYINT}

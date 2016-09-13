@@ -1249,6 +1249,18 @@ public class CUserController extends BaseController {
 	public String joinElection(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser currentUser = this.getCurrentUser();
 		modelMap.addAttribute("currentUser", currentUser);
+		modelMap.addAttribute("system", getSystem());
+		//查询已有记录
+		TdUserCampaignCriteria sc = new TdUserCampaignCriteria();
+		sc.setUid(currentUser.getUid());
+		List<TdUserCampaign> campaignList = tdUserCampaignService.findBySearchCriteria(sc);
+		if(null!=campaignList && campaignList.size()>0){
+			TdUserCampaign campaign = campaignList.get(0);
+			TdDistrict district = tdDistrictService.findOneFull(campaign.getRegionId());
+			campaign.setDistrict(district);
+			modelMap.addAttribute("campaign", campaign);
+			return "/client/user/electioninfo";	
+		}
 		return "/client/user/electionMaterial";	
 	}
 	
@@ -1266,14 +1278,32 @@ public class CUserController extends BaseController {
 		List<TdCampaign> campaignList = tdCampaignService.findBySearchCriteria(sc);
 		if(campaignList == null || campaignList.size() != 1){
 			res.put("code", "0");
-			res.put("msg", "服务器异常，地区活动数据错误。");
+			res.put("msg", "改地区暂无竞选活动！");
 			return res;
 		}else{
 			TdCampaign  campaign =  tdCampaignService.findOne(campaignList.get(0).getId());
 			res.put("code", "1");
 			res.put("note", campaign.getNote());
+			res.put("cid", campaign.getId().toString());
 			return res;
 		}
+	}
+	/*
+	 * 刷新活动描述
+	 */
+	@RequestMapping(value="/loadcelectiondes")
+	public String loadcelectiondes(Integer selectedDistrictId,  HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdCampaignSearchCriteria sc = new TdCampaignSearchCriteria();
+		sc.setFlag(false);
+		sc.setRegionId(selectedDistrictId);
+		List<TdCampaign> campaignList = tdCampaignService.findBySearchCriteria(sc);
+		TdCampaign  campaign = null;
+		if(campaignList == null || campaignList.size() < 1){
+		}else{
+			campaign =  tdCampaignService.findOne(campaignList.get(0).getId());
+		}
+		modelMap.addAttribute("campaign", campaign);
+		return "/client/user/loadcelectiondes";	
 	}
 	
 	/*
@@ -1316,21 +1346,32 @@ public class CUserController extends BaseController {
 		TdUser currentUser = this.getCurrentUser();
 		try{
 			userCampaign.setUid(currentUser.getUid());
-			TdCampaignSearchCriteria sc = new TdCampaignSearchCriteria();
+			/*TdCampaignSearchCriteria sc = new TdCampaignSearchCriteria();
 			sc.setFlag(false);
 			sc.setRegionId(userCampaign.getRegionId());
 			List<TdCampaign> tdCampaignList = tdCampaignService.findBySearchCriteria(sc);
 			TdCampaign theCampaign = tdCampaignList.get(0);
-			userCampaign.setCid(theCampaign.getId());
+			userCampaign.setCid(theCampaign.getId());*/
+			//查询已有记录
+			TdUserCampaignCriteria sc = new TdUserCampaignCriteria();
+			sc.setUid(currentUser.getUid());
+			List<TdUserCampaign> campaignList = tdUserCampaignService.findBySearchCriteria(sc);
+			if(null!=campaignList && campaignList.size()>0){
+				res.put("msg", "竞选提交失败:您已经参加过竞选了！");
+				res.put("code", "0");
+				return res;
+			}
 			userCampaign.setCreateTime(new Date());
 			tdUserCampaignService.save(userCampaign);
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.error("竞选保存失败。");
 			res.put("msg", "竞选提交失败。");
+			res.put("code", "0");
 			return res;
 		}
 		res.put("msg", "竞选提交成功。");
+		res.put("code", "1");
 		return res;
 	}
 	

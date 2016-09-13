@@ -22,6 +22,9 @@
 	<script type="text/javascript" src="${app.basePath}/static/js/client/common.js"></script>
 	<script type="text/javascript" src="${app.basePath}/static/js/client/core.js"></script>
     <script src="${app.basePath}/static/js/client/compaign/compaign.js" type="text/javascript"></script>
+    <style>
+    	.title select{height: 28px; line-height: 28px; color: #666; border: 1px solid #ddd;}
+    </style>
 </head>
 <body>
 <h1 style="display:none;">创客</h1>

@@ -4,7 +4,7 @@ function searchCompaign(t){
 	if(t){
 		loadData =$("#searchform").serializeArray();
 		var newsurl = basePath + "/campaign/searchads";
-		$("#newsList").load(url,loadData);
+		$("#newsList").load(newsurl,loadData);
 	}else{
 		loadData = $("#listform").serializeArray();
 	}

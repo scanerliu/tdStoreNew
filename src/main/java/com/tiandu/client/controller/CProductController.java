@@ -322,6 +322,7 @@ public class CProductController extends BaseController {
 		map.addAttribute("productdesc", productdesc);
 		map.addAttribute("delivedesc", delivedesc);
 		map.addAttribute("servicedesc", servicedesc);
+		map.addAttribute("productId", id);
 		return "/client/product/productdescribe";
 	}
 	

@@ -25,6 +25,7 @@
         <p <#if menucode?? && menucode=="recommend">class="active"</#if>><a href="${app.basePath}/user/recommendPeople" title="">我的推荐人</a></p>
         <p <#if menucode?? && menucode=="chirldren">class="active"</#if>><a href="${app.basePath}/user/downUserList" title="">我的盟友</a></p>
         <p <#if menucode?? && menucode=="spreed">class="active"</#if>><a href="${app.basePath}/user/mySpread" title="">我的分享</a></p>
+        <p <#if menucode?? && menucode=="election">class="active"</#if>><a href="${app.basePath}/user/joinElection" title="股东竞选">股东竞选</a></p>
     </li>
     <li>
         <p class="p1">商家管理</p>
@@ -35,7 +36,7 @@
     </li>
     <li>
         <p class="p1">附近门店</p>
-        <p><a href="${app.basePath}/" title="">门店列表</a></p>
+        <p><a href="${app.basePath}/experience/list" title="">门店列表</a></p>
     </li>
     <li>
         <p class="p1">客服中心</p>

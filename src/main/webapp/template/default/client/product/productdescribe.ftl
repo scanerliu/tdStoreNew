@@ -7,6 +7,7 @@
 <div id="2" class="evalute">
 	<form id="searchcommentform">
 		<input type="hidden" id="sc_fliter" name="fliter" value=""/>
+		<input type="hidden" name="productId" value="${productId}"/>
 	</form>
     <div class="enav" id="commentTab">
         <a href="javascript:;" class="on" tid=""><label>全部（${productStat.reviewCount!'0'}）</label></a>

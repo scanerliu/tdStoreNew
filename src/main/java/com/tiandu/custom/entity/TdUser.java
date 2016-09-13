@@ -113,6 +113,10 @@ public class TdUser {
 	 * 下级会员级数
 	 */
 	private Integer clevel;
+	/**
+	 * 会员等级
+	 */
+	private Integer umlevel;
 
     public Integer getUid() {
         return uid;
@@ -393,6 +397,14 @@ public class TdUser {
 	public void setChildren(List<TdUser> children) {
 		this.children = children;
 	}*/
+
+	public Integer getUmlevel() {
+		return umlevel;
+	}
+
+	public void setUmlevel(Integer umlevel) {
+		this.umlevel = umlevel;
+	}
 
 	public Integer getTempsupplier() {
 		return tempsupplier;
