@@ -35,8 +35,8 @@ public class IndexController extends BaseController {
 	
 	@RequestMapping("/index")
 	public String index(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-	    TdUser user = tdUserService.findOne(1);
-	    modelMap.addAttribute("user", user) ;
+		// 系统配置
+		modelMap.addAttribute("system", getSystem());
 	    return "/index";
 	}
 	

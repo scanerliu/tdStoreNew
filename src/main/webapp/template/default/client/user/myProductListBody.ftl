@@ -29,7 +29,7 @@
 		        <P><a href="javascript:;" onclick="editProduct(${product.id?c})" title="" class="a_sure2" style="margin-top:20px;">商品编辑</a></P>
 		        <!--<p><a href="javascript:;" class="a_sure3" title="立即上架" onclick="<#if product.onshelf>goOnshelf('${product.id?c}', 'false')<#else>goOnshelf('${product.id?c}', 'true')</#if>"><#if product.onshelf>立即下架<#else>立即上架</#if></a></p>-->
 		        <!--<P><a href="javascript:;" title="" class="a_sure3">立即上架</a></P>-->
-		        <!--<p><a href="${app.basePath}/mobile/imageorder/list?productId=${product.id?c}" class="a-up" title="图片美化">图片美化</a></p>-->
+		        <p><a href="${app.basePath}/imageorder/list?productId=${product.id?c}" class="a-up" title="图片美化">图片美化</a></p>
 		      </div>
 		    </div>
 			</li>

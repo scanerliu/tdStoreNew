@@ -310,7 +310,7 @@ public class MUserController extends BaseController {
 	public Map<String, String> getChangePhoneNumValidCode(HttpServletRequest request, String phone) {
 		Map<String,String> res = new HashMap<String,String>();
 		Random random = new Random();
-		String smscode = String.format("%04d", random.nextInt(9999));
+		String smscode = String.format("%06d", random.nextInt(999999));
 		request.getSession().setAttribute("changePasswordValidCode", smscode);
 		List<String> phoneNums =new ArrayList<>();
 		phoneNums.add(phone);
