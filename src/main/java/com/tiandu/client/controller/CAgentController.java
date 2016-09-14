@@ -1,5 +1,6 @@
 package com.tiandu.client.controller;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -179,7 +180,7 @@ public class CAgentController extends BaseController{
 	 */
 	@RequestMapping(value= "/addagent", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> agentAdd(TdExperienceStore experience, Integer typeId, HttpServletRequest req,ModelMap map)
+	public Map<String,Object> agentAdd(TdExperienceStore experience, Integer typeId, String storesite, HttpServletRequest req,ModelMap map)
 	{
 		Map<String,Object> res = new HashMap<>();
 		res.put("code", 0);
@@ -209,6 +210,26 @@ public class CAgentController extends BaseController{
 		}
 		if(null == typeId){
 			res.put("msg", "请选择代理类型");
+			return res;
+		}
+		if(StringUtils.isNotBlank(storesite)){
+			String[] sites = storesite.split(",");
+			if(null!=sites  && sites.length==2){
+				try {
+					experience.setLat(new BigDecimal(sites[0]));
+					experience.setLng(new BigDecimal(sites[1]));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					res.put("msg", "坐标错误");
+					return res;
+				}
+			}else{
+				res.put("msg", "坐标错误");
+				return res;
+			}
+		}else{
+			res.put("msg", "坐标错误");
 			return res;
 		}
 		if(null!=experience.getAttachments() && experience.getAttachments().length>0){

@@ -55,6 +55,11 @@ public class TdProductComment {
      * 属性键值对，显示时候使用
      */
     private List<SkuSpecialVO> specialList;
+    
+    /**
+     * 上传图片数组，显示用
+     */
+    private String[] imageArray;
 
     public Integer getId() {
         return id;
@@ -199,4 +204,18 @@ public class TdProductComment {
 		this.specialList = specialList;
 	}
     
+	public String[] getImageArray(){
+		if(null!=this.imageArray && this.imageArray.length>0){
+			return this.imageArray;
+		}
+		if(StringUtils.isNotBlank(images)){
+			this.imageArray = images.split(":");
+		}
+		return this.imageArray;
+	}
+
+	public void setImageArray(String[] imageArray) {
+		this.imageArray = imageArray;
+	}
+	
 }

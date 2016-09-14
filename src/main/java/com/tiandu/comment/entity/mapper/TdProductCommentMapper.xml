@@ -243,7 +243,7 @@
     </if>
   </select>
   
-  <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.comment.search.TdProductCommentCrateria" >
+  <select id="findBySearchCriteria" resultMap="ResultMapWithBLOBs" parameterType="com.tiandu.comment.search.TdProductCommentCrateria" >
     select 
     <include refid="Base_Column_List" />
     ,

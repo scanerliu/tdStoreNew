@@ -100,40 +100,40 @@ public class IndexController extends BaseController {
 		return "/client/forgetpassword";
 	}
 	@RequestMapping("/forgetpassword2")
-	public String forgetpassword2(String utel, String valideCode, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	@ResponseBody
+	public  Map<String, String> forgetpassword2(String utel, String valideCode, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		Map<String, String> res = new HashMap<String, String>();
+		res.put("code", "0");
 		try{
 			String changePasswordValidCode = (String) request.getSession().getAttribute("changePasswordValidCode");
 			
-			/*if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
+			if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
 				request.getSession().removeAttribute("changePasswordValidCode");
-				String errmsg = "验证码错误！";
-				modelMap.addAttribute("errmsg", errmsg) ;
-				return  "/mobile/error";
-			}*/
+				res.put("msg", "验证码错误！");
+				return  res;
+			}
 			
 			if(StringUtils.isBlank(utel)){
-				String errmsg = "手机号码不能为空！";
-				modelMap.addAttribute("errmsg", errmsg) ;
-				return  "/client/error";
+				res.put("msg", "手机号码不能为空！");
+				return  res;
 			}
 			
 			TdUser user = tdUserService.findByUtel(utel);
 			if(null == user){
-				String errmsg = "没有找到该用户！";
-				modelMap.addAttribute("errmsg", errmsg) ;
-				return  "/client/error";
+				res.put("msg", "没有找到该用户！");
+				return  res;
 			}
 			String sign = WebUtils.generatePassword(utel, utel);
-			modelMap.addAttribute("user", user);
-			modelMap.addAttribute("sign", sign);
+			res.put("token", user.getUid().toString());
+			res.put("sign", sign);
+			res.put("code", "1");
 			
-			return "/client/forgetpassword2";
+			return res;
 		} catch(Exception e){
 			request.getSession().removeAttribute("changePasswordValidCode");
 			e.printStackTrace();
-			String errmsg = "未填写收货地址！";
-			modelMap.addAttribute("errmsg", errmsg) ;
-			return  "/client/error";
+			res.put("msg", "数据错误！");
+			return  res;
 		}
 		
 	}
@@ -144,21 +144,21 @@ public class IndexController extends BaseController {
 		Map<String, String> res = new HashMap<>();
 		try{
 			if(null==user || null == user.getUid()){
-				res.put("info", "重置密码失败：用户信息错误！");
-				res.put("status", "0");
+				res.put("msg", "重置密码失败：用户信息错误！");
+				res.put("code", "0");
 				return res;
 			}
 			
 			TdUser puser = tdUserService.findOne(user.getUid());
 			if(null == puser || null == puser.getUid()){
-				res.put("info", "重置密码失败：用户查找失败！");
-				res.put("status", "0");
+				res.put("msg", "重置密码失败：用户查找失败！");
+				res.put("code", "0");
 				return res;
 			}
 			String sign2 = WebUtils.generatePassword(puser.getUtel(), puser.getUtel());
 			if(StringUtils.isBlank(sign) || !sign2.equals(sign)){
-				res.put("info", "重置密码失败：数据错误！");
-				res.put("status", "0");
+				res.put("msg", "重置密码失败：数据错误！");
+				res.put("code", "0");
 				return res;
 			}
 			
@@ -170,12 +170,12 @@ public class IndexController extends BaseController {
 			u.setUpdateTime(new Date());
 			tdUserService.saveUserPassword(u);
 			
-			res.put("info", "重置密码成功。");
-			res.put("status", "1");
+			res.put("msg", "重置密码成功。");
+			res.put("code", "1");
 			return res;
 		} catch(Exception e){
-			res.put("info", "重置密码失败："+e.getMessage());
-			res.put("status", "0");
+			res.put("msg", "重置密码失败："+e.getMessage());
+			res.put("code", "0");
 			return res;
 		}
 		

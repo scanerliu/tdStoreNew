@@ -1,11 +1,11 @@
 <#import "/common/app.ftl" as app>
-<ul>
+<ul id="commlist">
 <#if commentList?? && commentList?size gt 0>
 	<#list commentList as comm>
 		<li>
             <span class="useravatar">
                 <img src="<#if comm.commentUser.uavatar??><#if comm.commentUser.uavatar?index_of("http")==0><#else>${app.basePath}</#if>${comm.commentUser.uavatar!''}<#else>${app.basePath}/static/default/mobile/images/defaultavtar.png</#if>" alt=""/>
-                <label>${comm.commentUser.uname}</label>
+                <label>${comm.commentUser.unick!''}</label>
                 <span class="vip">V<#if comm.commentUser.cmlevel??>${comm.commentUser.cmlevel!'1'}<#else>1</#if></span>
             </span>
             <div class="right">
@@ -22,6 +22,13 @@
                 <p>
                     ${comm.content!''}
                 </p>
+                <#if comm.imageArray??>
+                <p>
+                    <#list comm.imageArray as image>
+                    <img src="${app.basePath}${image}" class="comimage cimge"/>
+                    </#list>
+                </p>
+                </#if>
                 <div class="item">
                     <label>${comm.specifications!''}</label>
                     <label><#if comm.createTime??>${comm.createTime?string('yyyy-MM-dd HH:mm')}</#if></label>
@@ -38,6 +45,8 @@
 </div>
 <script language="javascript" type="text/javascript">
     $(function () {
-		
+		$("#commlist .comimage").on("click",function(){
+			$(this).toggleClass("cimge").siblings().addClass("cimge");
+		});
     });
 </script>

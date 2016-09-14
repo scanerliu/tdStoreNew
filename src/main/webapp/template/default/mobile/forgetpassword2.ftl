@@ -33,10 +33,10 @@
     <form class="findin2" id="repasswordForm" action="${app.basePath}/mobile/repassword">
         <div>
             <label>设置密码</label>
-            <input type="text" placeholder="请输入新密码" name="upassword" id="upassword" datatype="*6-16" nullmsg="请设置密码！" errormsg="密码范围在6~16位之间！"></div>
+            <input type="password" placeholder="请输入新密码" name="upassword" id="upassword" datatype="*6-16" nullmsg="请设置密码！" errormsg="密码范围在6~16位之间！"></div>
         <div>
             <label>确认密码</label>
-            <input type="text" placeholder="再次输入密码" name="repassword" id="repassword" datatype="*" recheck="upassword" nullmsg="请再输入一次密码！" errormsg="您两次输入的账号密码不一致！" >
+            <input type="password" placeholder="再次输入密码" name="repassword" id="repassword" datatype="*" recheck="upassword" nullmsg="请再输入一次密码！" errormsg="您两次输入的账号密码不一致！" >
         </div>
         <div>
         <input type="submit" value=保存并重新登录></div>

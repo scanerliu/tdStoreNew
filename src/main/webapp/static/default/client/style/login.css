@@ -114,6 +114,7 @@ textarea {resize: none;}
 .forgetpw .pw_phone .ipt3{width: 245px; height: 43px; border: 1px solid #ccc; margin:20px 20px 0px 20px; background: url("../images/zj_icon_password.png") no-repeat 12px; padding-left: 55px; line-height: 43px; float: left;}
 .forgetpw .pw_phone .ipt2{width: 131px; height: 43px; border: 1px solid #ccc; margin:20px 20px 0px 20px; background: url("../images/zj_icon_yzm.png") no-repeat 12px; padding-left: 55px;line-height: 43px;float: left;}
 .forgetpw .pw_phone .ipt_yzm{width: 114px; height: 45px; background: #555; color: #fff; text-align: center; line-height: 45px; font-size: 15px; position: absolute; top:85px; left:207px;}
+.forgetpw .pw_phone .ipt_yzmac{background: #ff9900;}
 .forgetpw .pw_phone .tips_err{color:#ff9900;float: left; margin-top: 30px;background: url("../images/zj_tips_err.png") no-repeat left center; padding-left: 25px;}
 .forgetpw .pw_phone .tips_rig{color:#ff9900;float: left; margin-top: 32px; margin-left:114px; background: url("../images/zj_tips_rig.png") no-repeat left center; padding-left: 25px;}
 .forgetpw .pw_phone .form_btn{width: 140px; height: 45px; background:#ff8800;color: #fff; font-size: 18px; text-align: center; line-height: 45px; border: none; margin: 35px 20px;}

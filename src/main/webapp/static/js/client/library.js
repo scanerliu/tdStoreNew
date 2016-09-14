@@ -254,3 +254,110 @@ function left_del(val){
 		}
 	}
 }
+
+function autoPlay(obj,second,auto_time){
+
+	obj.num=1;//设置初始的num
+
+	var pic=obj.find('.banner_img_box'),
+	dot=obj.find('.banner_dot'),
+	last=obj.find('.ban_last'),
+	next=obj.find('.ban_next');
+
+	var oWidth=obj.width();//每次滚动的宽度
+
+	var len=pic.find('li').size();//图片li的length
+	var off=true;//设置开关，控制左右按钮无限点击
+
+	// 自动生成两个img图片,首位和最后一位
+	var first_li=$('<li>'),last_li=$('<li>');
+	first_li.html(pic.find('li').eq(len-1).html());
+	last_li.html(pic.find('li').eq(0).html());
+
+	// 将新生成的图片放在ul 首位和最后一位,实现无缝
+	pic.find('ul').prepend(first_li);
+	pic.find('ul').append(last_li);
+	len=pic.find('li').size();//重置li的长度
+
+	// 设置初始值
+	pic.find('li').css('width',oWidth);//设置li的初始宽度
+	pic.find('ul').css('width',len*oWidth);//设置ul的初始宽度
+	pic.find('ul').css('left',-oWidth);//设置ul的初始left
+
+	// 浏览器发生变化时,改变li的宽度
+	$(window).on("resize",function(){
+		oWidth=obj.width();
+		pic.find('li').css('width',oWidth);//设置li的初始宽度
+		pic.find('ul').css('width',len*oWidth);//设置ul的初始宽度
+		pic.find('ul').css('left',-obj.num*oWidth);//设置ul的初始left
+	})
+
+	$(window).click(function(){console.log(2)})
+	// 点击轮播
+	next.click(function(ev){
+		ev.stopPropagation();
+		if(!off){return}
+		obj.num++;
+		goFn(obj.num);
+		dotRun(obj.num);
+	})
+	last.click(function(ev){
+		ev.stopPropagation();
+		if(!off){return}
+		obj.num--;
+		goFn(obj.num);
+		dotRun(obj.num);
+	})
+
+	// 设置滚动函数
+	function goFn(num){
+		off=false;
+		pic.find('ul').animate({'left':-num*oWidth},second,function(){
+			if(obj.num==(len-1)){
+				obj.num=1;
+				pic.find('ul').css('left',-obj.num*oWidth);
+			}
+			if(obj.num<1){
+				obj.num=len-2;
+				pic.find('ul').css('left',-obj.num*oWidth);
+			}
+			off=true;
+		});
+	}
+
+	// 设置点的轮播效果
+	function dotRun(num){
+		if(num==(len-1)){
+			num=1;
+		}
+		if(num<1){
+			num=len-2;
+		}
+		dot.find('span').eq(num-1).addClass('active').siblings().removeClass('active');
+	}
+
+	// 设置点的点击效果
+	dot.find('span').each(function(i,ele){
+		$(ele).click(function(ev){
+			$(this).addClass('active').siblings().removeClass('active');
+			obj.num=i+1;
+			goFn(obj.num);
+			ev.stopPropagation();
+		});
+	})
+
+	//设置定时器自动点击"右"按钮
+	obj.timer=setInterval(function(){
+		next.click();
+	},auto_time);
+
+	//鼠标移入关闭定时器
+	obj.on('mouseover',function(){
+		clearInterval(obj.timer);
+	});
+	obj.on('mouseout',function(){
+		obj.timer=setInterval(function(){
+			next.click();
+		},auto_time);
+	});
+}

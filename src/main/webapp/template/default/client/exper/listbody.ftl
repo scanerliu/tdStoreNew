@@ -1,67 +1,32 @@
 <#import "/common/app.ftl" as app>
-
-<script>
-   $(function(){
-        three_bing2();
-    })
-</script>
-
-
-<!-- Center Start -->
-<section class="container">
-
-        <!-- 三级联动2 -->
-<form  id="form">
-<div class="tarea" id="tarea">
-    <section>
-	<span><#if province??>${province.name!''}<#else>请选择</#if></span>
-        <select name="provinceId" id="" >
-            <option value="">请选择</option>
-        	<#if districtList??>
-        	<#list districtList as dis>
-            	<option value="${dis.id?c}" <#if province?? && province.id = dis.id>selected</#if>>${dis.name!''}</option>
-            </#list>
-            </#if>
-        </select>
-    </section>
-    <section>
-        <span><#if city??>${city.name!''}<#else>请选择</#if></span>
-        <select name="cityId" id="">
-            <option value="">请选择</option>
-            <#if cityList??>
-        	<#list cityList as dis>
-            	<option value="${dis.id?c}" <#if city ?? && city.id = dis.id>selected</#if>>${dis.name!''}</option>
-            </#list>
-            </#if>
-        </select>
-    </section>
-    <section>
-        <span><#if regin??>${regin.name!''}<#else>请选择</#if></span>
-        <select name="regionId" id="">
-            <option value="">请选择</option>
-            <#if regionList??>
-        	<#list regionList as dis>
-            	<option value="${dis.id?c}" <#if regin ?? && regin.id = dis.id>selected</#if>>${dis.name!''}</option>
-            </#list>
-            </#if>
-        </select>
-    
-</div>
-</form>
-        <!-- 三级联动2-结束 -->
-        
-        <ul class="nearest">
-            <#if experList??>
-            <#list experList as exp>
-            <li>
-                <a href="${app.basePath}/mobile/experience/detail?id=${exp.id?c}" title="${exp.regionFullName!''}体验代购店${(exp_index+1)}店" class="a1">
-                    <p class="p1">${exp.regionFullName!''}体验代购店${(exp_index+1)}店</p>
-                    <p class="p2">${exp.regionFullName!''}${exp.address!''}</p>
-                </a>
-                <a href="${app.basePath}/mobile/experience/map?id=${exp.id?c}" title="导航" class="a2"><span>导航</span></a>
-            </li>
-            </#list>
-            </#if>
-        </ul>
+<section class="sec2 fl">
+<ul>
+	<#if experList?? && experList?size gt 0>
+	<#list experList as exp>
+	<a href="${app.basePath}/experience/detail?id=${exp.id?c}" title="${exp.regionFullName!''}体验店">
+	<li>
+		<p class="p1">${exp.regionFullName!''}体验店</p>
+		<p class="p2">
+			<label for="" class="fl">店铺地址：</label>
+			<span class="fl">${exp.regionFullName!''}${exp.address!''}</span>
+			<label for="" class="fl">销售热线：</label>
+			<span class="fl">${exp.telphone!''}</span>
+		</p>
+	</li>
+	</a>
+	</#list>
+	<#else>
+		<li><p class="p2">
+			该地区暂无体验店。
+		</p>
+		</li>
+	</#if>
+</ul>
 </section>
-<!-- Center End -->
+<input type="hidden" value="${sc.regionId!''}" name="regionId">
+<#if experList?? && experList?size gt 0>
+<section class="page fl" style="margin:0 auto;margin-top:30px;width:1200px;">
+<#assign pageId="Exper" />
+<#include "../common/commonpostpage.ftl" />
+</section>
+</#if>

@@ -82,6 +82,11 @@
 	                    <p class="pig">小提示：亲，体验店申请需要填写门店的详细信息，门店的图片，社区的图片等</p>
 	                </section>
 	            </div>
+	            <div class="fig fig2">
+	                <label for="" class="lab1 fl Validform_label"><span>*</span>百度坐标</label>
+	                <input type="text" name="storesite" placeholder="请定位百度坐标" datatype="/^[-]?[0-9]\d{1,3}(\.\d{1,6})?,[-]?[0-9]\d{1,3}(\.\d{1,6})?$/i" nullmsg="请定位百度坐标！">
+	                <a href="http://api.map.baidu.com/lbsapi/getpoint/index.html" target="_blank">获取百度地图坐标工具</a>
+	            </div>
 	            <input type="submit" id="sub_btn" class="btnjoin" value="立即申请" />
 	        	<input type="hidden" name="agentProductId" id="agentProductId" value="${agent.id!''}"/>
 	        	<input type="hidden" name="productType" id="productType" value="2"/>
