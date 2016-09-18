@@ -33,6 +33,7 @@ import com.tiandu.common.tencent.common.Configure;
 import com.tiandu.common.tencent.common.RandomStringGenerator;
 import com.tiandu.common.tencent.common.Signature;
 import com.tiandu.common.utils.ConstantsUtils;
+import com.tiandu.common.utils.KuaiDiUtils;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.complaint.entity.TdComplaint;
 import com.tiandu.custom.entity.TdUser;
@@ -55,6 +56,8 @@ import com.tiandu.order.service.TdOrderShipmentService;
 import com.tiandu.order.service.TdOrderSkuService;
 import com.tiandu.order.vo.OperResult;
 import com.tiandu.order.vo.OrderCancel;
+import com.tiandu.order.vo.PostageResponseVO;
+import com.tiandu.order.vo.PostageVO;
 import com.tiandu.payment.alipay.AlipayConfig;
 import com.tiandu.payment.alipay.Constants;
 import com.tiandu.payment.alipay.PaymentChannelAlipay;
@@ -166,6 +169,17 @@ public class COrderController extends BaseController {
 		TdOrder order = null;
 		if(null!=orderId && orderId>0){
 			order = tdOrderService.findDetail(orderId);
+		}
+		if(order.getOrderStatus().compareTo(Byte.valueOf("3"))>=0){
+			TdOrderShipmentSearchCriteria sc = new TdOrderShipmentSearchCriteria();
+			sc.setType(Byte.valueOf("1"));
+			sc.setOrderId(order.getOrderId());
+			List<TdOrderShipment> ordershimentList = tdOrderShipmentService.findBySearchCriteria(sc);
+			TdOrderShipment ordershipment = null;
+			if(null!=ordershimentList && ordershimentList.size()>0){
+				ordershipment = ordershimentList.get(0);
+			}
+			modelMap.addAttribute("ordershipment", ordershipment) ;
 		}
 		if(null==order || !order.getUserId().equals(currUser.getUid())){
 		    return "redirect:404";
@@ -400,6 +414,16 @@ public class COrderController extends BaseController {
 		map.put("code", "1");
 		map.put("msg", "确认收货操作成功。");
 		return map;
+	}
+	
+	@RequestMapping("/searchpostinfo")
+	public String searchpostinfo(PostageVO postage, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		PostageResponseVO presp = null;
+		if(null!=postage && StringUtils.isNotBlank(postage.getTrackingCom())&&StringUtils.isNotBlank(postage.getTrackingNo())){
+			presp = KuaiDiUtils.query(postage);
+		}
+		modelMap.addAttribute("presp", presp);		
+		return "/client/order/postinfo";
 	}
 	
 	@RequestMapping("/gopay{orderId}")

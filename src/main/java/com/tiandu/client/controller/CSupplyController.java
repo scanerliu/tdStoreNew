@@ -118,7 +118,18 @@ public class CSupplyController extends BaseController{
 		if(null==order || !order.getSupplierId().equals(currUser.getUid())){
 		    return "redirect:404";
 		}
-		map.addAttribute("order", order) ;
+		if(order.getOrderStatus().compareTo(Byte.valueOf("3"))>=0){
+			TdOrderShipmentSearchCriteria sc = new TdOrderShipmentSearchCriteria();
+			sc.setType(Byte.valueOf("1"));
+			sc.setOrderId(order.getOrderId());
+			List<TdOrderShipment> ordershimentList = tdOrderShipmentService.findBySearchCriteria(sc);
+			TdOrderShipment ordershipment = null;
+			if(null!=ordershimentList && ordershimentList.size()>0){
+				ordershipment = ordershimentList.get(0);
+			}
+			map.addAttribute("ordershipment", ordershipment);
+		}
+		map.addAttribute("order", order);
 		return "/client/supply/order_detail";
 	}
 	

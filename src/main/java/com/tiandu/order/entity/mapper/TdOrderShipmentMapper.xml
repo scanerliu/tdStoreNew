@@ -53,6 +53,7 @@
   
   <resultMap id="trackExpressResult" type="com.tiandu.express.entity.TdExpress" >
   	<result column="express_name" property="name" jdbcType="VARCHAR" />
+  	<result column="express_com" property="com" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -76,7 +77,7 @@
     <if test="getOrder">
     , r.total_amount, r.pay_amount, r.order_no 
     </if>
-    , e.name as express_name, i.id as ITEM_ID, i.quantity as ITEM_QUANTITY,o.product_image as item_img, o.product_name as item_productName, o.display_specifications as item_specification, o.price as item_price
+    , e.name as express_name, e.com as express_com, i.id as ITEM_ID, i.quantity as ITEM_QUANTITY,o.product_image as item_img, o.product_name as item_productName, o.display_specifications as item_specification, o.price as item_price
     from td_order_shipment s left join td_express e on s.tracking_id = e.id left join td_order_shipment_item i on i.shipment_id = s.id left join td_order_sku o on i.order_sku_id = o.order_sku_id
     <if test="getOrder">
      left join td_order r on r.order_id=s.order_id 

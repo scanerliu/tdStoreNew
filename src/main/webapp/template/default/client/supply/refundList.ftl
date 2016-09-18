@@ -42,17 +42,13 @@
 	            <!-- 全部订单、待评价分类 -->
 	            <div class="box1">
 	            	<form id="searchform">
-						<input type="hidden" id="sc_fliterType" name="fliterType" value="0"/>
-					
-	                <div class="div1 fl">我的订单</div>
+						<input type="hidden" id="sc_fliterType" name="status" value=""/>
+	                <div class="div1 fl">我的退货单</div>
 	                <div class="div2 fl" id="orderTab">
-	                    <a href="javascript:;" title="" tid="0" class="active">全部订单</a>
-	                    <a href="javascript:;" title="" tid="2">待发货</a>
-	                    <a href="javascript:;" title="" tid="3">已发货</a>
-	                </div>
-	                <div class="search_box_right fr">
-	                    <a href="javascript:;" title="" class="fr" onclick="searchOrders(true)">搜索</a>
-	                    <input type="text" name="keyword" placeholder="请输入商品名称或订单号" class="fr"/>
+	                    <a href="javascript:;" title="" tid="0" class="active">全部</a>
+	                    <a href="javascript:;" title="" tid="1">待退货</a>
+	                    <a href="javascript:;" title="" tid="2">退货中</a>
+	                    <a href="javascript:;" title="" tid="4">待完成</a>
 	                </div>
 	                </form>
 	            </div>
@@ -84,19 +80,19 @@
             var $self = $(this);//当前a标签
             var index = $self.attr('tid');//当前索引
             $("#sc_fliterType").val(index);
-            searchOrders(true);
+            searchRefunds(true);
           	$self.addClass('active').siblings().removeClass('active');
           });
         };
         tab('#orderTab','');
-        searchOrders(true);
+        searchRefunds(true);
       })
     </script>
   <!-- header_top end -->
   <div id="results"></div>
   <script type="text/javascript">
 	$(function(){
-	    searchOrder();
+	    searchRefunds(true);
 	});
 	
 </script>

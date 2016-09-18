@@ -37,7 +37,7 @@ public class IndexController extends BaseController {
 	public String index(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		// 系统配置
 		modelMap.addAttribute("system", getSystem());
-	    return "/index";
+	    return "/client/index";
 	}
 	
 	@RequestMapping("/unauthorized")

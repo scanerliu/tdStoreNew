@@ -132,28 +132,25 @@
 	</ul>
 	<!-- order_detail_title_end -->
 	<!-- order_time -->
-	<ul class="detail_order" style="display:none;">
+	<#if ordershipment??>
+	<ul class="detail_order">
 		<li class="title">
 			物流详情
 		</li>
 		<li class="name">
 			<label>物流公司：</label>
-			<span>顺丰速递</span>
+			<span>${ordershipment.trackExpress.name!''}</span>
 			<label>物流单号：</label>
-			<span>102543245842513</span>
+			<span>${ordershipment.trackingNo!''}</span>
 		</li>
-		<li class="dleft">
-			<div><span class="active"></span></div>
-			<div><span></span></div>
-			<div><span></span><span></span></div>
-		</li>
-		<li class="dright">
-			<p class="active">重庆市渝中区派件员：河流（13883845552）正在派件<span>2015-11-30  14:30:21</span></p>
-			<p>包裹已到达：重庆市渝中区网点<span>2015-11-30  14:30:21</span></p>
-			<p>已发货<span>2015-11-30  14:30:21</span></p>
-			<p>已发货<span>2015-11-30  14:30:21</span></p>
-		</li>
+		<dl id="postinfo"></dl>
 	</ul>
+	 <script>
+        $(function () {
+            searchpostinfo("${ordershipment.trackExpress.com!''}","${ordershipment.trackingNo!''}");
+        });
+    </script>
+	</#if>
 	<!-- order_time_end -->
 </section>
 </body>

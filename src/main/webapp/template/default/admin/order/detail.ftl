@@ -7,8 +7,11 @@
 	<#if order.shipmentStatus==2><span>|</span><a href="javascript:;" onclick="shipOrder(${order.orderId!''})" ><em>发货</em></a></#if>
 	<#if order.orderType!=2 && (order.payStatus==1||order.payStatus==3)><span>|</span><a href="javascript:;" onclick="refundOrder(${order.orderId!''})" ><em>退款</em></a></#if>
 	</#if>
-	<#if order.orderType==3 && order.payStatus==1></#if>
+	<#if order.orderType==3 && order.orderStatus==2>
 	<span>|</span><a href="javascript:;" onclick="completeOrder(${order.orderId!''})" ><em>完成</em></a>
+	<#elseif order.orderStatus==3||order.orderStatus==4>
+	<span>|</span><a href="javascript:;" onclick="completeOrder(${order.orderId!''})" ><em>完成</em></a>
+	</#if>
 </div>
 <div id="dg_${order.orderId}" style="width:800px;height:350px;">
     <div title="基本信息" style="width:800px;height:350px;padding:0px;">

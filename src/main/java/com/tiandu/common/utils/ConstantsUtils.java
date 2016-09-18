@@ -42,6 +42,11 @@ public class ConstantsUtils {
 	 */
 	public final static String TDSTORE_MOBILE_FILTER = "/mobile/";
 	
+	/**
+	 * 系统pc端登录地址
+	 */
+	public final static String TDSTORE_LOGIN_URL = "/login";
+	
 	
 	public final static Byte CONF_DATA_TYPE_BOOLEAN = 3;
 	/**

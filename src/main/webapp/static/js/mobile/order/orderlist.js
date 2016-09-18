@@ -114,3 +114,12 @@ function cancelOrderCallback(data){
 		window.location.href=basePath+"/mobile/order/list";
 	}
 }
+/**
+ * 查询物流信息
+ * @param f
+ */
+function searchpostinfo(com,no){
+	var url = basePath+"/mobile/order/searchpostinfo";
+	var loadData = {"trackingNo":no,"trackingCom":com};
+	$("#postinfo").loading().load(url,loadData);
+}

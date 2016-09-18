@@ -82,3 +82,23 @@ function delCollectCallback(data){
 		searchCollect();
 	}
 }
+
+/**
+ * 查询退货单
+ * @param f
+ */
+function searchRefunds(f){
+	var url = basePath+"/supply/searchrefund";
+	var loadData = "";
+	if(f){
+		loadData = $("#searchform").serializeArray();
+	}else{
+		loadData = $("#listform").serializeArray();
+	}
+	$("#results").loading().load(url,loadData);
+}
+
+//分页函数
+function fnGotoPageRefunds(num){
+	searchRefunds(false);
+}

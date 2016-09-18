@@ -167,3 +167,12 @@ function cancelOrderCallback(data){
 		window.location.href=basePath+"/order/list";
 	}
 }
+/**
+ * 查询物流信息
+ * @param f
+ */
+function searchpostinfo(com,no){
+	var url = basePath+"/order/searchpostinfo";
+	var loadData = {"trackingNo":no,"trackingCom":com};
+	$("#postinfo").loading().load(url,loadData);
+}

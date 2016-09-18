@@ -124,38 +124,18 @@
 	                    <label>订&nbsp;&nbsp;单&nbsp;号</label>
 	                    <span>${order.orderNo!''}</span>
 	                </div>
-	                <!--
+	                <#if ordershipment??>
 	                <div>
 	                    <label>物流跟踪</label>
-	
-	                    <div class="wuliuinfo" style="height: 30px;">
-	                        <ul>
-	                            <li class="top"><label>2016-02-15 12:24:56</label> 您提交了订单，请等待系统确认。</li>
-	                            <li><label>2016-02-15 12:24:56</label> 已到达XXX</li>
-	                            <li><label>2016-02-15 12:24:56</label> 已到达XXX</li>
-	                            <li><label>2016-02-15 12:24:56</label> 已到达XXX</li>
-	                            <li><label>2016-02-15 12:24:56</label> 已到达XXX</li>
-	                        </ul>
-	                        <a href="javascript:void(0);" id="wuliumore" class="amore" title="">展开</a>
+	                    <div id="postinfo" class="wuliuinfo hei30">
 	                    </div>
-	
 	                    <script>
 	                        $(function () {
-	                            var i = false;
-	                            $('#wuliumore').click(function () {
-	                                if(i==false){
-	                                    $(this).parent().animate({'height':'auto'},600);
-	                                    $(this).addClass('on').html('收起');
-	                                }else{
-	                                    $(this).parent().animate({'height':'30px'},600);
-	                                    $(this).removeClass('on').html('展开');
-	                                }
-	                                i == false ? i = true : i = false;
-	                            });
+	                            searchpostinfo("${ordershipment.trackExpress.com!''}","${ordershipment.trackingNo!''}");
 	                        });
 	                    </script>
 	                </div>
-	                -->
+	                </#if>
 	                <#if order.orderAddress??>
 					<div>
 	                    <label>收&nbsp;&nbsp;货&nbsp;人</label>
@@ -170,6 +150,10 @@
 	                    <span>${order.orderAddress.telphone!''}</span>
 	                </div>
 					</#if>
+					<div>
+	                    <label>客户备注</label>
+	                    <span>${order.userMessage!''}</span>
+	                </div>
 	                <div>
 	                    <label>支付方式</label>
 	                    <span>${order.paymentStr!''}</span>

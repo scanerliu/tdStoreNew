@@ -17,6 +17,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,7 @@ import com.tiandu.common.tencent.common.Configure;
 import com.tiandu.common.tencent.common.RandomStringGenerator;
 import com.tiandu.common.tencent.common.Signature;
 import com.tiandu.common.utils.ConstantsUtils;
+import com.tiandu.common.utils.KuaiDiUtils;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.complaint.entity.TdComplaint;
 import com.tiandu.custom.entity.TdUser;
@@ -52,6 +54,8 @@ import com.tiandu.order.service.TdOrderShipmentService;
 import com.tiandu.order.service.TdOrderSkuService;
 import com.tiandu.order.vo.OperResult;
 import com.tiandu.order.vo.OrderCancel;
+import com.tiandu.order.vo.PostageResponseVO;
+import com.tiandu.order.vo.PostageVO;
 import com.tiandu.payment.alipay.AlipayConfig;
 import com.tiandu.payment.alipay.Constants;
 import com.tiandu.payment.alipay.PaymentChannelAlipay;
@@ -138,8 +142,29 @@ public class MOrderController extends BaseController {
 		if(null==order || !order.getUserId().equals(currUser.getUid())){
 		    return "redirect:404";
 		}
+		if(order.getOrderStatus().compareTo(Byte.valueOf("3"))>=0){
+			TdOrderShipmentSearchCriteria sc = new TdOrderShipmentSearchCriteria();
+			sc.setType(Byte.valueOf("1"));
+			sc.setOrderId(order.getOrderId());
+			List<TdOrderShipment> ordershimentList = tdOrderShipmentService.findBySearchCriteria(sc);
+			TdOrderShipment ordershipment = null;
+			if(null!=ordershimentList && ordershimentList.size()>0){
+				ordershipment = ordershimentList.get(0);
+			}
+			modelMap.addAttribute("ordershipment", ordershipment) ;
+		}
 		modelMap.addAttribute("order", order) ;
 		return "/mobile/order/detail";
+	}
+	
+	@RequestMapping("/searchpostinfo")
+	public String searchpostinfo(PostageVO postage, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		PostageResponseVO presp = null;
+		if(null!=postage && StringUtils.isNotBlank(postage.getTrackingCom())&&StringUtils.isNotBlank(postage.getTrackingNo())){
+			presp = KuaiDiUtils.query(postage);
+		}
+		modelMap.addAttribute("presp", presp);		
+		return "/mobile/order/postinfo";
 	}
 	
 	@RequestMapping("/cancelorder{orderId}")

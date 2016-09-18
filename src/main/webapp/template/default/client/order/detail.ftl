@@ -24,6 +24,9 @@
     <script type="text/javascript" src="${app.basePath}/static/js/client/common.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/js/client/index.js"></script>
     <script src="${app.basePath}/static/js/client/order/orderlist.js" type="text/javascript"></script>
+    <style>
+    .view-logistics .logistic-info .order-number .hei30{height:30px;}
+    </style>
 </head>
 <body>
 	<h1 style="display:none;"></h1>
@@ -126,38 +129,18 @@
 	                    <label>订&nbsp;&nbsp;单&nbsp;号</label>
 	                    <span>${order.orderNo!''}</span>
 	                </div>
-	                <!--
+	                <#if ordershipment??>
 	                <div>
 	                    <label>物流跟踪</label>
-	
-	                    <div class="wuliuinfo" style="height: 30px;">
-	                        <ul>
-	                            <li class="top"><label>2016-02-15 12:24:56</label> 您提交了订单，请等待系统确认。</li>
-	                            <li><label>2016-02-15 12:24:56</label> 已到达XXX</li>
-	                            <li><label>2016-02-15 12:24:56</label> 已到达XXX</li>
-	                            <li><label>2016-02-15 12:24:56</label> 已到达XXX</li>
-	                            <li><label>2016-02-15 12:24:56</label> 已到达XXX</li>
-	                        </ul>
-	                        <a href="javascript:void(0);" id="wuliumore" class="amore" title="">展开</a>
+	                    <div id="postinfo" class="wuliuinfo hei30">
 	                    </div>
-	
 	                    <script>
 	                        $(function () {
-	                            var i = false;
-	                            $('#wuliumore').click(function () {
-	                                if(i==false){
-	                                    $(this).parent().animate({'height':'auto'},600);
-	                                    $(this).addClass('on').html('收起');
-	                                }else{
-	                                    $(this).parent().animate({'height':'30px'},600);
-	                                    $(this).removeClass('on').html('展开');
-	                                }
-	                                i == false ? i = true : i = false;
-	                            });
+	                            searchpostinfo("${ordershipment.trackExpress.com!''}","${ordershipment.trackingNo!''}");
 	                        });
 	                    </script>
 	                </div>
-	                -->
+	                </#if>
 	                <#if order.orderAddress??>
 					<div>
 	                    <label>收&nbsp;&nbsp;货&nbsp;人</label>
@@ -172,6 +155,10 @@
 	                    <span>${order.orderAddress.getSecretTel()!''}</span>
 	                </div>
 					</#if>
+	                <div>
+	                    <label>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label>
+	                    <span>${order.userMessage!''}</span>
+	                </div>
 	                <div>
 	                    <label>支付方式</label>
 	                    <span>${order.paymentStr!''}</span>
@@ -229,6 +216,7 @@
 			              	${special.sname!''}：${special.soption!''}&nbsp;&nbsp;
 			                </#list>
 			                </#if>
+			                &nbsp;
 	                    </li>
 	                    <li class="li3">${sku.price!''}</li>
 	                    <li class="li4">${sku.quantity!'0'}</li>

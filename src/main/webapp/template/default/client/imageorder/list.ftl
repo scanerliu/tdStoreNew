@@ -68,10 +68,14 @@
 	                            </ul>
 	                        </section>
 	                    </div>
+	                    <div class="fig fig1">
+	                        <label for="" class="lab1 fl"><span>*</span>图片数量</label>
+	                        ${imagNum!'0'}
+	                    </div>
 	                    <div class="rule">
 	                        <p class="p1">平台修改图片细则</p>
-	                        <p class="p2">1、规则</p>
-	                        <p class="p2">2、规则</p>
+	                        <p class="p2">1、这里什么修改图片细则</p>
+	                        <p class="p2">2、这里什么修改图片细则</p>
 	                    </div>
 	                    <form id="imageForm" method="post" action="">
 	                    <div class="fig fig1">

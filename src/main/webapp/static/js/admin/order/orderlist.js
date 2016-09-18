@@ -227,6 +227,7 @@ function closerepaywin(){
 function completeOrder(id){
 	$.messager.confirm('消息提醒', '确定要完成该订单吗?', function(r){
 		if (r){
+			openwaiting();
 			var url = basePath+"/admin/order/completeorder";
 			var loadData={"id":id};
 			$.post(url,loadData,completeOrderCallback,"text");
@@ -239,6 +240,7 @@ function completeOrder(id){
  */
 function completeOrderCallback(data){
 	var result = eval("("+data+")");
+	closewaiting();
 	if(result.code==1){
 		$.messager.alert('消息提醒','订单完成成功。');
 		refreshList();

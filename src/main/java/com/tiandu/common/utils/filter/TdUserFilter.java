@@ -33,6 +33,8 @@ public class TdUserFilter extends UserFilter {
         	//移动端登录切换登录地址
         	}else if(uri.indexOf(contextPath+ConstantsUtils.TDSTORE_MOBILE_FILTER)==0){
         		setLoginUrl(ConstantsUtils.TDSTORE_MOBILE_LOGIN_URL);
+        	}else{
+        		setLoginUrl(ConstantsUtils.TDSTORE_LOGIN_URL);
         	}
 	    	saveRequestAndRedirectToLogin(request, response);
 	    }
