@@ -22,34 +22,6 @@ function fnGotoPageOrders(num){
 }
 
 
-function refuseReturn(){
-	var remark = $("#remark").val();
-	if(remark==""||remark.length<5 || remark.length > 60){
-		alert("请正确填写拒绝说明：5至60个文字！");
-		return ;
-	}
-	$("#form").submit();
-}
-
-function agreeReturn(shipId){
-	var s = confirm("确认同意此次退款申请？");
-		 if (s) {
-			 $.ajax({
-				 url : basePath+"/supply/agree",
-				 type : "post",
-				 data : {"shipId":shipId},
-				 success:function(data){
-					 if(data.code==1){
-						 alert(data.msg);
-						 window.location.reload();
-					 }else{
-						 alert(data.msg);
-					 }
-				 }
-			 })
-		 }
-}
-
 function shippmentOrder(){
 	var url = basePath+"/supply/shiporder";
 	var loadData = $("#shipmentform").serializeArray();
@@ -101,4 +73,80 @@ function searchRefunds(f){
 //分页函数
 function fnGotoPageRefunds(num){
 	searchRefunds(false);
+}
+
+/**
+ * 查询物流信息
+ * @param f
+ */
+function searchpostinfo(com,no){
+	var url = basePath+"/order/searchpostinfo";
+	var loadData = {"trackingNo":no,"trackingCom":com};
+	$("#postinfo").loading().load(url,loadData);
+}
+
+function agreeReturn(shipId){
+	var s = confirm("确认同意此次退款申请？");
+		 if (s) {
+			 $.ajax({
+				 url : basePath+"/supply/agree",
+				 type : "post",
+				 data : {"shipId":shipId},
+				 success:function(result){
+					 var data = eval("("+result+")");
+					 if(data.code==1){
+						 alert(data.msg);
+						 window.location.reload();
+					 }else{
+						 alert(data.msg);
+					 }
+				 }
+			 })
+		 }
+}
+
+function refuseReturn(shipId){
+	var remark = $("#remark").val();
+	if(remark==""||remark.length<5||remark.length>50){
+		alert("请正确填写拒绝理由！");
+		$("#remark").focus();
+		return false;
+	}
+	var s = confirm("确认拒绝此次退款申请？");
+		 if (s) {
+			 $.ajax({
+				 url : basePath+"/supply/refusereturn",
+				 type : "post",
+				 data : {"shipId":shipId,"remark":remark},
+				 success:function(result){
+					 var data = eval("("+result+")");
+					 if(data.code==1){
+						 alert(data.msg);
+						 window.location.reload();
+					 }else{
+						 alert(data.msg);
+					 }
+				 }
+			 })
+		 }
+}
+
+function completeReturn(shipId){
+	var s = confirm("确认完成退款？");
+		 if (s) {
+			 $.ajax({
+				 url : basePath+"/supply/refundorder",
+				 type : "post",
+				 data : {"shipId":shipId},
+				 success:function(result){
+					 var data = eval("("+result+")");
+					 if(data.code==1){
+						 alert(data.msg);
+						 window.location.reload();
+					 }else{
+						 alert(data.msg);
+					 }
+				 }
+			 })
+		 }
 }

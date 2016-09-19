@@ -297,6 +297,34 @@ public class COrderController extends BaseController {
 		return map;
 	}
 	
+	@RequestMapping("/refunddetail{shipId}")
+	public String turnDetail(@PathVariable Integer shipId,HttpServletRequest req,ModelMap map)
+	{
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		TdUser currUser = this.getCurrentUser();
+		
+		if(null == shipId){
+			return "redirect:404";
+		}
+		TdOrderShipment shipment = tdOrderShipmentService.findOne(shipId);
+		
+		if(null==shipment){
+			return "redirect:404";
+		}
+		
+		if(null != shipment){
+			map.addAttribute("ship", shipment);
+			TdOrder order = tdOrderService.findDetail(shipment.getOrderId());
+			if(null==order || order.getUserId()!=currUser.getUid()){
+				return "redirect:404";
+			}
+			map.addAttribute("order", order);
+		}
+		
+		return "/client/order/turn_detail";
+	}
+	
 	@RequestMapping("/refundtract{shipId}")
 	public String refundtract(@PathVariable("shipId") Integer shipId, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser currUser = this.getCurrentUser();
@@ -318,6 +346,8 @@ public class COrderController extends BaseController {
 		List<TdExpress> expressList = tdExpressService.findBySearchCriteria(sc);
 		modelMap.addAttribute("expressList", expressList);		
 	    modelMap.addAttribute("shipment", shipment) ;
+	 // 系统配置
+	 		modelMap.addAttribute("system", getSystem());
 		return "/client/order/refundtract";
 	}
 	@RequestMapping("/savetract")
@@ -342,14 +372,16 @@ public class COrderController extends BaseController {
 			map.put("msg", "录入物流单号失败：退款申请不存在！");
 			return map;
 		}
-		TdOrderShipment saverecord = new TdOrderShipment();
-		saverecord.setId(shipment.getId());
-		saverecord.setTrackingId(ship.getTrackingId());
-		saverecord.setTrackingNo(ship.getTrackingNo());
-		saverecord.setUpdateBy(currUser.getUid());
-		saverecord.setUpdateTime(now);
-		saverecord.setStatus(Byte.valueOf("4"));
-		tdOrderShipmentService.save(saverecord);
+		if(shipment.getStatus().equals(Byte.valueOf("2"))){
+			TdOrderShipment saverecord = new TdOrderShipment();
+			saverecord.setId(shipment.getId());
+			saverecord.setTrackingId(ship.getTrackingId());
+			saverecord.setTrackingNo(ship.getTrackingNo());
+			saverecord.setUpdateBy(currUser.getUid());
+			saverecord.setUpdateTime(now);
+			saverecord.setStatus(Byte.valueOf("4"));
+			tdOrderShipmentService.save(saverecord);
+		}
 		map.put("code", "1");
 		map.put("msg", "录入物流单号成功。");
 		return map;

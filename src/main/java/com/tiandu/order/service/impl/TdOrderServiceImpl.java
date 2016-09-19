@@ -2178,10 +2178,37 @@ public class TdOrderServiceImpl implements TdOrderService{
 		if(null!=orderList){
 			TdUser user = tdUserService.findOne(1);//系统账号
 			for(TdOrder order : orderList){
-				this.completeOrder(order, user);
+				this.cancelOrder(order, user);
 			}
 		}
 		
+	}
+
+	@Override
+	public OperResult refundorderBySupply(TdOrderShipment ship) {
+		OperResult result = new OperResult();
+		OrderRefund refund = new OrderRefund();
+		refund.setOrderId(ship.getOrderId());
+		refund.setCreateTime(ship.getUpdateTime());
+		refund.setCreateBy(ship.getSupplyId());
+		refund.setRefundAmount(ship.getReturnAmount());
+		OperResult ret = this.refundorder(refund);
+		if(ret.isFlag()){
+			//更改退货单状态为已完成
+			ship.setStatus(Byte.valueOf("5"));
+			tdOrderShipmentMapper.updateByPrimaryKeySelective(ship);
+			//更改订单状态为已发货状态继续订单流程
+			TdOrder uporder = new TdOrder();
+			uporder.setOrderId(ship.getOrderId());
+			uporder.setUpdateBy(ship.getSupplyId());
+			uporder.setUpdateTime(ship.getUpdateTime());
+			uporder.setOrderStatus(ConstantsUtils.ORDER_STATUS_RECEIPTED);
+			tdOrderMapper.updateByPrimaryKeySelective(uporder);
+			result.setFlag(true);
+		}else{
+			result.setFailMsg(ret.getFailMsg());
+		}
+		return result;
 	}
 
 	

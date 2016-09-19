@@ -47,12 +47,15 @@
 			      		已完成
 			    	</#if>
                 </p>
-                <p><a href="${app.basePath}/supply/order/detail${ship.orderId!'0'}" title="查看详情" target="_blank">订单详情</a></p>
+                <p><a href="${app.basePath}/supply/return/detail${ship.id!'0'}" title="查看详情" target="_blank">退货详情</a></p>
             </div>
             <div class="div7 w89 fl">
             <#if ship.status==1><P><a href="javascript:;" class="a_sure" onclick="agreeReturn(${ship.id!''})">同意退货</a></P><P><a href="javascript:;" class="a_sure" onclick="rejectReturn(${ship.id!''})">不同意退货</a></P></#if>
             <#if ship.status==4><P><a href="javascript:;" class="a_sure" onclick="completeReturn(${ship.id!''})">完成退货</a></P></#if>
             </div>
+        </div>
+        <div class="goodsorder_detail">
+        	退货原因：${ship.returnCauseStr!''}
         </div>
     </li>
     </#list>

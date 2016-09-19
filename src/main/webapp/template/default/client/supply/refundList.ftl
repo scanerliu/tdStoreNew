@@ -1,5 +1,4 @@
 <#import "/common/app.ftl" as app>
-<#include "/common/common.ftl" />
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,7 +44,7 @@
 						<input type="hidden" id="sc_fliterType" name="status" value=""/>
 	                <div class="div1 fl">我的退货单</div>
 	                <div class="div2 fl" id="orderTab">
-	                    <a href="javascript:;" title="" tid="0" class="active">全部</a>
+	                    <a href="javascript:;" title="" tid="" class="active">全部</a>
 	                    <a href="javascript:;" title="" tid="1">待退货</a>
 	                    <a href="javascript:;" title="" tid="2">退货中</a>
 	                    <a href="javascript:;" title="" tid="4">待完成</a>

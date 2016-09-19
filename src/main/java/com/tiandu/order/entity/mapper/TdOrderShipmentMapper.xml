@@ -47,6 +47,7 @@
   <resultMap id="itemOrderSkuResult" type="com.tiandu.order.entity.TdOrderSku" >
   	<result column="item_img" property="productImage" jdbcType="VARCHAR" />
   	<result column="item_productName" property="productName" jdbcType="VARCHAR" />
+  	<result column="item_productId" property="productId" jdbcType="INTEGER" />
   	<result column="item_specification" property="displaySpecifications" jdbcType="VARCHAR" />
   	 <result column="item_price" property="price" jdbcType="DECIMAL" />
   </resultMap>
@@ -58,17 +59,19 @@
   
   <sql id="Base_Column_List" >
     s.id, s.order_id, s.type, s.tracking_no, s.tracking_id, s.return_reason, s.cargo_status, s.status, 
-    s.create_time, s.create_by, s.update_time, s.update_by, s.return_cause, s.return_amount,s.supply_id,s.remark
+    s.create_time, s.create_by, s.update_time, s.update_by, s.return_cause, s.return_amount,s.supply_id,s.remark,s.tracking_trace,s.voucher_images
   </sql>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     , r.total_amount, r.pay_amount, r.order_no ,r.order_status as order_status,r.pay_status as order_pay,r.shipment_status as order_ship
-   , i.id as ITEM_ID, i.quantity as ITEM_QUANTITY,o.product_image as item_img, o.product_name as item_productName, o.display_specifications as item_specification
+   , i.id as ITEM_ID, i.quantity as ITEM_QUANTITY,o.product_image as item_img, o.product_id as item_productId,o.price as item_price, o.product_name as item_productName, o.display_specifications as item_specification
+   , e.name as express_name, e.com as express_com
     from td_order_shipment s
     	left join td_order_shipment_item i on i.shipment_id = s.id 
     	left join td_order_sku o on i.order_sku_id = o.order_sku_id
     	left join td_order r on r.order_id=s.order_id 
+    	left join td_express e on s.tracking_id = e.id 
     where s.id = #{id,jdbcType=INTEGER}
   </select>
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.order.search.TdOrderShipmentSearchCriteria" >

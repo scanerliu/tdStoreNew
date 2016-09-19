@@ -227,6 +227,11 @@ public class TdOrderShipment {
 	}
 
 	public String[] getVoucherImageList() {
+		if(null==voucherImageList){
+			if(StringUtils.isNotBlank(voucherImages)){
+				voucherImageList = voucherImages.split(",");
+			}
+		}
 		return voucherImageList;
 	}
 
@@ -254,5 +259,46 @@ public class TdOrderShipment {
 				this.setVoucherImages(sb.toString());
 			}
 		}
+	}
+	
+	 /**
+     * 前台上传图片后，赋值给数据库属性voucherImages
+     */
+	public String getReturnCauseStr(){
+		StringBuffer sb = new StringBuffer();
+		if(null!=returnCause){
+			switch(returnCause){
+				case 1:
+					sb.append("七天无理由退换货");
+					break;
+				case 2:
+					sb.append("退运费");
+					break;
+				case 3:
+					sb.append("收到商品破损");
+					break;
+				case 4:
+					sb.append("商品错发/漏发");
+					break;
+				case 5:
+					sb.append("商品需要维修");
+					break;
+				case 6:
+					sb.append("收到商品与描述不符");
+					break;
+				case 7:
+					sb.append("商品质量问题");
+					break;
+				case 8:
+					sb.append("假冒品牌");
+					break;
+				case 9:
+					sb.append("未收到货");
+					break;
+				default:
+					break;
+			}
+		}
+		return sb.toString();
 	}
 }

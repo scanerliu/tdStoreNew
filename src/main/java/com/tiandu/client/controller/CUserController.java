@@ -1040,7 +1040,7 @@ public class CUserController extends BaseController {
 		List<TdProduct> productList = tdProductService.findBySearchCriteria(sc);
 		modelMap.addAttribute("productList", productList);			
 		modelMap.addAttribute("sc", sc);
-		return "/client/user/myProductListbody";	
+		return "/client/user/myProductListBody";	
 	}
 	
 	/*

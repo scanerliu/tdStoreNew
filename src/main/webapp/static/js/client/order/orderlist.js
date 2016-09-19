@@ -68,7 +68,7 @@ function fnGotoPageRefunds(num){
  */
 function refundtract(){
 	var trackingNo = $("#trackingNo").val();
-	if(trackingNo==""||trackingNo.length<3){
+	if(trackingNo==""||trackingNo.length<3||trackingNo.length>50){
 		alert("请正确填写物流单号！");
 		return ;
 	}

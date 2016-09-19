@@ -147,6 +147,7 @@
 				closewaiting();
 				alert(data.msg);
 				if(data.code == 1){
+					window.location.href=basePath+"/order/list";
 				}
 			}
 		});

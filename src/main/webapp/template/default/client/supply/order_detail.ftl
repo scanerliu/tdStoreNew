@@ -24,6 +24,9 @@
     <script type="text/javascript" src="${app.basePath}/static/js/client/common.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/js/client/index.js"></script>
     <script src="${app.basePath}/static/js/client/order/orderlist.js" type="text/javascript"></script>
+    <style>
+    .view-logistics .logistic-info .order-number .hei30{height:30px;}
+    </style>
 </head>
 <body>
 	<h1 style="display:none;"></h1>
@@ -125,6 +128,10 @@
 	                    <span>${order.orderNo!''}</span>
 	                </div>
 	                <#if ordershipment??>
+	                <div>
+	                    <label>物流信息</label>
+	                    <span>${ordershipment.trackExpress.name!''} ${ordershipment.trackingNo!''}</span>
+	                </div>
 	                <div>
 	                    <label>物流跟踪</label>
 	                    <div id="postinfo" class="wuliuinfo hei30">

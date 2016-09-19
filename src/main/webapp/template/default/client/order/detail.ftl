@@ -131,6 +131,10 @@
 	                </div>
 	                <#if ordershipment??>
 	                <div>
+	                    <label>物流信息</label>
+	                    <span>${ordershipment.trackExpress.name!''} ${ordershipment.trackingNo!''}</span>
+	                </div>
+	                <div>
 	                    <label>物流跟踪</label>
 	                    <div id="postinfo" class="wuliuinfo hei30">
 	                    </div>

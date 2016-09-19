@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,6 +33,7 @@ import com.tiandu.order.search.TdOrderShipmentSearchCriteria;
 import com.tiandu.order.service.TdOrderService;
 import com.tiandu.order.service.TdOrderShipmentService;
 import com.tiandu.order.vo.OperResult;
+import com.tiandu.order.vo.OrderRefund;
 
 /**
  * 
@@ -41,6 +43,8 @@ import com.tiandu.order.vo.OperResult;
 @Controller
 @RequestMapping("/supply")
 public class CSupplyController extends BaseController{
+	
+	private final Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
 	TdOrderService tdOrderService;
@@ -138,6 +142,7 @@ public class CSupplyController extends BaseController{
 	{
 		// 系统配置
 		map.addAttribute("system", getSystem());
+		TdUser currUser = this.getCurrentUser();
 		
 		if(null == shipId){
 			return "redirect:404";
@@ -145,6 +150,9 @@ public class CSupplyController extends BaseController{
 		TdOrderShipment shipment = tdOrderShipmentService.findOne(shipId);
 		
 		if(null != shipment){
+			if(shipment.getSupplyId()!=currUser.getUid()){
+				return "redirect:404";
+			}
 			map.addAttribute("ship", shipment);
 			map.addAttribute("order", tdOrderService.findDetail(shipment.getOrderId()));
 		}
@@ -199,6 +207,30 @@ public class CSupplyController extends BaseController{
 			tdOrderShipmentService.save(shipment);
 			res.put("code", 1);
 			res.put("msg", "退款成功");
+			return res;
+		}
+		res.put("msg", "参数错误");
+		return res;
+	}
+	
+	/**
+	 * 拒绝退货
+	 */
+	@RequestMapping(value = "/refusereturn",method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> refusereturn(TdOrderShipment ship,HttpServletRequest req,ModelMap map){
+		Map<String,Object> res = new HashMap<>();
+		res.put("code", 0);
+		
+		if(null != ship.getId()){
+			TdOrderShipment shipment = tdOrderShipmentService.findOne(ship.getId());
+			if(shipment.getStatus().equals(Byte.valueOf("1"))){
+				shipment.setStatus((byte)3);
+				shipment.setRemark(ship.getRemark());
+				tdOrderShipmentService.save(shipment);
+			}
+			res.put("code", 1);
+			res.put("msg", "操作成功");
 			return res;
 		}
 		res.put("msg", "参数错误");
@@ -267,7 +299,51 @@ public class CSupplyController extends BaseController{
 	}
 	
 	
-	
+	/**
+	 * 订单完成退款操作
+	 * @param id 订单id
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
+	@RequestMapping(value="/refundorder", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> refundorder(TdOrderShipment ship, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>(); 
+		if(null!=ship && null!=ship.getOrderId()){
+			try {
+				Date now = new Date();
+				TdUser currUser = this.getCurrentUser();
+				ship.setCreateTime(now);
+				ship.setCreateBy(currUser.getUid());
+				
+				TdOrderShipment shipment = tdOrderShipmentService.findOne(ship.getId());
+				if(null!=shipment &&shipment.getSupplyId().equals(currUser.getUid())&& shipment.getStatus().equals(Byte.valueOf("4"))){
+					OperResult result = tdOrderService.refundorderBySupply(ship);
+					if(result.isFlag()){
+						res.put("code", "1");
+					}else{
+						res.put("code", "0");
+						res.put("msg", result.getFailMsg());
+					}
+				}else{
+					res.put("code", "0");
+					res.put("msg", "数据错误");
+				}
+				return res;
+			}catch (Exception e) {
+				logger.error("订单删除失败错误信息:"+e);
+				res.put("code", "0");
+				res.put("msg", "系统错误："+e.getMessage());
+				return res;
+			}
+		}else{
+			res.put("code", "0");
+			res.put("msg", "数据有误！");
+			return res;
+		}
+	}
 	
 	
 	@ModelAttribute

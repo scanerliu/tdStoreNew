@@ -41,12 +41,15 @@
 				      <#elseif ship.status==3>
 				      		不同意退款
 				      <#elseif ship.status==4>
+				      		待退款
+				      <#elseif ship.status==5>
 				      		完成退款
 				      </#if>
                 </p>
+                <p><a href="${app.basePath}/order/refunddetail${ship.id!'0'}" title="查看详情" target="_blank">退货详情</a></p>
             </div>
             <div class="div7 w89 fl">
-	        <#if ship.status==2 && ship.cargoStatus==2><P><a href="${app.basePath}/order/refundtract${ship.id!'0'}" title="">录入物流单号</a></P></#if>
+	        <#if ship.status==2 && ship.cargoStatus==1><P><a href="${app.basePath}/order/refundtract${ship.id!'0'}" class="a_sure" title="录入物流单号">录入物流单号</a></P></#if>
             </div>
         </div>
     </li>

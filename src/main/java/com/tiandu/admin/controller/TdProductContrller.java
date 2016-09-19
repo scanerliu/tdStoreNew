@@ -158,18 +158,19 @@ public class TdProductContrller extends BaseController{
 					}
 				}
 			}*/
+			// 商品对应的货品
+			List<TdProductSku> productSkuList = tdProductSkuService.findByProductId(id);
+			map.addAttribute("productSkuList", productSkuList);
 			//商品类型规格
 			List<TdProductTypeAttribute> attributeList = tdProductTypeAttributeService.findByTypeIdWithOptions(product.getTypeId());
 			if(attributeList.size()>0){
 				//匹配货品库存状态
+				tdProductService.matchSkuStockWithAttributeOption(productSkuList,attributeList);
 				if(product.getSpecification()){//开启规格，合并自定义属性
 					tdProductService.joinSelfAttributeOption(product,attributeList);
 				}
 			}
 			map.addAttribute("taList", attributeList);
-			// 商品对应的货品
-			List<TdProductSku> productSkuList = tdProductSkuService.findByProductId(id);
-			map.addAttribute("productSkuList", productSkuList);
 			// 商品key=value字符串
 			/*String keyValueStr = "";
 			for(TdProductSku ps : productSkuList){

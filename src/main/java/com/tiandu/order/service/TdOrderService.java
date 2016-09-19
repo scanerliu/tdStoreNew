@@ -153,4 +153,11 @@ public interface TdOrderService {
 	 * @return
 	 */
 	public OperResult cancelOrderByUser(TdOrder order, OrderCancel ordercancel);
+
+	/**
+	 * 供应商完成退货操作
+	 * @param ship
+	 * @return
+	 */
+	public OperResult refundorderBySupply(TdOrderShipment ship);
 }

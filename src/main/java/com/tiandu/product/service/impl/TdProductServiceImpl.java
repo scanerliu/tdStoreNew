@@ -292,7 +292,7 @@ public class TdProductServiceImpl implements TdProductService{
 							for(String aoption : aos.getSoptions()){//循环商品已有选项值
 								Boolean exist = false;
 								for(TdProductAttributeOption option : optionList){//循环系统规格选项值
-									if(option.equals(aoption)){//如果系统中存在相同的，则跳出
+									if(option.getName().equals(aoption)){//如果系统中存在相同的，则跳出
 										exist = true;
 										break;
 									}
