@@ -77,10 +77,14 @@ public class MobileSupplyController extends BaseController{
 		
 		sc.setSupplierId(user.getUid());
 		sc.setGetProductSku(true);
-		sc.setFliterType(2);
 		
+		map.addAttribute("all_order_list", tdOrderService.findBySearchCriteria(sc));
+		
+		sc.setFliterType(2);
 		map.addAttribute("order_list", tdOrderService.findBySearchCriteria(sc));
 		map.addAttribute("sc", sc);
+		
+		
 		
 		shipsc.setGetOrder(true);
 		shipsc.setSupplyId(user.getUid());
