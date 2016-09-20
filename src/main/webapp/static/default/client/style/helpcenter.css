@@ -1,0 +1,256 @@
+@charset "UTF-8";
+.helpcentertop {
+  width: 100%;
+  display: inline-block;
+  height: 160px;
+  min-width: 1200px;
+  background: url("../images/f-topbg.jpg") center center repeat-y;
+  background-size: 1920px; }
+  .helpcentertop .intop {
+    display: inline-block;
+    width: 100%; }
+    .helpcentertop .intop .title {
+      float: left;
+      margin-top: 60px;
+      line-height: 35px;
+      height: 40px;
+      font-size: 30px;
+      color: #fff; }
+      .helpcentertop .intop .title i {
+        float: left;
+        margin-right: 10px; }
+    .helpcentertop .intop .search-div {
+      float: right;
+      width: 356px;
+      height: 44px;
+      margin-top: 60px; }
+      .helpcentertop .intop .search-div .txt {
+        float: left;
+        width: 248px;
+        height: 44px;
+        padding: 0 15px;
+        line-height: 44px;
+        font-size: 14px;
+        color: #666;
+        border: 0;
+        background: #fff; }
+      .helpcentertop .intop .search-div .asearch {
+        float: left;
+        width: 78px;
+        height: 44px;
+        background: #ff9900 url(../images/z3.png) no-repeat center; }
+
+/* 椤电爜 */
+.goods-page-nums {
+  display: inline-block;
+  width: 100%;
+  color: #999; }
+
+.goods-page-nums a {
+  padding: 0 10px;
+  height: 30px;
+  line-height: 28px;
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: inline-block; }
+
+.goods-page-nums input {
+  width: 46px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 12px;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
+
+.goods-page-nums a:hover {
+  color: #fff;
+  background-color: #ff9900; }
+
+.goods-page-nums a.active {
+  color: #fff;
+  background-color: #ff9900; }
+
+.goods-page-nums a.btn-sure {
+  margin-left: 5px;
+  margin-right: 0;
+  height: 30px;
+  line-height: 30px; }
+
+/* 椤电爜-缁撴潫 */
+.txtr {
+  text-align: right; }
+
+.centerwarp {
+  display: inline-block;
+  width: 1200px;
+  margin-top: 40px;
+  border: 1px solid #e2e2e2; 
+  height:auto;
+  }
+  .centerwarp .leftnav1 {
+    float: left;
+    width: 188px;
+    padding: 35px 30px;
+    border-right: 1px solid #e2e2e2;
+    background: url("../images/f-icon22.png") right repeat-y; }
+    .centerwarp .leftnav1 dl {
+      float: left;
+      margin-bottom: 30px; }
+      .centerwarp .leftnav1 dl dt {
+        float: left;
+        width: 173px;
+        height: 20px;
+        padding-left: 10px;
+        line-height: 20px;
+        border-left-style: solid;
+        border-left-width: 5px;
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 15px; }
+      .centerwarp .leftnav1 dl dd {
+        float: left;
+        width: 188px; }
+        .centerwarp .leftnav1 dl dd a {
+          float: left;
+          width: 100%;
+          font-size: 14px;
+          margin-bottom: 10px; }
+          .centerwarp .leftnav1 dl dd a i {
+            float: left;
+            font-style: normal;
+            margin-right: 15px;
+            color: #666; }
+        .centerwarp .leftnav1 dl dd a.on {
+          color: #ff9900; }
+  .centerwarp .leftnav2 {
+    float: left;
+    width: 248px; }
+    .centerwarp .leftnav2 dl {
+      float: left; }
+      .centerwarp .leftnav2 dl dt, .centerwarp .leftnav2 dl dd {
+        float: left;
+        width: 218px;
+        height: 50px;
+        padding-left: 30px;
+        line-height: 50px;
+        overflow: hidden;
+        border-bottom: 1px solid #e2e2e2; }
+      .centerwarp .leftnav2 dl dt {
+        font-weight: bold;
+        font-size: 16px; }
+      .centerwarp .leftnav2 dl dd {
+        font-size: 16px; }
+        .centerwarp .leftnav2 dl dd i {
+          float: left;
+          font-style: normal;
+          margin-right: 15px; }
+      .centerwarp .leftnav2 dl dt.on {
+        color: #fff;
+        background: #ff9900; }
+      .centerwarp .leftnav2 dl dd.on a {
+        color: #ff9900; }
+  .centerwarp .content1 {
+    float: left;
+    width: 840px;
+    padding: 35px 45px; }
+    .centerwarp .content1 .title {
+      float: left;
+      width: 100%;
+      font-size: 30px;
+      line-height: 30px;
+      margin-bottom: 20px; }
+    .centerwarp .content1 article {
+      float: left;
+      width: 100%;
+      line-height: 26px; }
+  .centerwarp .content2 {
+    float: left;
+    width: 840px;
+    padding: 35px 45px;
+    border-left: 1px solid #e2e2e2; }
+    .centerwarp .content2 .title {
+      float: left;
+      width: 100%;
+      font-size: 30px;
+      line-height: 30px;
+      margin-bottom: 20px; }
+    .centerwarp .content2 .newslist {
+      float: left;
+      width: 100%; }
+      .centerwarp .content2 .newslist dl {
+        float: left;
+        width: 100%;
+        margin-bottom: 30px; }
+        .centerwarp .content2 .newslist dl dd {
+          float: left;
+          width: 100%; }
+          .centerwarp .content2 .newslist dl dd a {
+            float: left;
+            width: 730px;
+            line-height: 34px;
+            height: 34px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 15px; }
+            .centerwarp .content2 .newslist dl dd a i {
+              float: left;
+              margin-right: 15px;
+              font-style: normal; }
+          .centerwarp .content2 .newslist dl dd .date {
+            float: right;
+            line-height: 34px;
+            font-size: 15px; }
+  .centerwarp .content3 {
+    float: left;
+    width: 840px;
+    padding: 35px 45px;
+    border-left: 1px solid #e2e2e2; }
+    .centerwarp .content3 div.title {
+      float: left;
+      width: 100%;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #e2e2e2; }
+      .centerwarp .content3 div.title .p1 {
+        float: left;
+        width: 100%;
+        margin-bottom: 20px;
+        font-size: 30px;
+        line-height: 36px; }
+      .centerwarp .content3 div.title .p2 {
+        float: left;
+        margin-right: 20px;
+        line-height: 18px;
+        font-size: 14px; }
+        .centerwarp .content3 div.title .p2 i {
+          float: left;
+          margin-right: 5px; }
+        .centerwarp .content3 div.title .p2 label {
+          float: left; }
+        .centerwarp .content3 div.title .p2 .bdsharebuttonbox {
+          float: left;
+          margin-top: -5px; }
+    .centerwarp .content3 span.title {
+      float: left;
+      width: 100%;
+      font-size: 30px;
+      line-height: 30px;
+      margin-bottom: 20px; }
+    .centerwarp .content3 article {
+      float: left;
+      padding: 30px 0;
+      width: 100%;
+      line-height: 26px; }
+
+/*# sourceMappingURL=helpcenter.css.map */
