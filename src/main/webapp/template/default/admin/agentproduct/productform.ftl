@@ -56,13 +56,26 @@
             </select>
         </td>
     </tr>
+            <input type="text" name="note" class="easyui-textbox" value="${product.note!''}" style="width:800px;height:300px" data-options="multiline:true,required:true" validType="length[2,5000]">
     -->
     <tr>
         <th>产品描述：</th>
         <td>
-            <input type="text" name="note" class="easyui-textbox" value="${product.note!''}" style="width:800px;height:300px" data-options="multiline:true,required:true" validType="length[2,5000]">
+        	<textarea style="display:none;" rows="5" cols="60" id="ac" name="note">${product.note!''}</textarea>
+		    <!-- 加载编辑器的容器 -->
+		    <script id="note" name="content" type="text/plain">${product.note!''}</script>
         </td>
     </tr>
+    <!-- 配置文件 -->
+<script type="text/javascript" src="${app.basePath}/static/js/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="${app.basePath}/static/js/ueditor/ueditor.all.js"></script>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+	$(document).ready(function(){
+	    var ue = UE.getEditor('note');	
+	});
+</script>
     <tr>
         <th>排序值：</th>
         <td>

@@ -164,6 +164,19 @@ public class MobileProductListController extends BaseController{
 		sc.setEndTime(new Date());
 		sc.setOnshelf(true);
 		sc.setStatus(Byte.valueOf("1"));
+		
+		// 轮播广告
+		TdAdvertisementSearchCriteria adsc = new TdAdvertisementSearchCriteria();
+		adsc.setCreateTime(new Date());
+		adsc.setEndTime(new Date());
+		TdAdsense adsense = tdAdsenseService.findByName("触屏预售秒杀轮播大图广告");
+		if(null != adsense)
+		{
+			adsc.setAdsId(adsense.getId());
+			adsc.setOrderBy("2");
+			map.addAttribute("adList", tdAdvertisementService.findBySearchCriteria(adsc));
+		}
+		
 		// 秒杀
 		sc.setKind((byte)6);
 		map.addAttribute("killList", tdProductService.findBySearchCriteria(sc));
@@ -243,6 +256,18 @@ public class MobileProductListController extends BaseController{
 		sc.setKind((byte)3);
 		map.addAttribute("zeroList", tdProductService.findBySearchCriteria(sc));
 		
+		// 轮播广告
+		TdAdvertisementSearchCriteria adsc = new TdAdvertisementSearchCriteria();
+		adsc.setCreateTime(new Date());
+		adsc.setEndTime(new Date());
+		TdAdsense adsense = tdAdsenseService.findByName("触屏零元专区轮播大图广告");
+		if(null != adsense)
+		{
+			adsc.setAdsId(adsense.getId());
+			adsc.setOrderBy("2");
+			map.addAttribute("adList", tdAdvertisementService.findBySearchCriteria(adsc));
+		}
+		
 		/*// 预售
 		sc.setKind((byte)4);
 		map.addAttribute("tenList", tdProductService.findBySearchCriteria(sc));*/
@@ -255,6 +280,7 @@ public class MobileProductListController extends BaseController{
 	public String newProductList(HttpServletRequest req,ModelMap map){
 		// 系统配置
 		map.addAttribute("system", getSystem());
+		
 		return "/mobile/product/new_list";
 	}
 	
@@ -262,6 +288,19 @@ public class MobileProductListController extends BaseController{
 	@RequestMapping("/new/search")
 	public String newSearch(TdProductCriteria sc,HttpServletRequest req,ModelMap map)
 	{
+		
+		// 轮播广告
+		TdAdvertisementSearchCriteria adsc = new TdAdvertisementSearchCriteria();
+		adsc.setCreateTime(new Date());
+		adsc.setEndTime(new Date());
+		TdAdsense adsense = tdAdsenseService.findByName("触屏新品专区轮播大图广告");
+		if(null != adsense)
+		{
+			adsc.setAdsId(adsense.getId());
+			adsc.setOrderBy("2");
+			map.addAttribute("adList", tdAdvertisementService.findBySearchCriteria(adsc));
+		}
+		
 		sc.setOnshelf(true);
 		sc.setStatus(Byte.valueOf("1"));
 		if(null == sc.getOrderby())
@@ -310,6 +349,18 @@ public class MobileProductListController extends BaseController{
 	{
 		// 系统配置
 		map.addAttribute("system", getSystem());
+		// 轮播广告
+		TdAdvertisementSearchCriteria adsc = new TdAdvertisementSearchCriteria();
+		adsc.setCreateTime(new Date());
+		adsc.setEndTime(new Date());
+		TdAdsense adsense = tdAdsenseService.findByName("触屏积分兑换轮播大图广告");
+		if(null != adsense)
+		{
+			adsc.setAdsId(adsense.getId());
+			adsc.setOrderBy("2");
+			map.addAttribute("adList", tdAdvertisementService.findBySearchCriteria(adsc));
+		}
+		
 		return "/mobile/product/point_list";
 	}
 	

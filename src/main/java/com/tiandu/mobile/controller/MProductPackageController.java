@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tiandu.article.entity.TdAdsense;
+import com.tiandu.article.search.TdAdvertisementSearchCriteria;
+import com.tiandu.article.service.TdAdsenseService;
+import com.tiandu.article.service.TdAdvertisementService;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.ConstantsUtils;
 import com.tiandu.custom.entity.TdUser;
@@ -86,12 +90,31 @@ public class MProductPackageController extends BaseController {
 	@Autowired
 	private TdProductPackageItemService tdProductPackageItemService;
 	
+	@Autowired
+	private TdAdsenseService tdAdsenseService;
+	
+	@Autowired
+	private TdAdvertisementService tdAdvertisementService;
+	
 	/*
 	 * 商品包列表页
 	 */
 	@RequestMapping("/list")
 	public String list(TdProductCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		modelMap.addAttribute("sc", sc);
+		
+		// 轮播广告
+		TdAdvertisementSearchCriteria adsc = new TdAdvertisementSearchCriteria();
+		adsc.setCreateTime(new Date());
+		adsc.setEndTime(new Date());
+		TdAdsense adsense = tdAdsenseService.findByName("触屏礼品包轮播大图广告");
+		if(null != adsense)
+		{
+			adsc.setAdsId(adsense.getId());
+			adsc.setOrderBy("2");
+			modelMap.addAttribute("adList", tdAdvertisementService.findBySearchCriteria(adsc));
+		}
+		
 	    return "/mobile/package/list";
 	}
 	/*

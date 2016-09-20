@@ -15,6 +15,43 @@ $(document).ready(function(){
 </div>
 <!-- header_top end -->
 
+<!-- ****广告轮播**** -->
+<#if adList?? && adList?size gt 0>
+<div class="addWrap2">
+    <div class="swipe" id="mySwipe">
+        <div class="swipe-wrap">
+        	<#list adList as ad>
+				<div><a href="${ad.linkUrl!''}"><img class="img-responsive" src="${ad.imageUrl!''}"/></a></div>
+        	</#list>
+        </div>
+    </div>
+    <ul id="position">
+    	  <#if adList?? && adList?size gt 0>
+    	  <#list adList as ad>
+          <li class="cur"></li>
+          </#list>
+          </#if>
+    </ul>
+</div> 
+<script type="text/javascript">
+    var bullets = document.getElementById('position').getElementsByTagName('li');
+    var banner = Swipe(document.getElementById('mySwipe'), {
+        auto: 3000,
+        continuous: true,
+        disableScroll:false,
+        callback: function(pos) {
+            var i = bullets.length;
+            while (i--) {
+              bullets[i].className = ' ';
+            }
+            bullets[pos].className = 'cur';
+        }
+    });
+</script>
+</div>
+</#if>
+<!-- ****广告轮播-结束**** -->
+
 <!-- Center Start -->
 <!-- <section class="container"> -->
 <div class="three">
