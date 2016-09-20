@@ -18,12 +18,12 @@
 			</section>
 			<section class="row_linka fr">
 				<a href="${app.basePath}/shoppingcart/list" title="" class="_shop_car"><span id="shoppingcartcount">0</span></a>
-				<a href="#" title="" class="">帮助中心</a>
-				<a href="#" title="" class="">关注创客</a>
+				<a href="${app.basePath}/help/list" title="" class="">帮助中心</a>
+				<!--<a href="#" title="" class="">关注创客</a>-->
 				<a href="${app.basePath}/mobile/index" title="" class="">手机创客</a>
 				<a href="${app.basePath}/user/center" title="" class="">会员中心</a>
 				<a href="${app.basePath}/order/list" title="" class="">我的订单</a>
-				<a href="${app.basePath}/user/index" title="" class="">我的店铺</a>
+				<!--<a href="${app.basePath}/user/index" title="" class="">我的店铺</a>-->
 			</section>
 		</div>
 	</div>

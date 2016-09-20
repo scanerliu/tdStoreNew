@@ -8,6 +8,8 @@ public class TdArticleCategorySearchCriteria extends SearchCriteria {
 	private Integer parentId;
 	
 	private String name;
+	
+	private Integer aid; //文章id，前端参数，展示效果用
 
 	public Integer getCid() {
 		return cid;
@@ -40,7 +42,13 @@ public class TdArticleCategorySearchCriteria extends SearchCriteria {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
 
+	public Integer getAid() {
+		return aid;
+	}
+
+	public void setAid(Integer aid) {
+		this.aid = aid;
+	}
+	
 }

@@ -27,8 +27,9 @@
 		</div>
 	</div>
 	<div class="w100" style="border-bottom:1px solid #ddd;">
-		<div class="link_div">
+		<div class="link_div" id="helpbanner">
 			<ul>
+				<#--
 				<#if articleList??>
 				<#list articleList as at>
 				<li>
@@ -43,6 +44,7 @@
 				</li>
 				</#list>
 				</#if>
+				-->
 				<#--
 				<li>
 					<p class="p1">支付方式</p>
@@ -93,3 +95,8 @@
 <div class="load-container" id="loaddiv" style="display:none;">
 	<div class="loader" style="z-index: 1000;position:fixed;left:0;top:0;width:100%;height:100%;background:url('${app.basePath}/static/default/client/images/opa1.png');text-align:center;"><img style="position:relative;top:50%;margin-top:-18px;" src="${app.basePath}/static/default/client/images/loading.gif"></div>
 </div>
+<script>
+$(function(){
+loadhelpbanner();
+});
+</script>

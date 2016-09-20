@@ -1,6 +1,6 @@
 <div class="w100">
     <div class="under_div">
-        <p class="p1">
+        <p class="p1" id="sitebanner">
             <a href="#" title="" class="a1">关于我们</a>
             <a href="#" title="" class="">联系我们</a>
             <a href="#" title="" class="">人才招聘</a>
@@ -14,3 +14,8 @@
         <p class="p3"><#if system?? && system.webcopyright??>${system.webcopyright}</#if></p>
     </div>
 </div>
+<script>
+$(function(){
+loadsitebanner();
+});
+</script>

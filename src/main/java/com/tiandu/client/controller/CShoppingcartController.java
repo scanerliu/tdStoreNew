@@ -453,7 +453,7 @@ public class CShoppingcartController extends BaseController {
 		if(order!=null && StringUtils.isNotEmpty(order.getJno())){
 			//下单成功调整支付页面
 			modelMap.addAttribute("order", order) ;
-		    return "redirect:/client/order/jointdopay"+order.getId();
+		    return "redirect:/order/jointdopay"+order.getId();
 			
 		}else{
 			//下单失败

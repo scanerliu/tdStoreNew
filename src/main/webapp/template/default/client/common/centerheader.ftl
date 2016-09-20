@@ -21,7 +21,7 @@
             <span class="fl">|</span>
             <a href="${app.basePath}/mobile/index" title="">手机创客</a>
             <span class="fl">|</span>
-            <a class="help" href="${app.basePath}/" title="帮助中心">帮助中心</a>
+            <a class="help" href="${app.basePath}/help/list" title="帮助中心">帮助中心</a>
         </div>
     </div>
 </div>

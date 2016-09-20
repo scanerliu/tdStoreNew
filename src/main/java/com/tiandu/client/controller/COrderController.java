@@ -471,7 +471,7 @@ public class COrderController extends BaseController {
 		
 		order.setPaymentId(paymentId);
 		tdOrderService.save(order);
-		return "redirect:/client/order/dopay"+orderId+"?type=agent";
+		return "redirect:/order/dopay"+orderId+"?type=agent";
 	}
 	
 	/**
@@ -508,7 +508,7 @@ public class COrderController extends BaseController {
 		map.addAttribute("system", getSystem());
 		
 		Byte pay = torder.getPaymentId();
-		if(ConstantsUtils.ORDER_PAYMENT_ALIPAY.equals(pay)){
+		if(ConstantsUtils.ORDER_PAYMENT_ALIPAY.equals(pay)||ConstantsUtils.ORDER_PAYMENT_WEIXIN.equals(pay)){
 			// 支付宝支付
 			// 支付金额
 			req.setAttribute("totalAmount", torder.getAmount().toString());

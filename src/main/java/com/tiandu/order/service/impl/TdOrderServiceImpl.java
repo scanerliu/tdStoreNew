@@ -340,6 +340,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 
 	@Override
 	public OperResult completeOrder(TdOrder order, TdUser user) {
+		logger.error("completeOrder  start: orderno= "+order.getOrderNo());
 		OperResult result = new OperResult();
 		//已完成的订单的不能进行完成操作
 		if(ConstantsUtils.ORDER_STATUS_COMPLETE.equals(order.getOrderStatus())){
@@ -373,7 +374,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 		
 		//分润
 		this.benefitOrder(order);
-		
+		logger.error("completeOrder  end: orderno= "+order.getOrderNo());
 		result.setFlag(true);
 		return result;
 	}
@@ -1998,6 +1999,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 
 	@Override
 	public void completeOrderBySystemJob() {
+		logger.error("completeOrderBySystemJob  start:");
 		Date now = new Date();
 		Integer ordercompleteperiod = configUtil.getOrderCompletePeriod();
 		Date receiptTime = DateUtil.getNewDate(now, -ordercompleteperiod);//获取n天前的时间
@@ -2012,10 +2014,12 @@ public class TdOrderServiceImpl implements TdOrderService{
 		if(null!=orderList){
 			TdUser user = tdUserService.findOne(1);//系统账号
 			for(TdOrder order : orderList){
+				logger.error("completeOrderBySystemJob  start orderno:"+order.getOrderNo());
 				this.completeOrder(order, user);
+				logger.error("completeOrderBySystemJob  end orderno:"+order.getOrderNo());
 			}
 		}
-		
+		logger.error("completeOrderBySystemJob  end");
 	}
 	
 	

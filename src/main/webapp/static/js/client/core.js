@@ -72,3 +72,17 @@ function openwaiting(){
 function closewaiting(){
 	$("#loaddiv").hide();
 }
+/**
+ * 加载底部帮助列表
+ */
+function loadhelpbanner(){
+	var url = basePath + "/help/banner";
+	$("#helpbanner").loading().load(url,null);
+}
+/**
+ * 加载底部网站说明列表
+ */
+function loadsitebanner(){
+	var url = basePath + "/site/banner";
+	$("#sitebanner").loading().load(url,null);
+}

@@ -103,7 +103,7 @@
 	</bean>
 	<bean id="orderCancleTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="orderCancelJobDetail"/>
-		<property name="cronExpression" value="0 0 /1 ? * *"/>
+		<property name="cronExpression" value="0 0 4 ? * *"/>
 	</bean>
 	
 	<!-- 预售秒杀到时间自动下架 -->
