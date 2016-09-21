@@ -26,6 +26,12 @@ public interface TdProductTypeService {
 	
 	public List<TdProductType> findByParentId(Integer id);
 	/**
+	 * 根据父类id只查询分类Tree(最多只找三级)
+	 * @param id
+	 * @return
+	 */
+	public List<TdProductType> findTypeTreeByParentId(Integer id);
+	/**
 	 * 查找分类带所有上级分类(最多只找三级)
 	 * @param id
 	 * @return

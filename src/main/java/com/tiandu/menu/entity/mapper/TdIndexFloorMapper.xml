@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tiandu.menu.entity.mapper.TdIndexFloorMapper" >
+  <resultMap id="BaseResultMap" type="com.tiandu.menu.entity.TdIndexFloor" >
+    <id column="fid" property="fid" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    <collection property="typeList" column="fid" select="com.tiandu.menu.entity.mapper.TdIndexFloorTypeMapper.findByFloorId">
+	</collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    fid, title, sort, status, update_time, update_by
+  </sql>
+  <select id="findByTdIndexFloorSearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.menu.search.TdIndexFloorSearchCriteria" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_index_floor
+    where 1=1 
+    order by sort asc
+  </select>
+  <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.menu.search.TdIndexFloorSearchCriteria" >
+    select count(fid)
+    from td_index_floor
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_index_floor
+    where fid = #{fid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from td_index_floor
+    where fid = #{fid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tiandu.menu.entity.TdIndexFloor" >
+    <selectKey resultType="java.lang.Integer" keyProperty="fid" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into td_index_floor (title, sort, status, 
+      update_time, update_by)
+    values (#{title,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tiandu.menu.entity.TdIndexFloor" >
+    <selectKey resultType="java.lang.Integer" keyProperty="fid" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into td_index_floor
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tiandu.menu.entity.TdIndexFloor" >
+    update td_index_floor
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tiandu.menu.entity.TdIndexFloor" >
+    update td_index_floor
+    set title = #{title,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=INTEGER}
+    where fid = #{fid,jdbcType=INTEGER}
+  </update>
+</mapper>

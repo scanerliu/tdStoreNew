@@ -1,5 +1,5 @@
 <#import "/common/app.ftl" as app>
-<ul class="active" id="results">
+<ul class="active">
 <li class="li_title">
     <span class="fl">时间</span>
     <span class="fl">订单号</span>
@@ -28,7 +28,7 @@
 <input type="hidden" value="${sc.incomeType!''}" name="incomeType">
 <#if logList?? && logList?size gt 0>
 <div class="goods-page-nums mt20 w100 txtr">
-	<#assign pageId="AccountLogs" />
+	<#assign pageId="Profits" />
 	<#include "../common/commonpostpage.ftl" />
 </div>
 </#if>

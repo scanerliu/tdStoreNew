@@ -2,6 +2,7 @@ package com.tiandu.client.controller;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tiandu.article.entity.TdAdsense;
+import com.tiandu.article.entity.TdArticleTitle;
+import com.tiandu.article.search.TdAdvertisementSearchCriteria;
+import com.tiandu.article.search.TdArticleTitleSearchCriteria;
+import com.tiandu.article.service.TdAdsenseService;
+import com.tiandu.article.service.TdAdvertisementService;
+import com.tiandu.article.service.TdArticleTitleService;
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdUser;
@@ -30,13 +38,52 @@ import com.tiandu.custom.vo.LoginForm;
 @RequestMapping("")
 public class IndexController extends BaseController {
 	private final Logger logger = Logger.getLogger(getClass());
+	
 	@Autowired
 	private TdUserService tdUserService;
+	
+	@Autowired
+	private TdAdsenseService tdAdsenseService;
+	
+	@Autowired
+	private TdAdvertisementService tdAdvertisementService;
+	@Autowired
+	private TdArticleTitleService tdArticleTitleService;
 	
 	@RequestMapping("/index")
 	public String index(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		// 系统配置
 		modelMap.addAttribute("system", getSystem());
+		//首页轮播广告
+		TdAdvertisementSearchCriteria sc = new TdAdvertisementSearchCriteria();
+		sc.setCreateTime(new Date());
+		sc.setEndTime(new Date());
+		sc.setStatus(Byte.valueOf("1"));
+		TdAdsense adsense = tdAdsenseService.findByName("首页轮播广告");
+		if(null != adsense)
+		{
+			sc.setAdsId(adsense.getId());
+			sc.setOrderBy("2");
+			modelMap.addAttribute("adList", tdAdvertisementService.findBySearchCriteria(sc));
+		}
+		//公告新闻
+		TdArticleTitleSearchCriteria asc =new TdArticleTitleSearchCriteria();
+		asc.setCid(13);//网站公告id
+		asc.setStatus((byte)1);
+		List<TdArticleTitle> artList = tdArticleTitleService.findBySearchCriteria(asc);
+		modelMap.addAttribute("artList", artList);
+		asc.setCid(14);//公司新闻id
+		List<TdArticleTitle> newsList = tdArticleTitleService.findBySearchCriteria(asc);
+		modelMap.addAttribute("newsList", newsList);
+		//首页中间广告
+		sc.setPageSize(3);
+		TdAdsense adsense2 = tdAdsenseService.findByName("首页中间三图广告");
+		if(null != adsense2)
+		{
+			sc.setAdsId(adsense2.getId());
+			sc.setOrderBy("2");
+			modelMap.addAttribute("middeadList", tdAdvertisementService.findBySearchCriteria(sc));
+		}
 	    return "/client/index";
 	}
 	

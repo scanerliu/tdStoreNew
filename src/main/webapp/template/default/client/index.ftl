@@ -2,199 +2,846 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Language" content="zh-CN">
-    <meta name="keywords" content="${system.webkeywords!''}">
-    <meta name="description" content="${system.webdescription!''}">
-    <meta name="copyright" content="${system.webcopyright!''}" />
+	<meta charset="UTF-8">
+    <meta name="description" content="中国创客联盟"/>
+    <meta name="keywords" content="中国创客联盟"/>
+    <meta name="author" content="中国创客联盟"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <title>首页- ${system.webkeywords!''}</title>
+    <!-- 网站图标 -->
     <link rel="shortcut icon" href="${app.basePath}/static/default/images/icon.ico" />
-    <meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1">
-    <meta content="yes" name="apple-mobile-web-app-capable">
-    <meta content="black" name="apple-mobile-web-app-status-bar-style">
-    <meta content="telephone=no" name="format-detection">
-    <title>首页</title>
     <!-- css -->
-    <link rel="stylesheet" href="${app.basePath}/static/touch/css/common.css" type="text/css" />
-    <link rel="stylesheet" href="${app.basePath}/static/touch/css/main.css" type="text/css" />
-    <link rel="stylesheet" href="${app.basePath}/static/touch/css/swipe.css" />
-    <link rel="stylesheet" href="${app.basePath}/static/touch/css/index.css">
-    <link rel="stylesheet" href="${app.basePath}/static/touch/css/x_pc.css">
+    <link rel="stylesheet" href="${app.basePath}/static/default/client/style/site.css" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="${app.basePath}/static/default/client/style/chuangkeftt.css">
+    <link rel="stylesheet" type="text/css" href="${app.basePath}/static/default/client/style/lhead.css">
+	<#include "/common/common.ftl" />
     <!-- js -->
-    <script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script> 
-    <script type="text/javascript" src="${app.basePath}/static/touch/js/swipe.js"></script> 
-    <script type="text/javascript" src="${app.basePath}/static/touch/js/index.js"></script> 
-    <script type="text/javascript" src="${app.basePath}/static/touch/js/common.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/jquery-1.12.3.min.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/client/html5.js"></script>
+    <!--通用js-->
+    <script type="text/javascript" src="${app.basePath}/static/js/client/core.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/client/common.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/client/index.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/client/ftt_imgslide.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/jquery.SuperSlide.2.1.1.js"></script>
+    <script src="${app.basePath}/static/js/client/order/orderlist.js" type="text/javascript"></script>
+     <script language="javascript" type="text/javascript">
+        $(function () {
+            /*头部菜单js*/
+            indexmenutoggle('menu', "menuitem", "childitem");
+            jQuery("#slidebox").slide({
+                mainCell: ".bd ul",
+                effect: "fold",
+                autoPlay: true,
+                interTime: 5000
+            });
+
+
+            $(".picScroll").slide({
+                titCell:".hd ul",
+                mainCell:".bd ul",
+                autoPage:true,
+                effect:"leftLoop",
+                autoPlay:true,
+                vis:1
+            });
+            togglenav1('#floor1 .subnav a', 'current', "#floor1 .floorcontent .right");
+            togglenav1('#floor2 .subnav a', 'current', "#floor2 .floorcontent .right");
+            togglenav1('#floor3 .subnav a', 'current', "#floor3 .floorcontent .right");
+            togglenav1('#floor4 .subnav a', 'current', "#floor4 .floorcontent .right");
+
+            /*记录楼层位置*/
+            var arr = new Array();
+            $('.floor').each(function(){
+                arr.push($(this).position().top);
+            });
+
+            //滚动条滚动，右侧导航树跟着导航
+            $(window).scroll(function(){
+                var scrollbar=$(document).scrollTop(); //得到滚动条距离浏览器顶部的高度
+                var floorscroll = $('#floor1').offset().top-200;
+
+                if(scrollbar < floorscroll){
+                    $('#navtree').fadeOut();
+                }else {
+                    $('#navtree').fadeIn();
+                }
+                for ( var i=0; i < arr.length ; i++ ){
+                    if(scrollbar>=arr[i] && scrollbar<arr[i+1]-300){
+                        $(".navigationtree a").removeClass("on");
+                        $(".navigationtree a").eq(""+i).addClass("on");
+                    }
+                    else if(scrollbar>=arr[arr.length-1]){
+                        $(".navigationtree a").removeClass("on");
+                        $(".navigationtree a").eq(""+i).addClass("on");
+                    }
+                }
+            });
+            searchProductType(2);
+			getenjoyproducts();
+        });
+    </script>
 </head>
-
-<script>
-    window.onload=function(){
-        // news_lab2();
-        value_over1();
-    }
-</script>
-
-<body class="body_bg">
-<!-- 头部 -->
-<style>
-	.index_header {
-		background:rgba(255,255,255,.5);
-		position:fixed;
-		top:0;
-		left:inherit;
-		z-index:99;
-	}
-	.index_header .input {
-		background-color:#fff !important;
-	}
-	.my_banner1 {
-		min-height:3rem  !important;
-	}
-</style>
-
-<div class="index_header">
-    <div class="fl"><img src="${app.basePath}/static/touch/images/touchlogo.png" alt="LOGO"></div>
-    <a href="${app.basePath}/mobile/search" title="搜索"  class="fl input">搜索我的宝贝</a>
-    <a href="javascript:;" title="分享" style="color:#e4211a;" id="avalue_btn" class="fr">分享</a>
-</div>
-<!-- 头部-结束 -->
-  <div class="value_over1" id="value_over1">
-    <section class="sec1 bdsharebuttonbox">
-		  <a href="javascript:;" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
-    	  <a href="javascript:;" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
-		  <a href="javascript:;" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
-		  <a href="javascript:;" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
-    </section>
-    <menu>取消分享</menu>
-  </div>
-  
-<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"32"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
-<!-- -->
-<#if adList?? && adList?size gt 0>
-<div class="my_banner1">
-<!-- ****广告轮播**** -->
-<div class="addWrap">
-    <div class="swipe" id="mySwipe">
-        <div class="swipe-wrap">
-        	<#list adList as ad>
-				<div><a href="${ad.linkUrl!''}"><img class="img-responsive" src="${ad.imageUrl!''}"/></a></div>
-        	</#list>
-        </div>
-    </div>
-    <ul id="position">
-    	<#list adList as ad>
-          <li class="cur"></li>
-         </#list>
-    </ul>
-</div> 
-<script type="text/javascript">
-    var bullets = document.getElementById('position').getElementsByTagName('li');
-    var banner = Swipe(document.getElementById('mySwipe'), {
-        auto: 3000,
-        continuous: true,
-        disableScroll:false,
-        callback: function(pos) {
-            var i = bullets.length;
-            while (i--) {
-              bullets[i].className = ' ';
-            }
-            bullets[pos].className = 'cur';
-        }
-    });
-</script>
-<!-- ****广告轮播-结束**** -->
-</div>
-</#if>
-<!-- 股东竞选 -->
-<div class="rank">
-    <span></span>
-    <label class="lab1">股东竞选</label>
-    <section class="lab2" id="news_lab2">
-        <ul>
-        	<#if compAdList?? && compAdList?size gt 0>
-        	<#list compAdList as comp>
-            	<li><a href="${comp.linkUrl!''}" title="${comp.title!''}">${comp.title!''}</a></li>
-			</#list>
-			</#if>
-        </ul>
-    </section>
-        <a href="javascript:;" title="更多" class="a_link"></a>
-</div>
-<!-- 股东竞选-结束 -->
-<!-- 分类按钮 -->
-<div class="clickbtn">
-    <a href="${app.basePath}/mobile/agent/list" title="创业中心"><p>创业中心</p></a>
-    <a href="${app.basePath}/mobile/campaign/list" title="股东竞选"><p>股东竞选</p></a>
-    <a href="${system.logisticweburl!''}" title=""><p>物流查询</p></a>
-    <a href="${app.basePath}/mobile/user/center" title="个人中心"><p>个人中心</p></a>
-    <a href="${app.basePath}/mobile/product/zero" title="0元专区"><p>0元专区</p></a>
-    <a href="${app.basePath}/mobile/product/seckill" title="秒杀专区"><p>秒杀专区</p></a>
-    <a href="${app.basePath}/mobile/product/new" title="新品专区"><p>新品专区</p></a>
-    <a href="${app.basePath}/mobile/productType/list" title="分类选择"><p>分类选择</p></a>
-</div>
-<!-- 分类按钮-结束 -->
-<!-- 精品专区 -->
-<div class="bestarea">
-    <section class="index_title">
-        <label class="lab1 fl">精品专区</label>
-        <a href="javascript:;" class="a_link"></a>
-    </section>
-    <section class="sec2">
-    	<#if hotAdList?? && hotAdList?size gt 0>
-    	<#list hotAdList as ad>
-        	<a href="${ad.linkUrl!''}" title="${ad.title!''}" class=""><img src="${ad.imageUrl!''}" alt="${ad.title!''}"></a>
-        </#list>
-        </#if>
-    </section>
-</div>
-<!-- 精品专区-结束 -->
-<!-- 热销推荐 -->
-<#--
-<#if productList?? && productList?size gt 0 >
-<div class="hot">
-    <section class="index_title">
-        <label class="lab1 fl">热销推荐</label>
-        <a href="javascript:;" class="a_link"></a>
-    </section>
-    <section class="sec2">
-    	<#list productList as pro>
-        <a href="${app.basePath}/mobile/product/item${pro.id!'0'}" title="${pro.name!''}" class="">
-            <img src="${app.basePath}${pro.imageUrl!''}" alt="${pro.name}">
-            <p class="p1">${pro.name}</p>
-            <p class="p2">
-                <label class="lab1">¥<#if pro.price??>${pro.price?string('0.00')}</#if></label>
-                <label class="lab2">￥188.00</label>
-            </p>
-        </a>
-        </#list>
-    </section>
-</div>
-</#if>
--->
-<div class="hot">
-    <section class="index_title">
-        <label class="lab1 fl">热销推荐</label>
-        <a href="javascript:;" class="a_link"></a>
-    </section>
-</div>
-<div class="lcy_index1">
-	<ul>
-	<#if productTypeAdList?? && productTypeAdList?size gt 0>
-	<#list productTypeAdList as ad>
-		<li class="lcy_index2"><a href="${ad.linkUrl!''}"><img class="img-responsive" src="${ad.imageUrl!''}"/></a></li>
-	</#list>
-	</#if>
-   </ul>
-</div>
-
-<!-- 热销推荐-结束 -->
-<!-- 底部 -->
-<div style="width:100%;height:0.9rem"></div>
-<div class="index_foot">
-    <a href="${app.basePath}/mobile" title="首页" class="active"><p>首页</p></a>
-    <a href="${app.basePath}/mobile/productType/list" title=""><p>分类</p></a>
-    <a href="${app.basePath}/mobile/shoppingcart/list" title=""><p>购物车</p></a>
-    <a href="${app.basePath}/mobile/user/center" title="个人中心"><p>我的</p></a>
-</div>
-<!-- 底部-结束 -->
+<body>
+<h1 style="display:none;"></h1>
+	<!-- Header -->
+	<#include "./common/commonheader.ftl">
+	<!-- Header -->
+	<div class="clear"></div>
+	<!-- Center Start -->
+	<div class="index-item1">
+	    <div class="wrapper">
+	        <div class="initem1">
+	            <!--首页banner-->
+	            <div class="indexbanner" id="slidebox">
+	                <div class="bd">
+	                    <ul>
+	                    	<#if adList??>
+	                    	<#list adList as add>
+	                        <li><a href="<#if add.linkUrl??>${add.linkUrl!''}<#else>javascript:;</#if>" target="_blank"><img src="${app.basePath}${add.imageUrl!''}"/></a></li>
+	                        </#list>
+	                        </#if>
+	                    </ul>
+	                </div>
+	            </div>
+	            <div class="rightcontent">
+	                <div class="item1" id="rightitem">
+	                    <div class="nav">
+	                        <span class="on">公告</span>
+	                        <span>新闻</span>
+	                    </div>
+	                    <div class="content" id="rightcon">
+	                        <div style="display: block">
+	                        	<#if artList??>
+		                    	<#list artList as item>
+		                        <a href="${app.basePath}/site/list?aid=${item.aid!'0'}" title="${item.title!''}" target="_blank"><i>•</i>${item.title!''}</a>
+		                        </#list>
+		                        </#if>
+	                        </div>
+	                        <div>
+	                            <#if newsList??>
+		                    	<#list newsList as item>
+		                        <a href="${app.basePath}/site/list?aid=${item.aid!'0'}" title="${item.title!''}" target="_blank"><i>•</i>${item.title!''}</a>
+		                        </#list>
+		                        </#if>
+	                        </div>
+	                    </div>
+	                </div>
+	                <!--
+	                <div class="item2">
+	                    <div class="title">
+	                        <span>股东竞选</span>
+	                        <a href="#" title="">+</a>
+	                    </div>
+	                    <div class="content1">
+	                        <div class="partner part1">
+	                            <img src="images/avatar.png" alt=""/>
+	                            <em>NO.1</em>
+	                            <span>二牛</span>
+	                        </div>
+	                        <div class="partner part2">
+	                            <img src="images/avatar.png" alt=""/>
+	                            <em>NO.2</em>
+	                            <span>李晓梅</span>
+	                        </div>
+	                        <div class="partner part3">
+	                            <img src="images/avatar.png" alt=""/>
+	                            <em>NO.2</em>
+	                            <span>董春辉</span>
+	                        </div>
+	                    </div>
+	                    <span class="line"></span>
+	
+	                    <div class="appitem">
+	                        <a href="#" class="ios" title="">苹果版App</a>
+	                        <a href="#" class="android" title="">安卓版App</a>
+	                    </div>
+	                </div>
+	                -->
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	<div class="wrapper wrelative">
+	    <div class="index-content">
+	    	<#if middeadList??>
+        	<#list middeadList as add>
+            <li><a href="<#if add.linkUrl??>${add.linkUrl!''}<#else>javascript:;</#if>" target="_blank"><img src="${app.basePath}${add.imageUrl!''}"/></a></li>
+            <div class="item1">
+	            <img src="${app.basePath}${add.imageUrl!''}" alt="广告图"/>
+	            <a href="<#if add.linkUrl??>${add.linkUrl!''}<#else>javascript:;</#if>" title="" class="go">GO</a>
+	        </div>
+            </#list>
+            </#if>
+	    </div>
+	    <!--
+	    <div class="index-content">
+	        <div class="item2">
+	            <a href="#" title=""><img src="images/14.jpg" alt=""/></a>
+	        </div>
+	        <div class="item3">
+	            <a href="#" title=""><img src="images/15.jpg" alt="图片尺寸157*98"/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	            <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	        </div>
+	    </div>
+	    -->
+	    <div class="index-content">
+	        <div class="guess-like">
+	        	<form id="enjoyForm">
+				<input type="hidden" name="pageNo" id="enjoysc_pageNo" value="1">
+				<input type="hidden" name="pageSize" value="6"/>
+				</form>
+	            <div class="title">
+	                <label>猜你喜欢</label>
+	                <a href="javascript:;" class="a-change" title="" id="enjoybtn">换一批</a>
+	            </div>
+	            <ul class="pro-list" id="enjoyList">
+	            </ul>
+	        </div>
+	    </div>
+	
+	    <div id="floor1" class="index-content floor">
+	        <div class="subtitle">
+	            <span class="title">1F 女装/内衣</span>
+	            <div class="subnav">
+	                <a href="javascript:void(0);" class="current" title="">热门推荐</a>
+	                <a href="javascript:void(0);" title="">特色服装</a>
+	                <a href="javascript:void(0);" title="">内裤背心</a>
+	                <a href="javascript:void(0);" title="">袜子配饰</a>
+	                <a href="javascript:void(0);" title="">文胸塑型</a>
+	            </div>
+	        </div>
+	        <div class="floorcontent">
+	            <div class="left">
+	                <div class="sitebanner">
+	                    <div class="picScroll">
+	                        <div class="hd">
+	                            <ul></ul>
+	                        </div>
+	                        <div class="bd">
+	                            <ul class="picList">
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	
+	                            </ul>
+	                        </div>
+	                    </div>
+	                    <div class="a-item">
+	                        <a href="#" title="">女士T恤</a>
+	                        <a href="#" title="">连衣裙</a>
+	                        <a href="#" title="">雪纺衫</a>
+	                        <a href="#" title="">中老年服装</a>
+	                        <a href="#" title=""> 圆领</a>
+	                        <a href="#" title=""> V领</a>
+	                        <a href="#" title=""> POLO</a>
+	                        <a href="#" title=""> 立领</a>
+	                        <a href="#" title=""> 一字领</a>
+	                        <a href="#" title=""> 半开领</a>
+	                    </div>
+	                </div>
+	                <div class="brands">
+	                    <!--图片尺寸127*80-->
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                </div>
+	            </div>
+	            <div class="right">
+	                <div class="rightlist" style="display: block;">
+	                    <div class="right-item1">
+	                        <a href="#" title="" class="pic-item pic-item1">
+	                            <img src="images/16.jpg" class="img" alt=""/>
+	                        </a>
+	                        <a href="#" title="" class=" pic-item pic-item2">
+	                            <img src="images/17.jpg" class="img" alt=""/>
+	                        </a>
+	                        <a href="#" title="" class=" pic-item pic-item2">
+	                            <img src="images/18.jpg" class="img" alt=""/>
+	                        </a>
+	                    </div>
+	                    <div class="right-item2">
+	                        <a href="#" title="" class=" pic-item pic-item3">
+	                            <img src="images/19.jpg" class="img" alt=""/>
+	                        </a><a href="#" title="" class=" pic-item pic-item3">
+	                        <img src="images/19.jpg" class="img" alt=""/>
+	                    </a><a href="#" title="" class=" pic-item pic-item3">
+	                        <img src="images/19.jpg" class="img" alt=""/>
+	                    </a>
+	                    </div>
+	                </div>
+	                <div class="rightlist">
+	                    <ul class="productlist">
+	                        <li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li>
+	                    </ul>
+	                </div>
+	                <div class="rightlist">
+	                    <ul class="productlist">
+	                        <li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li>
+	                    </ul>
+	                </div>
+	                <div class="rightlist">
+	                    <ul class="productlist">
+	                        <li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li>
+	                    </ul>
+	                </div>
+	                <div class="rightlist">
+	                    <ul class="productlist">
+	                        <li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li>
+	                    </ul>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	    <div id="floor2" class="index-content floor">
+	        <div class="subtitle">
+	            <span class="title">2F 男装/户外运动</span>
+	            <div class="subnav">
+	                <a href="javascript:void(0);" class="current" title="">热门推荐</a>
+	                <a href="javascript:void(0);" title="">特色服装</a>
+	                <a href="javascript:void(0);" title="">内裤背心</a>
+	                <a href="javascript:void(0);" title="">袜子配饰</a>
+	                <a href="javascript:void(0);" title="">文胸塑型</a>
+	            </div>
+	        </div>
+	        <div class="floorcontent">
+	            <div class="left">
+	                <div class="sitebanner">
+	                    <div class="picScroll">
+	                        <div class="hd">
+	                            <ul></ul>
+	                        </div>
+	                        <div class="bd">
+	                            <ul class="picList">
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	
+	                            </ul>
+	                        </div>
+	                    </div>
+	                    <div class="a-item">
+	                        <a href="#" title="">女士T恤</a>
+	                        <a href="#" title="">连衣裙</a>
+	                        <a href="#" title="">雪纺衫</a>
+	                        <a href="#" title="">中老年服装</a>
+	                        <a href="#" title=""> 圆领</a>
+	                        <a href="#" title=""> V领</a>
+	                        <a href="#" title=""> POLO</a>
+	                        <a href="#" title=""> 立领</a>
+	                        <a href="#" title=""> 一字领</a>
+	                        <a href="#" title=""> 半开领</a>
+	                    </div>
+	                </div>
+	                <div class="brands">
+	                    <!--图片尺寸127*80-->
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                </div>
+	            </div>
+	            <div class="right">
+	                <div class="rightlist" style="display: block;">
+	                    <div class="right-item1">
+	                        <a href="#" title="" class="pic-item pic-item1">
+	                            <img src="images/16.jpg" class="img" alt=""/>
+	                        </a>
+	                        <a href="#" title="" class=" pic-item pic-item2">
+	                            <img src="images/17.jpg" class="img" alt=""/>
+	                        </a>
+	                        <a href="#" title="" class=" pic-item pic-item2">
+	                            <img src="images/18.jpg" class="img" alt=""/>
+	                        </a>
+	                    </div>
+	                    <div class="right-item2">
+	                        <a href="#" title="" class=" pic-item pic-item3">
+	                            <img src="images/19.jpg" class="img" alt=""/>
+	                        </a><a href="#" title="" class=" pic-item pic-item3">
+	                        <img src="images/19.jpg" class="img" alt=""/>
+	                    </a><a href="#" title="" class=" pic-item pic-item3">
+	                        <img src="images/19.jpg" class="img" alt=""/>
+	                    </a>
+	                    </div>
+	                </div>
+	                <div class="rightlist">
+	                    <ul class="productlist">
+	                        <li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li>
+	                    </ul>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	    <div id="floor3" class="index-content floor">
+	        <div class="subtitle">
+	            <span class="title">3F 男装/户外运动</span>
+	            <div class="subnav">
+	                <a href="javascript:void(0);" class="current" title="">热门推荐</a>
+	                <a href="javascript:void(0);" title="">特色服装</a>
+	                <a href="javascript:void(0);" title="">内裤背心</a>
+	                <a href="javascript:void(0);" title="">袜子配饰</a>
+	                <a href="javascript:void(0);" title="">文胸塑型</a>
+	            </div>
+	        </div>
+	        <div class="floorcontent">
+	            <div class="left">
+	                <div class="sitebanner">
+	                    <div class="picScroll">
+	                        <div class="hd">
+	                            <ul></ul>
+	                        </div>
+	                        <div class="bd">
+	                            <ul class="picList">
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	
+	                            </ul>
+	                        </div>
+	                    </div>
+	                    <div class="a-item">
+	                        <a href="#" title="">女士T恤</a>
+	                        <a href="#" title="">连衣裙</a>
+	                        <a href="#" title="">雪纺衫</a>
+	                        <a href="#" title="">中老年服装</a>
+	                        <a href="#" title=""> 圆领</a>
+	                        <a href="#" title=""> V领</a>
+	                        <a href="#" title=""> POLO</a>
+	                        <a href="#" title=""> 立领</a>
+	                        <a href="#" title=""> 一字领</a>
+	                        <a href="#" title=""> 半开领</a>
+	                    </div>
+	                </div>
+	                <div class="brands">
+	                    <!--图片尺寸127*80-->
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                </div>
+	            </div>
+	            <div class="right">
+	                <div class="rightlist" style="display: block;">
+	                    <div class="right-item1">
+	                        <a href="#" title="" class="pic-item pic-item1">
+	                            <img src="images/16.jpg" class="img" alt=""/>
+	                        </a>
+	                        <a href="#" title="" class=" pic-item pic-item2">
+	                            <img src="images/17.jpg" class="img" alt=""/>
+	                        </a>
+	                        <a href="#" title="" class=" pic-item pic-item2">
+	                            <img src="images/18.jpg" class="img" alt=""/>
+	                        </a>
+	                    </div>
+	                    <div class="right-item2">
+	                        <a href="#" title="" class=" pic-item pic-item3">
+	                            <img src="images/19.jpg" class="img" alt=""/>
+	                        </a><a href="#" title="" class=" pic-item pic-item3">
+	                        <img src="images/19.jpg" class="img" alt=""/>
+	                    </a><a href="#" title="" class=" pic-item pic-item3">
+	                        <img src="images/19.jpg" class="img" alt=""/>
+	                    </a>
+	                    </div>
+	                </div>
+	                <div class="rightlist">
+	                    <ul class="productlist">
+	                        <li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li>
+	                    </ul>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	    <div id="floor4" class="index-content floor">
+	        <div class="subtitle">
+	            <span class="title">4F 男装/户外运动</span>
+	            <div class="subnav">
+	                <a href="javascript:void(0);" class="current" title="">热门推荐</a>
+	                <a href="javascript:void(0);" title="">特色服装</a>
+	                <a href="javascript:void(0);" title="">内裤背心</a>
+	                <a href="javascript:void(0);" title="">袜子配饰</a>
+	                <a href="javascript:void(0);" title="">文胸塑型</a>
+	            </div>
+	        </div>
+	        <div class="floorcontent">
+	            <div class="left">
+	                <div class="sitebanner">
+	                    <div class="picScroll">
+	                        <div class="hd">
+	                            <ul></ul>
+	                        </div>
+	                        <div class="bd">
+	                            <ul class="picList">
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	                                <li>
+	                                    <a href="#" title=""><img src="images/20.jpg" alt=""/></a>
+	                                </li>
+	
+	                            </ul>
+	                        </div>
+	                    </div>
+	                    <div class="a-item">
+	                        <a href="#" title="">女士T恤</a>
+	                        <a href="#" title="">连衣裙</a>
+	                        <a href="#" title="">雪纺衫</a>
+	                        <a href="#" title="">中老年服装</a>
+	                        <a href="#" title=""> 圆领</a>
+	                        <a href="#" title=""> V领</a>
+	                        <a href="#" title=""> POLO</a>
+	                        <a href="#" title=""> 立领</a>
+	                        <a href="#" title=""> 一字领</a>
+	                        <a href="#" title=""> 半开领</a>
+	                    </div>
+	                </div>
+	                <div class="brands">
+	                    <!--图片尺寸127*80-->
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                    <a href="#" title=""><img src="images/15.jpg" alt=""/></a>
+	                </div>
+	            </div>
+	            <div class="right">
+	                <div class="rightlist" style="display: block;">
+	                    <div class="right-item1">
+	                        <a href="#" title="" class="pic-item pic-item1">
+	                            <img src="images/16.jpg" class="img" alt=""/>
+	                        </a>
+	                        <a href="#" title="" class=" pic-item pic-item2">
+	                            <img src="images/17.jpg" class="img" alt=""/>
+	                        </a>
+	                        <a href="#" title="" class=" pic-item pic-item2">
+	                            <img src="images/18.jpg" class="img" alt=""/>
+	                        </a>
+	                    </div>
+	                    <div class="right-item2">
+	                        <a href="#" title="" class=" pic-item pic-item3">
+	                            <img src="images/19.jpg" class="img" alt=""/>
+	                        </a><a href="#" title="" class=" pic-item pic-item3">
+	                        <img src="images/19.jpg" class="img" alt=""/>
+	                    </a><a href="#" title="" class=" pic-item pic-item3">
+	                        <img src="images/19.jpg" class="img" alt=""/>
+	                    </a>
+	                    </div>
+	                </div>
+	                <div class="rightlist">
+	                    <ul class="productlist">
+	                        <li>
+	                            <img src="images/3.jpg" alt=""/>
+	                            <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                            <p class="price">￥99.00</p>
+	                        </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li><li>
+	                        <img src="images/3.jpg" alt=""/>
+	                        <a href="#" title="">唐狮夏季牛仔裙唐狮夏季牛仔裙唐狮夏季牛仔裙</a>
+	                        <p class="price">￥99.00</p>
+	                    </li>
+	                    </ul>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	<!-- Center End -->
+	
+	<!--楼层引导-->
+	<div class="navigationtree" id="navtree">
+	    <a href="javascript:void(0);" onclick="hreftofloor('floor1')"><img src="images/21.jpg" alt=""/><label>1F</label></a>
+	    <a href="javascript:void(0);" onclick="hreftofloor('floor2')"><img src="images/21.jpg" alt=""/><label>2F</label></a>
+	    <a href="javascript:void(0);" onclick="hreftofloor('floor3')"><img src="images/21.jpg" alt=""/><label>3F</label></a>
+	    <a href="javascript:void(0);" onclick="hreftofloor('floor4')"><img src="images/21.jpg" alt=""/><label>4F</label></a>
+	    <a href="javascript:void(0);" onclick="hreftofloor(0);" class="totop"><img src="images/f-icon20.jpg" alt=""/><label>Top</label></a>
+	</div>
+	<!-- Footer Start -->
+	<#include "./common/commonfooter.ftl">
+	<!-- Footer End -->
 </body>
 </html>

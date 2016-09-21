@@ -139,6 +139,36 @@ public class TdProductTypeImpl implements TdProductTypeService{
  		return typeList;
 	}
 	
+	@Override
+	public List<TdProductType> findTypeTreeByParentId(Integer id) {
+		List<TdProductType> productList = null;
+		if(null!=id){
+			productList= tdProduceTypeMapper.findTypeOnlyByParentId(id);
+			if(null != productList && productList.size() > 0)
+			{
+				for (TdProductType tdProductType : productList) 
+				{
+					// 查找二级分类
+					List<TdProductType> secondList = tdProduceTypeMapper.findTypeOnlyByParentId(tdProductType.getId());
+					if(null != secondList && secondList.size() > 0)
+					{
+						for (TdProductType productType : secondList) 
+						{
+							// 查找三级分类
+							List<TdProductType> thirdList = tdProduceTypeMapper.findTypeOnlyByParentId(productType.getId());
+							if(null != thirdList && thirdList.size() > 0)
+							{
+								productType.setSubList(thirdList);
+							}
+						}
+					}
+					tdProductType.setSubList(secondList);
+				}
+			}
+		}
+		return productList;
+	}
+	
 	/**
 	 * @author Max
 	 * 查找属性已关联的属性集合

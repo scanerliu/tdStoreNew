@@ -31,6 +31,8 @@ import com.tiandu.custom.search.TdUserCollectionCriteria;
 import com.tiandu.custom.service.TdUserCollectionService;
 import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.service.TdDistrictService;
+import com.tiandu.menu.search.TdProductMenuSearchCriteria;
+import com.tiandu.menu.service.TdProductMenuService;
 import com.tiandu.product.entity.TdBrand;
 import com.tiandu.product.entity.TdProduct;
 import com.tiandu.product.entity.TdProductAttachment;
@@ -114,6 +116,9 @@ public class CProductController extends BaseController {
 	@Autowired
 	private TdArticleCategoryService tdArticleCategoryService;
 	
+	@Autowired
+	private TdProductMenuService tdProductMenuService;
+	
 	/*
 	 * 商品列表页
 	 */
@@ -180,12 +185,21 @@ public class CProductController extends BaseController {
 	/*
 	 * 商品类型数据页
 	 */
-	@RequestMapping("/searchproducttype")
+	/*@RequestMapping("/searchproducttype")
 	public String searchproducttype(TdProductTypeCriteria sc,HttpServletRequest req,ModelMap map)
 	{
 		sc.setFlag(false);
 		sc.setStatus(Byte.valueOf("1"));
 		map.addAttribute("producttypelist", tdProductTypeService.findAll(sc));
+		map.addAttribute("sc", sc);
+		return "/client/product/producttypelist";
+	}*/
+	@RequestMapping("/searchproducttype")
+	public String searchproducttype(TdProductMenuSearchCriteria sc,HttpServletRequest req,ModelMap map)
+	{
+		sc.setFlag(false);
+		sc.setStatus(1);
+		map.addAttribute("treeList", tdProductMenuService.findMenuTree(sc));
 		map.addAttribute("sc", sc);
 		return "/client/product/producttypelist";
 	}

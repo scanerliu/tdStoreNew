@@ -21,5 +21,6 @@ public interface TdProductTypeMapper {
     public Integer countByCriteria(TdProductTypeCriteria sc);
     public List<TdProductType> findBySearchCriteria(TdProductTypeCriteria sc);
     public List<TdProductType> findByParentId(Integer id);
+    public List<TdProductType> findTypeOnlyByParentId(Integer id);
     
 }
