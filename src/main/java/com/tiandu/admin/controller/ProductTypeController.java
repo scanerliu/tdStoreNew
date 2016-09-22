@@ -186,4 +186,26 @@ public class ProductTypeController extends BaseController{
             model.addAttribute("tdProductType", tdProductTypeService.findOne(productId));
         }
     }
+	
+	@RequestMapping(value = "/producttypeallselect")
+	public String producttypeallselect(TdProductTypeCriteria sc,HttpServletRequest request,ModelMap map)
+	{
+		if(null != sc.getParentId()){
+			TdProductType parent = new TdProductType();
+			if(sc.getParentId().compareTo(0)>0){
+				parent = tdProductTypeService.findOne(sc.getParentId());
+				if(null!=parent && parent.getParentId()==0){
+					parent.setLevel(1);
+				}else if(null!=parent && parent.getParentId().compareTo(0)>0){
+					parent.setLevel(2);
+				}
+			}
+			sc.setFlag(false);
+			List<TdProductType> typeList = tdProductTypeService.findByParentId(sc.getParentId());
+			map.addAttribute("parent", parent);
+			map.addAttribute("typeList", typeList);
+			
+		}
+		return "/admin/product/type/producttypeallselect";
+	}
 }

@@ -17,9 +17,10 @@
         			<#if ad?? && ad.adsId == ads.id>${ads.name!''}</#if>
         		</#list>
         		</#if>
-        		<input type="hidden" name="adsId" value="${ad.adsId?c}">
+        		<input type="hidden" name="adsId" id="adsId" value="${ad.adsId?c}">
         	<#else>
-        	<select name="adsId" style="width:200px;" onchange="changeAds(this)">
+        	<select name="adsId" id="adsId" style="width:200px;" onchange="changeAds(this)">
+        		<option value="">--请选择--</option>
         		<#if adsenseList ??>
         		<#list adsenseList as ads>
         			<option value="${ads.id?c}" <#if ad?? && ad.adsId == ads.id>selected</#if>>${ads.name!''}</option>
@@ -89,6 +90,19 @@
         	</select>
         </td>
     </tr>
+    <tr style="display:none;" id="floorIdTr">
+        <th>pc首页楼层：</th>
+        <td>
+            <select name="floorId" style="width:200px;" id="floorIdSelect">
+            	<option value="">--请选择--</option>
+        		<#if floorList ??>
+        		<#list floorList as floor>
+        			<option value="${floor.fid?c}" <#if ad?? && ad.floorId?? && ad.floorId== floor.fid>selected</#if>>${floor.title!''}</option>
+        		</#list>
+        		</#if>
+        	</select>
+        </td>
+    </tr>
     <tr>
         <th>
         </th>
@@ -99,7 +113,9 @@
 </table>
 </form>
 </div>
+<#assign flooraids = [14, 15, 16, 17]>
 <script>
+	__flooraids = [14, 15, 16, 17];
 	$(function(){
 		$('#file_upload').uploadify({
 				'multi'    : false, // 限制单图上传
@@ -122,6 +138,9 @@
 		});
 		<#if ad?? && ad.adsId?? && ad.adsId==6>
 			$("#typeIdTr").show();
+		</#if>
+		<#if ad?? && ad.adsId?? && flooraids?seq_contains(ad.adsId)>
+			$("#floorIdTr").show();
 		</#if>
 	});
 </script>

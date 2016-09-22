@@ -18,6 +18,8 @@ public class TdAdvertisementSearchCriteria extends SearchCriteria{
     
     private Integer typeId;
     
+    private Integer floorId;
+    
     private Integer createBy;
 
 	public Byte getStatus() {
@@ -75,6 +77,13 @@ public class TdAdvertisementSearchCriteria extends SearchCriteria{
 	public void setTypeId(Integer typeId) {
 		this.typeId = typeId;
 	}
-    
+
+	public Integer getFloorId() {
+		return floorId;
+	}
+
+	public void setFloorId(Integer floorId) {
+		this.floorId = floorId;
+	}
 	
 }

@@ -30,6 +30,7 @@ public class TdAdvertisement extends TdBaseEntity{
     private Integer regionId;
     
     private Integer typeId; //商品分类Id,分类广告使用
+    private Integer floorId; //pc楼层Id,pc楼层广告使用
     
     private Date endTime;
     
@@ -156,6 +157,14 @@ public class TdAdvertisement extends TdBaseEntity{
 
 	public void setTypeId(Integer typeId) {
 		this.typeId = typeId;
+	}
+
+	public Integer getFloorId() {
+		return floorId;
+	}
+
+	public void setFloorId(Integer floorId) {
+		this.floorId = floorId;
 	}
     
 }

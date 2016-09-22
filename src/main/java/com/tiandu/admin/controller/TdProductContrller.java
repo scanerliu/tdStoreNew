@@ -107,12 +107,12 @@ public class TdProductContrller extends BaseController{
 	@RequestMapping("/edit")
 	public String edit(Integer id,HttpServletRequest req,ModelMap map) throws Exception
 	{
-		TdProductTypeCriteria tsc = new TdProductTypeCriteria();
+		/*TdProductTypeCriteria tsc = new TdProductTypeCriteria();
 		tsc.setStatus((byte) 1);
 		List<TdProductType> productTypeList = tdProductTypeService.findAll(tsc);
 		// 初始化对应的规格
 		initTypeWithSpecifiaction(productTypeList);
-		map.addAttribute("productTypeList", productTypeList);
+		map.addAttribute("productTypeList", productTypeList);*/
 		if(null != id && id != 0)
 		{
 			// 商品主要信息
@@ -161,6 +161,8 @@ public class TdProductContrller extends BaseController{
 			// 商品对应的货品
 			List<TdProductSku> productSkuList = tdProductSkuService.findByProductId(id);
 			map.addAttribute("productSkuList", productSkuList);
+			TdProductType productType = tdProductTypeService.findOne(product.getTypeId());
+			map.addAttribute("productType", productType);
 			//商品类型规格
 			List<TdProductTypeAttribute> attributeList = tdProductTypeAttributeService.findByTypeIdWithOptions(product.getTypeId());
 			if(attributeList.size()>0){

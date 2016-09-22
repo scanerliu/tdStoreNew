@@ -3,7 +3,6 @@
 <script src="${app.basePath}/static/js/easyui/easyui-lang-zh_CN.js" type="text/javascript"></script>
 <script src="${app.basePath}/static/js/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="${app.basePath}/static/js/Validform_v5.3.2_min.js"></script>
-<#--<script src="${app.basePath}/static/js/jquery-1.7.2.js" type="text/javascript"></script>-->
 <link rel="stylesheet" type="text/css" href="${app.basePath}/static/js/uploadify/uploadify.css" />
 <div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="returnList()"><em>返回列表</em></a>&#12288;</div></div>
 <div class="pad_lr_10">
@@ -15,42 +14,12 @@
 		    <tr>
 		        <th width="150">商品分类：</th>
 		        <td>
-		        	<#if tdProduct?? && tdProduct.id??>
-		        		<#if productTypeList ??>
-		        		<#list productTypeList as pro>
-		        			<#if tdProduct?? && tdProduct.typeId == pro.id>${pro.name!''}</#if>
-		        			<#if pro.subList??>
-		        			<#list pro.subList as spro>
-		        				<#if tdProduct?? && tdProduct.typeId == spro.id>${spro.name!''}</#if>
-		        				<#if spro.subList??>
-			        			<#list spro.subList as tpro>
-			        				<#if tdProduct?? && tdProduct.typeId == tpro.id>${tpro.name!''}</#if>
-			        			</#list>
-			        			</#if>
-		        			</#list>
-		        			</#if>	
-		        		</#list>
-		        		</#if>
+		        	<#if tdProduct?? && tdProduct.id?? && productType??>
+		        		${productType.name!''}
 		        		<input type="hidden" name="typeId" value="<#if tdProduct??>${tdProduct.typeId!''}</#if>">
 		        	<#else>
-		        	<select id="productTypeSelections" name="typeId" style="width:200px;" onchange="changeType(this)" datatype="n" nullmsg="请选择商品分类！">
-		        		<option value="" >--请选择--</option>
-		        		<#if productTypeList ??>
-		        		<#list productTypeList as pro>
-		        			<option value="${pro.id?c}" disabled="">${pro.name!''}</option>
-		        			<#if pro.subList??>
-		        			<#list pro.subList as spro>
-		        				<option value="${spro.id?c}" disabled="">├ ${spro.name!''}</option>
-		        				<#if spro.subList??>
-			        			<#list spro.subList as tpro>
-			        				<option value="${tpro.id?c}" <#if !tpro.subList?? || tpro.subList?size == 0>isLastLevel="yes"</#if> <#if tdProduct?? && tdProduct.typeId == tpro.id>selected="selected"</#if>>&emsp;├ ${tpro.name!''}</option>
-			        			</#list>
-			        			</#if>
-		        			</#list>
-		        			</#if>	
-		        		</#list>
-		        		</#if>
-		        	</select>
+		        		<span id="onetypespn"></span><span id="twotypespn"></span><span id="typespn"></span>
+						<input type="hidden" id="productTypeId" name="typeId" value="" datatype="n1-10" nullmsg="请选择商品分类！">
 		        	</#if>
 		        </td>
 		    </tr>
@@ -395,6 +364,10 @@
 		//初始化商品一口价设置
 		<#if tdProduct?? && tdProduct.id?? && tdProduct.specification==true>
 			initProductCommon();
+		</#if>
+		<#if tdProduct?? && tdProduct.id?? && productType??>
+		<#else>
+			getAllTypes({'obj':null,'num':0});
 		</#if>
 		
 		// 图片上传

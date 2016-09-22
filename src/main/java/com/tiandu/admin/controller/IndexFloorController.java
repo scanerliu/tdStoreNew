@@ -65,13 +65,13 @@ public class IndexFloorController extends BaseController{
 		}
 		map.addAttribute("pfloor", floor);
 		//查询一级商品类型
-		List<TdProductType> typeList = tdProductTypeService.findByParentId(0);
+		/*List<TdProductType> typeList = tdProductTypeService.findByParentId(0);
 		if(null!=floor && null!=floor.getTypeList()){//移除已经选择的分类
 			List<TdProductType> typerList =  tdIndexFloorService.removeSeletedType(typeList, floor.getTypeList());
 			map.addAttribute("typeList", typerList);
 		}else{
 			map.addAttribute("typeList", typeList);
-		}
+		}*/
 		return "/admin/pfloor/pfloorform";
 	}
 	

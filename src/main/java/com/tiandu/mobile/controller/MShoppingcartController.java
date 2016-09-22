@@ -242,7 +242,7 @@ public class MShoppingcartController extends BaseController {
 		if(!TdUser.USTATUS_ACTIVE.equals(currUser.getUverification())){//未验证的用户不能购买商品
 			String errmsg = "用户未验证，请先到个人信息中绑定手机号码和设置地区完成验证才能购买商品！<a href='"+request.getServletContext().getContextPath()+"/mobile/user/info'>立即验证</a>";
 			modelMap.addAttribute("errmsg", errmsg) ;
-			return  "/mobile/error";
+			return  "/mobile/noverification";
 		}
 		//获取购物车
 		ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid());
@@ -291,7 +291,7 @@ public class MShoppingcartController extends BaseController {
 		if(!TdUser.USTATUS_ACTIVE.equals(currUser.getUverification())){//未验证的用户不能购买商品
 			String errmsg = "用户未验证，请先到个人信息中绑定手机号码和设置地区完成验证才能购买商品！<a href='"+request.getServletContext().getContextPath()+"/mobile/user/info'>立即验证</a>";
 			modelMap.addAttribute("errmsg", errmsg) ;
-			return  "/mobile/error";
+			return  "/mobile/noverification";
 		}
 		//获取购物车
 		ShoppingcartVO shoppingcart  = getShoppingcart(currUser.getUid());
@@ -339,7 +339,7 @@ public class MShoppingcartController extends BaseController {
 		if(!TdUser.USTATUS_ACTIVE.equals(currUser.getUverification())){//未验证的用户不能购买商品
 			String errmsg = "用户未验证，请先到个人信息中绑定手机号码和设置地区完成验证才能购买商品！<a href='"+request.getServletContext().getContextPath()+"/mobile/user/info'>立即验证</a>";
 			modelMap.addAttribute("errmsg", errmsg) ;
-			return  "/mobile/error";
+			return  "/mobile/noverification";
 		}
 		//生成购物车
 		ShoppingcartVO shoppingcart;	
@@ -409,7 +409,7 @@ public class MShoppingcartController extends BaseController {
 		if(!TdUser.USTATUS_ACTIVE.equals(currUser.getUverification())){//未验证的用户不能购买商品
 			String errmsg = "用户未验证，请先到个人信息中绑定手机号码和设置地区完成验证才能购买商品！<a href='"+request.getServletContext().getContextPath()+"/mobile/user/info'>立即验证</a>";
 			modelMap.addAttribute("errmsg", errmsg) ;
-			return  "/mobile/error";
+			return  "/mobile/noverification";
 		}
 		try {
 			//获取购物车

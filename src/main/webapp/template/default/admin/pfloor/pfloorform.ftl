@@ -24,30 +24,9 @@
     <tr>
     	<th>分类选择</th>
     	<td>
+    		<span id="onetypespn"></span><span id="twotypespn"></span><span id="typespn"></span>(选择第三级分类自动添加)
 	    	<div>
-		        <div>
-		          <select multiple="multiple" id="select1" style="width:150px;height:200px; float:left; border:4px #A0A0A4 outset; padding:4px; ">
-		            <#if typeList??>
-		            <#list typeList as type>
-		            	<option value="${type.id?c}">${type.name!''}</option>
-		            </#list>
-		            </#if>
-		          </select>
-		        </div>
-		        <div style="float:left"> <span id="add">
-		          <input type="button" class="btn" value=">"/>
-		          </span><br />
-		          <span id="add_all">
-		          <input type="button" class="btn" value=">>"/>
-		          </span> <br />
-		          <span id="remove">
-		          <input type="button" class="btn" value="<"/>
-		          </span><br />
-		          <span id="remove_all">
-		          <input type="button" class="btn" value="<<"/>
-		          </span> 
-		        </div>
-		        <div>
+		        <div style="float:left">
 		          <select multiple="multiple" name="typeid" id="select2" style="width: 150px;height:200px; float:lfet;border:4px #A0A0A4 outset; padding:4px;">
 		          	<#if pfloor.typeList??>
 		            <#list pfloor.typeList as type>
@@ -57,6 +36,14 @@
 		            </#list>
 		            </#if>
 		          </select>
+		        </div>
+		        <div style="float:left"> <span id="add">
+		          <span id="remove">
+		          <input type="button" class="btn" value="删除"/>
+		          </span><br />
+		          <span id="remove_all">
+		          <input type="button" class="btn" value="全部删除"/>
+		          </span> 
 		        </div>
 		      </div>
     	</td>
@@ -73,32 +60,18 @@
 </div>
 <script>
 $(function(){
-	//移到右边
-    $('#add').click(function() {
-    //获取选中的选项，删除并追加给对方
-        $('#select1 option:selected').appendTo('#select2');
-    });
     //移到左边
     $('#remove').click(function() {
-        $('#select2 option:selected').appendTo('#select1');
-    });
-    //全部移到右边
-    $('#add_all').click(function() {
-        //获取全部的选项,删除并追加给对方
-        $('#select1 option').appendTo('#select2');
+        $('#select2 option:selected').remove();
     });
     //全部移到左边
     $('#remove_all').click(function() {
-        $('#select2 option').appendTo('#select1');
-    });
-    //双击选项
-    $('#select1').dblclick(function(){ //绑定双击事件
-        //获取全部的选项,删除并追加给对方
-        $("option:selected",this).appendTo('#select2'); //追加给对方
+        $('#select2 option').remove();
     });
     //双击选项
     $('#select2').dblclick(function(){
-       $("option:selected",this).appendTo('#select1');
+       $("option:selected",this).remove();
     });
+    getAllTypes({'obj':null,'num':0});
 });
 </script>

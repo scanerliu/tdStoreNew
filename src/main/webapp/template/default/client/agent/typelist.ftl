@@ -137,7 +137,7 @@
 	                    <label for="isCheck"><input type="checkbox" checked="checked" id="isCheck"/>我已同意《创客代理条款》</label>
 	                </dt>
 	                <dd>
-	                   
+	                   <#if agentcontent??>${agentcontent.content!''}</#if>
 	                </dd>
 	            </dl>
 	            <input type="button" id="sub_btn" class="btnjoin" value="立即加入"/>

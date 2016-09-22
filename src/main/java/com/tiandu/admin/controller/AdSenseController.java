@@ -29,6 +29,9 @@ import com.tiandu.custom.entity.TdBrancheCompany;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.search.TdBrancheCompanySearchCriteria;
 import com.tiandu.custom.service.TdBrancheCompanyService;
+import com.tiandu.menu.entity.TdIndexFloor;
+import com.tiandu.menu.search.TdIndexFloorSearchCriteria;
+import com.tiandu.menu.service.TdIndexFloorService;
 import com.tiandu.product.entity.TdProductType;
 import com.tiandu.product.search.TdProductTypeCriteria;
 import com.tiandu.product.service.TdProductTypeService;
@@ -54,6 +57,9 @@ public class AdSenseController extends BaseController{
 	
 	@Autowired
 	private TdProductTypeService tdProductTypeService;
+	
+	@Autowired
+	private TdIndexFloorService tdIndexFloorService;
 	
 	/**
 	 * @author Max
@@ -183,6 +189,11 @@ public class AdSenseController extends BaseController{
 		tsc.setFlag(false);
 		List<TdProductType> typeList = tdProductTypeService.findBySearchCriteria(tsc);
 		map.addAttribute("typeList", typeList);
+		//查询pc楼层
+		TdIndexFloorSearchCriteria fsc = new TdIndexFloorSearchCriteria();
+		fsc.setFlag(false);
+		List<TdIndexFloor> floorList = tdIndexFloorService.findByTdIndexFloorSearchCriteria(fsc);
+		map.addAttribute("floorList", floorList);
 		return "/admin/article/adfrom";
 	}
 	

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.article.entity.TdAdsense;
+import com.tiandu.article.entity.TdAdvertisement;
 import com.tiandu.article.entity.TdArticleTitle;
 import com.tiandu.article.search.TdAdvertisementSearchCriteria;
 import com.tiandu.article.search.TdArticleTitleSearchCriteria;
@@ -33,6 +34,9 @@ import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.service.TdUserService;
 import com.tiandu.custom.vo.LoginForm;
+import com.tiandu.menu.entity.TdIndexFloor;
+import com.tiandu.menu.search.TdIndexFloorSearchCriteria;
+import com.tiandu.menu.service.TdIndexFloorService;
 
 @Controller
 @RequestMapping("")
@@ -47,8 +51,12 @@ public class IndexController extends BaseController {
 	
 	@Autowired
 	private TdAdvertisementService tdAdvertisementService;
+	
 	@Autowired
 	private TdArticleTitleService tdArticleTitleService;
+	
+	@Autowired
+	private TdIndexFloorService tdIndexFloorService;
 	
 	@RequestMapping("/index")
 	public String index(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
@@ -84,7 +92,52 @@ public class IndexController extends BaseController {
 			sc.setOrderBy("2");
 			modelMap.addAttribute("middeadList", tdAdvertisementService.findBySearchCriteria(sc));
 		}
+		//查询楼层
+		TdIndexFloorSearchCriteria fsc = new TdIndexFloorSearchCriteria();
+		fsc.setFlag(false);
+		fsc.setStatus(1);
+		List<TdIndexFloor> floorList = tdIndexFloorService.findByTdIndexFloorSearchCriteria(fsc);
+		modelMap.addAttribute("floorList", floorList);
 	    return "/client/index";
+	}
+	/**
+	 * 首页楼层广告
+	 * @param sc
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
+	@RequestMapping("/floorads")
+	public String floorads(TdAdvertisementSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		Date now = new Date();
+		sc.setCreateTime(now);
+		sc.setEndTime(now);
+		sc.setStatus(Byte.valueOf("1"));
+		sc.setOrderBy("2");
+		//楼层轮播广告
+		sc.setFlag(false);
+		sc.setAdsId(14);//楼层轮播广告位id
+		List<TdAdvertisement> floorcycleadList = tdAdvertisementService.findBySearchCriteria(sc);
+		modelMap.addAttribute("floorcycleadList", floorcycleadList);
+		//pc楼层中间第一幅广告
+		sc.setFlag(true);
+		sc.setPageSize(1);
+		sc.setAdsId(15);//pc楼层中间第一幅广告位id
+		List<TdAdvertisement> floorcenteroneadList = tdAdvertisementService.findBySearchCriteria(sc);
+		modelMap.addAttribute("floorcenteroneadList", floorcenteroneadList);
+		//pc楼层中间二三幅广告
+		sc.setPageSize(2);
+		sc.setAdsId(16);//pc楼层中间二三幅广告位id
+		List<TdAdvertisement> floorcentertwoadList = tdAdvertisementService.findBySearchCriteria(sc);
+		modelMap.addAttribute("floorcentertwoadList", floorcentertwoadList);
+		//pc楼层中间二三幅广告
+		sc.setPageSize(3);
+		sc.setAdsId(17);//pc楼层中间二三幅广告位id
+		List<TdAdvertisement> floorrightadList = tdAdvertisementService.findBySearchCriteria(sc);
+		modelMap.addAttribute("floorrightadList", floorrightadList);
+		
+	    return "/client/indexfloor";
 	}
 	
 	@RequestMapping("/unauthorized")

@@ -91,11 +91,41 @@ function addZeroProduct(id){
 	$("#formdiv").loading().load(url,loadData);
 	showForm();
 }
+function getAllTypes(_settings){
+	var settings = {obj:"",num:0};
+	settings=$.extend(settings,_settings);
+	var url = basePath+"/agent/producttypeallselect";
+	var loadData = "";
+	if(settings.num==0){
+		loadData = {'parentId':0};
+		$("#onetypespn").loading().load(url,loadData);
+		$("#twotypespn").html("");
+		$("#typespn").html("");
+		$("#productTypeId").val("");
+	}else if(settings.num==1){
+		var upid = $(settings.obj).val();
+		loadData = {'parentId':upid};
+		$("#twotypespn").loading().load(url,loadData);
+		$("#typespn").html("");
+		$("#productTypeId").val("");
+		changeType();
+	}else if(settings.num==2){
+		var upid = $(settings.obj).val();
+		loadData = {'parentId':upid};
+		$("#typespn").loading().load(url,loadData);
+		$("#productTypeId").val("");
+		changeType();
+	}else if(settings.num==3){
+		var upid = $(settings.obj).val();
+		$("#productTypeId").val(upid);
+		changeType();
+	}
+}
 /**
  * 改变商品分类
  */
-function changeType(obj){
-	var typeId = $(obj).val();
+function changeType(){
+	var typeId = $("#productTypeId").val();
 	if(typeId!=""){
 		var url = basePath + "/user/producttypeattributes";
 		var loadData = {"id":typeId};

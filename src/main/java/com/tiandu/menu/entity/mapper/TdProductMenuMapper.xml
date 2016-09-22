@@ -26,11 +26,18 @@
     <include refid="Base_Column_List" />
     from td_product_menu
     where 1=1 
+    <if test="status != null" >
+        and status=#{status,jdbcType=INTEGER}
+    </if>
     order by sort asc
   </select>
   <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.menu.search.TdProductMenuSearchCriteria" >
     select count(mid)
     from td_product_menu
+    where 1=1
+    <if test="status != null" >
+        and status=#{status,jdbcType=INTEGER}
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from td_product_menu

@@ -13,7 +13,7 @@
 				</script>
 			</@shiro.user>
 			<@shiro.guest>
-			您好欢迎来到创客联盟!请<a href="${app.basePath}/login" title="" class="a1">【登录】</a>或<a href="${app.basePath}/register" title="" class="a2">【免费注册】</a>
+			您好欢迎来到创客联盟!请<a href="${app.basePath}/login" title="" class="a1">【登录】</a>
 			</@shiro.guest>
 			</section>
 			<section class="row_linka fr">

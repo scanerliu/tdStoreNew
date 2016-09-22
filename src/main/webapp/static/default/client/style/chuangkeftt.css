@@ -1389,7 +1389,8 @@
     .index-item1 .rightcontent .item1 {
       float: left;
       width: 235px;
-      height: 195px;
+ /*      height: 195px; */
+      height: 445px;
       background: #fff;
       margin-bottom: 10px; }
       .index-item1 .rightcontent .item1 .nav {
@@ -1652,12 +1653,15 @@
   .floor .floorcontent .sitebanner {
     float: left;
     width: 386px;
-    height: 439px;
+/*     height: 439px; */
+	height: 600px;
     position: relative; }
     .floor .floorcontent .sitebanner .picScroll {
       float: left;
       width: 386px;
-      height: 439px; }
+      /* height: 439px;  */
+      height: 600px; 
+      }
       .floor .floorcontent .sitebanner .picScroll .hd {
         position: absolute;
         top: 300px;

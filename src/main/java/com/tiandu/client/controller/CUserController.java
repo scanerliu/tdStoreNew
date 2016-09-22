@@ -1829,10 +1829,10 @@ public class CUserController extends BaseController {
 	 */
 	@RequestMapping("/editproduct")
 	public String editProduct(Integer id, Integer ktype, HttpServletRequest request, HttpServletResponse response, ModelMap map) {
-		TdProductTypeCriteria tsc = new TdProductTypeCriteria();
+		/*TdProductTypeCriteria tsc = new TdProductTypeCriteria();
 		tsc.setStatus((byte) 1);
 		List<TdProductType> productTypeList = tdProductTypeService.findAll(tsc);
-		map.addAttribute("productTypeList", productTypeList);
+		map.addAttribute("productTypeList", productTypeList);*/
 		
 		if(null != id && id != 0)
 		{
@@ -1861,6 +1861,9 @@ public class CUserController extends BaseController {
 			// 商品对应的货品
 			List<TdProductSku> productSkuList = tdProductSkuService.findByProductId(id);
 			map.addAttribute("productSkuList", productSkuList);
+			TdProductType productType = tdProductTypeService.findOne(product.getTypeId());
+			map.addAttribute("productType", productType);
+			
 			//商品类型规格
 			List<TdProductTypeAttribute> taList = tdProductTypeAttributeService.findByTypeIdWithOptions(product.getTypeId());
 			if(taList.size()>0){

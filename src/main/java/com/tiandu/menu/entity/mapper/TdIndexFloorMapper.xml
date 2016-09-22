@@ -19,11 +19,18 @@
     <include refid="Base_Column_List" />
     from td_index_floor
     where 1=1 
+    <if test="status != null" >
+        and status=#{status,jdbcType=INTEGER}
+    </if>
     order by sort asc
   </select>
   <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.menu.search.TdIndexFloorSearchCriteria" >
     select count(fid)
     from td_index_floor
+    where 1=1
+    <if test="status != null" >
+        and status=#{status,jdbcType=INTEGER}
+    </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 

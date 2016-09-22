@@ -262,6 +262,8 @@ public class CShoppingcartController extends BaseController {
 	@RequestMapping(value = "/confirmorder")
 	public String confirmorder(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUser currUser = this.getCurrentUser();
+		// 系统配置
+		modelMap.addAttribute("system", getSystem());
 		if(!TdUser.USTATUS_ACTIVE.equals(currUser.getUverification())){//未验证的用户不能购买商品
 			String errmsg = "用户未验证，请先到个人信息中绑定手机号码和设置地区完成验证才能购买商品！<a href='"+request.getServletContext().getContextPath()+"/user/info'>立即验证</a>";
 			modelMap.addAttribute("errmsg", errmsg) ;
@@ -296,8 +298,6 @@ public class CShoppingcartController extends BaseController {
 		
 		modelMap.addAttribute("shoppingcart", shoppingcart) ;
 		modelMap.addAttribute("defaulteAddressId", defaulteAddressId);
-		// 系统配置
-		modelMap.addAttribute("system", getSystem());
 	    return "/client/shoppingcart/confirmorder";
 	}
 	
@@ -310,6 +310,8 @@ public class CShoppingcartController extends BaseController {
 			orderForm.setUsePoints(false);
 		}
 		TdUser currUser = this.getCurrentUser();
+		// 系统配置
+		modelMap.addAttribute("system", getSystem());
 		if(!TdUser.USTATUS_ACTIVE.equals(currUser.getUverification())){//未验证的用户不能购买商品
 			String errmsg = "用户未验证，请先到个人信息中绑定手机号码和设置地区完成验证才能购买商品！<a href='"+request.getServletContext().getContextPath()+"/user/info'>立即验证</a>";
 			modelMap.addAttribute("errmsg", errmsg) ;
@@ -358,6 +360,8 @@ public class CShoppingcartController extends BaseController {
 	@RequestMapping("/buynow")
 	public String buynow(OrderForm orderForm, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap ,Integer addressId) {
 		TdUser currUser = this.getCurrentUser();
+		// 系统配置
+		modelMap.addAttribute("system", getSystem());
 		if(!TdUser.USTATUS_ACTIVE.equals(currUser.getUverification())){//未验证的用户不能购买商品
 			String errmsg = "用户未验证，请先到个人信息中绑定手机号码和设置地区完成验证才能购买商品！<a href='"+request.getServletContext().getContextPath()+"/user/info'>立即验证</a>";
 			modelMap.addAttribute("errmsg", errmsg) ;
@@ -396,9 +400,6 @@ public class CShoppingcartController extends BaseController {
 				modelMap.addAttribute("addressList", addressList) ;
 			}
 			modelMap.addAttribute("defaulteAddressId", defaulteAddressId);
-			// 系统配置
-			modelMap.addAttribute("system", getSystem());
-			
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -424,6 +425,8 @@ public class CShoppingcartController extends BaseController {
 		}
 		TdJointOrder order = new TdJointOrder();
 		TdUser currUser = this.getCurrentUser();
+		// 系统配置
+		modelMap.addAttribute("system", getSystem());
 		if(!TdUser.USTATUS_ACTIVE.equals(currUser.getUverification())){//未验证的用户不能购买商品
 			String errmsg = "用户未验证，请先到个人信息中绑定手机号码和设置地区完成验证才能购买商品！<a href='"+request.getServletContext().getContextPath()+"/user/info'>立即验证</a>";
 			modelMap.addAttribute("errmsg", errmsg) ;

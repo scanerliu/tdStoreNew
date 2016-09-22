@@ -1607,10 +1607,10 @@ public class MUserController extends BaseController {
 	 */
 	@RequestMapping("/addProduct")
 	public String addProduct(Boolean isFreeProduct, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		TdProductTypeCriteria tsc = new TdProductTypeCriteria();
+		/*TdProductTypeCriteria tsc = new TdProductTypeCriteria();
 		tsc.setStatus((byte) 1);
 		List<TdProductType> productTypeList = tdProductTypeService.findAll(tsc);
-		modelMap.addAttribute("productTypeList", productTypeList);
+		modelMap.addAttribute("productTypeList", productTypeList);*/
 		modelMap.addAttribute("isFreeProduct", isFreeProduct);
 		return "/mobile/user/addProduct";	
 	}

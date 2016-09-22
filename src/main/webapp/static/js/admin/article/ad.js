@@ -108,8 +108,12 @@ function editAd(id){
 
 function saveAd(){
 	var f = $('#adForm').form('enableValidation').form('validate');
-	
 	if(f){
+		var adsId = $("#adsId").val();
+		if(adsId==""){
+			$.messager.alert('消息提醒','请选择广告位。');
+			return false;
+		}
 		$("#adForm").form("submit",{
 			success : function(data){
 				 var result = eval("("+data+")");
@@ -149,13 +153,21 @@ function delAdCallback(data){
 		$.messager.alert('消息提醒','删除失败!');
 	}
 }
-
+var __flooraids;
 function changeAds(obj){
 	var asid = $(obj).val();
 	if(asid==6){
 		$("#typeIdTr").show();
+		$("#floorIdTr").hide();
+		$("#floorIdSelect").find("option[value='']").prop("selected",true);
+	}else if($.inArray(asid, __flooraids)){
+		$("#floorIdTr").show();
+		$("#typeIdTr").hide();
+		$("#typeIdSelect").find("option[value='']").prop("selected",true);
 	}else{
 		$("#typeIdTr").hide();
 		$("#typeIdSelect").find("option[value='']").prop("selected",true);
+		$("#floorIdTr").hide();
+		$("#floorIdSelect").find("option[value='']").prop("selected",true);
 	}
 }

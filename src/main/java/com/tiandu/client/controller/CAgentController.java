@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.article.entity.TdArticleCategory;
+import com.tiandu.article.entity.TdArticleContent;
 import com.tiandu.article.entity.TdArticleTitle;
 import com.tiandu.article.search.TdArticleCategorySearchCriteria;
 import com.tiandu.article.search.TdArticleTitleSearchCriteria;
@@ -118,6 +119,10 @@ public class CAgentController extends BaseController{
 //		{
 //			return "/mobile/agent/company";
 //		}
+		
+		//代理条款说明
+		TdArticleContent agentcontent = tdArticleContentService.findOne(1);
+		map.addAttribute("agentcontent", agentcontent);
 		//供应商
 		if(ConstantsUtils.AGENT_GROUPID_SUPPLIER.equals(agent.getGroupId())){
 			

@@ -33,6 +33,10 @@
     delete from td_index_floor_type
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <delete id="deleteByFloorId" parameterType="java.lang.Integer" >
+    delete from td_index_floor_type
+    where fid = #{id,jdbcType=INTEGER}
+  </delete>
   <insert id="insert" parameterType="com.tiandu.menu.entity.TdIndexFloorType" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
