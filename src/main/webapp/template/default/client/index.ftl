@@ -165,11 +165,11 @@
 	    <div class="index-content">
 	    	<#if middeadList??>
         	<#list middeadList as add>
-            <li><a href="<#if add.linkUrl??>${add.linkUrl!''}<#else>javascript:;</#if>" target="_blank"><img src="${app.basePath}${add.imageUrl!''}"/></a></li>
-            <div class="item1">
+        	<a href="<#if add.linkUrl??>${add.linkUrl!''}<#else>javascript:;</#if>" title="">
+            <div class="item1 <#if !add_has_next>nomargin</#if>">
 	            <img src="${app.basePath}${add.imageUrl!''}" alt="广告图"/>
-	            <a href="<#if add.linkUrl??>${add.linkUrl!''}<#else>javascript:;</#if>" title="" class="go">GO</a>
 	        </div>
+	        </a>
             </#list>
             </#if>
 	    </div>

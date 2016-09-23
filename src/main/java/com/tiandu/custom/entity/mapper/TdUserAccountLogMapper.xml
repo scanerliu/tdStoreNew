@@ -83,7 +83,11 @@
     left join td_user as u 
     on g.uid = u.uid
     where 1=1 
-    	and type = 2
+    and u.utype=1
+    <if test="type != null">
+		and g.type = #{type,jdbcType=TINYINT}
+	</if>
+    	
     <if test="username != null and username != ''" >
         and u.uname like CONCAT('%',#{username,jdbcType=VARCHAR},'%')
     </if>
@@ -105,7 +109,10 @@
     left join td_user as u 
     on g.uid = u.uid
     where 1=1 
-    and type = 2
+    and u.utype=1
+    <if test="type != null">
+		and g.type = #{type,jdbcType=TINYINT}
+	</if>
     <if test="username != null and username != ''" >
         and u.uname like CONCAT('%',#{username,jdbcType=VARCHAR},'%')
     </if>

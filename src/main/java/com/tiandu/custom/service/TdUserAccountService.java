@@ -1,7 +1,11 @@
 package com.tiandu.custom.service;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import com.tiandu.custom.entity.TdUserAccount;
 import com.tiandu.custom.entity.TdUserAccountLog;
+import com.tiandu.custom.search.TdUserAccountCriteria;
 
 public interface TdUserAccountService {
 
@@ -17,5 +21,9 @@ public interface TdUserAccountService {
 	public boolean addAmount(TdUserAccount record, TdUserAccountLog log);
 	
 	public TdUserAccount findByUid(Integer uId);
+	
+	public BigDecimal countTotalAmount();
+	
+	public List<TdUserAccount> findBySearchCriteria(TdUserAccountCriteria sc);
 	
 }

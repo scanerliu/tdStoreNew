@@ -200,6 +200,13 @@ public class TdUserServiceImpl implements TdUserService {
 							TdRole role = new TdRole();
 							role.setId(mid);
 							roleSet.add(role);
+							//分公司权限特殊处理，添加admin权限
+							if(mid.equals(11)){
+								TdRole brach = new TdRole();
+								brach.setId(2);//admin权限
+								roleSet.add(brach);
+							}
+							
 						} catch (NumberFormatException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

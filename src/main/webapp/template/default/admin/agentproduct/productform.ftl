@@ -61,9 +61,8 @@
     <tr>
         <th>产品描述：</th>
         <td>
-        	<textarea style="display:none;" rows="5" cols="60" id="ac" name="note">${product.note!''}</textarea>
 		    <!-- 加载编辑器的容器 -->
-		    <script id="note" name="content" type="text/plain">${product.note!''}</script>
+		    <script id="note" name="note" type="text/plain">${product.note!''}</script>
         </td>
     </tr>
     <!-- 配置文件 -->

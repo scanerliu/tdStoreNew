@@ -45,4 +45,19 @@ function searchUserIncome(f){
 function fnGotoPageUserIncome(num){
 	searchUserIncome(false);
 }
+/**钱包余额**/
+function searchUserAccounts(f){
+	var url = basePath+"/admin/report/user/accountsearch";
+	var loadData = "";
+	if(f){
+		loadData = $("#searchForm").serializeArray();
+	}else{
+		loadData = $("#listForm").serializeArray();
+	}
+	$("#results").load(url,loadData);
+}
+
+function fnGotoPageAccounts(num){
+	searchUserAccounts(false);
+}
 

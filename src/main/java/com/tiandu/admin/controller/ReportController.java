@@ -1,5 +1,6 @@
 package com.tiandu.admin.controller;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -177,6 +178,26 @@ public class ReportController extends BaseController {
 		modelMap.addAttribute("acountLogList", acountLogList);
 		modelMap.addAttribute("sc", sc);
 		return "/admin/acountLog/acountLogListBody";
+	}
+	/*
+	 * 钱包信息列表
+	 */
+	@RequestMapping("/user/accountlist")
+	public String acountlist(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		//统计客户钱包总金额
+		BigDecimal totalAmount = tdUserAccountService.countTotalAmount();
+		modelMap.addAttribute("totalAmount", totalAmount);
+		return "/admin/report/accountList";
+	}
+	/*
+	 * 钱包信息列表body
+	 */
+	@RequestMapping("/user/accountsearch")
+	public String accountsearch(TdUserAccountCriteria sc ,HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		List<TdUserAccount> accountList = tdUserAccountService.findBySearchCriteria(sc);
+		modelMap.addAttribute("accountList", accountList);
+		modelMap.addAttribute("sc", sc);
+		return "/admin/report/accountListBody";
 	}
 	
 }

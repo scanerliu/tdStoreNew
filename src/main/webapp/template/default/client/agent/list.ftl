@@ -53,10 +53,10 @@
 	                	<#if agentList??>
     					<#list agentList as ag>
 	                    <li>
-	                        <a href="${app.basePath}/agent/producttype?agentId=${ag.id?c}" title="${ag.title!''}" class="title"><img src="${app.basePath}${ag.imageUrl!''}" alt="${ag.title!''}"/></a>
+	                        <a href="${app.basePath}/agent/producttype?agentId=${ag.id?c}" title="${ag.title!''}" class="title"><img src="${app.basePath}${ag.imageUrl!''}" alt="${ag.title!''}" width="285" height="225"/></a>
 	                        <div class="infoitem">
 	                            <a href="${app.basePath}/agent/producttype?agentId=${ag.id?c}" title="${ag.title!''}" class="title">${ag.title!''}</a>
-	                            <p class="desc">${ag.note!''}</p>
+	                            <#--<p class="desc">${ag.note!''}</p>-->
 	                            <span class="price red">￥<label><#if ag.salesPrice??>${ag.salesPrice?string('0.00')}</#if></label></span>
 	                            <span class="continue"></span>
 	                        </div>

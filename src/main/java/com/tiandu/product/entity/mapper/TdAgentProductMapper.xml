@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.tiandu.product.entity.TdAgentProduct" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
-    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="LONGVARCHAR" />
     <result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
     <result column="supplier_price" property="supplierPrice" jdbcType="DECIMAL" />
     <result column="sales_price" property="salesPrice" jdbcType="DECIMAL" />
@@ -74,7 +74,7 @@
       supplier_price, sales_price, group_id, 
       level, update_time, update_by, sort, gift
       )
-    values (#{title,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, #{imageUrl,jdbcType=VARCHAR}, 
+    values (#{title,jdbcType=VARCHAR}, #{note,jdbcType=LONGVARCHAR}, #{imageUrl,jdbcType=VARCHAR}, 
       #{supplierPrice,jdbcType=DECIMAL}, #{salesPrice,jdbcType=DECIMAL}, #{groupId,jdbcType=INTEGER}, 
       #{level,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, #{gift,jdbcType=BIT}
       )
@@ -124,7 +124,7 @@
         #{title,jdbcType=VARCHAR},
       </if>
       <if test="note != null" >
-        #{note,jdbcType=VARCHAR},
+        #{note,jdbcType=LONGVARCHAR},
       </if>
       <if test="imageUrl != null" >
         #{imageUrl,jdbcType=VARCHAR},
@@ -162,7 +162,7 @@
         title = #{title,jdbcType=VARCHAR},
       </if>
       <if test="note != null" >
-        note = #{note,jdbcType=VARCHAR},
+        note = #{note,jdbcType=LONGVARCHAR},
       </if>
       <if test="imageUrl != null" >
         image_url = #{imageUrl,jdbcType=VARCHAR},
@@ -197,7 +197,7 @@
   <update id="updateByPrimaryKey" parameterType="com.tiandu.product.entity.TdAgentProduct" >
     update td_agent_product
     set title = #{title,jdbcType=VARCHAR},
-      note = #{note,jdbcType=VARCHAR},
+      note = #{note,jdbcType=LONGVARCHAR},
       image_url = #{imageUrl,jdbcType=VARCHAR},
       supplier_price = #{supplierPrice,jdbcType=DECIMAL},
       sales_price = #{salesPrice,jdbcType=DECIMAL},

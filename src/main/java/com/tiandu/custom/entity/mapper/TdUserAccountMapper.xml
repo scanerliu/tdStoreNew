@@ -7,16 +7,49 @@
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    uid, amount, status, update_time, update_by
+    a.uid, a.amount, a.status, a.update_time, a.update_by
   </sql>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from td_user_account
+    from td_user_account a
     where uid = #{uid,jdbcType=INTEGER}
   </select>
+  
+  <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.custom.search.TdUserAccountCriteria">
+    select count(a.uid) 
+    from td_user_account a left join td_user u on a.uid=u.uid
+    where u.utype=1
+    <if test="username != null and username != ''" >
+        and u.uname like CONCAT('%',#{username,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+  
+  <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.custom.search.TdUserAccountCriteria">
+    select
+    <include refid="Base_Column_List" />
+    ,u.uname as username
+    from td_user_account a left join td_user u on a.uid=u.uid
+    where u.utype=1
+    <if test="username != null and username != ''" >
+        and u.uname like CONCAT('%',#{username,jdbcType=VARCHAR},'%')
+    </if>
+    <choose>
+		<when test="sortBy != null and sortBy == 1"> order by a.amount desc </when>
+		<when test="sortBy != null and sortBy == 2"> order by a.amount asc </when>
+	</choose>
+  </select>
+  
+  <select id="countTotalAmount" resultType="java.math.BigDecimal" >
+    select sum(a.amount) 
+    from td_user_account a left join td_user u on a.uid=u.uid
+    where u.utype=2
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from td_user_account
     where uid = #{uid,jdbcType=INTEGER}

@@ -24,6 +24,11 @@ public class TdUserAccount {
 
     private Integer updateBy;
 
+    /**
+     * 账户名称，显示用
+     */
+    private String username;
+    
     public Integer getUid() {
         return uid;
     }
@@ -63,4 +68,13 @@ public class TdUserAccount {
     public void setUpdateBy(Integer updateBy) {
         this.updateBy = updateBy;
     }
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+    
 }

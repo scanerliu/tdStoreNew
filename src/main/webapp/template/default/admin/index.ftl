@@ -29,9 +29,9 @@
     <ul class="nav white" id="J_tmenu">
         <#if mainList??>
         <#list mainList as menu>
-        	<#--<@shiro.hasPermission name="${menu.modelName!''}_${menu.actionName!''}">-->
+        	<@shiro.hasPermission name="${menu.actionName!''}">
             <li class="top_menu"><a href="javascript:;" data-id="${menu.id!''}" hidefocus="true" style="outline:none;">${menu.name!''}</a></li>
-            <#--</@shiro.hasPermission>-->
+            </@shiro.hasPermission>
         </#list>
         </#if>
     </ul>

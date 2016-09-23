@@ -2,6 +2,7 @@ package com.tiandu.custom.service.impl;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import com.tiandu.custom.entity.TdUserAccount;
 import com.tiandu.custom.entity.TdUserAccountLog;
 import com.tiandu.custom.entity.mapper.TdUserAccountLogMapper;
 import com.tiandu.custom.entity.mapper.TdUserAccountMapper;
+import com.tiandu.custom.search.TdUserAccountCriteria;
 import com.tiandu.custom.service.TdUserAccountService;
 
 @Service("tdUserAccountService")
@@ -57,10 +59,19 @@ public class TdUserAccountServiceImpl implements TdUserAccountService {
 		}
 		return tdUserAccountMapper.selectByPrimaryKey(uId);
 	}
+	
+	@Override
+	public List<TdUserAccount> findBySearchCriteria(TdUserAccountCriteria sc) {
+		if(sc.isFlag()){
+			Integer count = tdUserAccountMapper.countByCriteria(sc);
+			sc.setTotalCount(count);
+		}
+		return tdUserAccountMapper.findBySearchCriteria(sc);
+	}
 
-	
-
-	
-	
+	@Override
+	public BigDecimal countTotalAmount() {
+		return tdUserAccountMapper.countTotalAmount();
+	}
 	
 }

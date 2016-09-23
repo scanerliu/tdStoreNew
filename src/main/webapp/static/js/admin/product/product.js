@@ -79,8 +79,10 @@ function saveProduct(){
 	$("#formTableData").val(tableData);
 	var f = $('#productForm').form('enableValidation').form('validate');
 	if(f){
+		openwaiting();
 		$("#productForm").form("submit",{
 			success : function(data){
+				closewaiting();
 				 var result = eval("("+data+")");
 				  if(result.code==1){
 					  $.messager.alert('消息提醒','商品保存成功。');
@@ -97,6 +99,7 @@ function saveProduct(){
 function deleteProduct(id){
 	$.messager.confirm('消息提醒', '删除后不可恢复，确定要继续删除吗?', function(r){
 		if (r){
+			openwaiting();
 			var url = basePath+"/admin/product/delete";
 			var loadData={"id":id};
 			$.post(url,loadData,delProductTypeCallback,"text");
@@ -105,6 +108,7 @@ function deleteProduct(id){
 }
 
 function delProductTypeCallback(data){
+	closewaiting();
 	var result = eval("("+data+")");
 	if(result.code==1){
 		$.messager.alert('消息提醒','删除成功。');
@@ -148,6 +152,7 @@ function bacthOperProducts(optype){
 		$.messager.alert('消息提醒','操作不合规范!');
 		return ;
 	}
+	openwaiting();
 	var url = basePath+"/admin/product/batchoperproducts";
 	var postData = {"type":optype,"productIds":ids};
 	$.post(url,postData,batchOperCallback,"text");
@@ -158,6 +163,7 @@ function bacthOperProducts(optype){
  * @param data
  */
 function batchOperCallback(data){
+	closewaiting();
 	var result = eval("("+data+")");
 	if(result.code==1){
 		$.messager.alert('消息提醒','操作成功。');
