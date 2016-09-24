@@ -89,7 +89,7 @@ public class WechatNotify {
 		{
 			response.getWriter().print(echostr);
 		}
-		response.getWriter().print(echostr);
+//		response.getWriter().print(echostr);
 	}
 	
 	/**
