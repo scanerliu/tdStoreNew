@@ -75,7 +75,7 @@ public class ShoppingcartVO {
 	private ImageOrderVO imageOrder;
 	
 	/**
-	 * 购买类型1-普通商品，2-单代产品，3-分公司，4-图片订单，5-供应商
+	 * 购买类型1-普通商品，2-单代产品，3-分公司，4-图片订单，5-供应商，6-零元购商品
 	 */
 	private Integer ptype;
 	/**

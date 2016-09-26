@@ -30,6 +30,10 @@ public class TdUserAccountLog {
 	 * 订单支付
 	 */
 	public static final Byte USERACCOUNTLOG_TYPE_ORDER_PAY = 5;
+	/**
+	 * 分润收入扣回
+	 */
+	public static final Byte USERACCOUNTLOG_TYPE_PROFIT_BACK = 6;
 	
     private Integer id;
 
@@ -176,6 +180,8 @@ public class TdUserAccountLog {
     			sb.append("提现");
     		}else if(this.getType().equals(USERACCOUNTLOG_TYPE_ORDER_PAY)){
     			sb.append("订单支付");
+    		}else if(this.getType().equals(USERACCOUNTLOG_TYPE_PROFIT_BACK)){
+    			sb.append("分润扣除");
     		}
     		
     	}

@@ -406,6 +406,42 @@ public class MobileController extends BaseController {
 						      }
 						      tdUserService.updateByPrimaryKeySelective(upuser);
 					      }
+					      if(StringUtils.isNotBlank(state)){
+					    	  switch (state) {
+								case "1"://主页
+									return "redirect:/mobile/index";
+								case "2"://零元专区
+									return "redirect:/mobile/product/zero";
+								case "3"://新品专区
+									return "redirect:/mobile/product/new";
+								case "4"://秒杀预售
+									return "redirect:/product/seckill";
+								case "5"://个人中心
+									return "redirect:/mobile/user/center";
+								case "6"://分享二维码
+									return "redirect:/mobile/user/mySpread";
+								case "7"://成为供应商
+									return "redirect:/mobile/agent/producttype?agentId=1";
+								case "8"://成为代理
+									return "redirect:/mobile/agent/list";
+								case "9"://成为分公司
+									return "redirect:/mobile/agent/list";
+								case "10"://股东竞选
+									return "redirect:/mobile/campaign/list";
+								case "11"://关于我们
+									return "redirect:/mobile/article/item3";
+								case "12"://退货退款
+									return "redirect:/mobile/article/item2";
+								case "13"://投诉维权
+									return "redirect:/mobile/article/item4";
+								case "14"://联盟合作
+									return "redirect:/mobile/article/item5";
+								case "15"://公司公告
+									return "redirect:/mobile/article/list?cid=13";
+								default:
+									break;
+							  }
+					      }
 					      return "redirect:/mobile/index";
 					    }catch (AuthenticationException e) {
 					    	logger.error("wechat login error:"+e.getMessage());

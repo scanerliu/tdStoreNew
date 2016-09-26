@@ -273,8 +273,12 @@ public class TdOrderServiceImpl implements TdOrderService{
 		if(refundAmount.compareTo(order.getPayAmount())>0){
 			result.setFailMsg("退款金额不能大于支付金额！");
 			return result;
-		}else if(refundAmount.compareTo(order.getPayAmount())==0){
+		}else if(refundAmount.compareTo(order.getPayAmount().subtract(order.getRefundAmount()))>0){
+			result.setFailMsg("退款金额不能大于支付金额！");
+			return result;
+		}else if(refundAmount.compareTo(order.getPayAmount().subtract(order.getRefundAmount()))==0){
 			uporder.setPayStatus(ConstantsUtils.ORDER_PAY_STATUS_ALL_REFUND);
+			uporder.setOrderStatus(ConstantsUtils.ORDER_STATUS_CANCEL);
 		}else{
 			uporder.setPayStatus(ConstantsUtils.ORDER_PAY_STATUS_PART_REFUND);
 		}
@@ -288,8 +292,94 @@ public class TdOrderServiceImpl implements TdOrderService{
 		log.setOperType(ConstantsUtils.ORDER_LOG_TYPE_REFUND);
 		log.setNote("订单进行退款操作：退款金额 "+refund.getRefundAmount());
 		tdOrderLogMapper.insert(log);
+		//已分润订单进行回扣操作
+		if(order.getBenefited().equals(2)&&BigDecimal.ZERO.compareTo(order.getBenefitAmount())<0){
+			backBenefitOrder(order);
+		}
 		result.setFlag(true);
 		return result;
+	}
+
+	private void backBenefitOrder(TdOrder order) {
+		Date now  = new Date();
+		//分润花费金额
+		BigDecimal totalBenefitAmount = BigDecimal.ZERO;
+		//订单用于分润金额
+		BigDecimal orderBenefitAmount = BigDecimal.ZERO;
+		
+		if(order.getBenefited().equals(2)&&BigDecimal.ZERO.compareTo(order.getBenefitAmount())<0){//已分润和分润金额大于零的进行扣润
+			//订单用户信息
+			TdUser orderUser = tdUserService.findOneWithAccount(order.getUserId());
+			if(ConstantsUtils.ORDER_KIND_AGENTPRODUCT.equals(order.getOrderType())){//代理产品分润
+				//代理产品添加代理
+				TdOrderProduct orderProduct = tdOrderProductMapper.findByOrderIdAndTypeId(order.getOrderId(), Byte.valueOf("1"));
+				if(null!=orderProduct){
+						BigDecimal amount = orderProduct.getItemPrice().subtract(orderProduct.getSupplierPrice());
+						TdBenefitSearchCriteria sc = new TdBenefitSearchCriteria();
+						sc.setFlag(false);
+						sc.setTypeId(orderProduct.getItemId());
+						List<TdBenefit> benefitList = tdBenefitService.findBySearchCriteria(sc);
+						
+						//单类代理分润
+						BigDecimal agentBenefitAmount = displayAgentBenefit(BigDecimal.ZERO.subtract(amount), order, orderUser, orderProduct, benefitList, 3, now);
+						totalBenefitAmount = totalBenefitAmount.add(agentBenefitAmount);
+						
+						//分公司分润
+						BigDecimal branchBenefitAmount = displayBranchBenefit(BigDecimal.ZERO.subtract(amount), order, orderUser, benefitList, 3, now);
+						totalBenefitAmount = totalBenefitAmount.add(branchBenefitAmount);
+						
+						//三级分销分润
+						BigDecimal distriBenefitAmount = displayDistributionBenefit(BigDecimal.ZERO.subtract(amount), order, orderUser, benefitList, 3, now);
+						totalBenefitAmount = totalBenefitAmount.add(distriBenefitAmount);
+				}
+			}else if(ConstantsUtils.ORDER_KIND_ZEROPRODUCT.equals(order.getOrderType())){//零元购商品分润
+				//普通商品分润设置
+				TdBenefitSearchCriteria sc = new TdBenefitSearchCriteria();
+				/*sc.setFlag(false);
+				sc.setTypeId(8);
+				List<TdBenefit> benefitList = tdBenefitService.findBySearchCriteria(sc);*/
+				//零元商品分润设置
+				sc.setFlag(false);
+				sc.setTypeId(9);
+				List<TdBenefit> zerobenefitList = tdBenefitService.findBySearchCriteria(sc);
+				
+				//获取零元三级分润金额
+				BigDecimal zeroAmount = configUtil.getZeroProductBenefitAmount();
+				
+				List<TdOrderSku> orderSkuList = tdOrderSkuMapper.findByOrderId(order.getOrderId());
+				if(null!=orderSkuList && orderSkuList.size()>0){
+					//单类代理分润
+					for(TdOrderSku ordersku : orderSkuList){
+						//零元商品分润，不再参与普通商品分润
+						if(BigDecimal.ZERO.compareTo(ordersku.getBenefitAmount())<0){//有利润空间才分润
+							BigDecimal amount = ordersku.getBenefitAmount();
+							if(zeroAmount.compareTo(amount)<=0){
+								//三级分销分润
+								BigDecimal distBenefitAmount = displayDistributionBenefit(BigDecimal.ZERO.subtract(zeroAmount), order, orderUser, zerobenefitList, 4, now);
+								totalBenefitAmount = totalBenefitAmount.add(distBenefitAmount);	
+								amount = amount.subtract(zeroAmount);
+								
+								if(BigDecimal.ZERO.compareTo(amount)<0){
+									//分公司分润
+									BigDecimal branchBenefitAmount = displayBranchBenefit(BigDecimal.ZERO.subtract(amount), order, orderUser, zerobenefitList, 3, now);
+									totalBenefitAmount = totalBenefitAmount.add(branchBenefitAmount);
+								}
+							}
+						}							
+					}
+				}
+			}
+			//更新订单分润信息
+			TdOrder uporder2 = new TdOrder();
+			uporder2.setOrderId(order.getOrderId());
+			
+			uporder2.setBenefitAmount(totalBenefitAmount.add(order.getBenefitAmount()));
+			uporder2.setUpdateBy(1);
+			uporder2.setUpdateTime(now);
+			uporder2.setBenefited(5);
+			tdOrderMapper.updateByPrimaryKeySelective(uporder2);
+		}
+		
 	}
 
 	@Override
@@ -439,12 +529,127 @@ public class TdOrderServiceImpl implements TdOrderService{
 			}else if(shoppingcart.getPtype()==5){//供应商订单
 				TdOrder order = this.insertSuppilerOrder(currUser, orderForm, shoppingcart, torder, now);
 //				torder.setJno(order.getOrderNo());
+			}else if(shoppingcart.getPtype()==6){
+				TdOrder order = this.insertZeroOrder(currUser, orderForm, shoppingcart, torder, now);
 			}
 			
 //			tdJointOrderMapper.updateByPrimaryKey(torder);
 		}		
 		return torder;
 	}
+	/**
+	 * 生成零元购订单
+	 * @param currUser
+	 * @param orderForm
+	 * @param shoppingcart
+	 * @param torder
+	 * @param now
+	 * @return
+	 */
+	private TdOrder insertZeroOrder(TdUser currUser, OrderForm orderForm, ShoppingcartVO shoppingcart, TdJointOrder torder, Date now) {
+		TdOrder order = new TdOrder();
+		order.setCreateTime(now);
+		order.setGainPoints(shoppingcart.getGainPoints());
+		order.setCommented(false);
+		order.setBenefited(1);
+		order.setItemNum(shoppingcart.getTotalcount());
+		order.setJointId(torder.getId());//联合订单
+		order.setOrderNo(WebUtils.generateOrderNo());
+		order.setOrderStatus(ConstantsUtils.ORDER_STATUS_NEW);
+		order.setOrderType(ConstantsUtils.ORDER_KIND_ZEROPRODUCT);
+		order.setPaymentId(orderForm.getPaymentId());
+		if(orderForm.getUsePoints()){
+			order.setUsedPoint(shoppingcart.getTotalPointsUsed());
+			order.setPointAmount(shoppingcart.getTotalPointAmount());
+			order.setPayAmount(shoppingcart.getTotalAmount().subtract(shoppingcart.getTotalPointAmount()));
+		}else{
+			order.setUsedPoint(0);
+			order.setPointAmount(BigDecimal.ZERO);
+			order.setPayAmount(shoppingcart.getTotalAmount());
+		}
+		order.setPostage(shoppingcart.getTotalPostage());
+		order.setPayStatus(ConstantsUtils.ORDER_PAY_STATUS_UNPAY);
+		order.setPaymentId(orderForm.getPaymentId());
+		order.setProductAmount(shoppingcart.getTotalProductAmount());
+		order.setRefundAmount(BigDecimal.ZERO);
+		order.setBenefitAmount(BigDecimal.ZERO);
+		order.setShipmentStatus(ConstantsUtils.ORDER_SHIPMENT_STATUS_UNSHIPPED);
+		order.setTotalAmount(shoppingcart.getTotalAmount());
+		order.setUpdateBy(currUser.getUid());
+		order.setUpdateTime(now);
+		order.setUserId(currUser.getUid());
+		order.setUserMessage(orderForm.getUserMsg());
+		order.setSupplierId(shoppingcart.getSupplierId());
+		this.save(order);
+		//保存订单货品
+		for(TdShoppingcartItem item : shoppingcart.getItemList()){
+			if(item.getQuantity()>item.getProductSku().getStock()){
+				throw new RuntimeException("商品"+item.getProduct().getName()+"库存不足!");
+			}
+			if(!item.getProduct().getOnshelf()||!item.getProduct().getStatus().equals(Byte.valueOf("1"))){
+				throw new RuntimeException("商品"+item.getProduct().getName()+"已经下架!");
+			}
+			TdOrderSku sku = new TdOrderSku();
+			sku.setDisplaySpecifications(item.getProductSku().getSpecifications());
+			sku.setItemType(item.getProduct().getKind());
+			sku.setOrderId(order.getOrderId());
+			sku.setProductSkuId(item.getProductSkuId());
+			sku.setProductId(item.getProductId());
+			sku.setProductImage(tdProductService.findOne(item.getProductId()).getImageUrl());
+			if(ConstantsUtils.PRODUCT_KIND_ZEROBUY.equals(sku.getItemType())){
+				sku.setPrice(item.getProduct().getPostage());
+			}else{
+				sku.setPrice(item.getProductSku().getSalesPrice());
+			}
+			sku.setSupplierPrice(item.getProductSku().getSupplierPrice());
+			sku.setProductName(item.getProduct().getName());
+			sku.setProductSkuCode(item.getProductSku().getSkuCode());
+			sku.setQuantity(item.getQuantity());
+			sku.setBackQuantity(0);
+			tdOrderSkuMapper.insert(sku);
+			//更新货品库存
+			tdProductSkuService.updateStock(item.getProductSkuId(),-item.getQuantity());
+			//更新总库存
+			tdProductService.updateStock(item.getProductId(),-item.getQuantity());
+			
+			// 更新销量
+			tdProductStatService.updateByCount(item.getProductId(), item.getQuantity());
+		}
+		//扣除抵扣积分
+		if(order.getUsedPoint()>0){
+			TdUserIntegral userIntegral = tdUserIntegralService.findOne(currUser.getUid());
+			if(null==userIntegral||userIntegral.getIntegral()<order.getUsedPoint()){
+				throw new RuntimeException("积分不足，不能抵扣金额！");
+			}
+			userIntegral.setUpdateBy(0);
+			userIntegral.setUpdateTime(now);
+			TdUserIntegralLog integralLog = new TdUserIntegralLog();
+			integralLog.setType(Byte.valueOf("4"));
+			integralLog.setCreateTime(now);
+			integralLog.setPreintegral(userIntegral.getIntegral());
+			integralLog.setIntegral(-order.getUsedPoint());
+			integralLog.setUid(currUser.getUid());
+			integralLog.setNote("积分抵扣订单金额,订单编号："+order.getOrderNo()+" 消耗积分数量："+order.getUsedPoint()+" 抵扣金额：￥"+order.getPointAmount());
+			integralLog.setRelation("");
+			tdUserIntegralService.addIntegral(userIntegral, integralLog);
+		}
+		//保存收货地址
+		if(null!=orderForm.getUserAddress()){
+			TdUserAddress address = orderForm.getUserAddress();
+			TdOrderAddress orderAddress = new TdOrderAddress();
+			orderAddress.setOrderId(order.getOrderId());
+			orderAddress.setAddress(address.getAddress());
+			orderAddress.setCustomerName(address.getName());
+			orderAddress.setRegionFullName(address.getFullAddress());
+			orderAddress.setTelphone(address.getTelphone());
+			orderAddress.setRegionId(address.getRegionId());
+			tdOrderAddressMapper.insert(orderAddress);			
+		}
+		//保存日志
+		
+		return order;
+	}
+
 	/**
 	 * 生成订单
 	 * @param currUser
@@ -1340,6 +1545,8 @@ public class TdOrderServiceImpl implements TdOrderService{
 				log2.setNote("订单生成代理操作失败：订单详情未找到!");
 			}			
 			tdOrderLogMapper.insert(log2);
+		}else if(ConstantsUtils.ORDER_KIND_ZEROPRODUCT.equals(order.getOrderType())){//零元购订单立即分润
+			benefitOrder(order);
 		}
 		
 		result.setFlag(true);
@@ -1385,13 +1592,13 @@ public class TdOrderServiceImpl implements TdOrderService{
 				sc.setFlag(false);
 				sc.setTypeId(8);
 				List<TdBenefit> benefitList = tdBenefitService.findBySearchCriteria(sc);
-				//零元商品分润设置
+				/*//零元商品分润设置
 				sc.setFlag(false);
 				sc.setTypeId(9);
 				List<TdBenefit> zerobenefitList = tdBenefitService.findBySearchCriteria(sc);
 				
 				//获取零元三级分润金额
-				BigDecimal zeroAmount = configUtil.getZeroProductBenefitAmount();
+				BigDecimal zeroAmount = configUtil.getZeroProductBenefitAmount();*/
 				
 				List<TdOrderSku> orderSkuList = tdOrderSkuMapper.findByOrderId(order.getOrderId());
 				if(null!=orderSkuList && orderSkuList.size()>0){
@@ -1407,7 +1614,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 									totalBenefitAmount = totalBenefitAmount.add(agentBenefitAmount);								
 								}
 							}
-						}else{//零元商品分润，不再参与普通商品分润
+						}/*else{//零元商品分润，不再参与普通商品分润
 							if(BigDecimal.ZERO.compareTo(ordersku.getBenefitAmount())<0){//有利润空间才分润
 								BigDecimal amount = ordersku.getBenefitAmount();
 								if(zeroAmount.compareTo(amount)<=0){
@@ -1423,7 +1630,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 									}
 								}
 							}							
-						}
+						}*/
 					}
 					if(BigDecimal.ZERO.compareTo(orderBenefitAmount)<0){
 						//分公司分润
@@ -1433,6 +1640,42 @@ public class TdOrderServiceImpl implements TdOrderService{
 						//三级分销分润
 						BigDecimal distBenefitAmount = displayDistributionBenefit(orderBenefitAmount, order, orderUser, benefitList, 4, now);
 						totalBenefitAmount = totalBenefitAmount.add(distBenefitAmount);
+					}
+				}
+			}else if(ConstantsUtils.ORDER_KIND_ZEROPRODUCT.equals(order.getOrderType())){//零元购商品分润
+				//普通商品分润设置
+				TdBenefitSearchCriteria sc = new TdBenefitSearchCriteria();
+				/*sc.setFlag(false);
+				sc.setTypeId(8);
+				List<TdBenefit> benefitList = tdBenefitService.findBySearchCriteria(sc);*/
+				//零元商品分润设置
+				sc.setFlag(false);
+				sc.setTypeId(9);
+				List<TdBenefit> zerobenefitList = tdBenefitService.findBySearchCriteria(sc);
+				
+				//获取零元三级分润金额
+				BigDecimal zeroAmount = configUtil.getZeroProductBenefitAmount();
+				
+				List<TdOrderSku> orderSkuList = tdOrderSkuMapper.findByOrderId(order.getOrderId());
+				if(null!=orderSkuList && orderSkuList.size()>0){
+					//单类代理分润
+					for(TdOrderSku ordersku : orderSkuList){
+						//零元商品分润，不再参与普通商品分润
+						if(BigDecimal.ZERO.compareTo(ordersku.getBenefitAmount())<0){//有利润空间才分润
+							BigDecimal amount = ordersku.getBenefitAmount();
+							if(zeroAmount.compareTo(amount)<=0){
+								//三级分销分润
+								BigDecimal distBenefitAmount = displayDistributionBenefit(zeroAmount, order, orderUser, zerobenefitList, 4, now);
+								totalBenefitAmount = totalBenefitAmount.add(distBenefitAmount);	
+								amount = amount.subtract(zeroAmount);
+								
+								if(BigDecimal.ZERO.compareTo(amount)<0){
+									//分公司分润
+									BigDecimal branchBenefitAmount = displayBranchBenefit(amount, order, orderUser, zerobenefitList, 3, now);
+									totalBenefitAmount = totalBenefitAmount.add(branchBenefitAmount);
+								}
+							}
+						}							
 					}
 				}
 			}
@@ -1908,15 +2151,23 @@ public class TdOrderServiceImpl implements TdOrderService{
 	 */
 	private BigDecimal saveBenefit(TdUserAccount account, TdUser orderUser, BigDecimal amount, TdOrder order, TdBenefit benefit, Date now, String note){
 		BigDecimal benefitAmount = amount.multiply(new BigDecimal(benefit.getPercent())).divide(ConstantsUtils.SYSTEM_BENEFIT_PERCENT_NUM).setScale(2, BigDecimal.ROUND_HALF_UP);
+		if(BigDecimal.ZERO.compareTo(benefitAmount.abs())>0){
+			return benefitAmount;
+		}
 		account.setUpdateBy(1);
 		account.setUpdateTime(now);
 		TdUserAccountLog alog = new TdUserAccountLog();
 		alog.setPreamount(account.getAmount());
 		alog.setUid(account.getUid());
 		alog.setUpamount(benefitAmount);
-		alog.setType(TdUserAccountLog.USERACCOUNTLOG_TYPE_PROFIT_INCOME);
+		if(BigDecimal.ZERO.compareTo(benefitAmount)>0){
+			alog.setType(TdUserAccountLog.USERACCOUNTLOG_TYPE_PROFIT_BACK);
+			alog.setNote("订单退款分润收入扣回，订单编号："+order.getOrderNo()+" "+note);
+		}else{
+			alog.setType(TdUserAccountLog.USERACCOUNTLOG_TYPE_PROFIT_INCOME);
+			alog.setNote("订单分润收入，订单编号："+order.getOrderNo()+" "+note);
+		}
     	alog.setCreateTime(now);
-    	alog.setNote("订单分润收入，订单编号："+order.getOrderNo()+" "+note);
     	//关联对象
     	ProfitInfo profit = new ProfitInfo();
     	profit.setBuyUserName(orderUser.getUnick());
@@ -2100,7 +2351,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 	public OperResult cancelOrderByUser(TdOrder order, OrderCancel ordercancel) {
 		OperResult result = new OperResult();
 		//发货后的订单不能取消
-		if(ConstantsUtils.ORDER_STATUS_PAYED.compareTo(order.getOrderStatus())<0){
+		if(ConstantsUtils.ORDER_STATUS_SHIPPMENTED.compareTo(order.getOrderStatus())<=0){
 			result.setFailMsg("订单的不能进行取消操作！");
 			return result;
 		}
@@ -2133,6 +2384,14 @@ public class TdOrderServiceImpl implements TdOrderService{
 					}
 				}
 			}
+		}
+		if(ConstantsUtils.ORDER_PAY_STATUS_PAYED.equals(order.getPayStatus())){//已支付的订单进行退款操作
+			OrderRefund refund = new OrderRefund();
+			refund.setOrderId(order.getOrderId());
+			refund.setCreateBy(ordercancel.getOperBy());
+			refund.setCreateTime(ordercancel.getCreateTime());
+			refund.setRefundAmount(order.getPayAmount());
+			this.refundorder(refund);
 		}
 		//开始操作
 		TdOrder uporder = new TdOrder();

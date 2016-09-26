@@ -98,6 +98,10 @@
             			<th>订单获得积分：</th>
             			<td>${order.gainPoints!'0'}</td>
             	    </tr>
+            	    <tr>
+            			<th>已分润金额：</th>
+            			<td>${order.benefitAmount!'0'}</td>
+            	    </tr>
             	</table>
             </td>
             <td width="30%" valign="top">

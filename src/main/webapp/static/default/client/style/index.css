@@ -607,6 +607,9 @@
   font-size: 18px;
   font-weight: bold;
 }
+.detail .obody ul li span.sp4 {
+  width: 20%;
+}
 .detail .obody ul li span.dum {
   color: #333;
 }

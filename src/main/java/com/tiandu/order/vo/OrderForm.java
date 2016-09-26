@@ -30,7 +30,7 @@ public class OrderForm {
 	 */
 	private Integer quantity;
 	/**
-	 * 商品类型，立即下单使用 1-普通商品，2-代理产品, 3-美化图片
+	 * 商品类型，立即下单使用 1-普通商品，2-代理产品, 3-美化图片,4-零元购商品
 	 */
 	private Integer productType = 1;
 	/**

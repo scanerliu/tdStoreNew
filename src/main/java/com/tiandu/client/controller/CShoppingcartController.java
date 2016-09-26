@@ -477,7 +477,7 @@ public class CShoppingcartController extends BaseController {
 		Integer partproductpointpercent = configUtil.getPartProductPointPercent(); //部分积分兑换商品可积分抵扣的比例
 		Boolean canuserpackage = configUtil.isAgentProductUsePackage();//是否启用700元的单类代理领取商品包
 		ShoppingcartVO cart = new ShoppingcartVO();
-		//判断商品类型，1普通商品，2代理产品，3图片美化
+		//判断商品类型，1普通商品，2代理产品，3图片美化,4-零元购商品
 		if(orderForm.getProductType()==2){
 			cart.setPtype(2);
 			TdAgentProduct agentproduct = tdAgentProductService.findOne(orderForm.getAgentProductId());
@@ -599,6 +599,7 @@ public class CShoppingcartController extends BaseController {
 				item.setProductSku(sku);
 				if(sku.getProduct().getKind().equals(Byte.valueOf("3"))){//零元购数量固定为1
 					item.setQuantity(1);
+					cart.setPtype(6);
 				}else{
 					item.setQuantity(orderForm.getQuantity());
 				}

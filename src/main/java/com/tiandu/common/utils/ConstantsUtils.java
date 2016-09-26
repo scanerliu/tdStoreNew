@@ -64,9 +64,13 @@ public class ConstantsUtils {
 	 */
 	public static final Byte ORDER_KIND_AGENTPRODUCT = 2;
 	/**
-	 * 订单类型2-图片处理订单
+	 * 订单类型3-图片处理订单
 	 */
 	public static final Byte ORDER_KIND_IMAGEPRODUCT = 3;
+	/**
+	 * 订单类型4-零元购订单
+	 */
+	public static final Byte ORDER_KIND_ZEROPRODUCT = 4;
 	/*******************************订单商品类型****************************/
 	/**
 	 * 订单商品类型1-代理产品
@@ -338,5 +342,27 @@ public class ConstantsUtils {
 	 * 付费供应商 2
 	 */
 	public static final Integer CUSTOMER_SUPPLIER_BUYED = 2;
+	
+	/********民生银行支付*******/
+	/**
+	 * 商户代码
+	 */
+	public static final String CMBC_PAY_API_CORPID = "3305";
+	/**
+	 * 商户名称
+	 */
+	public static final String CMBC_PAY_API_CORPNAME = "3305";
+	/**
+	 * 商户私钥
+	 */
+	public static final String CMBC_PAY_API_SM = "/static/default/images/33005.sm2";
+	/**
+	 * 银行公钥
+	 */
+	public static final String CMBC_PAY_API_CER = "/static/default/images/bank.cer";
+	/**
+	 * 私钥密码
+	 */
+	public static final String CMBC_PAY_API_PASS = "123123";
 	
 }
