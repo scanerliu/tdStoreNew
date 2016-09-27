@@ -11,6 +11,7 @@ public class TdOrderShipmentSearchCriteria extends SearchCriteria {
     private Integer uid;	//用户id
     private Integer supplyId; // 供应商ID
     private Byte status; //退货单状态：1-申请，2-同意，3-不同意，4-已录物流号，5-完成
+    private Integer fliterType; //查询分类 1-退货 
 	public Integer getOrderId() {
 		return orderId;
 	}
@@ -52,6 +53,12 @@ public class TdOrderShipmentSearchCriteria extends SearchCriteria {
 	}
 	public void setStatus(Byte status) {
 		this.status = status;
+	}
+	public Integer getFliterType() {
+		return fliterType;
+	}
+	public void setFliterType(Integer fliterType) {
+		this.fliterType = fliterType;
 	}
 	
 }

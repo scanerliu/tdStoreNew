@@ -55,6 +55,23 @@
 		</form>
 	</div>
 	<!-- 中间-结束 -->
+	<!-- 隐藏部分 -->
+	<div class="opa_box local_hide_box">
+		<div class="opa_content local_hide">
+			<i class="close"></i>
+			<section class="fl sec1">
+				<img src="" alt="" id="opa_avatar"/>
+				<p>
+					<label for="" class="fl" id="opa_uanme"></label>
+				</p>
+				<p>
+					<label for="" class="fl">排名：</label>
+					<label class="fr" id="opa_level"></label>
+				</p>
+			</section>
+			<section class="sec2 fr" id="opa_resume"></section>
+		</div>
+	</div>
 	<!-- 底部 -->
 	<#include "../common/commonfooter.ftl">
 	<!-- 底部 -->

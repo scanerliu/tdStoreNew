@@ -7,6 +7,7 @@
 <div class="pad_lr_10">
 <form id="articleForm" action="${app.basePath}/admin/article/save" class="easyui-form" method="post" data-options="novalidate:true">
 <table class="table_form" width="100%">
+	<#if branch?? && branch==false>
 	<tr>
         <th>资讯目录：</th>
         <td>
@@ -19,6 +20,7 @@
 	        </select>
         </td>
     </tr>
+    </#if>
 	<tr>
         <th width="150">标题：</th>
         <td><input type="text" name="title" class="easyui-textbox" value="${tdArticleTitle.title!''}" style="width:200px;height:30px" data-options="required:true" validType="length[2,100]"></td>

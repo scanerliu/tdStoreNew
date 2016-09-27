@@ -12,10 +12,33 @@
 	      <#elseif ship.status==3>
 	      		不同意退款
 	      <#elseif ship.status==4>
+	      		待寄回商品
+	      <#elseif ship.status==5>
 	      		完成退款
 	      </#if>
 	      </span></p>
 	    </div>
+	    <#if ship.itemList??>
+		<#list ship.itemList as item>
+	    <div class="middle">
+	      <img src="${app.basePath}${item.itemOrderSku.productImage!''}" alt="商品图片"/>
+	      <div class="right-content">
+	        <h3>${item.itemOrderSku.productName!''}</h3>
+	        <div>
+	        	<#if item.itemOrderSku.specialList??>
+              	<#list item.itemOrderSku.specialList as special>
+              	<span><label for="">${special.sname!''}：</label><font>${special.soption!''}</font></span>
+                </#list>
+                </#if>
+	        </div>
+	        <p>
+	          <label class="lab1">￥${item.itemOrderSku.price!'0'}</label>
+	          <label class="lab2"><span>${item.quantity!'0'}</span></label>
+	        </p>
+	      </div>
+	    </div>
+	    </#list>
+	    </#if>
 	    <div class="bottom">
 	      	订单交易金额 <span>￥${ship.order.payAmount!'0'}</span> 退款金额<strong class="price">￥<span>${ship.returnAmount!'0'}</span></strong>
 	    </div>

@@ -75,7 +75,7 @@
             <div class="btn-group">
             	
               <a href="${app.basePath}/mobile/supply/order/detail${order.orderId!'0'}" title="">查看订单</a>
-               <#if order.payStatus==1 && order.shipmentStatus==2>
+               <#if order.orderStatus==2>
               	<a class="active" href="${app.basePath}/mobile/supply/shipment?orderId=${order.orderId!''}" title="立即发货">立即发货</a>
               	</#if>
             </div>

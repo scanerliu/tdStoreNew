@@ -23,6 +23,14 @@ public class TdUserIntegralLog {
 	 * 注册赠送积分
 	 */
 	public static final Byte USERINTEGRALLOG_TYPE_REGISTER = 5;
+	/**
+	 * 订单取消返回积分
+	 */
+	public static final Byte USERINTEGRALLOG_TYPE_REFUND = 6;
+	/**
+	 * 订单赠送积分
+	 */
+	public static final Byte USERINTEGRALLOG_TYPE_ORDER_SEND = 7;
 	
     private Integer id;
 
@@ -120,6 +128,10 @@ public class TdUserIntegralLog {
     			sb.append("抵扣订单金额");
     		}else if(this.getType().equals(USERINTEGRALLOG_TYPE_REGISTER)){
     			sb.append("注册赠送积分");
+    		}else if(this.getType().equals(USERINTEGRALLOG_TYPE_REFUND)){
+    			sb.append("取消订单返回积分");
+    		}else if(this.getType().equals(USERINTEGRALLOG_TYPE_ORDER_SEND)){
+    			sb.append("订单赠送积分");
     		}
     		
     	}

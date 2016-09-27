@@ -131,23 +131,24 @@ public class CUserCommentController extends BaseController{
 			TdProductSku sku = tdProductSkuService.findOne(commentForm.getSkuId()[i]);
 			TdProductComment comment = new TdProductComment();
 			comment.setOrderId(commentForm.getOrderId()); // 订单
-			String[] subimag = commentForm.getImages().get(i);
-			StringBuffer sb = new StringBuffer();
-			if(null!=subimag){
-				int k=1;
-				for(String image : subimag){
-					if(StringUtils.isNotBlank(image)){
-						if(k==1){
-							sb.append(image);
-						}else{
-							sb.append(":"+image);
+			if(null!=commentForm.getImages()){
+				String[] subimag = commentForm.getImages().get(i);
+				StringBuffer sb = new StringBuffer();
+				if(null!=subimag){
+					int k=1;
+					for(String image : subimag){
+						if(StringUtils.isNotBlank(image)){
+							if(k==1){
+								sb.append(image);
+							}else{
+								sb.append(":"+image);
+							}
+							k++;
 						}
-						k++;
 					}
 				}
+				comment.setImages(sb.toString()); //图
 			}
-			
-			comment.setImages(sb.toString()); //图
 			comment.setContent(commentForm.getContent()[i]); //内容
 			comment.setProductId(commentForm.getProductId()[i]);
 			comment.setUid(user.getUid()); 

@@ -58,13 +58,17 @@
         <#list campaignList as comp>
         <li>
             <a class="fl">
-                <img src="${app.basePath}${comp.uavatar!''}" alt="">
+                <img src="<#if comp.uavatar?index_of("http")==0><#else>${app.basePath}</#if>${comp.uavatar!''}" alt="">
                 <i></i>
             </a>
             <section class="fr">
                 <aside class="as1">${comp.uname!''}</aside>
                 <aside class="as2">${comp.resume!''}</aside>
-                <aside class="as3"><menu>1962</menu>人</aside>
+                <aside class="as3"><#if comp.status==1>
+						${comp.level!'0'}
+					<#else>
+						暂无排名
+					</#if></aside>
             </section>
         </li>
         </#list>
@@ -75,7 +79,7 @@
         <#list campaignList as comp>
         <li class="">
             <div class="opa_bg" id="opa_bg">
-                <section><img src="${app.basePath}${comp.uavatar!''}" alt="${comp.uname!''}"></section>
+                <section><img src="<#if comp.uavatar?index_of("http")==0><#else>${app.basePath}</#if>${comp.uavatar!''}" alt="${comp.uname!''}"></section>
                 <section>${comp.uname!''}</section>
                 <section><span></span></section>
                 <section>${comp.declaration!''}</section>

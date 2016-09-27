@@ -148,7 +148,7 @@ public class TdDistrict {
     			return this.getParent().getParent().getName()+" "+this.getParent().getName()+" "+this.getName();
     		}
     	}
-    	return null;
+    	return this.getName();
     }
     
     /**

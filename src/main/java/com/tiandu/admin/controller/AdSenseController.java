@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -158,6 +160,7 @@ public class AdSenseController extends BaseController{
 		List<TdBrancheCompany> bclist = tdBrancheCompanyService.findBySearchCriteria(bsc);
 		if(bclist != null && bclist.size() == 1){
 			sc.setCreateBy(currentUser.getUid());
+			map.addAttribute("branch", true);
 		}
 		
 		map.addAttribute("adlist", tdAdvertService.findBySearchCriteria(sc));
@@ -176,6 +179,10 @@ public class AdSenseController extends BaseController{
 		TdAdsenseSearchCriteria sc = new TdAdsenseSearchCriteria();
 		sc.setFlag(false);
 		map.addAttribute("adsenseList", tdAdsenseService.findBySearchCriteria(sc));
+		Subject user = SecurityUtils.getSubject();
+		if(user.hasRole("branch")){
+			map.addAttribute("branch", true);
+		}
 		
 		if(null != id)
 		{
@@ -207,22 +214,27 @@ public class AdSenseController extends BaseController{
 		res.put("code", "0");
 		if(null != tdAdvertisement)
 		{
+			Subject user = SecurityUtils.getSubject();
+			TdUser currUser = this.getCurrentUser();
+			Integer regionid = null;
+			if(user.hasRole("branch")){
+				TdBrancheCompany branch = tdBrancheCompanyService.findByUid(currUser.getUid());
+				if(null!=branch){
+					regionid = branch.getRegionId();
+				}
+			}
 			// 更新时间
 			tdAdvertisement.setUpdateTime(new Date());
-			TdUser user = getCurrentUser();
-			if(user!= null )
+			if(currUser!= null )
 			{
-				if(null == tdAdvertisement.getCreateBy())
+				if(null == tdAdvertisement.getId())
 				{
 					// 创建人
-					tdAdvertisement.setCreateBy(user.getUid());
-				}
-				// 地区
-				if(null == tdAdvertisement.getRegionId()){
-					tdAdvertisement.setRegionId(user.getUregionId());
+					tdAdvertisement.setCreateBy(currUser.getUid());
+					tdAdvertisement.setRegionId(regionid);
 				}
 				// 最后更新人
-				tdAdvertisement.setUpdateBy(user.getUid());
+				tdAdvertisement.setUpdateBy(currUser.getUid());
 				
 				tdAdvertService.save(tdAdvertisement);
 				res.put("code", "1");

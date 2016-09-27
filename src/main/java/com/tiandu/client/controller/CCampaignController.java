@@ -64,12 +64,12 @@ public class CCampaignController extends BaseController{
 	{
 		//广告
 		sc.setPageSize(1);
-		sc.setAdsId(1);
+		sc.setAdsId(4);
 		List<TdAdvertisement> advertList = tdAdvertisementService.findBySearchCriteria(sc);
 		map.addAttribute("advertList", advertList);
 		//文章
 		TdArticleTitleSearchCriteria asc = new TdArticleTitleSearchCriteria();
-		asc.setCid(1);
+		asc.setCid(14);
 		asc.setRegionId(sc.getRegionId());
 		asc.setPageSize(4);
 		List<TdArticleTitle> artList = tdArticleTitleService.findBySearchCriteria(asc);

@@ -27,7 +27,7 @@
 <body>
 <h1 style="display:none;"></h1>
 	<!-- Header -->
-	<#include "../common/centerheader.ftl">
+	<#include "./common/centerheader.ftl">
 	<!-- Header -->
 	<div class="clear"></div>
 	<!-- Center Start -->
@@ -56,7 +56,13 @@
             </li>
         </ul>
         <div class="successinfo">
-            <span><i></i>您已成功付款${order.payAmount?string('0.00')}元<#if order??><label><a href="${app.basePath}/order/detail${order.orderId!'0'}" title="订单详情">订单详情</a></label></#if></span>
+            <span><i></i>您已成功付款
+            <#if order?? && order.payAmount??>
+            	${order.payAmount?string('0.00')}元<label><a href="${app.basePath}/order/detail${order.orderId!'0'}" title="订单详情">订单详情</a></label>
+            <#elseif order?? && order.amount??>
+            	${order.amount?string('0.00')}元<label><a href="${app.basePath}/order/list" title="查看订单">查看订单</a></label>
+            </#if>
+            </span>
         </div>
         <div class="guess-like">
         	<!--猜您喜欢-->
@@ -78,7 +84,7 @@
 	</div>
 	<!-- Center End -->
 	<!-- Footer Start -->
-	<#include "../common/commonfooter.ftl">
+	<#include "./common/commonfooter.ftl">
 	<!-- Footer End -->
 	<script>
 		$(function(){

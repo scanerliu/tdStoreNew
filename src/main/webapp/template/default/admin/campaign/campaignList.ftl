@@ -19,8 +19,10 @@
 							<span id="campaign_secondDistrictLevel"></span>
 							<span id="campaign_thirdDistrictLevel"></span>
 							<#--地区  end-->
-							
+							<#if branch?? && branch==true>
+							<#else>
 							<input type="button" value="搜索" onclick="searchCampaign(true)">
+							</#if>
 						</div>
 						<#--根据三级联动设置隐藏值-->
 						<input type="hidden" id="campaign_region_id" name="regionId" value="-1">
@@ -37,7 +39,10 @@
 
 <script type="text/javascript">
 	$(function(){
+		<#if branch?? && branch==true>
+		<#else>
 	    getDistrictSelections(0, 0, "campaign");
+	    </#if>
 	    searchCampaign(true);
 	});
 </script>

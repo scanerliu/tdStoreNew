@@ -205,6 +205,18 @@ public class CSupplyController extends BaseController{
 			TdOrderShipment shipment = tdOrderShipmentService.findOne(shipId);
 			shipment.setStatus((byte)2);
 			tdOrderShipmentService.save(shipment);
+			if(shipment.getCargoStatus().equals(Byte.valueOf("2"))){
+				OperResult result = tdOrderService.refundorderBySupply(shipment);
+				if(result.isFlag()){
+					res.put("code", "1");
+					res.put("msg", "退款成功");
+					return res;
+				}else{
+					res.put("code", "0");
+					res.put("msg", result.getFailMsg());
+					return res;
+				}
+			}
 			res.put("code", 1);
 			res.put("msg", "退款成功");
 			return res;

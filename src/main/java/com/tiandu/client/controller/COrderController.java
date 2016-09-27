@@ -525,7 +525,7 @@ public class COrderController extends BaseController {
 			// 钱包余额支付
 			TdUserAccount account = tdUserAccountService.findByUid(user.getUid());
 			// 钱包余额小于支付金额
-			if(null == account || torder.getAmount().compareTo(account.getAmount()) < 0){
+			if(null == account || torder.getAmount().compareTo(account.getAmount()) > 0){
 				return "/client/pay_failed";
 			}
 			jointOrderAccountPay(torder,account);
@@ -621,10 +621,22 @@ public class COrderController extends BaseController {
 		}
 		
 		// 非待支付订单
-		if(order.getPayStatus() != 2){
-			return "redirect:404";
+		if(order.getPayStatus() != ConstantsUtils.ORDER_STATUS_NEW){
+			//return "redirect:404";
+			map.addAttribute("errmsg", "已支付的订单的不能进行支付操作！");
+			return "/client/error";
 		}
 		
+		if(ConstantsUtils.ORDER_STATUS_COMPLETE.equals(order.getOrderStatus())){
+			map.addAttribute("errmsg", "已支付的订单的不能进行支付操作！");
+			return "/client/error";
+		}
+		
+		//已支付的订单的不能进行支付操作
+		if(ConstantsUtils.ORDER_PAY_STATUS_PAYED.equals(order.getPayStatus())){
+			map.addAttribute("errmsg", "已支付的订单的不能进行支付操作！");
+			return "/client/error";
+		}
 		
 		Byte pay = order.getPaymentId();
 		
@@ -1050,7 +1062,9 @@ public class COrderController extends BaseController {
 		BigDecimal amount = account.getAmount();
 		BigDecimal decimal = new BigDecimal(0.00);
 	
-		
+		if(!ConstantsUtils.ORDER_STATUS_NEW.equals(order.getOrderStatus())||ConstantsUtils.ORDER_PAY_STATUS_PAYED.equals(order.getPayStatus())){
+			return ;
+		}
 		// 记录
 		TdUserAccountLog log = new TdUserAccountLog();
 		log.setUpamount(BigDecimal.ZERO.subtract(payAmount));//支付转换为负数，账号金额支出减少
@@ -1079,6 +1093,16 @@ public class COrderController extends BaseController {
     	sc.setFlag(false);
     	sc.setJointId(torder.getId());
     	List<TdOrder> orderList = tdOrderService.findBySearchCriteria(sc);
+    	if(null != orderList && orderList.size() > 0)
+    	{
+    		for (TdOrder tdOrder : orderList) {
+    			if(!ConstantsUtils.ORDER_STATUS_NEW.equals(tdOrder.getOrderStatus())||ConstantsUtils.ORDER_PAY_STATUS_PAYED.equals(tdOrder.getPayStatus())){
+    				return ;
+    			}
+    		}
+    	}else{
+    		return;
+    	}
     	
     	BigDecimal payAmount = torder.getAmount();
 		BigDecimal amount = account.getAmount();

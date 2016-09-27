@@ -278,11 +278,12 @@ public class TdOrderServiceImpl implements TdOrderService{
 			return result;
 		}else if(refundAmount.compareTo(order.getPayAmount().subtract(order.getRefundAmount()))==0){
 			uporder.setPayStatus(ConstantsUtils.ORDER_PAY_STATUS_ALL_REFUND);
-			uporder.setOrderStatus(ConstantsUtils.ORDER_STATUS_CANCEL);
+			uporder.setOrderStatus(ConstantsUtils.ORDER_STATUS_NEW);
 		}else{
 			uporder.setPayStatus(ConstantsUtils.ORDER_PAY_STATUS_PART_REFUND);
 		}
 		uporder.setRefundAmount(refundAmount);
+		uporder.setGainPoints(0);//退款赠送积分清零
 		tdOrderMapper.updateByPrimaryKeySelective(uporder);
 		//订单操作日志
 		TdOrderLog log = new TdOrderLog();
@@ -292,6 +293,19 @@ public class TdOrderServiceImpl implements TdOrderService{
 		log.setOperType(ConstantsUtils.ORDER_LOG_TYPE_REFUND);
 		log.setNote("订单进行退款操作：退款金额 "+refund.getRefundAmount());
 		tdOrderLogMapper.insert(log);
+		//返回钱包余额
+		TdUserAccount account = tdUserAccountService.findByUid(order.getUserId());
+		account.setUpdateBy(1);
+		account.setUpdateTime(refund.getCreateTime());
+		TdUserAccountLog alog = new TdUserAccountLog();
+		alog.setPreamount(account.getAmount());
+		alog.setUid(account.getUid());
+		alog.setUpamount(refund.getRefundAmount());
+		alog.setType(TdUserAccountLog.USERACCOUNTLOG_TYPE_ORDER_REFUND);
+		alog.setNote("订单退款，订单编号："+order.getOrderNo());
+    	alog.setCreateTime(refund.getCreateTime());
+    	alog.setRelation(null);
+		tdUserAccountService.addAmount(account, alog);
 		//已分润订单进行回扣操作
 		if(order.getBenefited().equals(2)&&BigDecimal.ZERO.compareTo(order.getBenefitAmount())<0){
 			backBenefitOrder(order);
@@ -420,6 +434,21 @@ public class TdOrderServiceImpl implements TdOrderService{
 		log.setOperType(ConstantsUtils.ORDER_LOG_TYPE_COMPLETE);
 		log.setNote("订单进行完成操作");
 		tdOrderLogMapper.insert(log);
+		//订单完成赠送积分
+		if(order.getGainPoints().compareTo(0)>0){
+			TdUserIntegral userIntegral = tdUserIntegralService.findOne(order.getUserId());
+			userIntegral.setUpdateBy(0);
+			userIntegral.setUpdateTime(now);
+			TdUserIntegralLog integralLog = new TdUserIntegralLog();
+			integralLog.setType(TdUserIntegralLog.USERINTEGRALLOG_TYPE_ORDER_SEND);
+			integralLog.setCreateTime(now);
+			integralLog.setPreintegral(userIntegral.getIntegral());
+			integralLog.setIntegral(order.getGainPoints());
+			integralLog.setUid(order.getUserId());
+			integralLog.setNote("订单赠送积分,订单编号："+order.getOrderNo());
+			integralLog.setRelation("");
+			tdUserIntegralService.addIntegral(userIntegral, integralLog);
+		}
 		
 		//分润开始
 		this.benefitOrder(order);
@@ -461,6 +490,22 @@ public class TdOrderServiceImpl implements TdOrderService{
 		log.setOperType(ConstantsUtils.ORDER_LOG_TYPE_COMPLETE);
 		log.setNote("订单进行完成操作");
 		tdOrderLogMapper.insert(log);
+		
+		//订单完成赠送积分
+		if(order.getGainPoints().compareTo(0)>0){
+			TdUserIntegral userIntegral = tdUserIntegralService.findOne(order.getUserId());
+			userIntegral.setUpdateBy(0);
+			userIntegral.setUpdateTime(now);
+			TdUserIntegralLog integralLog = new TdUserIntegralLog();
+			integralLog.setType(TdUserIntegralLog.USERINTEGRALLOG_TYPE_ORDER_SEND);
+			integralLog.setCreateTime(now);
+			integralLog.setPreintegral(userIntegral.getIntegral());
+			integralLog.setIntegral(order.getGainPoints());
+			integralLog.setUid(order.getUserId());
+			integralLog.setNote("订单赠送积分,订单编号："+order.getOrderNo());
+			integralLog.setRelation("");
+			tdUserIntegralService.addIntegral(userIntegral, integralLog);
+		}
 		
 		//分润
 		this.benefitOrder(order);
@@ -734,7 +779,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 			if(null==userIntegral||userIntegral.getIntegral()<order.getUsedPoint()){
 				throw new RuntimeException("积分不足，不能抵扣金额！");
 			}
-			userIntegral.setUpdateBy(0);
+			userIntegral.setUpdateBy(1);
 			userIntegral.setUpdateTime(now);
 			TdUserIntegralLog integralLog = new TdUserIntegralLog();
 			integralLog.setType(Byte.valueOf("4"));
@@ -2151,7 +2196,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 	 */
 	private BigDecimal saveBenefit(TdUserAccount account, TdUser orderUser, BigDecimal amount, TdOrder order, TdBenefit benefit, Date now, String note){
 		BigDecimal benefitAmount = amount.multiply(new BigDecimal(benefit.getPercent())).divide(ConstantsUtils.SYSTEM_BENEFIT_PERCENT_NUM).setScale(2, BigDecimal.ROUND_HALF_UP);
-		if(BigDecimal.ZERO.compareTo(benefitAmount.abs())>0){
+		if(BigDecimal.ZERO.compareTo(benefitAmount.abs())==0){
 			return benefitAmount;
 		}
 		account.setUpdateBy(1);
@@ -2331,6 +2376,22 @@ public class TdOrderServiceImpl implements TdOrderService{
 		log.setNote("订单进行取消操作");
 		tdOrderLogMapper.insert(log);
 		
+		//返回使用积分
+		if(order.getUsedPoint().compareTo(0)>0){
+			TdUserIntegral userIntegral = tdUserIntegralService.findOne(order.getUserId());
+			userIntegral.setUpdateBy(0);
+			userIntegral.setUpdateTime(now);
+			TdUserIntegralLog integralLog = new TdUserIntegralLog();
+			integralLog.setType(TdUserIntegralLog.USERINTEGRALLOG_TYPE_REFUND);
+			integralLog.setCreateTime(now);
+			integralLog.setPreintegral(userIntegral.getIntegral());
+			integralLog.setIntegral(order.getUsedPoint());
+			integralLog.setUid(order.getUserId());
+			integralLog.setNote("订单取消返回已使用积分,订单编号："+order.getOrderNo());
+			integralLog.setRelation("");
+			tdUserIntegralService.addIntegral(userIntegral, integralLog);
+		}
+		
 		//返回货品库存
 		if(ConstantsUtils.ORDER_KIND_COMMON.equals(order.getOrderType())){
 			List<TdOrderSku> orderSkuList = tdOrderSkuMapper.findByOrderId(order.getOrderId());
@@ -2409,7 +2470,21 @@ public class TdOrderServiceImpl implements TdOrderService{
 		log.setOperType(ConstantsUtils.ORDER_LOG_TYPE_CANCEL);
 		log.setNote("客户取消订单操作，取消原因："+ordercancel.getCancelReason());
 		tdOrderLogMapper.insert(log);
-		
+		//返回使用积分
+		if(order.getUsedPoint().compareTo(0)>0){
+			TdUserIntegral userIntegral = tdUserIntegralService.findOne(order.getUserId());
+			userIntegral.setUpdateBy(0);
+			userIntegral.setUpdateTime(ordercancel.getCreateTime());
+			TdUserIntegralLog integralLog = new TdUserIntegralLog();
+			integralLog.setType(TdUserIntegralLog.USERINTEGRALLOG_TYPE_REFUND);
+			integralLog.setCreateTime(ordercancel.getCreateTime());
+			integralLog.setPreintegral(userIntegral.getIntegral());
+			integralLog.setIntegral(order.getUsedPoint());
+			integralLog.setUid(order.getUserId());
+			integralLog.setNote("订单取消返回已使用积分,订单编号："+order.getOrderNo());
+			integralLog.setRelation("");
+			tdUserIntegralService.addIntegral(userIntegral, integralLog);
+		}
 		//返回货品库存
 		if(ConstantsUtils.ORDER_KIND_COMMON.equals(order.getOrderType())){
 			List<TdOrderSku> orderSkuList = tdOrderSkuMapper.findByOrderId(order.getOrderId());

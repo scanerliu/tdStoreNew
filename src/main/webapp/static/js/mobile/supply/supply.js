@@ -1,9 +1,17 @@
-function searchOrder()
-{
-	var url = basePath+"/mobile/supply/order/list";
-	var loadData = null;
-
-	$("#results").load(url,loadData);
+function searchOrders(f){
+	var url = basePath+"/mobile/supply/order/search";
+	var loadData = "";
+	$(window).off("scroll", scrollHandler);
+	var fliter = $("#sc_fliterType").val();
+	if(fliter==1){
+		url = basePath+"/mobile/supply/order/refundlist";
+	}
+	if(f){
+		loadData = $("#searchform").serializeArray();
+	}else{
+		loadData = $("#listform").serializeArray();
+	}
+	$("#results").loading().load(url,loadData);
 }
 
 
@@ -23,7 +31,8 @@ function agreeReturn(shipId){
 				 url : basePath+"/mobile/supply/agree",
 				 type : "post",
 				 data : {"shipId":shipId},
-				 success:function(data){
+				 success:function(result){
+					 var data = eval("("+result+")");
 					 if(data.code==1){
 						 alert(data.msg);
 						 window.location.reload();
@@ -34,6 +43,12 @@ function agreeReturn(shipId){
 			 })
 		 }
 }
+
+var scrollHandler = function(){
+    if ($(document).height() - $(this).scrollTop() - $(this).height()<100){
+    	searchOrders(false);
+    } 
+};
 
 function shippmentOrder(){
 	var url = basePath+"/mobile/supply/shiporder";
@@ -66,4 +81,24 @@ function delCollectCallback(data){
 	if(result.code==1){
 		searchCollect();
 	}
+}
+
+function completeReturn(shipId){
+	var s = confirm("确认完成退款？");
+		 if (s) {
+			 $.ajax({
+				 url : basePath+"/mobile/supply/refundorder",
+				 type : "post",
+				 data : {"shipId":shipId},
+				 success:function(result){
+					 var data = eval("("+result+")");
+					 if(data.code==1){
+						 alert(data.msg);
+						 searchOrders(false);
+					 }else{
+						 alert(data.msg);
+					 }
+				 }
+			 })
+		 }
 }

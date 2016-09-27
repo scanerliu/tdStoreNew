@@ -156,11 +156,12 @@ function delAdCallback(data){
 var __flooraids;
 function changeAds(obj){
 	var asid = $(obj).val();
+	asid = parseInt(asid);
 	if(asid==6){
 		$("#typeIdTr").show();
 		$("#floorIdTr").hide();
 		$("#floorIdSelect").find("option[value='']").prop("selected",true);
-	}else if($.inArray(asid, __flooraids)){
+	}else if($.inArray(asid, __flooraids)>=0){
 		$("#floorIdTr").show();
 		$("#typeIdTr").hide();
 		$("#typeIdSelect").find("option[value='']").prop("selected",true);

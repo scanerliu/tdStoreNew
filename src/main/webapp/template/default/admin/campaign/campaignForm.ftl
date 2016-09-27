@@ -5,6 +5,9 @@
 <div class="pad_lr_10">
 <form id="campaignEditForm" action="${app.basePath}/admin/campaign/save" class="easyui-form" method="post" data-options="novalidate:true">
 <table class="table_form" width="100%">
+	<#if branch?? && branch==true>
+		<input type="hidden" id="edit_region_id" name="regionId" value="<#if campaign.regionId??>${campaign.regionId?c}<#else>-1</#if>">
+	<#else>
 	<tr>
         <th>地区：</th>
         <td>
@@ -16,6 +19,7 @@
 			<input type="hidden" id="edit_region_id" name="regionId" value="<#if campaign.regionId??>${campaign.regionId?c}<#else>-1</#if>">
         </td>
     </tr>
+    </#if>
 	<tr>
         <th width="150">竞选人数：</th>
         <td><input type="text" name="quota" class="easyui-textbox" value="${campaign.quota!''}" style="width:200px;height:30px" data-options="required:true" validType="length[1,100]"></td>

@@ -6,6 +6,10 @@ public class TdArticleTitleSearchCriteria extends SearchCriteria {
 	private Integer cid;
 	private Byte status;
 	private Integer regionId;
+	
+	private Integer uid;
+	
+	private Boolean branch; //分公司
 
 	public Integer getCid() {
 		return cid;
@@ -29,6 +33,22 @@ public class TdArticleTitleSearchCriteria extends SearchCriteria {
 
 	public void setRegionId(Integer regionId) {
 		this.regionId = regionId;
+	}
+
+	public Integer getUid() {
+		return uid;
+	}
+
+	public void setUid(Integer uid) {
+		this.uid = uid;
+	}
+
+	public Boolean getBranch() {
+		return branch;
+	}
+
+	public void setBranch(Boolean branch) {
+		this.branch = branch;
 	}
 	
 }

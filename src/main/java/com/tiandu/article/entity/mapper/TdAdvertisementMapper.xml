@@ -19,6 +19,8 @@
     <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
     <!-- 广告位 -->
     <association property="adsense" resultMap="adsenseResult"/>
+    <!-- 广告地区 -->
+    <association property="region" column="region_id" select="com.tiandu.district.entity.mapper.TdDistrictMapper.selectByPrimaryKey"/>
   </resultMap>
   
   <resultMap id="adsenseResult" type="com.tiandu.article.entity.TdAdsense" >
@@ -232,6 +234,9 @@
       </if>
       <if test="floorId != null" >
        	and  a.floor_id = #{floorId,jdbcType=INTEGER}
+      </if>
+      <if test="createBy != null" >
+       	and  a.create_by = #{createBy,jdbcType=INTEGER}
       </if>
       <if test="createTime != null" >
        	and  a.create_time <![CDATA[<=]]> #{createTime,jdbcType=TIMESTAMP} 

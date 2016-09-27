@@ -198,6 +198,9 @@
     <if test="status != null" >
         and status=#{status,jdbcType=TINYINT}
     </if>
+    <if test="uid != null" >
+        and uid=#{uid,jdbcType=INTEGER}
+    </if>
   </select>
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.article.search.TdArticleTitleSearchCriteria" >
     select 
@@ -209,6 +212,9 @@
     </if>
     <if test="regionId != null" >
         and region_id =#{regionId,jdbcType=INTEGER}
+    </if>
+    <if test="uid != null" >
+        and uid=#{uid,jdbcType=INTEGER}
     </if>
     <if test="status != null" >
         and status=#{status,jdbcType=TINYINT}

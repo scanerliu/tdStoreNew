@@ -1,43 +1,49 @@
 <#import "/common/app.ftl" as app>
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta http-equiv="Content-Language" content="zh-CN">
-<meta name="keywords" content="${system.webkeywords!''}">
-<meta name="description" content="${system.webdescription!''}">
-<meta name="copyright" content="${system.webcopyright!''}" />
-<link rel="shortcut icon" href="${app.basePath}/static/default/images/icon.ico" />
-<meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1">
-<meta content="yes" name="apple-mobile-web-app-capable">
-<meta content="black" name="apple-mobile-web-app-status-bar-style">
-<meta content="telephone=no" name="format-detection">
-<title>购买失败提示</title>
-<!-- css -->
-<link rel="stylesheet" href="${app.basePath}/static/touch/css/common.css" type="text/css" />
-<link href="${app.basePath}/static/touch/css/main.css" rel="stylesheet" type="text/css" />
-<link href="${app.basePath}/static/touch/css/x_pc.css" rel="stylesheet" type="text/css" />
-<!-- js -->
-<script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="${app.basePath}/static/touch/js/common.js"></script>
+	<meta charset="UTF-8">
+    <meta name="description" content="中国创客联盟"/>
+    <meta name="keywords" content="中国创客联盟"/>
+    <meta name="author" content="中国创客联盟"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <title>购买成功- ${system.webkeywords!''}</title>
+    <!-- 网站图标 -->
+    <link rel="shortcut icon" href="${app.basePath}/static/default/images/icon.ico" />
+    <!-- css -->
+    <link rel="stylesheet" href="${app.basePath}/static/default/client/style/site.css" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="${app.basePath}/static/default/client/style/personal-center-common.css">
+    <link rel="stylesheet" type="text/css" href="${app.basePath}/static/default/client/style/f_personal_center.css">
+    <link rel="stylesheet" type="text/css" href="${app.basePath}/static/default/client/style/lhead.css">
+	<#include "/common/common.ftl" />
+    <!-- js -->
+    <script type="text/javascript" src="${app.basePath}/static/js/jquery-1.12.3.min.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/client/html5.js"></script>
+    <!--通用js-->
+    <script type="text/javascript" src="${app.basePath}/static/js/client/core.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/client/common.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/client/index.js"></script>
 </head>
 <body>
-
-  <!-- header_top -->
-  <div class="top_heater">
-    <a href="${app.basePath}/mobile/order/list" title="返回" class="hleft hback"></a>
-    <span>购买失败</span>
-  </div>
-  <!-- header_top end -->
-
-  <!-- Center Start -->
-  <section class="container evaluate-success">
-    <img class="icon-success" src="${app.basePath}/static/touch/images/f-fail.png" alt="">
-    <div class="div1">对不起！付款失败</div>
-    <div class="div2"></div>
-    <a class="btn-share" href="${app.basePath}/mobile/order/list" title="点击返回">点击返回</a>
-  </section>
-  <!-- Center End -->
-
+<h1 style="display:none;"></h1>
+	<!-- Header -->
+	<#include "./common/centerheader.ftl">
+	<!-- Header -->
+	<div class="clear"></div>
+	<!-- Center Start -->
+	<div class="index-main">
+	    <div class="view-logistics submit-orders shopp-car shopping-program">
+	        <div class="successinfo">
+	            <span><i></i>订单支付暂未成功，请检查账号扣款情况，如扣款成功请等待支付接口返回，如扣款失败，请重新支付。<a href="${app.basePath}/order/list" title="查看我的订单">查看我的订单</a></label></span>
+	        </div>
+	    </div>
+	    <div class="clear"></div>
+	</div>
+	<!-- Center End -->
+	<!-- Footer Start -->
+	<#include "./common/commonfooter.ftl">
+	<!-- Footer End -->
+	<script>
+		$(function(){
+		});
+	</script>
 </body>
 </html>

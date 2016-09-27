@@ -3,6 +3,7 @@ package com.tiandu.article.entity;
 import java.util.Date;
 
 import com.tiandu.common.entity.TdBaseEntity;
+import com.tiandu.district.entity.TdDistrict;
 
 public class TdAdvertisement extends TdBaseEntity{
     private Integer id;
@@ -38,6 +39,10 @@ public class TdAdvertisement extends TdBaseEntity{
      * 广告位
      */
     private TdAdsense adsense;
+    /**
+     * 广告地区
+     */
+    private TdDistrict region;
 
     public Integer getId() {
         return id;
@@ -166,5 +171,14 @@ public class TdAdvertisement extends TdBaseEntity{
 	public void setFloorId(Integer floorId) {
 		this.floorId = floorId;
 	}
+
+	public TdDistrict getRegion() {
+		return region;
+	}
+
+	public void setRegion(TdDistrict region) {
+		this.region = region;
+	}
     
+	
 }

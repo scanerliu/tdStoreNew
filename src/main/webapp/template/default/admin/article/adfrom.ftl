@@ -23,7 +23,13 @@
         		<option value="">--请选择--</option>
         		<#if adsenseList ??>
         		<#list adsenseList as ads>
-        			<option value="${ads.id?c}" <#if ad?? && ad.adsId == ads.id>selected</#if>>${ads.name!''}</option>
+        			<#if branch?? && branch==true>
+	        			<#if ads.id==3||ads.id==4>
+	        			<option value="${ads.id?c}" <#if ad?? && ad.adsId == ads.id>selected</#if>>${ads.name!''}</option>
+	        			</#if>
+        			<#else>
+        				<option value="${ads.id?c}" <#if ad?? && ad.adsId == ads.id>selected</#if>>${ads.name!''}</option>
+        			</#if>
         		</#list>
         		</#if>
         	</select>

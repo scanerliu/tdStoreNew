@@ -7,7 +7,13 @@
 		    <option value="">请选择类别...</option>
 		    <#if adsenseList??>
 		    <#list adsenseList as ads>
-		    <option value="${ads.id?c}" <#if sc.adsId?? && sc.adsId==ads.id>selected="selected"</#if>>${ads.name!''}</option>
+		    		<#if branch?? && branch==true>
+	        			<#if ads.id==3||ads.id==4>
+	        			<option value="${ads.id?c}" <#if ad?? && ad.adsId == ads.id>selected</#if>>${ads.name!''}</option>
+	        			</#if>
+        			<#else>
+		    			<option value="${ads.id?c}" <#if sc.adsId?? && sc.adsId==ads.id>selected="selected"</#if>>${ads.name!''}</option>
+		    		</#if>
 		    </#list>
 		    </#if>
 		</select>
@@ -25,7 +31,7 @@
 			<th align="center">开始时间</th>
 			<th align="center">结束时间</th>
 			<th align="center">状态</th>
-			<th align="center">地区ID</th>
+			<th align="center">地区</th>
 			<th align="center">排序值</th>
 			<th >操作</th>
 		</tr>
@@ -45,7 +51,7 @@
 		        <td align="center"><#if ad.createTime??>${ad.createTime?string('yyyy-MM-dd')}</#if></td>
 		        <td align="center"><#if ad.endTime??>${ad.endTime?string('yyyy-MM-dd')}</#if></td>
 		        <td align="center"><#if ad.status==1>正常<#else>屏蔽</#if></td>
-		        <td align="center">${ad.regionId!''}</td>
+		        <td align="center"><#if ad.region??>${ad.region.name!''}</#if></td>
 		        <td align="center">${ad.sort!''}</td>
 		        <td align="center">
 		            <a class="J_confirmurl" href="javascript:;" onclick="delAd(${ad.id?c})">删除</a>

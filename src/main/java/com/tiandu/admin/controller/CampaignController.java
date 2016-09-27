@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -49,6 +51,10 @@ public class CampaignController extends BaseController {
 
 	@RequestMapping("/list")
 	public String list(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		Subject user = SecurityUtils.getSubject();
+		if(user.hasRole("branch")){
+			modelMap.addAttribute("branch", true);
+		}
 		return "/admin/campaign/campaignList";
 	}
 
@@ -133,6 +139,10 @@ public class CampaignController extends BaseController {
 			tdCampaign.setRegionId(-1);
 			modelMap.addAttribute("levelCount", 1);
 		}
+		Subject user = SecurityUtils.getSubject();
+		if(user.hasRole("branch")){
+			modelMap.addAttribute("branch", true);
+		}
 		modelMap.addAttribute("campaign", tdCampaign);
 		modelMap.addAttribute("isNew", isNew);
 		return "/admin/campaign/campaignForm";
@@ -143,6 +153,18 @@ public class CampaignController extends BaseController {
 	public Map<String,String> save(TdCampaign campaign, HttpServletRequest request, HttpServletResponse response) {
 		Map<String,String> res = new HashMap<String,String>(); 
 		if(null!=campaign){
+			if(null==campaign.getId()){
+				Subject user = SecurityUtils.getSubject();
+				TdUser currUser = this.getCurrentUser();
+				Integer regionid = null;
+				if(user.hasRole("branch")){
+					TdBrancheCompany branch = tdBrancheCompanyService.findByUid(currUser.getUid());
+					if(null!=branch){
+						regionid = branch.getRegionId();
+					}
+					campaign.setRegionId(regionid);
+				}
+			}
 			// 除直辖市外的市没有活动
 			TdDistrict district = tdDistrictService.findOne(campaign.getRegionId());
 			if(district.getLevel().equals(Byte.valueOf("2"))){
