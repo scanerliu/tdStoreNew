@@ -38,9 +38,9 @@
     		<#else>
     			<a href="javascript:;" onclick="forbiddenCustomer(${user.uid})">锁定</a> | 
     		</#if>
-    		<#if user.tempsupplier==0>
+    		<#if !user.tempsupplier?? ||(user.tempsupplier?? && user.tempsupplier==0)>
     			<a href="javascript:;" onclick="tempsupplierCustomer(${user.uid})">临时供应商</a> | 
-    		<#elseif user.tempsupplier==1>
+    		<#elseif user.tempsupplier?? && user.tempsupplier==1>
     			<a href="javascript:;" onclick="cancelTempsupplierCustomer(${user.uid})">取消零时供应商</a> | 
     		</#if> 
             <a href="javascript:;" onclick="editRoles(${user.uid})">授权</a> | 

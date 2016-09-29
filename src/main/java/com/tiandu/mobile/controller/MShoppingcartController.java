@@ -578,6 +578,7 @@ public class MShoppingcartController extends BaseController {
 				item.setProductSku(sku);
 				if(sku.getProduct().getKind().equals(Byte.valueOf("3"))){//零元购数量固定为1
 					item.setQuantity(1);
+					cart.setPtype(6);
 				}else{
 					item.setQuantity(orderForm.getQuantity());
 				}

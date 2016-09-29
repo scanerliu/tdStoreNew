@@ -260,6 +260,7 @@ public class WechatNotify {
 		user.setSupplierType(Byte.valueOf("0"));
 		user.setMembershipId(1);//会员等级
 		user.setUgenter(Byte.valueOf("3"));//性别-保密
+		user.setTempsupplier(0);//零时供应商
 		tdUserSerivce.saveRegisterUser(user);
 		return user;
 	}

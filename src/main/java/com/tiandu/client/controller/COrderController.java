@@ -621,7 +621,7 @@ public class COrderController extends BaseController {
 		}
 		
 		// 非待支付订单
-		if(order.getPayStatus() != ConstantsUtils.ORDER_STATUS_NEW){
+		if(!ConstantsUtils.ORDER_STATUS_NEW.equals(order.getOrderStatus())){
 			//return "redirect:404";
 			map.addAttribute("errmsg", "已支付的订单的不能进行支付操作！");
 			return "/client/error";

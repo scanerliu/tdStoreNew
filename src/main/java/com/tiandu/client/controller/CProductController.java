@@ -440,6 +440,7 @@ public class CProductController extends BaseController {
 		sc.setKind(ConstantsUtils.PRODUCT_KIND_ZEROBUY);
 		sc.setStatus(Byte.valueOf("1"));
 		sc.setOnshelf(true);
+		sc.setPageSize(12);
 		map.addAttribute("productList", tdProductService.findBySearchCriteria(sc));
 		map.addAttribute("sc", sc);
 		return "/client/product/zerolistbody";
@@ -464,6 +465,7 @@ public class CProductController extends BaseController {
 		sc.setNewRecommend(1);
 		sc.setStatus(Byte.valueOf("1"));
 		sc.setOnshelf(true);
+		sc.setPageSize(12);
 		map.addAttribute("productList", tdProductService.findBySearchCriteria(sc));
 		map.addAttribute("sc", sc);
 		return "/client/product/newlistbody";

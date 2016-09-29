@@ -29,9 +29,11 @@
         <td align="center">
         <input type="checkbox" value="${article.aid?c}" name="subbox" class="J_checkitem"></td>
         <td align="center">${article.aid?c}</td>
-        <td>${article.tdArticleCategory.name!''}</td>
+        <td><#if article.tdArticleCategory??>${article.tdArticleCategory.name!''}</#if></td>
         <td>${article.user.uname!''}</td>
-        <td align="center">${article.regionId?c}</td>
+        <td align="center">
+        	<#if article.regionId??>${article.regionId!''}</#if>
+        </td>
         <td align="center">${article.title!''}</td>
         <td>${article.statusStr!''}</td>
         <td>${article.sort!'0'}</td>
