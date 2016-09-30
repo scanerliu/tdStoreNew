@@ -73,6 +73,10 @@
 				/mobile/order/pay/notify_alipay**=anon
 				<!-- 支付宝返回 -->
 				/mobile/order/pay/result_alipay**=anon
+				<!-- 民生异步通知 -->
+				/mobile/order/pay/cmbc_notify**=anon
+				<!-- 民生返回 -->
+				/mobile/order/pay/cmbc_result**=anon
 				/mobile/order/**=user
 				/mobile/user/verifyCode=anon
 				/mobile/getChangePhoneNumValidCode=anon

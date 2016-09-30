@@ -2,6 +2,7 @@ package com.tiandu.client.controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -971,6 +972,163 @@ public class COrderController extends BaseController {
             return "/client/pay_failed";
         }
         return "/client/order_pay_failed";
+    }
+	/**
+	 * 民生银行支付异步通知
+	 * @param map
+	 * @param req
+	 * @param resp
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/pay/cmbc_notify")
+    public String cmbc_notify( ModelMap map, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String[]> requestParams = req.getParameterMap();
+        // 系统配置
+        map.addAttribute("system", getSystem());
+        
+        String ua = req.getHeader("User-Agent");
+        
+        String paramstr = req.getQueryString();
+        logger.error("cmbc notity:"+paramstr);
+        if(StringUtils.isNotBlank(paramstr)){
+        	String[] param = paramstr.split("\\|");
+        	String orderNo = param[0];
+        	String billstatus = param[6];
+        	String amount = param[3];
+        	BigDecimal oamount = new BigDecimal(amount);
+        	// 判断支付类型，含J为联合订单支付
+            if(orderNo.contains("J")){
+            	TdJointOrder jointOrder = tdJointOrderService.findByJno(orderNo);
+            	if (jointOrder == null) {
+            		logger.error("cmbc notity error order not exist:"+paramstr);
+            		throw new Exception("order not exist!");
+            	}
+            	map.put("order", jointOrder);
+            	if (billstatus.equals("0")&&jointOrder.getAmount().equals(oamount)) {// 验证成功
+            			// 订单支付成功
+            			tdOrderService.AfterJointPaySuccess(jointOrder,paramstr);
+            			// 触屏
+            			if(WebUtils.checkAgentIsMobile(ua)){
+            				return "/client/pay_success";
+            			}
+            			return "/client/order_pay_success";
+            	}else{
+            		throw new Exception("pay error");
+            	}
+            }else{
+            	TdOrder order = tdOrderService.findByOrderNo(orderNo);
+            	if (order == null) {
+            		logger.error("cmbc notity error order not exist:"+paramstr);
+            		throw new Exception("order not exist!");
+            	}
+            	map.put("order", order);
+            	if (billstatus.equals("0") && order.getPayAmount().equals(oamount)) {// 验证成功
+        			// 订单支付成功
+        			tdOrderService.AfterPaySuccess(order,params.toString());
+        			// 触屏
+        			if(WebUtils.checkAgentIsMobile(ua)){
+        				return "/client/pay_success";
+        			}
+        			return "/client/order_pay_success";
+            	}
+            }
+        }
+        
+        // 验证失败或者支付失败
+        // 触屏
+        if(WebUtils.checkAgentIsMobile(ua)){
+            return "/client/pay_failed";
+        }
+        return "/client/order_pay_failed";
+    }
+	
+	/**
+	 * 民生银行支付结果
+	 * @param map
+	 * @param req
+	 * @param resp
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/pay/cmbc_result")
+    public String cmbc_result( ModelMap map, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String[]> requestParams = req.getParameterMap();
+        // 系统配置
+        map.addAttribute("system", getSystem());
+        
+        String ua = req.getHeader("User-Agent");
+        
+        StringBuffer sb = new StringBuffer() ; 
+        InputStream is = req.getInputStream(); 
+        InputStreamReader isr = new InputStreamReader(is);   
+        BufferedReader br = new BufferedReader(isr); 
+        String s = "" ; 
+        while((s=br.readLine())!=null){ 
+        	sb.append(s) ; 
+        } 
+        String paramstr =sb.toString(); 
+        logger.error("cmbc notity:"+paramstr);
+        if(StringUtils.isNotBlank(paramstr)){
+        	String[] param = paramstr.split("\\|");
+        	String orderNo = param[0];
+        	String billstatus = param[6];
+        	String amount = param[3];
+        	BigDecimal oamount = new BigDecimal(amount);
+        	// 判断支付类型，含J为联合订单支付
+            if(orderNo.contains("J")){
+            	TdJointOrder jointOrder = tdJointOrderService.findByJno(orderNo);
+            	if (jointOrder == null) {
+            		logger.error("cmbc notity error order not exist:"+paramstr);
+
+            		if(WebUtils.checkAgentIsMobile(ua)){
+            			return "/mobile/pay_failed";
+            		}
+            		return "/client/pay_failed";
+            	}
+            	map.put("order", jointOrder);
+            	if (billstatus.equals("0")&&jointOrder.getAmount().equals(oamount)) {// 验证成功
+            			// 订单支付成功
+            			tdOrderService.AfterJointPaySuccess(jointOrder,paramstr);
+            			// 触屏
+            			if(WebUtils.checkAgentIsMobile(ua)){
+            				return "/client/pay_success";
+            			}
+            			return "/client/order_pay_success";
+            	}else{
+            		if(WebUtils.checkAgentIsMobile(ua)){
+            			return "/mobile/pay_failed";
+            		}
+            		return "/client/pay_failed";
+            	}
+            }else{
+            	TdOrder order = tdOrderService.findByOrderNo(orderNo);
+            	if (order == null) {
+            		logger.error("cmbc notity error order not exist:"+paramstr);
+            		if(WebUtils.checkAgentIsMobile(ua)){
+            			return "/mobile/pay_failed";
+            		}
+            		return "/client/pay_failed";
+            	}
+            	map.put("order", order);
+            	if (billstatus.equals("0") && order.getPayAmount().equals(oamount)) {// 验证成功
+        			// 订单支付成功
+        			tdOrderService.AfterPaySuccess(order,params.toString());
+        			// 触屏
+        			if(WebUtils.checkAgentIsMobile(ua)){
+        				return "/client/pay_success";
+        			}
+        			return "/client/order_pay_success";
+            	}
+            }
+        }
+        
+        if(WebUtils.checkAgentIsMobile(ua)){
+			return "/mobile/pay_failed";
+		}
+		return "/client/pay_failed";
     }
 	
     @RequestMapping(value = "/wx_notify")

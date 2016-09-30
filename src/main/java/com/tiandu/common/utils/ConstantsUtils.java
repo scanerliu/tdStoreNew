@@ -347,15 +347,15 @@ public class ConstantsUtils {
 	/**
 	 * 商户代码
 	 */
-	public static final String CMBC_PAY_API_CORPID = "3305";
+	public static final String CMBC_PAY_API_CORPID = "33005";
 	/**
 	 * 商户名称
 	 */
-	public static final String CMBC_PAY_API_CORPNAME = "3305";
+	public static final String CMBC_PAY_API_CORPNAME = "33005";
 	/**
 	 * 商户私钥
 	 */
-	public static final String CMBC_PAY_API_SM = "/static/default/images/33005.sm2";
+	public static final String CMBC_PAY_API_SM = "/static/default/images/09025.sm2";
 	/**
 	 * 银行公钥
 	 */
