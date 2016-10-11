@@ -49,6 +49,7 @@ import com.tiandu.complaint.search.TdComplaintCriteria;
 import com.tiandu.complaint.service.TdComplaintService;
 import com.tiandu.custom.entity.TdAgent;
 import com.tiandu.custom.entity.TdCampaign;
+import com.tiandu.custom.entity.TdDrawapply;
 import com.tiandu.custom.entity.TdExperienceStore;
 import com.tiandu.custom.entity.TdMembership;
 import com.tiandu.custom.entity.TdUser;
@@ -71,6 +72,7 @@ import com.tiandu.custom.search.TdUserSearchCriteria;
 import com.tiandu.custom.search.TdUserSupplierSearchCriteria;
 import com.tiandu.custom.service.TdAgentService;
 import com.tiandu.custom.service.TdCampaignService;
+import com.tiandu.custom.service.TdDrawapplyService;
 import com.tiandu.custom.service.TdExperienceStoreService;
 import com.tiandu.custom.service.TdMembershipService;
 import com.tiandu.custom.service.TdUserAccountLogService;
@@ -210,6 +212,8 @@ public class CUserController extends BaseController {
 	private TdUserAccountLogService tdUserAccountLogService;
 	@Autowired
 	private TdBrandService tdBrandService;
+	@Autowired
+	private TdDrawapplyService tdDrawapplyService;
 	@Autowired
 	private ConfigUtil configUtil;
 	
@@ -860,6 +864,31 @@ public class CUserController extends BaseController {
 		return "/client/user/withdraw";
 	}
 	/**
+	 * 用户大额提现申请
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping(value = "/drawapply")
+	public String drawapply(HttpServletRequest request, HttpServletResponse response, ModelMap map)
+	{
+		TdUser tdUser = this.getCurrentUser();
+		map.addAttribute("menucode", "account");
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		TdUserAccount userAccount = tdUserAccountService.findOne(tdUser.getUid());
+		if(userAccount == null)
+		{
+			map.addAttribute("errmsg", "数据错误，请重新操作！");
+			return "/client/error";
+		}
+		Integer withdrawfee = configUtil.getDrawApplyFee();
+		BigDecimal withdrawfeemin = configUtil.getDrawApplyFeeMin();
+		String feetip = "按提现金额的"+withdrawfee+"‰收取，最低收取"+withdrawfeemin+"元";
+		map.addAttribute("feetip", feetip);
+		map.addAttribute("account",userAccount);
+		return "/client/user/drawapply";
+	}
+	/**
 	 * 用户提现
 	 * @param map
 	 * @return
@@ -922,6 +951,67 @@ public class CUserController extends BaseController {
 				res.put("msg", "微信红包发送失败："+result.getFailMsg());
 			}
 		}
+		return res;
+	}
+	/**
+	 * 用户提现
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping(value = "/dodrawapply", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> dodrawapply(TdDrawapply drawApply, HttpServletRequest request, HttpServletResponse response, ModelMap map)
+	{
+		Map<String,String> res = new HashMap<String,String>();
+		res.put("code", "0");
+		res.put("msg", "提现操作失败！");
+		TdUser tdUser = this.getCurrentUser();
+		Date now = new Date();
+		// 系统配置
+		TdUserAccount userAccount = tdUserAccountService.findOne(tdUser.getUid());
+		if(userAccount == null)
+		{
+			res.put("msg", "提现操作失败：数据错误，请重新操作！");
+			return res;
+		}
+		if(userAccount.getAmount() == null || userAccount.getAmount().compareTo(drawApply.getAmount())<0)
+		{
+			res.put("msg", "提现操作失败：账户金额不足！");
+			return res;
+		}
+		//提现手续费计算
+		Integer withdrawfee = configUtil.getDrawApplyFee();
+		BigDecimal withdrawfeemin = configUtil.getDrawApplyFeeMin();
+		BigDecimal amount = drawApply.getAmount();
+		BigDecimal fee = amount.multiply(new BigDecimal(withdrawfee)).divide(new BigDecimal(1000));
+		if(fee.compareTo(withdrawfeemin)<0){//应收手续费小于最低手续费，以最低手续费为准
+			fee = withdrawfeemin;
+		}
+		if(fee.compareTo(amount)>=0){//手续费大于等于提现金额时，通知提现失败
+			res.put("msg", "提现操作失败：提现金额过小，不划算！");
+			return res;
+		}
+		//提现减去账号金额
+		userAccount.setUpdateBy(1);
+		userAccount.setUpdateTime(now);
+		TdUserAccountLog alog = new TdUserAccountLog();
+		alog.setPreamount(userAccount.getAmount());
+		alog.setUid(userAccount.getUid());
+		alog.setUpamount(BigDecimal.ZERO.subtract(amount));
+		alog.setType(TdUserAccountLog.USERACCOUNTLOG_TYPE_WITHDRAWALS);
+		alog.setCreateTime(now);
+		alog.setNote("用户提现，提现金额："+amount+" 元，其中包含手续费："+fee+" 元");
+		tdUserAccountService.addAmount(userAccount, alog);
+		//保存提现申请
+		drawApply.setCreateTime(now);
+		drawApply.setUid(tdUser.getUid());
+		drawApply.setStatus(1);
+		drawApply.setUpdateBy(tdUser.getUid());
+		drawApply.setUpdateTime(now);
+		tdDrawapplyService.save(drawApply);
+		
+		res.put("code", "1");
+		res.put("msg", "微信红包已经成功发送，请及时查收。");
 		return res;
 	}
 	/**

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tiandu.custom.entity.mapper.TdDrawapplyMapper" >
+  <resultMap id="BaseResultMap" type="com.tiandu.custom.entity.TdDrawapply" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="carduser" property="carduser" jdbcType="VARCHAR" />
+    <result column="idno" property="idno" jdbcType="VARCHAR" />
+    <result column="bankid" property="bankid" jdbcType="INTEGER" />
+    <result column="cardno" property="cardno" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    <result column="cash_time" property="cashTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, uid, amount, carduser, idno, bankid, cardno, status, create_time, update_time, 
+    update_by, cash_time, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_drawapply
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="countByCriteria" resultType="java.lang.Integer" parameterType="com.tiandu.custom.search.TdDrawapplySearchCriteria" >
+    select count(id)
+    from td_drawapply
+    where 1=1 
+    <if test="uid != null" >
+        and uid=#{uid,jdbcType=INTEGER}
+    </if>
+    <if test="username != null">
+        and carduser like CONCAT('%','${username}','%' )
+    </if>
+    <if test="status != null" >
+        and status=#{status,jdbcType=INTEGER}
+    </if>
+    <if test="startTime != null">
+		and create_time <![CDATA[ >= ]]>
+		#{startTime,jdbcType=TIMESTAMP}
+	</if>
+	<if test="endTime != null">
+		and create_time <![CDATA[ < ]]>
+		#{endTime,jdbcType=TIMESTAMP}
+	</if>
+  </select>
+  <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.custom.search.TdDrawapplySearchCriteria" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_agent as a
+    <if test="uid != null" >
+        and uid=#{uid,jdbcType=INTEGER}
+    </if>
+    <if test="username != null">
+        and carduser like CONCAT('%','${username}','%' )
+    </if>
+    <if test="status != null" >
+        and status=#{status,jdbcType=INTEGER}
+    </if>
+    <if test="startTime != null">
+		and create_time <![CDATA[ >= ]]>
+		#{startTime,jdbcType=TIMESTAMP}
+	</if>
+	<if test="endTime != null">
+		and create_time <![CDATA[ < ]]>
+		#{endTime,jdbcType=TIMESTAMP}
+	</if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from td_drawapply
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tiandu.custom.entity.TdDrawapply" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into td_drawapply (uid, amount, carduser, 
+      idno, bankid, cardno, 
+      status, create_time, update_time, 
+      update_by, cash_time, remark
+      )
+    values (#{uid,jdbcType=INTEGER}, #{amount,jdbcType=DECIMAL}, #{carduser,jdbcType=VARCHAR}, 
+      #{idno,jdbcType=VARCHAR}, #{bankid,jdbcType=INTEGER}, #{cardno,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=INTEGER}, #{cashTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tiandu.custom.entity.TdDrawapply" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into td_drawapply
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="carduser != null" >
+        carduser,
+      </if>
+      <if test="idno != null" >
+        idno,
+      </if>
+      <if test="bankid != null" >
+        bankid,
+      </if>
+      <if test="cardno != null" >
+        cardno,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="cashTime != null" >
+        cash_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="carduser != null" >
+        #{carduser,jdbcType=VARCHAR},
+      </if>
+      <if test="idno != null" >
+        #{idno,jdbcType=VARCHAR},
+      </if>
+      <if test="bankid != null" >
+        #{bankid,jdbcType=INTEGER},
+      </if>
+      <if test="cardno != null" >
+        #{cardno,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="cashTime != null" >
+        #{cashTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tiandu.custom.entity.TdDrawapply" >
+    update td_drawapply
+    <set >
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="carduser != null" >
+        carduser = #{carduser,jdbcType=VARCHAR},
+      </if>
+      <if test="idno != null" >
+        idno = #{idno,jdbcType=VARCHAR},
+      </if>
+      <if test="bankid != null" >
+        bankid = #{bankid,jdbcType=INTEGER},
+      </if>
+      <if test="cardno != null" >
+        cardno = #{cardno,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="cashTime != null" >
+        cash_time = #{cashTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tiandu.custom.entity.TdDrawapply" >
+    update td_drawapply
+    set uid = #{uid,jdbcType=INTEGER},
+      amount = #{amount,jdbcType=DECIMAL},
+      carduser = #{carduser,jdbcType=VARCHAR},
+      idno = #{idno,jdbcType=VARCHAR},
+      bankid = #{bankid,jdbcType=INTEGER},
+      cardno = #{cardno,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=INTEGER},
+      cash_time = #{cashTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

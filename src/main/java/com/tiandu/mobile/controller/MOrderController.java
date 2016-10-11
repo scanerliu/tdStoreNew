@@ -32,6 +32,7 @@ import com.tiandu.common.tencent.common.Configure;
 import com.tiandu.common.tencent.common.RandomStringGenerator;
 import com.tiandu.common.tencent.common.Signature;
 import com.tiandu.common.utils.ConstantsUtils;
+import com.tiandu.common.utils.DateUtil;
 import com.tiandu.common.utils.KuaiDiUtils;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.complaint.entity.TdComplaint;
@@ -59,6 +60,8 @@ import com.tiandu.order.vo.PostageVO;
 import com.tiandu.payment.alipay.AlipayConfig;
 import com.tiandu.payment.alipay.Constants;
 import com.tiandu.payment.alipay.PaymentChannelAlipay;
+
+import cfca.sadk.cmbc.tools.CMBCDecryptKit;
 
 /**
  * 
@@ -462,6 +465,30 @@ public class MOrderController extends BaseController {
 			}else if(wxPay){
 				return "/mobile/pay_wx";
 			}
+		}else if(ConstantsUtils.ORDER_PAYMENT_UNIONPAY.equals(pay)){//银联支付
+			// 支付金额
+			req.setAttribute("totalAmount", torder.getAmount().toString());
+			// 订单编号
+			req.setAttribute("orderNo", torder.getJno());
+			CMBCDecryptKit userKit = new CMBCDecryptKit();
+	        try {
+	        	String rootPath = req.getServletContext().getRealPath("/");
+				int result = userKit.Initialize(rootPath+ConstantsUtils.CMBC_PAY_API_SM, ConstantsUtils.CMBC_PAY_API_PASS ,rootPath+ConstantsUtils.CMBC_PAY_API_CER);
+			
+				//版本号|订单号|交易金额|币种|交易日期|交易时间|商户代码|商户名称|二级商户号|通知地址|跳转地址|银行卡卡号|交易详细内容|商户预留信息|支付通道|借贷标识|商品类型|商品名称|备注
+				String apidata = "1.0.0|"+torder.getJno()+"|"+torder.getAmount()+"|156|"+DateUtil.convertDateToString(torder.getCreateTime(), "yyyyMMdd")
+				+"|"+DateUtil.convertDateToString(torder.getCreateTime(), "HHmmss")+"|"+ConstantsUtils.CMBC_PAY_API_CORPID+"|"+ConstantsUtils.CMBC_PAY_API_CORPNAME
+				+"||http://www.yls77.com/order/cmbc_notify|http://www.yls77.com//mobile/pay_success||||2||||";
+			
+				String orderData = userKit.SignAndEncryptMessage(apidata);
+				logger.error("cmbc 加密后数据如下："+apidata);
+				map.addAttribute("orderData", orderData);
+	        } catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				logger.error("cmbc api error："+e.getMessage());
+			}
+			return "/mobile/cmbcpay_form";
 		}
 		return "/mobile/pay_failed";
 		
@@ -514,7 +541,7 @@ public class MOrderController extends BaseController {
 		}
 		
 		// 非待支付订单
-		if(order.getPayStatus() != ConstantsUtils.ORDER_STATUS_NEW){
+		if(order.getOrderStatus() != ConstantsUtils.ORDER_STATUS_NEW){
 			//return "redirect:404";
 			map.addAttribute("errmsg", "已支付的订单的不能进行支付操作！");
 			return "/client/error";
@@ -569,6 +596,26 @@ public class MOrderController extends BaseController {
 			}else if(wxPay){
 				return "/mobile/pay_wx";
 			}
+		}else if(ConstantsUtils.ORDER_PAYMENT_UNIONPAY.equals(pay)){
+			CMBCDecryptKit userKit = new CMBCDecryptKit();
+	        try {
+	        	String rootPath = req.getServletContext().getRealPath("/");
+				int result = userKit.Initialize(rootPath+ConstantsUtils.CMBC_PAY_API_SM, ConstantsUtils.CMBC_PAY_API_PASS ,rootPath+ConstantsUtils.CMBC_PAY_API_CER);
+			
+				//版本号|订单号|交易金额|币种|交易日期|交易时间|商户代码|商户名称|二级商户号|通知地址|跳转地址|银行卡卡号|交易详细内容|商户预留信息|支付通道|借贷标识|商品类型|商品名称|备注
+				String apidata = "1.0.0|"+order.getOrderNo()+"|"+order.getPayAmount()+"|156|"+DateUtil.convertDateToString(order.getCreateTime(), "yyyyMMdd")
+				+"|"+DateUtil.convertDateToString(order.getCreateTime(), "HHmmss")+"|"+ConstantsUtils.CMBC_PAY_API_CORPID+"|"+ConstantsUtils.CMBC_PAY_API_CORPNAME
+				+"||http://www.yls77.com/order/cmbc_notify|http://www.yls77.com/mobile/pay_success||||2||||";
+			
+				String orderData = userKit.SignAndEncryptMessage(apidata);
+				logger.error("cmbc 加密后数据如下："+apidata);
+				map.addAttribute("orderData", orderData);
+	        } catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				logger.error("cmbc api error："+e.getMessage());
+			}
+			return "/mobile/cmbcpay_form";
 		}
 		return "/mobile/pay_failed";
 	}
@@ -924,7 +971,76 @@ public class MOrderController extends BaseController {
 		}
     }
     
-    
+    /**
+	 * 民生银行支付异步通知
+	 * @param map
+	 * @param req
+	 * @param resp
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/pay/cmbc_notify")
+    public String cmbc_notify( ModelMap map, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String[]> requestParams = req.getParameterMap();
+        // 系统配置
+        map.addAttribute("system", getSystem());
+        
+        String ua = req.getHeader("User-Agent");
+        
+        String paramstr = req.getQueryString();
+        logger.error("cmbc notity:"+paramstr);
+        if(StringUtils.isNotBlank(paramstr)){
+        	String[] param = paramstr.split("\\|");
+        	String orderNo = param[0];
+        	String billstatus = param[6];
+        	String amount = param[3];
+        	BigDecimal oamount = new BigDecimal(amount);
+        	// 判断支付类型，含J为联合订单支付
+            if(orderNo.contains("J")){
+            	TdJointOrder jointOrder = tdJointOrderService.findByJno(orderNo);
+            	if (jointOrder == null) {
+            		logger.error("cmbc notity error order not exist:"+paramstr);
+            		throw new Exception("order not exist!");
+            	}
+            	map.put("order", jointOrder);
+            	if (billstatus.equals("0")&&jointOrder.getAmount().equals(oamount)) {// 验证成功
+            			// 订单支付成功
+            			tdOrderService.AfterJointPaySuccess(jointOrder,paramstr);
+            			// 触屏
+            			if(WebUtils.checkAgentIsMobile(ua)){
+            				return "/mobile/pay_success";
+            			}
+            			return "/client/order_pay_success";
+            	}else{
+            		throw new Exception("pay error");
+            	}
+            }else{
+            	TdOrder order = tdOrderService.findByOrderNo(orderNo);
+            	if (order == null) {
+            		logger.error("cmbc notity error order not exist:"+paramstr);
+            		throw new Exception("order not exist!");
+            	}
+            	map.put("order", order);
+            	if (billstatus.equals("0") && order.getPayAmount().equals(oamount)) {// 验证成功
+        			// 订单支付成功
+        			tdOrderService.AfterPaySuccess(order,params.toString());
+        			// 触屏
+        			if(WebUtils.checkAgentIsMobile(ua)){
+        				return "/mobile/pay_success";
+        			}
+        			return "/client/order_pay_success";
+            	}
+            }
+        }
+        
+        // 验证失败或者支付失败
+        // 触屏
+        if(WebUtils.checkAgentIsMobile(ua)){
+            return "/mobile/pay_failed";
+        }
+        return "/client/order_pay_failed";
+    }
     
     /**
      * 

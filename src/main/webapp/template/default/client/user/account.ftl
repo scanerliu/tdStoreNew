@@ -57,7 +57,10 @@
                         <p class="p1">钱包余额(元)</p>
                         <p class="p2"><#if account??>${account.amount!''}</#if></p>
                     </section>
-                    <section class="fr sec2"><a href="${app.basePath}/user/withdraw" title="" class="">零钱提现</a></section>
+                    <section class="fr sec2">
+                    	<a href="${app.basePath}/user/withdraw" title="" class="">零钱提现</a>
+                    	<a href="${app.basePath}/user/drawapply" title="" class="">大额提现</a>
+                    </section>
                 </div>
             </div>
             <!-- 我的钱包-结束 -->

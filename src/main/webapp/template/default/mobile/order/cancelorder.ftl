@@ -63,10 +63,10 @@
 <!-- Footer Start -->
 <div style="width:100%;height:0.2rem"></div>
 <footer>
-   <div class="addnew" style="background:#f23030">
+   <div class="addnew" style="background:#f23030" onclick="cancelOrder()">
        <a href="javascript:;" title="">提交</a>
    </div>
-    <span class="footclear" onclick="cancelOrder()"></span>
+    <span class="footclear"></span>
 </footer>
 <!-- Footer End -->
 </form>

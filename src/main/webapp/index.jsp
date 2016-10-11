@@ -4,9 +4,12 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>功能暂未开放，敬请期待...</title>
+    <title>欢迎来到创客联盟！</title>
+    <script type="text/javascript">
+    window.location.href="<%=request.getContextPath()%>/index";
+    </script>
 </head>
 <body>
-<h2>功能暂未开放，敬请期待...</h2>
+<h2>欢迎来到创客联盟！</h2>
 </body>
 </html>

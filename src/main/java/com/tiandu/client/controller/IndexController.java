@@ -120,6 +120,7 @@ public class IndexController extends BaseController {
 		sc.setAdsId(14);//楼层轮播广告位id
 		List<TdAdvertisement> floorcycleadList = tdAdvertisementService.findBySearchCriteria(sc);
 		modelMap.addAttribute("floorcycleadList", floorcycleadList);
+		modelMap.addAttribute("floorid", sc.getFloorId());
 		//pc楼层中间第一幅广告
 		sc.setFlag(true);
 		sc.setPageSize(1);

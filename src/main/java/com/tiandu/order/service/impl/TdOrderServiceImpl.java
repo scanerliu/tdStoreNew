@@ -453,6 +453,9 @@ public class TdOrderServiceImpl implements TdOrderService{
 		//分润开始
 		this.benefitOrder(order);
 		
+		//货款给到供应商钱包里
+		this.castCash(order);
+		
 		result.setFlag(true);
 		return result;
 	}
@@ -510,8 +513,32 @@ public class TdOrderServiceImpl implements TdOrderService{
 		//分润
 		this.benefitOrder(order);
 		logger.error("completeOrder  end: orderno= "+order.getOrderNo());
+		
+		//货款给到供应商钱包里
+		this.castCash(order);
+		
 		result.setFlag(true);
 		return result;
+	}
+
+	private void castCash(TdOrder order) {
+		Date now = new Date();
+		TdUserAccount account = tdUserAccountService.findByUid(order.getSupplierId());
+		if(null!=account){
+			BigDecimal benefitAmount = order.getPayAmount().subtract(order.getRefundAmount()).subtract(order.getBenefitAmount());
+			account.setUpdateBy(1);
+			account.setUpdateTime(now);
+			TdUserAccountLog alog = new TdUserAccountLog();
+			alog.setPreamount(account.getAmount());
+			alog.setUid(account.getUid());
+			alog.setUpamount(benefitAmount);
+			alog.setType(TdUserAccountLog.USERACCOUNTLOG_TYPE_PRODUCT_INCOME);
+			alog.setNote("订单完成，货款收入，订单编号："+order.getOrderNo());
+	    	alog.setCreateTime(now);
+	    	alog.setRelation(null);
+			tdUserAccountService.addAmount(account, alog);
+		}
+		
 	}
 
 	/**

@@ -1,7 +1,7 @@
 <#import "/common/app.ftl" as app>
 <div class="left">
     <div class="sitebanner">
-        <div class="picScroll">
+        <div class="picScroll" id="floorid_${floorid}">
             <div class="hd">
                 <ul></ul>
             </div>
@@ -50,7 +50,7 @@
 </div>
 <script language="javascript" type="text/javascript">
     $(function () {
-        $(".picScroll").slide({
+        $("#floorid_${floorid}").slide({
             titCell:".hd ul",
             mainCell:".bd ul",
             autoPage:true,

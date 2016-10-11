@@ -559,7 +559,7 @@ public class COrderController extends BaseController {
 				//版本号|订单号|交易金额|币种|交易日期|交易时间|商户代码|商户名称|二级商户号|通知地址|跳转地址|银行卡卡号|交易详细内容|商户预留信息|支付通道|借贷标识|商品类型|商品名称|备注
 				String apidata = "1.0.0|"+torder.getJno()+"|"+torder.getAmount()+"|156|"+DateUtil.convertDateToString(torder.getCreateTime(), "yyyyMMdd")
 				+"|"+DateUtil.convertDateToString(torder.getCreateTime(), "HHmmss")+"|"+ConstantsUtils.CMBC_PAY_API_CORPID+"|"+ConstantsUtils.CMBC_PAY_API_CORPNAME
-				+"||http://www.yls77.com/order/cmbc_notify|http://www.yls77.com/order/paysuccess||||0||||";
+				+"||http://www.yls77.com/order/cmbc_notify|http://www.yls77.com/order/list||||0||||";
 			
 				String orderData = userKit.SignAndEncryptMessage(apidata);
 				logger.error("cmbc 加密后数据如下："+apidata);
@@ -685,7 +685,7 @@ public class COrderController extends BaseController {
 				//版本号|订单号|交易金额|币种|交易日期|交易时间|商户代码|商户名称|二级商户号|通知地址|跳转地址|银行卡卡号|交易详细内容|商户预留信息|支付通道|借贷标识|商品类型|商品名称|备注
 				String apidata = "1.0.0|"+order.getOrderNo()+"|"+order.getPayAmount()+"|156|"+DateUtil.convertDateToString(order.getCreateTime(), "yyyyMMdd")
 				+"|"+DateUtil.convertDateToString(order.getCreateTime(), "HHmmss")+"|"+ConstantsUtils.CMBC_PAY_API_CORPID+"|"+ConstantsUtils.CMBC_PAY_API_CORPNAME
-				+"||http://www.yls77.com/order/cmbc_notify|http://www.yls77.com/order/paysuccess||||0||||";
+				+"||http://www.yls77.com/order/cmbc_notify|http://www.yls77.com/order/list||||0||||";
 			
 				String orderData = userKit.SignAndEncryptMessage(apidata);
 				logger.error("cmbc 加密后数据如下："+apidata);
@@ -1009,11 +1009,11 @@ public class COrderController extends BaseController {
             	if (billstatus.equals("0")&&jointOrder.getAmount().equals(oamount)) {// 验证成功
             			// 订单支付成功
             			tdOrderService.AfterJointPaySuccess(jointOrder,paramstr);
-            			// 触屏
+            			/*// 触屏
             			if(WebUtils.checkAgentIsMobile(ua)){
             				return "/client/pay_success";
             			}
-            			return "/client/order_pay_success";
+            			return "/client/order_pay_success";*/
             	}else{
             		throw new Exception("pay error");
             	}
@@ -1027,21 +1027,22 @@ public class COrderController extends BaseController {
             	if (billstatus.equals("0") && order.getPayAmount().equals(oamount)) {// 验证成功
         			// 订单支付成功
         			tdOrderService.AfterPaySuccess(order,params.toString());
-        			// 触屏
+        			/*// 触屏
         			if(WebUtils.checkAgentIsMobile(ua)){
         				return "/client/pay_success";
         			}
-        			return "/client/order_pay_success";
+        			return "/client/order_pay_success";*/
             	}
             }
         }
         
         // 验证失败或者支付失败
         // 触屏
-        if(WebUtils.checkAgentIsMobile(ua)){
+        /*if(WebUtils.checkAgentIsMobile(ua)){
             return "/client/pay_failed";
         }
-        return "/client/order_pay_failed";
+        return "/client/order_pay_failed";*/
+        return null;
     }
 	
 	/**

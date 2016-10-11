@@ -65,6 +65,10 @@
 				/main**=authc
 				/user/verifyCode=anon
 				/user/**=user
+				<!-- 民生异步通知 -->
+				/order/pay/cmbc_notify**=anon
+				<!-- 民生返回 -->
+				/order/pay/cmbc_result**=anon
 				/order/**=user
 				/mobile/shoppingcart/**=user
 				<!-- 微信异步通知 -->
@@ -73,10 +77,6 @@
 				/mobile/order/pay/notify_alipay**=anon
 				<!-- 支付宝返回 -->
 				/mobile/order/pay/result_alipay**=anon
-				<!-- 民生异步通知 -->
-				/mobile/order/pay/cmbc_notify**=anon
-				<!-- 民生返回 -->
-				/mobile/order/pay/cmbc_result**=anon
 				/mobile/order/**=user
 				/mobile/user/verifyCode=anon
 				/mobile/getChangePhoneNumValidCode=anon
