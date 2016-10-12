@@ -36,3 +36,24 @@ var scrollProfitHandler = function(){
     	searchProfits(false);
     } 
 };
+
+function searchDrawApplys(f){
+	var url = basePath + "/mobile/user/searchdrawapply";
+	var loadData = $("#searchForm").serializeArray();
+	$(window).off("scroll", scrollDrawApplyHandler);
+	if(f){
+		$("#results").loading().load(url,loadData);
+	}else{
+		$.get(url, loadData, function(html){
+			$(html).appendTo("#results");
+		});
+	}
+}
+
+var scrollDrawApplyHandler = function(){
+	if ($(document).height() - $(this).scrollTop() - $(this).height()<100){
+		searchDrawApplys(false);
+	} 
+};
+
+

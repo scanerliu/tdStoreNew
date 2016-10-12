@@ -42,6 +42,10 @@
         <div class="div2">钱包余额</div>
       </section>
       <a class="btn-withdraw" href="${app.basePath}/mobile/user/withdraw" title="">零钱提现</a>
+      <#if curruser.supplierType gt 0>
+      <br>
+		<a href="${app.basePath}/mobile/user/drawapply" title="" class="btn-withdraw">大额提现申请</a>
+	  </#if>
     </article><!-- top-balance end -->
     <article class="points-detail">
       <section>

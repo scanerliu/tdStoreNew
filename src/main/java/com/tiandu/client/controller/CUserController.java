@@ -63,6 +63,7 @@ import com.tiandu.custom.entity.TdUserMessage;
 import com.tiandu.custom.entity.TdUserSupplier;
 import com.tiandu.custom.search.TdAgentSearchCriteria;
 import com.tiandu.custom.search.TdCampaignSearchCriteria;
+import com.tiandu.custom.search.TdDrawapplySearchCriteria;
 import com.tiandu.custom.search.TdUserAccountLogSearchCriteria;
 import com.tiandu.custom.search.TdUserAddressCriteria;
 import com.tiandu.custom.search.TdUserCampaignCriteria;
@@ -819,6 +820,7 @@ public class CUserController extends BaseController {
 			tdUserAccountService.insert(userAccount);
 		}
 		map.addAttribute("account",userAccount);
+		map.addAttribute("curruser",tdUser);
 		return "/client/user/account";
 	}
 	/**
@@ -1008,11 +1010,44 @@ public class CUserController extends BaseController {
 		drawApply.setStatus(1);
 		drawApply.setUpdateBy(tdUser.getUid());
 		drawApply.setUpdateTime(now);
+		drawApply.setFee(fee);
 		tdDrawapplyService.save(drawApply);
 		
 		res.put("code", "1");
-		res.put("msg", "微信红包已经成功发送，请及时查收。");
+		res.put("msg", "提现申请提交成功，请等待工作人员处理。");
 		return res;
+	}
+	
+	/**
+	 * 用户提现申请记录
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping(value = "/drawapplylist")
+	public String drawapplylist(HttpServletRequest request, HttpServletResponse response, ModelMap map)
+	{
+		TdUser tdUser = this.getCurrentUser();
+		map.addAttribute("menucode", "drawapply");
+		// 系统配置
+		map.addAttribute("system", getSystem());
+		return "/client/user/drawapplylist";
+	}
+	/**
+	 * 钱包流水记录
+	 * @param sc
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
+	@RequestMapping("/searchdrawapply")
+	public String searchdrawapply(TdDrawapplySearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currUser = this.getCurrentUser();
+		sc.setUid(currUser.getUid());
+		List<TdDrawapply> logList = tdDrawapplyService.findBySearchCriteria(sc);
+	    modelMap.addAttribute("logList", logList) ;
+	    modelMap.addAttribute("sc", sc) ;
+		return "/client/user/drawapplylistbody";
 	}
 	/**
 	 * 用户收益

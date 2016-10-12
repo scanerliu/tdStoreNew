@@ -657,10 +657,10 @@ strong {font-weight: normal;}
 .my-wallet .btn-withdraw {
 	display: block;
 	margin: 0 auto;
-	margin-top: -.2rem;
+	margin-top: -.3rem;
 	width: 1.7rem;
-	height: .6rem;
-	line-height: .6rem;
+	height: .5rem;
+	line-height: .5rem;
 	font-size: .26rem;
 	color: #fff;
 	text-align: center;

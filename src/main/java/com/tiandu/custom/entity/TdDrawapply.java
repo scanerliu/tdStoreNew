@@ -9,6 +9,8 @@ public class TdDrawapply {
     private Integer uid;
 
     private BigDecimal amount;
+    
+    private BigDecimal fee;
 
     private String carduser;
 
@@ -29,6 +31,8 @@ public class TdDrawapply {
     private Date cashTime;
 
     private String remark;
+    
+    private TdUser user;
 
     public Integer getId() {
         return id;
@@ -54,7 +58,15 @@ public class TdDrawapply {
         this.amount = amount;
     }
 
-    public String getCarduser() {
+    public BigDecimal getFee() {
+		return fee;
+	}
+
+	public void setFee(BigDecimal fee) {
+		this.fee = fee;
+	}
+
+	public String getCarduser() {
         return carduser;
     }
 
@@ -133,4 +145,86 @@ public class TdDrawapply {
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
     }
+    
+    public String getStatusStr(){
+    	StringBuffer sb = new StringBuffer();
+    	if(null!=this.status){
+    		switch(this.status){
+	    		case 1:
+	    			sb.append("新申请");
+	    			break;
+	    		case 2:
+	    			sb.append("已同意");
+	    			break;
+	    		case 3:
+	    			sb.append("已拒绝");
+	    			break;
+	    		case 4:
+	    			sb.append("已打款");
+	    			break;
+	    		case 5:
+	    			sb.append("打款失败");
+	    			break;
+    		}
+    	}
+    	return sb.toString();
+    }
+
+	public TdUser getUser() {
+		return user;
+	}
+
+	public void setUser(TdUser user) {
+		this.user = user;
+	}
+	
+	public String getBankname(){
+		StringBuffer sb = new StringBuffer();
+    	if(null!=this.bankid){
+    		switch(this.bankid){
+	    		case 1:
+	    			sb.append("中国工商银行");
+	    			break;
+	    		case 2:
+	    			sb.append("中国建设银行");
+	    			break;
+	    		case 3:
+	    			sb.append("中国银行");
+	    			break;
+	    		case 4:
+	    			sb.append("中国农业银行");
+	    			break;
+	    		case 5:
+	    			sb.append("交通银行");
+	    			break;
+	    		case 6:
+	    			sb.append("招商银行");
+	    			break;
+	    		case 7:
+	    			sb.append("中国邮政储蓄银行");
+	    			break;
+	    		case 8:
+	    			sb.append("中信银行");
+	    			break;
+	    		case 9:
+	    			sb.append("光大银行");
+	    			break;
+	    		case 10:
+	    			sb.append("民生银行");
+	    			break;
+	    		case 11:
+	    			sb.append("兴业银行");
+	    			break;
+	    		case 12:
+	    			sb.append("华夏银行");
+	    			break;
+	    		case 13:
+	    			sb.append("平安银行");
+	    			break;
+    		}
+    	}
+    	return sb.toString();
+	}
+    
+    
 }

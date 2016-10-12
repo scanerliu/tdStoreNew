@@ -38,6 +38,10 @@ public class TdUserAccountLog {
 	 * 订单货款收入
 	 */
 	public static final Byte USERACCOUNTLOG_TYPE_PRODUCT_INCOME = 7;
+	/**
+	 * 用户提现返款
+	 */
+	public static final Byte USERACCOUNTLOG_TYPE_DRAWAPPLY_REFUND = 8;
 	
     private Integer id;
 
@@ -188,6 +192,8 @@ public class TdUserAccountLog {
     			sb.append("分润扣除");
     		}else if(this.getType().equals(USERACCOUNTLOG_TYPE_PRODUCT_INCOME)){
     			sb.append("货款收入");
+    		}else if(this.getType().equals(USERACCOUNTLOG_TYPE_DRAWAPPLY_REFUND)){
+    			sb.append("提现 退款");
     		}
     		
     	}

@@ -13,7 +13,7 @@
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <meta content="telephone=no" name="format-detection">
     <link rel="shortcut icon" href="${app.basePath}/static/default/images/icon.ico" />
-    <title>我的钱包 -  ${system.webkeywords!''}</title>
+    <title>提现申请 -  ${system.webkeywords!''}</title>
     <!-- css -->
     <link rel="stylesheet" href="${app.basePath}/static/default/client/style/site.css" type="text/css"/>
     <link rel="stylesheet" type="text/css" href="${app.basePath}/static/default/client/style/personal-center-common.css">
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="${app.basePath}/static/js/jquery-1.12.3.min.js"></script>
 	<script type="text/javascript" src="${app.basePath}/static/js/client/html5.js"></script>
 	<script type="text/javascript" src="${app.basePath}/static/js/client/library.js"></script>
-	<script type="text/javascript" src="${app.basePath}/static/js/client/user/account.js"></script>
+	<script type="text/javascript" src="${app.basePath}/static/js/client/user/drawapplylist.js"></script>
 	<!--通用js-->
     <script type="text/javascript" src="${app.basePath}/static/js/client/core.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/js/client/common.js"></script>
@@ -49,32 +49,22 @@
         	<!-- 我的钱包 -->
             <div class="my_wallet white_box">
                 <div class="otitle">
-                    <label for="" class="lab1 fl">我的钱包</label>
+                    <label for="" class="lab1 fl">提现申请记录</label>
                 </div>
                 <div class="clear"></div>
-                <div class="sbox">
-                    <section class="fl sec1">
-                        <p class="p1">钱包余额(元)</p>
-                        <p class="p2"><#if account??>${account.amount!''}</#if></p>
-                    </section>
-                    <section class="fr sec2">
-                    	<a href="${app.basePath}/user/withdraw" title="" class="">零钱提现</a>
-                    	<#if curruser.supplierType gt 0>
-                    	<a href="${app.basePath}/user/drawapply" title="" class="">大额提现申请</a>
-                    	</#if>
-                    </section>
-                </div>
             </div>
             <!-- 我的钱包-结束 -->
             <!-- 明细 -->
             <div class="detail white_box">
             	<form id="searchForm" >
-            		<input type="hidden" name="incomeType" id="sc_incomeType" value=""/>
+            		<input type="hidden" name="status" id="sc_incomeType" value=""/>
                 </form>
                 <div class="otitle tabh" id="selecttab">
-                    <a href="javascript:;" aid="0" title="" class="active">所有明细</a>
-                    <a href="javascript:;" aid="1" title="" class="">收入明细</a>
-                    <a href="javascript:;" aid="2" title="" class="">支出明细</a>
+                    <a href="javascript:;" aid="0" title="" class="active">所有记录</a>
+                    <a href="javascript:;" aid="1" title="" class="">新申请</a>
+                    <a href="javascript:;" aid="2" title="" class="">已同意</a>
+                    <a href="javascript:;" aid="3" title="" class="">已拒绝</a>
+                    <a href="javascript:;" aid="4" title="" class="">已完成</a>
                 </div>
                 <div class="tabb obody">
                 	<form id="listForm" >
@@ -93,7 +83,7 @@
 <script>
 	$(function(){
 		selectTab("selecttab");
-		searchAccountLogs(true);
+		searchDrawApplys(true);
 	});
 </script>
 <!-- Footer Start -->

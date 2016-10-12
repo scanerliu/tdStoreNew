@@ -9,7 +9,9 @@ public class TdDrawapplySearchCriteria extends SearchCriteria {
 	
 	private String username; //用户姓名
 	
-	private Integer status; // 提现状态 1-申请，2-同意提现，3-不同意提现，4-打款完成
+	private Integer status; // 提现状态 1-申请，2-同意提现，3-不同意提现，4-打款完成,5-打款失败
+	
+	private Integer bankid; //银行id
 
 	private Date startTime; //开始时间
 
@@ -53,6 +55,14 @@ public class TdDrawapplySearchCriteria extends SearchCriteria {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public Integer getBankid() {
+		return bankid;
+	}
+
+	public void setBankid(Integer bankid) {
+		this.bankid = bankid;
 	}
 
 }

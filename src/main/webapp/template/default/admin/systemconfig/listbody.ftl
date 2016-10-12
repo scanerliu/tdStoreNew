@@ -63,6 +63,12 @@
         <tr>
             <td align="right">提现手续费最低金额:</td><td><input type="hidden" name="configKey" value="withdrawfeemin"/><input type="text" name="withdrawfeemin" id="withdrawfeemin" value="${configMap.withdrawfeemin!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="length[1,100]"/>（提现手续费最低金额，单位为元,如最低收取手续费2元，此项填2）</td>
         </tr>
+        <tr>
+            <td align="right">大额提现申请手续费:</td><td><input type="hidden" name="configKey" value="drawapplyfee"/><input type="text" name="drawapplyfee" id="drawapplyfee" value="${configMap.drawapplyfee!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="length[1,100]"/>（提现手续费千分比,如收取5‰的手续费，此项填5）</td>
+        </tr>
+        <tr>
+            <td align="right">大额提现申请手续费最低金额:</td><td><input type="hidden" name="configKey" value="drawapplyfeemin"/><input type="text" name="drawapplyfeemin" id="drawapplyfeemin" value="${configMap.drawapplyfeemin!''}" class="easyui-textbox" style="width:300px;height:30px;" data-options="required:true" validType="length[1,100]"/>（提现手续费最低金额，单位为元,如最低收取手续费2元，此项填2）</td>
+        </tr>
         </table>
     </div>
     <div title="网站属性设置" style="overflow:auto;padding:20px;">

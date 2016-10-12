@@ -59,6 +59,9 @@
                         <p class="p1">钱包余额(元)</p>
                         <p class="p2"><#if account??>${account.amount!''}</#if></p>
                     </section>
+                    <section class="fr sec2">
+                    	<a href="${app.basePath}/user/drawapplylist" title="" class="">提现申请记录</a>
+                    </section>
                 </div>
             </div>
             <!-- 我的钱包-结束 -->
@@ -79,12 +82,19 @@
                     <section class="sec2">
                         <label for="" class="lab1 fl">所在银行</label>
                         <select name="bankid">
-                        	<option value="1">中国银行</option>
-                        	<option value="2">中国银行</option>
-                        	<option value="3">中国银行</option>
-                        	<option value="4">中国银行</option>
-                        	<option value="5">中国银行</option>
-                        	<option value="6">中国银行</option>
+                        	<option value="1">中国工商银行</option>
+                        	<option value="2">中国建设银行</option>
+                        	<option value="3">中国银行 </option>
+                        	<option value="4">中国农业银行</option>
+                        	<option value="5">交通银行</option>
+                        	<option value="6">招商银行</option>
+                        	<option value="7">中国邮政储蓄银行</option>
+                        	<option value="8">中信银行</option>
+                        	<option value="9">光大银行</option>
+                        	<option value="10">民生银行</option>
+                        	<option value="11">兴业银行</option>
+                        	<option value="12">华夏银行</option>
+                        	<option value="13">平安银行</option>
                         </select>
                     </section>
                     <section class="sec2">

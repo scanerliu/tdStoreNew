@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="uid" property="uid" jdbcType="INTEGER" />
     <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="fee" property="fee" jdbcType="DECIMAL" />
     <result column="carduser" property="carduser" jdbcType="VARCHAR" />
     <result column="idno" property="idno" jdbcType="VARCHAR" />
     <result column="bankid" property="bankid" jdbcType="INTEGER" />
@@ -15,9 +16,11 @@
     <result column="update_by" property="updateBy" jdbcType="INTEGER" />
     <result column="cash_time" property="cashTime" jdbcType="TIMESTAMP" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <!-- 提现人 -->
+    <association property="user" column="uid" select="com.tiandu.custom.entity.mapper.TdUserMapper.selectByPrimaryKey"/>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, uid, amount, carduser, idno, bankid, cardno, status, create_time, update_time, 
+    id, uid, amount, fee, carduser, idno, bankid, cardno, status, create_time, update_time, 
     update_by, cash_time, remark
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -39,6 +42,9 @@
     <if test="status != null" >
         and status=#{status,jdbcType=INTEGER}
     </if>
+    <if test="bankid != null" >
+        and bankid=#{bankid,jdbcType=INTEGER}
+    </if>
     <if test="startTime != null">
 		and create_time <![CDATA[ >= ]]>
 		#{startTime,jdbcType=TIMESTAMP}
@@ -51,7 +57,8 @@
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.custom.search.TdDrawapplySearchCriteria" >
     select 
     <include refid="Base_Column_List" />
-    from td_agent as a
+    from td_drawapply
+    where 1=1 
     <if test="uid != null" >
         and uid=#{uid,jdbcType=INTEGER}
     </if>
@@ -61,6 +68,9 @@
     <if test="status != null" >
         and status=#{status,jdbcType=INTEGER}
     </if>
+    <if test="bankid != null" >
+        and bankid=#{bankid,jdbcType=INTEGER}
+    </if>
     <if test="startTime != null">
 		and create_time <![CDATA[ >= ]]>
 		#{startTime,jdbcType=TIMESTAMP}
@@ -69,6 +79,7 @@
 		and create_time <![CDATA[ < ]]>
 		#{endTime,jdbcType=TIMESTAMP}
 	</if>
+	order by create_time desc
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from td_drawapply
@@ -78,12 +89,12 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into td_drawapply (uid, amount, carduser, 
+    insert into td_drawapply (uid, amount, fee, carduser, 
       idno, bankid, cardno, 
       status, create_time, update_time, 
       update_by, cash_time, remark
       )
-    values (#{uid,jdbcType=INTEGER}, #{amount,jdbcType=DECIMAL}, #{carduser,jdbcType=VARCHAR}, 
+    values (#{uid,jdbcType=INTEGER}, #{amount,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL}, #{carduser,jdbcType=VARCHAR}, 
       #{idno,jdbcType=VARCHAR}, #{bankid,jdbcType=INTEGER}, #{cardno,jdbcType=VARCHAR}, 
       #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{updateBy,jdbcType=INTEGER}, #{cashTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
@@ -100,6 +111,9 @@
       </if>
       <if test="amount != null" >
         amount,
+      </if>
+      <if test="fee != null" >
+        fee,
       </if>
       <if test="carduser != null" >
         carduser,
@@ -138,6 +152,9 @@
       </if>
       <if test="amount != null" >
         #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        #{fee,jdbcType=DECIMAL},
       </if>
       <if test="carduser != null" >
         #{carduser,jdbcType=VARCHAR},
@@ -180,6 +197,9 @@
       <if test="amount != null" >
         amount = #{amount,jdbcType=DECIMAL},
       </if>
+      <if test="fee != null" >
+        amount = #{fee,jdbcType=DECIMAL},
+      </if>
       <if test="carduser != null" >
         carduser = #{carduser,jdbcType=VARCHAR},
       </if>
@@ -217,6 +237,7 @@
     update td_drawapply
     set uid = #{uid,jdbcType=INTEGER},
       amount = #{amount,jdbcType=DECIMAL},
+      fee = #{fee,jdbcType=DECIMAL},
       carduser = #{carduser,jdbcType=VARCHAR},
       idno = #{idno,jdbcType=VARCHAR},
       bankid = #{bankid,jdbcType=INTEGER},

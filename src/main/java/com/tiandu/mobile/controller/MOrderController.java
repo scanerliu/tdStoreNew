@@ -478,7 +478,7 @@ public class MOrderController extends BaseController {
 				//版本号|订单号|交易金额|币种|交易日期|交易时间|商户代码|商户名称|二级商户号|通知地址|跳转地址|银行卡卡号|交易详细内容|商户预留信息|支付通道|借贷标识|商品类型|商品名称|备注
 				String apidata = "1.0.0|"+torder.getJno()+"|"+torder.getAmount()+"|156|"+DateUtil.convertDateToString(torder.getCreateTime(), "yyyyMMdd")
 				+"|"+DateUtil.convertDateToString(torder.getCreateTime(), "HHmmss")+"|"+ConstantsUtils.CMBC_PAY_API_CORPID+"|"+ConstantsUtils.CMBC_PAY_API_CORPNAME
-				+"||http://www.yls77.com/order/cmbc_notify|http://www.yls77.com//mobile/pay_success||||2||||";
+				+"||http://www.yls77.com/order/pay/cmbc_notify|http://www.yls77.com/mobile/order/list||||2||||";
 			
 				String orderData = userKit.SignAndEncryptMessage(apidata);
 				logger.error("cmbc 加密后数据如下："+apidata);
@@ -605,7 +605,7 @@ public class MOrderController extends BaseController {
 				//版本号|订单号|交易金额|币种|交易日期|交易时间|商户代码|商户名称|二级商户号|通知地址|跳转地址|银行卡卡号|交易详细内容|商户预留信息|支付通道|借贷标识|商品类型|商品名称|备注
 				String apidata = "1.0.0|"+order.getOrderNo()+"|"+order.getPayAmount()+"|156|"+DateUtil.convertDateToString(order.getCreateTime(), "yyyyMMdd")
 				+"|"+DateUtil.convertDateToString(order.getCreateTime(), "HHmmss")+"|"+ConstantsUtils.CMBC_PAY_API_CORPID+"|"+ConstantsUtils.CMBC_PAY_API_CORPNAME
-				+"||http://www.yls77.com/order/cmbc_notify|http://www.yls77.com/mobile/pay_success||||2||||";
+				+"||http://www.yls77.com/order/pay/cmbc_notify|http://www.yls77.com/mobile/order/list||||2||||";
 			
 				String orderData = userKit.SignAndEncryptMessage(apidata);
 				logger.error("cmbc 加密后数据如下："+apidata);
