@@ -12,6 +12,14 @@
 				<tr>
 					<td>
 						<div class="explain_col">
+							<select name="uprovinceId" class="J_cate_select mr10">
+								<option value="">-全国-</option>
+								<#if regionList??>
+								<#list regionList as region>
+								<option value="${region.id!''}">${region.name!''}</option>
+								</#list>
+								</#if>
+							</select>
 							<select name="ugenter" class="J_cate_select mr10">
 								<option value="">-性别-</option>
 								<option value="1">-男-</option>

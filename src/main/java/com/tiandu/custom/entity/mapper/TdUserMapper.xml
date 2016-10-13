@@ -254,7 +254,7 @@
   <select id="countgenterByCriteria" resultMap="regionCustomerResult" parameterType="com.tiandu.custom.search.TdUserSearchCriteria" >
     select u.ugenter as name, count(u.uid) as num from td_user u where u.utype=1 
     <if test="uprovinceId != null">
-    	and u.uprovinceId = #{uprovinceId,jdbcType=INTEGER}
+    	and u.uprovince_id = #{uprovinceId,jdbcType=INTEGER}
     </if>
     <if test="uverification != null" >
         and u.uverification =#{uverification,jdbcType=TINYINT}
@@ -273,7 +273,7 @@
 	SUM(CASE WHEN DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(u.ubirthday)), '%Y')+0 <![CDATA[ >= ]]>75 THEN 1 ELSE 0 END) AS 'over75'
 	from td_user as u where u.utype=1
     <if test="uprovinceId != null">
-    	and u.uprovinceId = #{uprovinceId,jdbcType=INTEGER}
+    	and u.uprovince_id = #{uprovinceId,jdbcType=INTEGER}
     </if>
     <if test="ugenter != null">
     	and u.ugenter = #{ugenter,jdbcType=TINYINT}

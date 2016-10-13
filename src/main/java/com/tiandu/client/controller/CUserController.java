@@ -2175,7 +2175,7 @@ public class CUserController extends BaseController {
 	}
 	
 	//init region path
-	@RequestMapping("/initregion")
+	/*@RequestMapping("/initregion")
 	public String initregion(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		TdUserSearchCriteria sc = new TdUserSearchCriteria();
 		sc.setFlag(false);
@@ -2203,5 +2203,5 @@ public class CUserController extends BaseController {
 		}
 		System.out.print("ok");
 		return null;	
-	}
+	}*/
 }

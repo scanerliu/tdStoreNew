@@ -29,6 +29,9 @@ import com.tiandu.custom.service.TdUserAccountService;
 import com.tiandu.custom.service.TdUserService;
 import com.tiandu.custom.vo.AgeCustomerCountVO;
 import com.tiandu.custom.vo.RegionCustomerCountVO;
+import com.tiandu.district.entity.TdDistrict;
+import com.tiandu.district.search.TdDistrictSearchCriteria;
+import com.tiandu.district.service.TdDistrictService;
 import com.tiandu.order.entity.TdOrderSku;
 import com.tiandu.order.search.TdOrderSkuSearchCriteria;
 import com.tiandu.order.service.TdOrderService;
@@ -66,6 +69,9 @@ public class ReportController extends BaseController {
 	
 	@Autowired
 	private TdUserService tdUserService;
+	
+	@Autowired
+	private TdDistrictService tdDistrictService;
 
 	@RequestMapping("/unsaleList")
 	public String unsaleList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
@@ -246,6 +252,11 @@ public class ReportController extends BaseController {
 	}*/
 	@RequestMapping("/user/countagelist")
 	public String countgenterlist(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdDistrictSearchCriteria dsc = new TdDistrictSearchCriteria();
+		dsc.setUpid(0);
+		dsc.setFlag(false);
+		List<TdDistrict> regionList = tdDistrictService.findBySearchCriteria(dsc);
+		modelMap.addAttribute("regionList", regionList);
 		return "/admin/report/useragelist";
 	}
 	/**

@@ -990,52 +990,67 @@ public class COrderController extends BaseController {
         
         String ua = req.getHeader("User-Agent");
         
-        String paramstr = req.getQueryString();
-        logger.error("cmbc notity:"+paramstr);
-        if(StringUtils.isNotBlank(paramstr)){
-        	String[] param = paramstr.split("\\|");
-        	String orderNo = param[0];
-        	String billstatus = param[6];
-        	String amount = param[3];
-        	BigDecimal oamount = new BigDecimal(amount);
-        	// 判断支付类型，含J为联合订单支付
-            if(orderNo.contains("J")){
-            	TdJointOrder jointOrder = tdJointOrderService.findByJno(orderNo);
-            	if (jointOrder == null) {
-            		logger.error("cmbc notity error order not exist:"+paramstr);
-            		throw new Exception("order not exist!");
-            	}
-            	map.put("order", jointOrder);
-            	if (billstatus.equals("0")&&jointOrder.getAmount().equals(oamount)) {// 验证成功
-            			// 订单支付成功
-            			tdOrderService.AfterJointPaySuccess(jointOrder,paramstr);
-            			/*// 触屏
-            			if(WebUtils.checkAgentIsMobile(ua)){
-            				return "/client/pay_success";
-            			}
-            			return "/client/order_pay_success";*/
-            	}else{
-            		throw new Exception("pay error");
-            	}
-            }else{
-            	TdOrder order = tdOrderService.findByOrderNo(orderNo);
-            	if (order == null) {
-            		logger.error("cmbc notity error order not exist:"+paramstr);
-            		throw new Exception("order not exist!");
-            	}
-            	map.put("order", order);
-            	if (billstatus.equals("0") && order.getPayAmount().equals(oamount)) {// 验证成功
-        			// 订单支付成功
-        			tdOrderService.AfterPaySuccess(order,params.toString());
-        			/*// 触屏
-        			if(WebUtils.checkAgentIsMobile(ua)){
-        				return "/client/pay_success";
-        			}
-        			return "/client/order_pay_success";*/
-            	}
-            }
-        }
-        
+        String orderData =  req.getParameter("payresult");
+		
+		logger.info("cmbc notity:收到的密文数据如下："+orderData);
+		
+		CMBCDecryptKit userKit = new CMBCDecryptKit();
+	    try {
+	    	
+	    	String rootPath = req.getServletContext().getRealPath("/");
+			int result = userKit.Initialize(rootPath+ConstantsUtils.CMBC_PAY_API_SM, ConstantsUtils.CMBC_PAY_API_PASS ,rootPath+ConstantsUtils.CMBC_PAY_API_CER);
+			String paramstr = userKit.DecryptAndVerifyMessage(orderData);
+//			String param = 
+			logger.info("cmbc notity order:通知商户解密后数据如下："+paramstr);
+			if(StringUtils.isNotBlank(paramstr)){
+	        	String[] param = paramstr.split("\\|");
+	        	String orderNo = param[0];
+	        	String billstatus = param[6];
+	        	String amount = param[3];
+	        	BigDecimal oamount = new BigDecimal(amount);
+	        	// 判断支付类型，含J为联合订单支付
+	            if(orderNo.contains("J")){
+	            	TdJointOrder jointOrder = tdJointOrderService.findByJno(orderNo);
+	            	if (jointOrder == null) {
+	            		logger.error("cmbc notity error order not exist:"+paramstr);
+	            		throw new Exception("order not exist!");
+	            	}
+	            	map.put("order", jointOrder);
+	            	if (billstatus.equals("0")&&jointOrder.getAmount().equals(oamount)) {// 验证成功
+	            			// 订单支付成功
+	            			tdOrderService.AfterJointPaySuccess(jointOrder,paramstr);
+	            			/*// 触屏
+	            			if(WebUtils.checkAgentIsMobile(ua)){
+	            				return "/client/pay_success";
+	            			}
+	            			return "/client/order_pay_success";*/
+	            	}else{
+	            		throw new Exception("pay error");
+	            	}
+	            }else{
+	            	TdOrder order = tdOrderService.findByOrderNo(orderNo);
+	            	if (order == null) {
+	            		logger.error("cmbc notity error order not exist:"+paramstr);
+	            		throw new Exception("order not exist!");
+	            	}
+	            	map.put("order", order);
+	            	if (billstatus.equals("0") && order.getPayAmount().equals(oamount)) {// 验证成功
+	        			// 订单支付成功
+	        			tdOrderService.AfterPaySuccess(order,params.toString());
+	        			/*// 触屏
+	        			if(WebUtils.checkAgentIsMobile(ua)){
+	        				return "/client/pay_success";
+	        			}
+	        			return "/client/order_pay_success";*/
+	            	}
+	            }
+	        }
+	        
+	    } catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				logger.info("cmbc notity error 收到的密文数解析异常："+e.getMessage()+" 密文内容："+orderData);
+		}
         // 验证失败或者支付失败
         // 触屏
         /*if(WebUtils.checkAgentIsMobile(ua)){
