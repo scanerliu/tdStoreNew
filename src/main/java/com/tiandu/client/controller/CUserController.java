@@ -527,9 +527,18 @@ public class CUserController extends BaseController {
 			String changePasswordValidCode = (String) request.getSession().getAttribute("changePasswordValidCode");
 			if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
 				res.put("msg", "验证码错误！");
-				res.put("status", "0");
+				res.put("code", "0");
 				return res;
 			}
+			TdUser currentUser = this.getCurrentUser();
+			//检查手机号码是否重复
+			TdUser puser = tdUserService.findByUtel(user.getUtel());
+			if(null != puser && !puser.getUid().equals(currentUser.getUid())){
+				res.put("code", "0");
+				res.put("msg", "保存失败:手机号码已被使用！");
+				return res;
+			}
+			
 			StringBuffer sb = new StringBuffer();
 			sb.append("["+user.getUprovinceId()+"]");
 			sb.append("["+user.getUcityId()+"]");
@@ -539,7 +548,6 @@ public class CUserController extends BaseController {
 				sb.append("["+user.getUregionId()+"]");
 			}			
 			
-			TdUser currentUser = this.getCurrentUser();
 			TdUser u = new TdUser();
 			u.setUid(currentUser.getUid());
 			u.setUtel(user.getUtel());
@@ -549,15 +557,15 @@ public class CUserController extends BaseController {
 			u.setUregionPath(sb.toString());
 			tdUserService.saveUserInfo(u);
 		} catch(Exception e){
-			res.put("status", "n");
-			res.put("info", "保存失败！");
+			res.put("code", "0");
+			res.put("msg", "保存失败！");
 			logger.error("用户修改手机号及地区失败！");
 			request.getSession().removeAttribute("changePasswordValidCode");
 			e.printStackTrace();
 			return res;
 		}
-		res.put("status", "y");
-		res.put("info", "修改成功！");
+		res.put("code", "1");
+		res.put("msg", "修改成功！");
 		request.getSession().removeAttribute("changePasswordValidCode");
 		return res;
 	}
@@ -2164,5 +2172,36 @@ public class CUserController extends BaseController {
 			return true;
 		}
 		return false;
+	}
+	
+	//init region path
+	@RequestMapping("/initregion")
+	public String initregion(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUserSearchCriteria sc = new TdUserSearchCriteria();
+		sc.setFlag(false);
+		sc.setUtype(Byte.valueOf("1"));
+		List<TdUser> userList = tdUserService.findBySearchCriteria(sc);
+		if(null!=userList){
+			for(TdUser user : userList){
+				if(null!=user.getUregionId()&&null==user.getUprovinceId()){
+					TdDistrict district = tdDistrictService.findOneFull(user.getUregionId());
+					if(null!=district){
+						TdUser u = new TdUser();
+						u.setUid(user.getUid());
+						if(district.getLevel().equals(Byte.valueOf("1"))){
+							u.setUprovinceId(district.getId());
+							u.setUregionPath("["+district.getId()+"]");
+						}else{
+							u.setUprovinceId(district.getRegionProvinceId());
+							u.setUregionPath(district.getRegionPath());
+						}
+						tdUserService.saveUserInfo(u);
+						System.out.print(".");
+					}
+				}
+			}
+		}
+		System.out.print("ok");
+		return null;	
 	}
 }

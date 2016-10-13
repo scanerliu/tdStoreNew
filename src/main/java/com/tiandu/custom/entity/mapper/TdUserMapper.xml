@@ -58,6 +58,23 @@
   	<result column="up_uname" property="uname" jdbcType="VARCHAR" />
   	<result column="up_unick" property="unick" jdbcType="VARCHAR" />
   </resultMap>
+  
+  <resultMap id="regionCustomerResult" type="com.tiandu.custom.vo.RegionCustomerCountVO" >
+  	<result column="name" property="name" jdbcType="VARCHAR" />
+  	<result column="num" property="num" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ageCustomerResult" type="com.tiandu.custom.vo.AgeCustomerCountVO" >
+  	<result column="nose" property="nose" jdbcType="INTEGER" />
+  	<result column="blow18" property="blow18" jdbcType="INTEGER" />
+  	<result column="blow25" property="blow25" jdbcType="INTEGER" />
+  	<result column="blow35" property="blow35" jdbcType="INTEGER" />
+  	<result column="blow45" property="blow45" jdbcType="INTEGER" />
+  	<result column="blow55" property="blow55" jdbcType="INTEGER" />
+  	<result column="blow65" property="blow65" jdbcType="INTEGER" />
+  	<result column="blow75" property="blow75" jdbcType="INTEGER" />
+  	<result column="over75" property="over75" jdbcType="INTEGER" />
+  </resultMap>
+  
   <!-- <resultMap id="parentUserResult" type="com.tiandu.custom.entity.TdUser" >
   	<result column="uid" property="uid" jdbcType="INTEGER" />
   	<result column="uname" property="uname" jdbcType="VARCHAR" />
@@ -221,6 +238,48 @@
     </if>
     <if test="agent" >
         and rr.rid=12
+    </if>
+  </select>
+  
+  <select id="countByProvinceId" resultMap="regionCustomerResult" parameterType="com.tiandu.custom.search.TdUserSearchCriteria" >
+    select d.name as name, count(u.uid) as num from td_user u left join td_district d on u.uprovince_id=d.id where u.utype=1 
+    <if test="ugenter != null">
+    	and u.ugenter = #{ugenter,jdbcType=TINYINT}
+    </if>
+    <if test="uverification != null" >
+        and u.uverification =#{uverification,jdbcType=TINYINT}
+    </if>
+    GROUP BY u.uprovince_id order by num desc
+  </select>
+  <select id="countgenterByCriteria" resultMap="regionCustomerResult" parameterType="com.tiandu.custom.search.TdUserSearchCriteria" >
+    select u.ugenter as name, count(u.uid) as num from td_user u where u.utype=1 
+    <if test="uprovinceId != null">
+    	and u.uprovinceId = #{uprovinceId,jdbcType=INTEGER}
+    </if>
+    <if test="uverification != null" >
+        and u.uverification =#{uverification,jdbcType=TINYINT}
+    </if>
+    GROUP BY u.ugenter
+  </select>
+  <select id="countageByCriteria" resultMap="ageCustomerResult" parameterType="com.tiandu.custom.search.TdUserSearchCriteria" >
+    select SUM(CASE WHEN ISNULL(u.ubirthday) THEN 1 ELSE 0 END) AS 'nose',
+     SUM(CASE WHEN DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(u.ubirthday)), '%Y')+0 <![CDATA[ < ]]>18 THEN 1 ELSE 0 END) AS 'blow18',
+	SUM(CASE WHEN DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(u.ubirthday)), '%Y')+0 <![CDATA[ >= ]]>18 AND DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(u.ubirthday)), '%Y')+0 <![CDATA[ < ]]>25 THEN 1 ELSE 0 END) AS 'blow25',
+	SUM(CASE WHEN DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(u.ubirthday)), '%Y')+0 <![CDATA[ >= ]]>25 AND DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(u.ubirthday)), '%Y')+0 <![CDATA[ < ]]>35 THEN 1 ELSE 0 END) AS 'blow35',
+	SUM(CASE WHEN DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(u.ubirthday)), '%Y')+0 <![CDATA[ >= ]]>35 AND DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(u.ubirthday)), '%Y')+0 <![CDATA[ < ]]>45 THEN 1 ELSE 0 END) AS 'blow45',
+	SUM(CASE WHEN DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(u.ubirthday)), '%Y')+0 <![CDATA[ >= ]]>45 AND DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(u.ubirthday)), '%Y')+0 <![CDATA[ < ]]>55 THEN 1 ELSE 0 END) AS 'blow55',
+	SUM(CASE WHEN DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(u.ubirthday)), '%Y')+0 <![CDATA[ >= ]]>55 AND DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(u.ubirthday)), '%Y')+0 <![CDATA[ < ]]>65 THEN 1 ELSE 0 END) AS 'blow65',
+	SUM(CASE WHEN DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(u.ubirthday)), '%Y')+0 <![CDATA[ >= ]]>65 AND DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(u.ubirthday)), '%Y')+0 <![CDATA[ < ]]>75 THEN 1 ELSE 0 END) AS 'blow75',
+	SUM(CASE WHEN DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(u.ubirthday)), '%Y')+0 <![CDATA[ >= ]]>75 THEN 1 ELSE 0 END) AS 'over75'
+	from td_user as u where u.utype=1
+    <if test="uprovinceId != null">
+    	and u.uprovinceId = #{uprovinceId,jdbcType=INTEGER}
+    </if>
+    <if test="ugenter != null">
+    	and u.ugenter = #{ugenter,jdbcType=TINYINT}
+    </if>
+    <if test="uverification != null" >
+        and u.uverification =#{uverification,jdbcType=TINYINT}
     </if>
   </select>
   

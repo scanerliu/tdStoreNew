@@ -8,6 +8,8 @@ import com.tiandu.custom.entity.TdExperienceStore;
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.entity.TdUserMessage;
 import com.tiandu.custom.search.TdUserSearchCriteria;
+import com.tiandu.custom.vo.AgeCustomerCountVO;
+import com.tiandu.custom.vo.RegionCustomerCountVO;
 
 public interface TdUserService {
 
@@ -121,5 +123,22 @@ public interface TdUserService {
 	 * @return
 	 */
 //	public List<TdUser> findChildrenTreeByUid(Integer uid);
-		
+	
+	/**
+	 * 统计各省用户数量
+	 * @param sc 
+	 */
+	public List<RegionCustomerCountVO> countByProvinceId(TdUserSearchCriteria sc);
+	/**
+	 * 统计用户性别
+	 * @param sc
+	 * @return
+	 */
+	public List<RegionCustomerCountVO> countgenterByCriteria(TdUserSearchCriteria sc);
+	/**
+	 * 统计年龄段
+	 * @param sc
+	 * @return
+	 */
+	public AgeCustomerCountVO countageByCriteria(TdUserSearchCriteria sc);
 }

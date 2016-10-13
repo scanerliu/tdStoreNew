@@ -23,8 +23,12 @@ import com.tiandu.custom.entity.TdUserAccount;
 import com.tiandu.custom.entity.TdUserAccountLog;
 import com.tiandu.custom.search.TdUserAccountCriteria;
 import com.tiandu.custom.search.TdUserAccountLogSearchCriteria;
+import com.tiandu.custom.search.TdUserSearchCriteria;
 import com.tiandu.custom.service.TdUserAccountLogService;
 import com.tiandu.custom.service.TdUserAccountService;
+import com.tiandu.custom.service.TdUserService;
+import com.tiandu.custom.vo.AgeCustomerCountVO;
+import com.tiandu.custom.vo.RegionCustomerCountVO;
 import com.tiandu.order.entity.TdOrderSku;
 import com.tiandu.order.search.TdOrderSkuSearchCriteria;
 import com.tiandu.order.service.TdOrderService;
@@ -59,6 +63,9 @@ public class ReportController extends BaseController {
 	
 	@Autowired
 	private TdUserAccountService tdUserAccountService;
+	
+	@Autowired
+	private TdUserService tdUserService;
 
 	@RequestMapping("/unsaleList")
 	public String unsaleList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
@@ -199,5 +206,61 @@ public class ReportController extends BaseController {
 		modelMap.addAttribute("sc", sc);
 		return "/admin/report/accountListBody";
 	}
+	
+	/*
+	 * 统计客户地区信息
+	 */
+	@RequestMapping("/user/regionlist")
+	public String customerlist(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		return "/admin/report/userregionlist";
+	}
+	/*
+	 * 统计客户地区信息
+	 */
+	@RequestMapping("/user/countregion")
+	public String countregion(TdUserSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		List<RegionCustomerCountVO> reportList = tdUserService.countByProvinceId(sc);
+		modelMap.addAttribute("reportList", reportList);
+		return "/admin/report/countregion";
+	}
+	
+	/*
+	 * 统计客户地区信息
+	 */
+	/*@RequestMapping("/user/countgenterlist")
+	public String countgenterlist(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		return "/admin/report/usergenterlist";
+	}*/
+	/**
+	 * 统计男女比例
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
+	/*@RequestMapping("/user/countgenter")
+	public String countgenter(TdUserSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		List<RegionCustomerCountVO> reportList = tdUserService.countgenterByCriteria(sc);
+		modelMap.addAttribute("reportList", reportList);
+		return "/admin/report/countgenter";
+	}*/
+	@RequestMapping("/user/countagelist")
+	public String countgenterlist(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		return "/admin/report/useragelist";
+	}
+	/**
+	 * 统计年龄段人数
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 */
+	@RequestMapping("/user/countage")
+	public String countage(TdUserSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		AgeCustomerCountVO report = tdUserService.countageByCriteria(sc);
+		modelMap.addAttribute("report", report);
+		return "/admin/report/countage";
+	}
+	
 	
 }

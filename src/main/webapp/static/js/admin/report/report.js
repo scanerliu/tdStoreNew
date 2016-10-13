@@ -60,4 +60,27 @@ function searchUserAccounts(f){
 function fnGotoPageAccounts(num){
 	searchUserAccounts(false);
 }
+/**地区用户统计**/
+function searchRegionCustomerCounts(f){
+	var url = basePath+"/admin/report/user/countregion";
+	var loadData = "";
+	if(f){
+		loadData = $("#searchForm").serializeArray();
+	}else{
+		loadData = $("#listForm").serializeArray();
+	}
+	$("#results").load(url,loadData);
+}
+/**年龄段用户统计**/
+function searchAgeCustomerCounts(f){
+	var url = basePath+"/admin/report/user/countage";
+	var loadData = "";
+	if(f){
+		loadData = $("#searchForm").serializeArray();
+	}else{
+		loadData = $("#listForm").serializeArray();
+	}
+	$("#results").load(url,loadData);
+}
+
 

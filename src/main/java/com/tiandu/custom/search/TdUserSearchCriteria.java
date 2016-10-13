@@ -24,6 +24,8 @@ public class TdUserSearchCriteria extends SearchCriteria {
 	
 	private String jointId; //第三方Id
 	
+	private Byte ugenter;//性别 1-男，2-女，3-保密
+	
 	private Integer uprovinceId; // 所属省id
 	
 	private Integer clevelType;	//下属类别查询，1-一级下属，2-二级下属，3-三级下属
@@ -146,6 +148,14 @@ public class TdUserSearchCriteria extends SearchCriteria {
 
 	public void setTempsupplier(Integer tempsupplier) {
 		this.tempsupplier = tempsupplier;
+	}
+
+	public Byte getUgenter() {
+		return ugenter;
+	}
+
+	public void setUgenter(Byte ugenter) {
+		this.ugenter = ugenter;
 	}
 	
 }

@@ -37,6 +37,8 @@ import com.tiandu.custom.service.TdUserIntegralService;
 import com.tiandu.custom.service.TdUserMessageService;
 import com.tiandu.custom.service.TdUserService;
 import com.tiandu.custom.service.TdUserSignService;
+import com.tiandu.custom.vo.AgeCustomerCountVO;
+import com.tiandu.custom.vo.RegionCustomerCountVO;
 import com.tiandu.district.entity.TdDistrict;
 import com.tiandu.district.service.TdDistrictService;
 import com.tiandu.system.service.TdSystemConfigService;
@@ -410,6 +412,23 @@ public class TdUserServiceImpl implements TdUserService {
 		}
 		return null;
 	}
+
+	@Override
+	public List<RegionCustomerCountVO> countByProvinceId(TdUserSearchCriteria sc) {
+		return userMapper.countByProvinceId(sc);
+	}
+
+	@Override
+	public List<RegionCustomerCountVO> countgenterByCriteria(TdUserSearchCriteria sc) {
+		return userMapper.countgenterByCriteria(sc);
+	}
+
+	@Override
+	public AgeCustomerCountVO countageByCriteria(TdUserSearchCriteria sc) {
+		return userMapper.countageByCriteria(sc);
+	}
+	
+	
 
 	/*@Override
 	public TdUser findParentTreeByUid(Integer uid) {

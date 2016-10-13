@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.tiandu.custom.entity.TdUser;
 import com.tiandu.custom.search.TdUserSearchCriteria;
+import com.tiandu.custom.vo.AgeCustomerCountVO;
+import com.tiandu.custom.vo.RegionCustomerCountVO;
 
 public interface TdUserMapper {
     int deleteByPrimaryKey(Integer uid);
@@ -38,4 +40,10 @@ public interface TdUserMapper {
 	public TdUser findParentTreeByUid(Integer uid);
 	
 	public List<TdUser> findChildrenTreeByUid(Integer uid);
+
+	List<RegionCustomerCountVO> countByProvinceId(TdUserSearchCriteria sc);
+
+	List<RegionCustomerCountVO> countgenterByCriteria(TdUserSearchCriteria sc);
+
+	AgeCustomerCountVO countageByCriteria(TdUserSearchCriteria sc);
 }

@@ -424,7 +424,7 @@ public class MUserController extends BaseController {
 		TdUser currentUser = this.getCurrentUser();
 		List<Integer> reginIds = new ArrayList<>();
 		if(currentUser.getUregionId() != null){
-			TdDistrict dis = tdDistrictService.findOne(currentUser.getUregionId());
+			/*TdDistrict dis = tdDistrictService.findOne(currentUser.getUregionId());
 			reginIds.add(dis.getId());
 			if(!dis.getLevel().equals(Byte.valueOf("1"))){
 				dis = tdDistrictService.findOne(dis.getUpid());
@@ -433,10 +433,12 @@ public class MUserController extends BaseController {
 					dis = tdDistrictService.findOne(dis.getUpid());
 					reginIds.add(dis.getId());
 				}
-			}
+			}*/
+			Map<String, Object> regionMap = tdUserAddressService.getUserDistrictIdByRegionId(new HashMap<String,Object>(),currentUser.getUregionId());
+			modelMap.addAllAttributes(regionMap);
 		}
 		// 为没有地区的会员默认初始化为北京
-		if(reginIds.size() == 0){
+		/*if(reginIds.size() == 0){
 			reginIds.add(1);
 		}
 		if(reginIds.size() > 0){
@@ -450,7 +452,7 @@ public class MUserController extends BaseController {
 				}
 			}
 			modelMap.addAttribute("disIdStr", disIdStr);
-		}
+		}*/
 		return "/mobile/user/changePhoneNum";		
 	}
 	
@@ -1704,11 +1706,22 @@ public class MUserController extends BaseController {
 				return res;
 			}
 			
+			StringBuffer sb = new StringBuffer();
+			sb.append("["+user.getUprovinceId()+"]");
+			sb.append("["+user.getUcityId()+"]");
+			if(null==user.getUregionId()){
+				user.setUregionId(user.getUcityId());
+			}else{
+				sb.append("["+user.getUregionId()+"]");
+			}
+			
 			TdUser u = new TdUser();
 			u.setUid(currentUser.getUid());
 			u.setUtel(user.getUtel());
 			u.setUregionId(user.getUregionId());
 			u.setUverification(Byte.valueOf("1"));
+			u.setUprovinceId(user.getUprovinceId());
+			u.setUregionPath(sb.toString());
 			tdUserService.saveUserInfo(u);
 		} catch(Exception e){
 			res.put("status", "n");
