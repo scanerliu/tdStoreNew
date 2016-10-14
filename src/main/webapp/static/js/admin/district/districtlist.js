@@ -153,3 +153,56 @@ function refreshList(){
 }
 
 
+function getDistricts(_settings){
+	var settings = {obj:"",num:0,total:1,callback:""};
+	settings=$.extend(settings,_settings);
+	var url = basePath+"/admin/regionselect";
+	var loadData = "";
+	var callback = settings.callback;
+	if(settings.num==0){
+		loadData = {'upid':0,'totalLevel':settings.total,'callback':''+settings.callback+''};
+		$("#provincespn").loading().load(url,loadData);
+		$("#cityspn").html("");
+		$("#regionspn").html("");
+		$("#townspn").html("");
+		$("#villagespn").html("");
+		$("#upid").val("0");
+	}else if(settings.num==1){
+		var upid = $(settings.obj).val();
+		if(settings.total==1){
+			$("#regionId").val(upid);
+			if(callback!=""){
+				
+			}
+		}else{
+			loadData = {'upid':upid,'provinceId':upid,'totalLevel':settings.total,'callback':''+settings.callback+''};
+			$("#cityspn").loading().load(url,loadData);
+			$("#regionspn").html("");
+			$("#townspn").html("");
+			$("#villagespn").html("");
+			$("#upid").val(upid);
+		}
+	}else if(settings.num==2){
+		var upid = $(settings.obj).val();
+		if(settings.total==2){
+			$("#regionId").val(upid);
+			if(callback!=""){
+				
+			}
+		}else{
+			var provinceid = $("#provinceId").val();
+			loadData = {'upid':upid,'provinceId':provinceid,'totalLevel':settings.total,'callback':''+settings.callback+''};
+			$("#regionspn").loading().load(url,loadData);
+			$("#townspn").html("");
+			$("#villagespn").html("");
+			$("#upid").val(upid);
+		}
+	}else if(settings.num==3){
+		var upid = $(settings.obj).val();
+		$("#regionId").val(upid);
+		if(callback!=""){
+			
+		}
+	}
+}
+
