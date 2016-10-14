@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.shiro.codec.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -999,8 +1000,8 @@ public class COrderController extends BaseController {
 	    	
 	    	String rootPath = req.getServletContext().getRealPath("/");
 			int result = userKit.Initialize(rootPath+ConstantsUtils.CMBC_PAY_API_SM, ConstantsUtils.CMBC_PAY_API_PASS ,rootPath+ConstantsUtils.CMBC_PAY_API_CER);
-			String paramstr = userKit.DecryptAndVerifyMessage(orderData);
-//			String param = 
+			String enparamstr = userKit.DecryptAndVerifyMessage(orderData);
+			String paramstr = Base64.decodeToString(enparamstr);
 			logger.info("cmbc notity order:通知商户解密后数据如下："+paramstr);
 			if(StringUtils.isNotBlank(paramstr)){
 	        	String[] param = paramstr.split("\\|");

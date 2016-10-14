@@ -249,6 +249,12 @@
     <if test="uverification != null" >
         and u.uverification =#{uverification,jdbcType=TINYINT}
     </if>
+    <if test="supplierType != null" >
+        and u.supplier_type =#{supplierType,jdbcType=TINYINT}
+    </if>
+    <if test="tempsupplier != null" >
+        and u.tempsupplier =#{tempsupplier,jdbcType=INTEGER}
+    </if>
     GROUP BY u.uprovince_id order by num desc
   </select>
   <select id="countgenterByCriteria" resultMap="regionCustomerResult" parameterType="com.tiandu.custom.search.TdUserSearchCriteria" >
@@ -258,6 +264,12 @@
     </if>
     <if test="uverification != null" >
         and u.uverification =#{uverification,jdbcType=TINYINT}
+    </if>
+    <if test="supplierType != null" >
+        and u.supplier_type =#{supplierType,jdbcType=TINYINT}
+    </if>
+    <if test="tempsupplier != null" >
+        and u.tempsupplier =#{tempsupplier,jdbcType=INTEGER}
     </if>
     GROUP BY u.ugenter
   </select>
@@ -280,6 +292,12 @@
     </if>
     <if test="uverification != null" >
         and u.uverification =#{uverification,jdbcType=TINYINT}
+    </if>
+    <if test="supplierType != null" >
+        and u.supplier_type =#{supplierType,jdbcType=TINYINT}
+    </if>
+    <if test="tempsupplier != null" >
+        and u.tempsupplier =#{tempsupplier,jdbcType=INTEGER}
     </if>
   </select>
   
