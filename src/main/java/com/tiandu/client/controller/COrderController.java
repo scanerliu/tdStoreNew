@@ -561,9 +561,9 @@ public class COrderController extends BaseController {
 				String apidata = "1.0.0|"+torder.getJno()+"|"+torder.getAmount()+"|156|"+DateUtil.convertDateToString(torder.getCreateTime(), "yyyyMMdd")
 				+"|"+DateUtil.convertDateToString(torder.getCreateTime(), "HHmmss")+"|"+ConstantsUtils.CMBC_PAY_API_CORPID+"|"+ConstantsUtils.CMBC_PAY_API_CORPNAME
 				+"||http://www.yls77.com/order/pay/cmbc_notify|http://www.yls77.com/order/list||||0||||";
-			
+				logger.error("cmbc pay 明文数据如下："+apidata);
 				String orderData = userKit.SignAndEncryptMessage(apidata);
-				logger.error("cmbc 加密后数据如下："+apidata);
+				logger.error("cmbc pay 加密后数据如下："+orderData);
 				map.addAttribute("orderData", orderData);
 	        } catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -687,9 +687,9 @@ public class COrderController extends BaseController {
 				String apidata = "1.0.0|"+order.getOrderNo()+"|"+order.getPayAmount()+"|156|"+DateUtil.convertDateToString(order.getCreateTime(), "yyyyMMdd")
 				+"|"+DateUtil.convertDateToString(order.getCreateTime(), "HHmmss")+"|"+ConstantsUtils.CMBC_PAY_API_CORPID+"|"+ConstantsUtils.CMBC_PAY_API_CORPNAME
 				+"||http://www.yls77.com/order/pay/cmbc_notify|http://www.yls77.com/order/list||||0||||";
-			
+				logger.error("cmbc pay 明文数据如下："+apidata);
 				String orderData = userKit.SignAndEncryptMessage(apidata);
-				logger.error("cmbc 加密后数据如下："+apidata);
+				logger.error("cmbc pay 加密后数据如下："+orderData);
 				map.addAttribute("orderData", orderData);
 	        } catch (Exception e) {
 				// TODO Auto-generated catch block

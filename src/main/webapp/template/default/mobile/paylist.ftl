@@ -35,7 +35,7 @@
     <div class="payway">
         <a href="${app.basePath}/mobile/order/gopay${order.orderId?c}?paymentId=1" title="支付宝付款">支付宝付款</a>
         <a href="${app.basePath}/mobile/order/gopay${order.orderId?c}?paymentId=2" title="微信支付">微信支付</a>
-        <a href="${app.basePath}/mobile/order/gopay${order.orderId?c}?paymentId=3" title="银行卡支付">银行卡支付</a>
+        <#--<a href="${app.basePath}/mobile/order/gopay${order.orderId?c}?paymentId=3" title="银行卡支付">银行卡支付</a>-->
     </div>
 <!-- </section> -->
 <!-- Center End -->

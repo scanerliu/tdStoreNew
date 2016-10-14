@@ -110,7 +110,7 @@
 	            	<#else>
 	            	<option value="1">支付宝支付</option>
 	            	</#if>
-	            	<option value="3">银联支付</option>
+	            	<#--<option value="3">银联支付</option>-->
 	            </select>
 	            <!--<a href="javascript:;"  class="fr wechatpay" title="">微信支付<i></i></a>-->
 	        </li>
