@@ -51,4 +51,25 @@ public class CDistrictController {
 		modelMap.addAttribute("sc", sc);
 		return "/client/region/regionselect";
 	}
+	
+	@RequestMapping("/regionlongselect")
+	public String regionlongselect(TdDistrictSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		sc.setFlag(false);
+		TdDistrict parent = new TdDistrict();	//上级
+		TdDistrict province = new TdDistrict();	//省份
+		if(null!=sc.getUpid()&&sc.getUpid()>0){
+			parent = tdDistrictService.findOne(sc.getUpid());
+			if(parent!=null && parent.getLevel()==1){
+				province = parent;
+			}else if(null!=sc.getProvinceId()&&sc.getProvinceId()>0){
+				province = tdDistrictService.findOne(sc.getProvinceId());
+			}
+		}
+		List<TdDistrict> regionList = tdDistrictService.findBySearchCriteria(sc);
+		modelMap.addAttribute("regionList", regionList);
+		modelMap.addAttribute("parent", parent);
+		modelMap.addAttribute("province", province);
+		modelMap.addAttribute("sc", sc);
+		return "/client/region/regionlongselect";
+	}
 }

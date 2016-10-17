@@ -40,97 +40,52 @@ public class DistrictController {
 	}
 
 	@RequestMapping("/search")
-	public String search(Integer provinceId, Integer cityId, HttpServletRequest request, HttpServletResponse response,
-			ModelMap modelMap) {
-		// 省列表
-		List<TdDistrict> provinceList = tdDistrictService.getDistrictByUpid(0);
+	public String search(TdDistrictSearchCriteria sc, HttpServletRequest request, HttpServletResponse response,	ModelMap modelMap) {
+		//设置上级id
+		if(null==sc.getUpid()){
+			sc.setUpid(0);
+		}
+		List<TdDistrict> districtList = tdDistrictService.getDistrictByUpid(sc.getUpid());
 
-		if (provinceId != null && provinceId != -1) {
-			List<TdDistrict> cityList = tdDistrictService.getDistrictByUpid(provinceId);
-			// 是否是直辖市
-			if (tdDistrictService.findOne(provinceId) != null
-					&& isCentralCity(tdDistrictService.findOne(provinceId).getName())) {
-				modelMap.addAttribute("isCentralCity", true);
-			} else {
-				modelMap.addAttribute("isCentralCity", false);
-			}
-			modelMap.addAttribute("cityList", cityList);
-		}
-		if (cityId != null && cityId != -1) {
-			List<TdDistrict> areaList = tdDistrictService.getDistrictByUpid(cityId);
-			// 若用户在选择了与市不匹配的省时，可视为只选择了省
-			if (tdDistrictService.findOne(cityId) != null && provinceId != null && provinceId != -1
-					&& tdDistrictService.findOne(cityId).getUpid().equals(provinceId)) {
-				modelMap.addAttribute("areaList", areaList);
-			} else {
-				cityId = -1;
-			}
-		}
-		modelMap.addAttribute("provinceList", provinceList);
-		modelMap.addAttribute("provinceId", provinceId);
-		modelMap.addAttribute("cityId", cityId);
+		modelMap.addAttribute("districtList", districtList);
+		modelMap.addAttribute("sc", sc);
 
 		return "/admin/district/listbody";
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, String> save(Integer provinceId, Integer cityId, String newDistrict, HttpServletRequest request,
+	public Map<String, String> save(Integer upid, String newDistrict, HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, String> res = new HashMap<String, String>();
-		// 分三种情况：上级为市
-		if (cityId != null && cityId != -1) {
-			TdDistrict district = new TdDistrict();
-			district.setName(newDistrict);
-			short displayorder = 0; // 顺序默认为0
-			district.setDisplayorder(displayorder);
-			TdDistrict theCity = tdDistrictService.findOne(cityId);
-			if (theCity != null) {
-				byte upLevel = theCity.getLevel();
-				upLevel++;
-				district.setLevel(upLevel);
-				district.setUpid(theCity.getId());
-				tdDistrictService.save(district);
-				res.put("code", "1");
-				return res;
-			} else {
-				logger.error("地区保存失败，原因：上级地区不存在。");
-				res.put("code", "0");
-				return res;
-			}
-			// 上级为省或直辖市
-		} else if (provinceId != null && provinceId != -1) {
-			TdDistrict district = new TdDistrict();
-			district.setName(newDistrict);
-			short displayorder = 0; // 顺序默认为0
-			district.setDisplayorder(displayorder);
-			TdDistrict theProvince = tdDistrictService.findOne(provinceId);
-			if (theProvince != null) {
-				byte upLevel = theProvince.getLevel();
-				upLevel++;
-				district.setLevel(upLevel);
-				district.setUpid(theProvince.getId());
-				tdDistrictService.save(district);
-				res.put("code", "1");
-				return res;
-			} else {
-				logger.error("地区保存失败，原因：上级地区不存在。");
-				res.put("code", "0");
-				return res;
-			}
-		} else {
-			// 没有上级
-			TdDistrict district = new TdDistrict();
-			district.setName(newDistrict);
-			short displayorder = 0; // 顺序默认为0
-			district.setDisplayorder(displayorder);
-			byte level = 1;
-			district.setLevel(level);
-			district.setUpid(0);
-			tdDistrictService.save(district);
-			res.put("code", "1");
+		TdDistrict district = new TdDistrict();
+		short displayorder = 0;
+		// 分三种情况
+		if(null==upid){
+			res.put("code", "0");
 			return res;
+		}else if(upid==0){
+			district.setName(newDistrict);
+			district.setDisplayorder(displayorder);
+			district.setUpid(upid);
+			district.setLevel(Byte.valueOf("1"));
+		}else{
+			TdDistrict updistrict = tdDistrictService.findOne(upid);
+			if(null==updistrict){
+				res.put("code", "0");
+				return res;
+			}
+			byte upLevel = updistrict.getLevel();
+			upLevel++;
+			district.setName(newDistrict);
+			district.setDisplayorder(displayorder);
+			district.setUpid(upid);
+			district.setLevel(upLevel);
 		}
+		tdDistrictService.save(district);
+		res.put("code", "1");
+		return res;
+			
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
@@ -235,6 +190,27 @@ public class DistrictController {
 		modelMap.addAttribute("parent", parent);
 		modelMap.addAttribute("province", province);
 		return "/admin/district/regionselect";
+	}
+	
+	@RequestMapping("/regionlongselect")
+	public String regionlongselect(TdDistrictSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		sc.setFlag(false);
+		TdDistrict parent = new TdDistrict();	//上级
+		TdDistrict province = new TdDistrict();	//省份
+		if(null!=sc.getUpid()&&sc.getUpid()>0){
+			parent = tdDistrictService.findOne(sc.getUpid());
+			if(parent!=null && parent.getLevel()==1){
+				province = parent;
+			}else if(null!=sc.getProvinceId()&&sc.getProvinceId()>0){
+				province = tdDistrictService.findOne(sc.getProvinceId());
+			}
+		}
+		List<TdDistrict> regionList = tdDistrictService.findBySearchCriteria(sc);
+		modelMap.addAttribute("regionList", regionList);
+		modelMap.addAttribute("parent", parent);
+		modelMap.addAttribute("province", province);
+		modelMap.addAttribute("sc", sc);
+		return "/admin/district/regionlongselect";
 	}
 	
 	@RequestMapping("/getDistrictSelections")

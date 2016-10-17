@@ -22,6 +22,7 @@
     <script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/touch/js/common.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/touch/js/index.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/mobile/core.js"></script>
     <script src="${app.basePath}/static/js/mobile/agent/agent.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="${app.basePath}/static/js/huploadify/Huploadify.css">
 <script src="${app.basePath}/static/js/huploadify/jquery.Huploadify.js" type="text/javascript"></script>
@@ -34,7 +35,7 @@
     }
     
     $(function(){
-	    searcAgentAddr();
+	   // searcAgentAddr();
 	});
 </script>
 
@@ -51,13 +52,19 @@
 <section class="container">
     <form class="store_askfor" id="form" >
         <section class="sec1">填写地址</section>
-        <section class="sec2">
+        
+        <span id="provincespn"></span><span id="cityspn"></span><span id="regionspn"></span><span id="townspn"></span><span id="villagespn"></span>
+        <script>
+			$(function(){
+				getLongDistricts({'obj':null,'num':0,'total':4});
+		    });
+		</script>
         <!-- 三级联动2 -->
-        <div class="tarea" id="tarea">
+        <#--<section class="sec2"><div class="tarea" id="tarea">
             
-        </div>
+        </div></section>-->
         <!-- 三级联动2-结束 -->
-        </section>
+        
         <section class="sec4"><input type="text" name="address" placeholder="请填写详细地址"></section>
         <section class="sec5"><input type="text" name="telphone" placeholder="请填写手机号码"></section>
         <section class="sec6">体验中心的货架，装修设计平台可以提供支持，部分厂家。客服电话1389636888</section>
@@ -72,13 +79,14 @@
         </div>
         <section class="sec7">
             <label for="" class="fl">商品分类</label>
-            <select name="typeId" >
-            	<#if typeList??>
-            	<#list typeList as type>
-                <option value="${type.id?c}">${type.name!''}</option>
-                </#list>
-                </#if>
-            </select>
+        </section>
+        <section class="sec7">
+            <span id="typespn"></span><span id="twotypespn"></span><span id="onetypespn"></span>
+            <script>
+				$(function(){
+					getAllTypes({'obj':null,'num':0})
+			    });
+			</script>
         </section>
         <input type="button" onclick="addAgent();" value="立即申请">
     </form>

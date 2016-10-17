@@ -1,6 +1,6 @@
 <#import "/common/app.ftl" as app>
 <script src="${app.basePath}/static/js/easyui/easyui-lang-zh_CN.js" type="text/javascript"></script>
-<div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="returnList(${provinceId!''}, ${cityId!''})"><em>返回列表页</em></a>&#12288;</div></div>
+<div class="subnav"><div class="content_menu ib_a blue line_x"><a href="javascript:;" class="add fb J_showdialog" onclick="returnList()"><em>返回列表页</em></a>&#12288;</div></div>
 <div class="pad_lr_10">
 <table>
     <tr>
@@ -12,11 +12,7 @@
         <td>&nbsp;&nbsp;</td>
     </tr>
     <tr>
-        <td><input type="hidden" name="provinceId" value="${provinceId!''}"></td>
-        <td>&nbsp;&nbsp;</td>
-    </tr>
-    <tr>
-        <td><input type="hidden" name="cityId" value="${cityId!''}"></td>
+        <td><input type="hidden" name="upid" value="${district.upid!'0'}"></td>
         <td>&nbsp;&nbsp;</td>
     </tr>
 </table>

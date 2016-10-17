@@ -205,3 +205,106 @@ function saveCallback(data){
 	}
 }
 
+function getLongDistricts(_settings){
+	var settings = {obj:"",num:0,level:1,total:1,callback:""};
+	settings=$.extend(settings,_settings);
+	var url = basePath+"/region/regionlongselect";
+	var loadData = "";
+	var callback = settings.callback;
+	if(settings.num==0){
+		loadData = {'upid':0,'level':1,'totalLevel':settings.total,'callback':''+settings.callback+''};
+		$("#provincespn").loading().load(url,loadData);
+		$("#cityspn").html("");
+		$("#regionspn").html("");
+		$("#townspn").html("");
+		$("#villagespn").html("");
+		$("#upid").val("0");
+	}else if(settings.num==1){
+		var upid = $(settings.obj).val();
+		if(upid!==""){
+			loadData = {'upid':upid,'provinceId':upid,'level':2,'totalLevel':settings.total,'callback':''+settings.callback+''};
+			$("#cityspn").loading().load(url,loadData);
+			$("#regionspn").html("");
+			$("#townspn").html("");
+			$("#villagespn").html("");
+			$("#upid").val(upid);
+			if(callback!=""){
+			}
+		}else{
+			$("#cityspn").html("");
+			$("#regionspn").html("");
+			$("#townspn").html("");
+			$("#villagespn").html("");
+		}
+	}else if(settings.num==2){
+		var upid = $(settings.obj).val();
+		if(upid!==""){
+			var provinceid = $("#provinceId").val();
+			loadData = {'upid':upid,'provinceId':provinceid,'level':3,'totalLevel':settings.total,'callback':''+settings.callback+''};
+			$("#regionspn").loading().load(url,loadData);
+			$("#townspn").html("");
+			$("#villagespn").html("");
+			$("#upid").val(upid);
+			if(callback!=""){
+			}
+		}else{
+			$("#regionspn").html("");
+			$("#townspn").html("");
+			$("#villagespn").html("");
+		}
+	}else if(settings.num==3){
+		var upid = $(settings.obj).val();
+		if(upid!==""){
+			var provinceid = $("#provinceId").val();
+			loadData = {'upid':upid,'provinceId':provinceid,'level':4,'totalLevel':settings.total,'callback':''+settings.callback+''};
+			$("#townspn").loading().load(url,loadData);
+			$("#villagespn").html("");
+			$("#upid").val(upid);
+			if(callback!=""){
+			}
+		}else{
+			$("#townspn").html("");
+			$("#villagespn").html("");
+		}
+	}else if(settings.num==4){
+		var upid = $(settings.obj).val();
+		if(upid!==""){
+			var provinceid = $("#provinceId").val();
+			loadData = {'upid':upid,'provinceId':provinceid,'level':5,'totalLevel':settings.total,'callback':''+settings.callback+''};
+			$("#villagespn").loading().load(url,loadData);
+			$("#upid").val(upid);
+			if(callback!=""){
+			}
+		}else{
+			$("#villagespn").html("");
+		}
+	}
+}
+
+function getAllTypes(_settings){
+	var settings = {obj:"",num:0};
+	settings=$.extend(settings,_settings);
+	var url = basePath+"/agent/producttypeallselect";
+	var loadData = "";
+	if(settings.num==0){
+		loadData = {'parentId':0};
+		$("#onetypespn").loading().load(url,loadData);
+		$("#twotypespn").html("");
+		$("#typespn").html("");
+		$("#productTypeId").val("");
+	}else if(settings.num==1){
+		var upid = $(settings.obj).val();
+		loadData = {'parentId':upid};
+		$("#twotypespn").loading().load(url,loadData);
+		$("#typespn").html("");
+		$("#productTypeId").val("");
+	}else if(settings.num==2){
+		var upid = $(settings.obj).val();
+		loadData = {'parentId':upid};
+		$("#typespn").loading().load(url,loadData);
+		$("#productTypeId").val("");
+	}else if(settings.num==3){
+		var upid = $(settings.obj).val();
+		$("#productTypeId").val(upid);
+	}
+}

@@ -47,10 +47,10 @@
         	<div class="tabb obody" style="float:left;">
 	    		<div class="fig fig4">
 	                <label class="lab1 fl">地址地区:</label>
-	                <span id="provincespn"></span><span id="cityspn"></span><span id="regionspn"></span>
+	                <span id="provincespn"></span><span id="cityspn"></span><span id="regionspn"></span><span id="townspn"></span><span id="villagespn"></span>
 	                <script>
 						$(function(){
-							getDistricts({'obj':null,'num':0,'total':3});
+							getLongDistricts({'obj':null,'num':0,'total':4});
 					    });
 					</script>
 	            </div>
@@ -90,7 +90,7 @@
 	            <input type="submit" id="sub_btn" class="btnjoin" value="立即申请" />
 	        	<input type="hidden" name="agentProductId" id="agentProductId" value="${agent.id!''}"/>
 	        	<input type="hidden" name="productType" id="productType" value="2"/>
-	        	<input type="hidden" name="regionId" id="regionId" value="" nullmsg="请选择所在地区！"/>
+	        	<input type="hidden" name="regionId" id="upid" value="" nullmsg="请选择所在地区！"/>
 	        	<input type="hidden" name="typeId" id="productTypeId" value="" nullmsg="请选择代理分类！"/>
 	        	<input type="hidden" id="isAgentProductUsePackage" value="${agent.gift?c}"/>
 	        	<input type="hidden" id="agentprice" value="${agent.salesPrice?c}"/>

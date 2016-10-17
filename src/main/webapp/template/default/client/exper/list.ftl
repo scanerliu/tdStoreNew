@@ -33,12 +33,12 @@
 	<div class="content w1200 learn">
 		<!-- 分类 -->
 		<form id="searchform">
-			<input type="hidden" name="regionId" id="regionId" value="">
+			<input type="hidden" name="regionId" id="upid" value="">
 		</form>
 		<div class="otitle">
 			<section class="sec1 fl">
 				<label for="" class="fl">请选择您要查询的地区：</label>
-				<span id="provincespn"></span><span id="cityspn"></span><span id="regionspn"></span>
+				<span id="provincespn"></span><span id="cityspn"></span><span id="regionspn"></span><span id="townspn"></span><span id="villagespn"></span>
 			</section>
 		</div>
 		<!-- 列表 -->
@@ -56,7 +56,7 @@
 	<!-- 底部 -->
 	<script type="text/javascript">
 	$(function(){
-	    getDistricts({'obj':null,'num':0,'total':3});
+	    getLongDistricts({'obj':null,'num':0,'total':4,'callback':'searchExper'});
 	});
 </script>
 </body>

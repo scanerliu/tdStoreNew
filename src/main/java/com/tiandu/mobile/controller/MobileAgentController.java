@@ -124,11 +124,11 @@ public class MobileAgentController extends BaseController{
 			return "/mobile/agent/supplier";
 		}
 		if(agent.getLevel() == 4)
-		{
+		{/*
 			TdProductTypeCriteria sc = new TdProductTypeCriteria();
 			sc.setStatus((byte)1);
 			sc.setOrderBy("2");
-			map.addAttribute("typeList", tdProductTypeService.findThirdType(sc));
+			map.addAttribute("typeList", tdProductTypeService.findThirdType(sc));*/
 			
 			return "/mobile/agent/agentform";
 		}

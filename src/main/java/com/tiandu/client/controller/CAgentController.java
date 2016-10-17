@@ -130,10 +130,10 @@ public class CAgentController extends BaseController{
 		}
 		if(agent.getLevel() == 4)
 		{
-			TdProductTypeCriteria sc = new TdProductTypeCriteria();
+			/*TdProductTypeCriteria sc = new TdProductTypeCriteria();
 			sc.setStatus((byte)1);
 			sc.setOrderBy("2");
-			map.addAttribute("typeList", tdProductTypeService.findThirdType(sc));
+			map.addAttribute("typeList", tdProductTypeService.findThirdType(sc));*/
 			
 			return "/client/agent/agentform";
 		}

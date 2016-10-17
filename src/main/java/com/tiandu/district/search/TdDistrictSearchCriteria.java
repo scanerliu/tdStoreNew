@@ -10,6 +10,7 @@ public class TdDistrictSearchCriteria extends SearchCriteria {
 	private Integer regionId; //区id
 	
 	private Integer totalLevel; //总共几级
+	private Integer level; //获取级数
 	private String callback;//回调函数
 
 
@@ -60,6 +61,14 @@ public class TdDistrictSearchCriteria extends SearchCriteria {
 
 	public void setCallback(String callback) {
 		this.callback = callback;
+	}
+
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
 	}
 	
 }
