@@ -44,34 +44,9 @@ public class MobileExperController extends BaseController{
 	{
 		TdUser user = getCurrentUser();
 		
-		TdDistrictSearchCriteria dsc = new TdDistrictSearchCriteria();
-		dsc.setFlag(false);
-		dsc.setUpid(0);
-		map.addAttribute("districtList", tdDistrictService.findBySearchCriteria(dsc));
-		map.addAttribute("dissc", dsc);
-		
-		// 如果选择省级，查找市级
-		if(null != sc.getProvinceId())
-		{
-			dsc.setUpid(sc.getProvinceId());
-			map.addAttribute("cityList", tdDistrictService.findBySearchCriteria(dsc));
-			
-			map.addAttribute("province", tdDistrictService.findOne(sc.getProvinceId()));
-		}
-		// 如果选择市级，查找区县级
-		if(null != sc.getCityId())
-		{
-			dsc.setUpid(sc.getCityId());
-			map.addAttribute("regionList", tdDistrictService.findBySearchCriteria(dsc));
-			map.addAttribute("city",tdDistrictService.findOne(sc.getCityId()));
-		}
-		
 		if(null == sc.getRegionId()){
 			sc.setRegionId(user.getUregionId());
-		}else{
-			map.addAttribute("regin",tdDistrictService.findOne(sc.getRegionId()));
-		}
-		
+		}		
 		map.addAttribute("experList", tdExperienceStoreService.findBySearchCriteria(sc));
 		map.addAttribute("sc", sc);
 		

@@ -21,8 +21,18 @@
     <!-- js -->
     <script type="text/javascript" src="${app.basePath}/static/touch/js/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/touch/js/common.js"></script>
+    <script src="${app.basePath}/static/js/mobile/core.js" type="text/javascript"></script>
     <script src="${app.basePath}/static/js/mobile/exper/exper.js" type="text/javascript"></script>
-    
+    <style>
+    .regiondiv select{
+    	display: inline-block;
+	    height: 0.8rem;
+	    line-height: 0.8rem;
+	    padding-right: 0.28rem;
+	    background-size: 0.18rem 0.11rem;
+	    margin-top:5px;
+    }
+    </style>
 </head>
 
 <body class="body_bg">
@@ -30,6 +40,15 @@
     <a href="javascript:history.go(-1);" title="" class="hleft hback"></a>
     <span>附近门店</span>
 </div>
+<form  id="form" class="regiondiv">
+<span id="provincespn"></span><span id="cityspn"></span><span id="regionspn"></span><span id="townspn"></span><span id="villagespn"></span>
+<script>
+	$(function(){
+		getLongDistricts({'obj':null,'num':0,'total':4,'callback':'searchExper'});
+    });
+</script>
+<input type="hidden" value="0" name="regionId" id="upid">
+</form>
 <div id="results"></div>
 
 <script type="text/javascript">
