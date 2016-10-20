@@ -90,7 +90,7 @@ function changeProductSku(skus){
 	});
 	if(exist){
 		$("#skustock").val(stock);
-		$("#s_skustock").val(stock);
+		$("#s_skustock").html(stock);
 		$("#skuId").val(skuId);
 		$("#skuPrice").val(price);
 		$("#prodprice").html(price);
@@ -166,7 +166,7 @@ function formatInputSkuNum(obj){
 	var selectUL = $("#slect .slect");
 	var selected = true;
 	selectUL.each(function(){
-		var sected = $(this).find("li[class='active']");
+		var sected = $(this).find("span[class='checked']");
 		if(sected.length==0){
 			selected = false;
 			return;
@@ -202,7 +202,7 @@ function addToShoppingcart(){
 	var itemType = $("#productKind").val();
 	var skustock = $("#skustock").val();
 	if(Number(skuId)>0){
-		if(Number(skustock)>Number(quantity)){
+		if(Number(skustock)>=Number(quantity)){
 			var url = basePath+"/shoppingcart/addsku";
 			var postData = {"productId":productId,"productSkuId":skuId,"price":skuPrice,"postage":postage,"quantity":quantity,"itemType":itemType};
 			openwaiting();
@@ -235,7 +235,7 @@ function buyNow(){
 	var itemType = $("#productKind").val();
 	var skustock = $("#skustock").val();
 	if(skuId>0){
-		if(skustock>quantity){
+		if(Number(skustock)>=Number(quantity)){
 			var url = basePath+"/shoppingcart/buynow";
 			var postData = {"productId":productId,"productSkuId":skuId,"quantity":quantity,"productType":itemType};
 			window.location.href= url+"?productId="+productId+"&productSkuId="+skuId+"&quantity="+quantity;

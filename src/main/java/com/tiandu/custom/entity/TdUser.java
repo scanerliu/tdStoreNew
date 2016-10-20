@@ -69,6 +69,9 @@ public class TdUser {
 
     private Integer membershipId;
 
+    /*
+     * 供应商资质类型 0-无供应商资格，1-个人供应商，2-公司供应商，3-企业供应商
+     */
     private Byte supplierType;
     
     private String qrcodeUrl;
@@ -487,6 +490,25 @@ public class TdUser {
 		}
 		if(null == this.getUgenter()){
 			sb.append("保密");
+		}
+		return sb.toString();
+	}
+	/**
+	 * 获取供应商资质文字说明
+	 * @return
+	 */
+	public String getSupplierTypeStr(){
+		StringBuffer sb = new StringBuffer(); 
+		if(null!=this.getSupplierType()){
+			if(this.getSupplierType().equals(Byte.valueOf("1"))){
+				sb.append("个人供应商");
+			}else if(this.getSupplierType().equals(Byte.valueOf("2"))){
+				sb.append("公司供应商");
+			}else if(this.getSupplierType().equals(Byte.valueOf("2"))){
+				sb.append("企业供应商");
+			}else{
+				sb.append("无资质");
+			}
 		}
 		return sb.toString();
 	}

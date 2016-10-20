@@ -603,6 +603,9 @@ public class CShoppingcartController extends BaseController {
 				}else{
 					item.setQuantity(orderForm.getQuantity());
 				}
+				if(sku.getStock().compareTo(item.getQuantity())<0){
+					throw new Exception("下单失败，商品库存不足！");
+				}
 			}else{
 				throw new Exception("下单失败，商品不存在或已经下架！");
 			}

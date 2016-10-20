@@ -1855,6 +1855,7 @@ public class CUserController extends BaseController {
 		}
 		// 系统配置
 		modelMap.addAttribute("system", getSystem());
+		modelMap.addAttribute("currentUser", currentUser);
 		return "/client/user/supplierApply";	
 	}
 	

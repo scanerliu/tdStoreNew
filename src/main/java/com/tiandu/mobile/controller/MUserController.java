@@ -1588,6 +1588,7 @@ public class MUserController extends BaseController {
 			String[] imgList = userSupplierList.get(0).getImages().split(":");
 			modelMap.addAttribute("imgList", imgList);
 		}
+		modelMap.addAttribute("currentUser", currentUser);
 		return "/mobile/user/supplierApply";	
 	}
 	

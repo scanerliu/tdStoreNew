@@ -57,7 +57,8 @@
         <!-- 默认编码 -->
         <property name="defaultEncoding" value="utf-8" />  
         <!-- 文件大小最大值 -->
-        <property name="maxUploadSize" value="10485760000" />  
+        <!-- <property name="maxUploadSize" value="10485760000" /> -->  
+        <property name="maxUploadSize" value="3145728" />  
         <!-- 内存中的最大值 -->
         <property name="maxInMemorySize" value="40960" />  
     </bean> 

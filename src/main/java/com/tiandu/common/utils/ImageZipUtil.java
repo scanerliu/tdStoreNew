@@ -1,4 +1,4 @@
-package com.tiandu.test;
+package com.tiandu.common.utils;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -11,17 +11,17 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
   
 public class ImageZipUtil {  
-	
+	/*
 	public static void main(String[] args) {
 //		zipWidthHeightImageFile(new File("E:\\tools\\test2.jpg"),new File("E:\\tools\\test5.jpg"),400,0,0.7f);
-		zipImageFile(new File("E:\\tools\\test1.jpg"),new File("E:\\tools\\test5.jpg"),800,0,0.5f);
+		zipImageFile(new File("E:\\tools\\test1.jpg"),new File("E:\\tools\\test5.jpg"),800,0,0.7f);
 		
 		//zipImageFile(new File("C:\\spider\\2.JPG"),new File("C:\\spider\\2-2.JPG"),425,638,0.7f);
 		
 		//zipImageFile(new File("C:\\spider\\3.jpg"),new File("C:\\spider\\3-3.jpg"),425,638,0.7f);
 		
 		System.out.println("ok");
-	}
+	}*/
   
     /** 
      * 根据设置的宽高等比例压缩图片文件<br> 先保存原文件，再压缩、上传 
@@ -53,7 +53,7 @@ public class ImageZipUtil {
             }  
             
             String srcImgPath = newFile.getAbsoluteFile().toString();
-            System.out.println(srcImgPath);
+//            System.out.println(srcImgPath);
             String subfix = "jpg";
     		subfix = srcImgPath.substring(srcImgPath.lastIndexOf(".")+1,srcImgPath.length());
 

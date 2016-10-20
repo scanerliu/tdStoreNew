@@ -181,7 +181,20 @@ public class TdAgentProduct extends TdBaseEntity {
 						break;
 					default:
 				}
-    		}    		
+    		}else if(ConstantsUtils.AGENT_GROUPID_SUPPLIER.equals(this.getGroupId())){
+    			switch(this.getLevel()){
+					case 1:
+						sb.append("个人供应商");
+						break;
+					case 2:
+						sb.append("公司供应商");
+						break;
+					case 3:
+						sb.append("企业供应商");
+						break;
+					default:
+				}
+    		}	
     	}
     	return sb.toString();
     }

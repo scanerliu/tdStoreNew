@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tiandu.common.utils.ImageZipUtil;
 import com.tiandu.common.utils.OSTypeUtil;
 import com.tiandu.common.utils.WebUtils;
 import com.tiandu.product.entity.TdProductAttachment;
@@ -59,6 +60,9 @@ public class ProductUploadController {
 				File savedFile = new File(this.getFolder(type, request) + "/" + savedFileName);
 				
 				FileCopyUtils.copy(file.getBytes(), savedFile);
+				//图片压缩
+				ImageZipUtil.zipImageFile(savedFile,savedFile,800,0,0.7f);
+				
 				res.put("code", "1");
 				res.put("msg", "上传成功。");
 				Calendar now = Calendar.getInstance();

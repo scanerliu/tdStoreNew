@@ -1598,6 +1598,7 @@ public class TdOrderServiceImpl implements TdOrderService{
 						if(null!=user && !ConstantsUtils.CUSTOMER_SUPPLIER_BUYED.equals(user.getTempsupplier())){
 							TdUser upuser = new TdUser();
 							upuser.setTempsupplier(ConstantsUtils.CUSTOMER_SUPPLIER_BUYED);
+							upuser.setSupplierType(agentProduct.getLevel().byteValue());//设置供应商类型
 							upuser.setUid(user.getUid());
 							tdUserService.updateByPrimaryKeySelective(upuser);
 							addagent = true;
