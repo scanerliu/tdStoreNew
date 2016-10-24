@@ -61,7 +61,7 @@
 				<a href="${app.basePath}/campaign/list" title="" class="fl">股东竞选</a>
 				<a href="${app.basePath}/product/killlist" title="" class="fl">秒杀专区</a>
 				<a href="${app.basePath}/product/zerolist" title="" class="fl">0元专区</a>
-				<a href="${app.basePath}/product/newlist" title="" class="fl">新品专区</a>
+				<a href="${app.basePath}/product/newlist" title="" class="fl">排队免单</a>
 			</nav>
 			<section class="sec1 fr">服务热线：<span><#if system?? && system.webhotline??>${system.webhotline}</#if></span></section>
 		</div>

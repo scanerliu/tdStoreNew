@@ -9,7 +9,7 @@
     <meta name="description" content="${system.webdescription!''}">
     <meta name="copyright" content="${system.webcopyright!''}" />
     <link rel="shortcut icon" href="${app.basePath}/static/default/images/icon.ico" />
-    <title>新品专区列表 - ${system.webkeywords!''}</title>
+    <title>排队免单 - ${system.webkeywords!''}</title>
     <!-- css -->
 	<link rel="stylesheet" href="${app.basePath}/static/default/client/style/base.css" />
 	<link rel="stylesheet" href="${app.basePath}/static/default/client/style/index.css" />

@@ -11,7 +11,7 @@ $(document).ready(function(){
 
 <div class="top_heater">
     <a href="javascript:history.go(-1);" title="返回" class="hleft hback"></a>
-    <span>新品专区</span>
+    <span>排队免单</span>
 </div>
 <!-- header_top end -->
 

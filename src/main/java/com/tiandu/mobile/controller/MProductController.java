@@ -103,6 +103,7 @@ public class MProductController extends BaseController {
 	 */
 	@RequestMapping("/list")
 	public String list(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		modelMap.addAttribute("system", getSystem());
 	    return "/mobile/product/productlist";
 	}
 	/*
@@ -112,9 +113,34 @@ public class MProductController extends BaseController {
 	public String search(TdProductCriteria sc,HttpServletRequest req,ModelMap map)
 	{
 		sc.setKind(ConstantsUtils.PRODUCT_KIND_COMMON);
+		if(null == sc.getOrderby())
+		{
+			sc.setOrderby(1);
+		}
+		sc.setOnshelf(true);
+		sc.setStatus(Byte.valueOf("1"));
+		sc.setOrderBy(sc.getOrderBySql());
 		map.addAttribute("productList", tdProductService.findBySearchCriteria(sc));
 		map.addAttribute("sc", sc);
 		return "/mobile/product/productlistbody";
+	}
+	/*
+	 * 商品列表数据页
+	 */
+	@RequestMapping("/searchmore")
+	public String searchmore(TdProductCriteria sc,HttpServletRequest req,ModelMap map)
+	{
+		sc.setKind(ConstantsUtils.PRODUCT_KIND_COMMON);
+		if(null == sc.getOrderby())
+		{
+			sc.setOrderby(1);
+		}
+		sc.setOnshelf(true);
+		sc.setStatus(Byte.valueOf("1"));
+		sc.setOrderBy(sc.getOrderBySql());
+		map.addAttribute("productList", tdProductService.findBySearchCriteria(sc));
+		map.addAttribute("sc", sc);
+		return "/mobile/product/productlistmore";
 	}
 	
 	/*

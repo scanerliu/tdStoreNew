@@ -117,7 +117,7 @@
 			</#if>
         </ul>
     </section>
-        <a href="javascript:;" title="更多" class="a_link"></a>
+        <a href="${app.basePath}/mobile/campaign/list" title="更多" class="a_link"></a>
 </div>
 <!-- 股东竞选-结束 -->
 <!-- 分类按钮 -->
@@ -128,15 +128,15 @@
     <a href="${app.basePath}/mobile/user/center" title="个人中心"><p>个人中心</p></a>
     <a href="${app.basePath}/mobile/product/zero" title="0元专区"><p>0元专区</p></a>
     <a href="${app.basePath}/mobile/product/seckill" title="秒杀专区"><p>秒杀专区</p></a>
-    <a href="${app.basePath}/mobile/product/new" title="新品专区"><p>新品专区</p></a>
+    <a href="${app.basePath}/mobile/product/new" title="排队免单"><p>排队免单</p></a>
     <a href="${app.basePath}/mobile/productType/list" title="分类选择"><p>分类选择</p></a>
 </div>
 <!-- 分类按钮-结束 -->
 <!-- 精品专区 -->
 <div class="bestarea">
     <section class="index_title">
-        <label class="lab1 fl">精品专区</label>
-        <a href="javascript:;" class="a_link"></a>
+        <label class="lab1 fl">亿企商家批发区</label>
+        <a href="${app.basePath}/mobile/product/list" class="a_link"></a>
     </section>
     <section class="sec2">
     	<#if hotAdList?? && hotAdList?size gt 0>
@@ -173,7 +173,7 @@
 <div class="hot">
     <section class="index_title">
         <label class="lab1 fl">热销推荐</label>
-        <a href="javascript:;" class="a_link"></a>
+        <a href="${app.basePath}/mobile/product/list" class="a_link"></a>
     </section>
 </div>
 <div class="lcy_index1">
