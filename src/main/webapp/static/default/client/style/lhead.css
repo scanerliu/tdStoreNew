@@ -185,7 +185,8 @@
     float: left;
     width: 100%;
     height: 32px;
-    position: relative;
+    /*position: relative;*/
+
 }
 
 .nav_div_box .all1 dd.menuitem .item > a {
@@ -196,8 +197,9 @@
     line-height: 32px;
     padding: 0 20px;
     color: #666;
-    background: url('../../images/f-icon9.png') 225px center no-repeat;
+    background: url('../images/f-icon9.png') 225px center no-repeat;
 }
+.nav_div_box .all1 dd.menuitem .item > a:hover{color:#ff9900;}
 
 .nav_div_box .all1 dd.menuitem .item > .childitem {
     position: absolute;
@@ -209,6 +211,8 @@
     display: none;
     padding: 6px 10px 0 20px;
     background: #fafafa;
+    height: 454px;
+    overflow: auto;
 }
 
 .nav_div_box .all1 dd.menuitem .item > .childitem dl {
@@ -273,6 +277,8 @@
     display: block;
     padding: 0 23px;
 }
+.nav_div a:hover,.nav_div a.cur{background: #ffc001;}
+
 
 .innerf {
     margin-top: 40px;

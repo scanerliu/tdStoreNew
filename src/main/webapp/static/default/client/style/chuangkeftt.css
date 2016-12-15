@@ -1365,34 +1365,40 @@
   margin-bottom: 20px;
   height: 460px; }
   .index-item1 .initem1 {
-    display: inline-block;
-    margin-left: 250px;
-    width: 950px;
-    height: 460px; }
+    /*display: inline-block;*/
+    /*margin-left: 250px;*/
+    /*width: 950px;*/
+    /*height: 460px;*/position: relative; }
   .index-item1 .indexbanner {
-    width: 715px;
+    width: 100%;
     height: 460px;
-    float: left; }
-    .index-item1 .indexbanner ul li {
+    float: left; position: relative;}
+    .index-item1 .indexbanner .bd ul li {
       float: left;
-      width: 715px;
-      height: 460px; }
-      .index-item1 .indexbanner ul li img {
-        width: 715px;
-        height: 460px;
-        display: block; }
+      width:100%;
+      height: 460px;overflow: hidden;position: relative;}
+
+      .index-item1 .indexbanner .bd ul li a{display: block;width: 100%;height: 460px;overflow:hidden;}
+
+      .index-item1 .indexbanner .bd ul li img {width: 1920px;height: 460px;position: absolute;left:50%;margin-left: -960px;top:0;}
+
+.index-item1 .indexbanner .hd{position: absolute;left:0;bottom: 4px;width: 100%;}
+.index-item1 .indexbanner .hd ul{text-align: center;}
+.index-item1 .indexbanner .hd ul li{display: inline-block;width: 10px;height: 10px;background: #fff;border-radius: 50%;-webkit-border-radius: 50%;cursor: pointer;margin:0 2px;}
+.index-item1 .indexbanner .hd ul li.on{background: #ff9900;}
+
   .index-item1 .rightcontent {
-    float: left;
+    float: right;
     width: 235px;
-    height: 440px;
-    margin-top: 10px; }
+    height: 460px;
+    /*margin-top: 10px; */position: absolute;top:0;right:0;}
     .index-item1 .rightcontent .item1 {
       float: left;
       width: 235px;
  /*      height: 195px; */
-      height: 445px;
+      height: 460px;
       background: #fff;
-      margin-bottom: 10px; }
+      /*margin-bottom: 10px; */}
       .index-item1 .rightcontent .item1 .nav {
         float: left;
         width: 235px;
@@ -1426,6 +1432,7 @@
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap; }
+          .index-item1 .rightcontent .item1 .content a:hover{color:#ff9900;}
           .index-item1 .rightcontent .item1 .content a i {
             float: left;
             margin-right: 5px; }
@@ -1779,11 +1786,14 @@
 .navigationtree {
   position: fixed;
   top: 170px;
-  left: 270px;
+  left: 50%;
   width: 38px;
   display: none;
   border: 1px solid #e7e7e7;
-  border-bottom: 0; }
+  border-bottom: 0; 
+  margin-left: -648px;
+
+}
   .navigationtree a {
     float: left;
     width: 38px;
