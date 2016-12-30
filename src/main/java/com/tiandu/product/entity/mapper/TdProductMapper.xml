@@ -647,6 +647,12 @@
         <if test="optype != null and optype==10">
 	    	type_recommend = 0
 	    </if>
+        <if test="optype != null and optype==11">
+	    	status = 1
+	    </if>
+        <if test="optype != null and optype==12">
+	    	status = 3
+	    </if>
         where id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
         	#{item,jdbcType=INTEGER}

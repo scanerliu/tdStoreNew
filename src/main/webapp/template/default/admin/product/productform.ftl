@@ -14,7 +14,7 @@
 		    <tr>
 		        <th width="150">商品分类：</th>
 		        <td>
-		        	<#if tdProduct?? && tdProduct.id?? && productType??>
+		        	<#if tdProduct?? && productType??>
 		        		${productType.name!''}
 		        		<input type="hidden" name="typeId" value="<#if tdProduct??>${tdProduct.typeId!''}</#if>">
 		        	<#else>
@@ -144,11 +144,11 @@
 		    </tr>
 		    <tr>
 		        <th width="150">名称：</th>
-		        <td><input type="text" name="name" value="<#if tdProduct??>${tdProduct.name!''}</#if>"  style="width:200px;height:30px" datatype="s1-60" nullmsg="请填写商品名称！"></td>
+		        <td><input type="text" name="name" value="<#if tdProduct??>${tdProduct.name!''}</#if>"  style="width:200px;height:30px" datatype="*1-60" nullmsg="请填写商品名称！"></td>
 		    </tr>
 		    <tr>
 		        <th width="150">副标题：</th>
-		        <td><input type="text" name="title" value="<#if tdProduct??>${tdProduct.title!''}</#if>"  style="width:200px;height:30px"  datatype="s1-50" nullmsg="请填写副标题！"></td>
+		        <td><input type="text" name="title" value="<#if tdProduct??>${tdProduct.title!''}</#if>"  style="width:200px;height:30px"  datatype="*1-50" nullmsg="请填写副标题！"></td>
 		    </tr>
 		    <tr>
 		        <th width="150">编号：</th>

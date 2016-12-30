@@ -44,7 +44,7 @@
 					&nbsp;&nbsp;<label><input type="checkbox" value="true" name="agent">单类代理</label>
 					&nbsp;&nbsp;<label><input type="checkbox" value="true" name="branch">分公司</label>
 					&nbsp;&nbsp;用户名 :
-					<input type="text" value="" size="25" class="input-text" name="uname">
+					<input type="text" value="" size="25" class="input-text" name="keyword">
 					<input type="button" value="搜索" class="btn" name="search" onclick="searchCustomers(true)">
 				</div>
 			</td>

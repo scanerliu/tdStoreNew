@@ -142,7 +142,7 @@ function getCheckedProductIds(){
  * @param optype 1-上架，2-下架，3-热门推荐，4-取消热门推荐，5-新品推荐，6-取消热门推荐，7-精品推荐，8-取消精品推荐，9-分类推荐，10-取消分类推荐
  */
 function bacthOperProducts(optype){
-	var oparr = [1,2,3,4,5,6,7,8,9,10];
+	var oparr = [1,2,3,4,5,6,7,8,9,10,11,12];
 	var ids = getCheckedProductIds();
 	if(ids==""){
 		$.messager.alert('消息提醒','请先勾选要操作的商品!');

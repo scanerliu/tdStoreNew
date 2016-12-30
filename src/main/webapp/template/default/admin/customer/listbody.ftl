@@ -54,7 +54,7 @@
 </table>
 </div>
 <div class="btn_wrap_fixed">
-	<input type="hidden" name="uanme" value="${sc.uname!''}"/>
+	<input type="hidden" name="keyword" value="${sc.keyword!''}"/>
 	<input type="hidden" name="ustatus" value="${sc.ustatus!''}"/>
 	<input type="hidden" name="uverification" value="${sc.uverification!''}"/>
 	<input type="hidden" name="supplierType" value="${sc.supplierType!''}"/>

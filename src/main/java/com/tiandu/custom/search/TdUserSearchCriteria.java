@@ -5,6 +5,7 @@ import com.tiandu.common.search.SearchCriteria;
 public class TdUserSearchCriteria extends SearchCriteria {
 
 	private String uname; // 用户名
+	private String keyword; // 关键字
 
 	private Byte ustatus; // 用户状态，1-正常，2-屏蔽
 
@@ -36,6 +37,14 @@ public class TdUserSearchCriteria extends SearchCriteria {
 
 	public void setUname(String uname) {
 		this.uname = uname;
+	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
 
 	public Byte getUstatus() {

@@ -29,7 +29,7 @@
 					<#if spro.subList??>
 					<ul>
 						<#list spro.subList as tpro>
-						<li><span><a href="javascript:editProductType(${tpro.id?c});">${tpro.name!''}</a>&emsp;&emsp;&emsp;&emsp;<a href="javascript:;" onclick="searchTypeAttrbute(${tpro.id?c})">属性</a>&emsp;/&emsp;<a href="javascript:;" onclick="deleteProduct(${tpro.id?c});">删除</a></span></li>
+						<li><span><a href="javascript:editProductType(${tpro.id?c});">${tpro.name!''}</a>&emsp;&emsp;&emsp;&emsp;<a href="javascript:;" onclick="searchTypeAttrbute(${tpro.id?c})">属性</a>&emsp;/&emsp;<a href="javascript:;" onclick="deleteProduct(${tpro.id?c});">删除</a>&emsp;/&emsp;<a href="javascript:;" onclick="addProduct(${tpro.id?c});">添加商品</a></span></li>
 						</#list>
 					</ul>
 					</#if>

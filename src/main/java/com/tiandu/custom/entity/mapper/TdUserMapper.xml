@@ -185,6 +185,9 @@
     <if test="uname != null and uname !=''" >
         and a.uname like CONCAT('%',#{uname,jdbcType=VARCHAR},'%')
     </if>
+    <if test="keyword != null and keyword !=''" >
+        and (a.uname like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%') or a.unick like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%'))
+    </if>
     <if test="parentId != null" >
         and a.uparent_id = #{parentId,jdbcType=INTEGER}
     </if>
@@ -226,6 +229,9 @@
     </if>
     <if test="uname != null and uname !=''" >
         and a.uname like CONCAT('%',#{uname,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="keyword != null and keyword !=''" >
+        and (a.uname like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%') or a.unick like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%'))
     </if>
     <if test="parentId != null" >
         and a.uparent_id = #{parentId,jdbcType=INTEGER}

@@ -26,8 +26,11 @@ function returnList(){
 	$("#rightform").html("").hide();
 }
 
-function refreshList(){
+function refreshTypeList(){
 	searchProductType(false);
+}
+function refreshList(){
+	returnList();
 }
 
 // 提交新增、修改广告为内容
@@ -40,7 +43,7 @@ function saveProductType(){
 				  if(result.code==1){
 					  $.messager.alert('消息提醒','分类保存成功。');
 					  returnList();
-					  refreshList();
+					  refreshTypeList();
 				  }else{
 					  $.messager.alert('消息提醒','分类保存失败!');
 				  }
@@ -64,7 +67,7 @@ function delProductTypeCallback(data){
 	var result = eval("("+data+")");
 	if(result.code==1){
 		$.messager.alert('消息提醒','删除成功。');
-		refreshList();
+		refreshTypeList();
 	}else{
 		$.messager.alert('消息提醒','删除失败!');
 	}
@@ -97,7 +100,7 @@ function saveTypeAttribute(){
     	$.messager.confirm('信息提示', '未选择属性，放弃编辑返回列表页吗？', function(r){
     		if (r){
     			returnList();
-    			refreshList();
+    			refreshTypeList();
     		}
     	});
     	return ;
@@ -118,6 +121,13 @@ function saveTypeAttr(data){
 	}else{
 		$.messager.alert('消息提醒','分类是属性关联失败');
 	}
+}
+
+function addProduct(id){
+	var url = basePath + "/admin/product/edit";
+	var loadData = {"typeId" : id};
+	$("#rightform").load(url,loadData);
+	showForm();
 }
 
 /*

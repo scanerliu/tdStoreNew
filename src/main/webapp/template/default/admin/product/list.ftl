@@ -21,6 +21,8 @@
 			<input type="button" onclick="bacthOperProducts(8)" value="取消精品推荐" class="btn" title="批量取消精品推荐"/>
 			<input type="button" onclick="bacthOperProducts(9)" value="分类推荐" class="btn" title="批量分类推荐"/>
 			<input type="button" onclick="bacthOperProducts(10)" value="取消分类推荐" class="btn" title="批量取消分类推荐"/>
+			<input type="button" onclick="bacthOperProducts(11)" value="审核通过" class="btn" title="批量审核通过"/>
+			<input type="button" onclick="bacthOperProducts(12)" value="审核不通过" class="btn" title="批量审核不通过"/>
 		</div>
 	</div>
 	<input type="hidden" id="isFromProductPackage" value="<#if isFromProductPackage??>yes<#else>no</#if>">

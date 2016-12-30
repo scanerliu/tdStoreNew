@@ -77,7 +77,7 @@ public class TdProductServiceImpl implements TdProductService{
 
 	@Override
 	public Integer batchOperProducts(Integer type, String productIds) {
-		if(null!=type && type>0 && type<11 && StringUtils.isNotEmpty(productIds)){
+		if(null!=type && type>0 && type<13 && StringUtils.isNotEmpty(productIds)){
 			String[] pids = productIds.split(",");
 			List<Integer> idlist = new ArrayList<Integer>();
 			if(pids.length>0){

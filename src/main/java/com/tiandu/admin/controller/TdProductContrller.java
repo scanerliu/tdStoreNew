@@ -105,7 +105,7 @@ public class TdProductContrller extends BaseController{
 	
 	
 	@RequestMapping("/edit")
-	public String edit(Integer id,HttpServletRequest req,ModelMap map) throws Exception
+	public String edit(Integer id, Integer typeId, HttpServletRequest req,ModelMap map) throws Exception
 	{
 		/*TdProductTypeCriteria tsc = new TdProductTypeCriteria();
 		tsc.setStatus((byte) 1);
@@ -199,6 +199,14 @@ public class TdProductContrller extends BaseController{
 			}
 		}else{
 			TdProduct product = new TdProduct();
+			if(null!=typeId  && typeId != 0){
+				TdProductType productType = tdProductTypeService.findOne(typeId);
+				map.addAttribute("productType", productType);
+				//商品类型规格
+				List<TdProductTypeAttribute> attributeList = tdProductTypeAttributeService.findByTypeIdWithOptions(typeId);
+				map.addAttribute("taList", attributeList);
+				product.setTypeId(typeId);
+			}
 			map.addAttribute("tdProduct", product);
 		}
 		
@@ -644,7 +652,7 @@ public class TdProductContrller extends BaseController{
 	public Map<String,String> batchOperProducts(Integer type, String productIds, HttpServletRequest request, HttpServletResponse response)
 	{
 		Map<String, String> res = new HashMap<>();
-		if(null!=type && type>0 && type<11 && StringUtils.isNotEmpty(productIds)){
+		if(null!=type && type>0 && type<13 && StringUtils.isNotEmpty(productIds)){
 			int count = tdProductService.batchOperProducts(type,productIds);
 			if(count>0){
 				res.put("code", "1");
