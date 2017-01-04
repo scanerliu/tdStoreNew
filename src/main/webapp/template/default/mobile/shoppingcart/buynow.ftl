@@ -191,7 +191,7 @@
 	</section>
 </form>
 	<!-- Footer Start -->
-	<footer onclick="genernateOrder2()">
+	<footer onclick="preorder2()">
 	    <div class="gopay">
 	        <span class="totalprice">总计：<font color="red" id="totalAmountdv">￥${shoppingcart.totalAmount!''}</font></span>
 	        <a href="javascript:;"  class="a-pay" title="">提交订单</a>
@@ -199,9 +199,22 @@
 	    <span class="footclear"></span>
 	</footer>
 	<!-- Footer End -->
+	<div class="password_wrap">
+		<form id="paypassword" method="post" action ="">
+	    <div class="password">
+	        <h3>输入支付密码</h3>
+	        <input type="password" id="upaypassword" name="paypassword" class="pass"/>
+	        <div>
+	            <input type="button" onclick="checkpaypassword2()" class="submit" value="提交"/>
+	            <a href="${app.basePath}/mobile/user/changepaypassword" class="forget">忘记密码？</a>
+	        </div>
+	        <a href="javascript:void(0)" class="quit"><</a>
+	    </div>
+	    </form>
+	</div>
 <script>
 $(function(){
-	
+	passWord();
 });
 </script>
 </body>  

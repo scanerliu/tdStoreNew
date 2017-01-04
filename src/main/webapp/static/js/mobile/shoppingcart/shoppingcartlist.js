@@ -116,6 +116,56 @@ function nextOrder(){
 	window.location.href=url;
 }
 //下订单
+/*function genernateOrder(){
+	var addressId = $("#addressId").val();
+	var needShipment = $("#needShipment").val();
+	if(addressId==""&& needShipment=="true"){
+		alert("请填写收货地址！");
+		return ;
+	}
+	var url = basePath+"/mobile/shoppingcart/order";
+	$("#confirmorder").attr("action",url);
+	$("#confirmorder").submit();
+}*/
+function preorder(){
+	var usePoints = $("#confirmorder input[name=usePoints]:checked");
+	var pay_method = $("#pay_method").val();
+	if(usePoints.length==1||pay_method==4){
+		poppaypassword();
+	}else{
+		genernateOrder();
+	}
+}
+function poppaypassword(){
+	var btn = $(".gopay .a-pay");
+	var wrap = $(".password_wrap");
+	var input = $(".password_wrap .password input");
+	var quit = $(".password_wrap .password a.quit");
+	$("body").css({overflow:"hidden"});
+	wrap.css({"display":"block"})
+	input.focus();
+}
+
+function checkpaypassword(){
+	var upaypassword = $("#upaypassword").val();
+	if(upaypassword==""||upaypassword.length<6){
+		alert("请填写支付密码，6-15位字符！");
+		return ;
+	}
+	var url = basePath+"/shoppingcart/checkpaypassword";
+	var postData = $("#paypassword").serializeArray();
+	$.post(url,postData,checkpaypasswordCallback,"text");
+}
+
+function checkpaypasswordCallback(data){
+	var result = eval("("+data+")");
+	if(result.code==1){
+		genernateOrder();
+	}else{
+		alert('支付密码错误!');
+		$("#upaypassword").val("");
+	}
+}
 function genernateOrder(){
 	var addressId = $("#addressId").val();
 	var needShipment = $("#needShipment").val();
@@ -138,4 +188,34 @@ function genernateOrder2(){
 	}
 	$("#confirmorder").attr("action",url);
 	$("#confirmorder").submit();
+}
+
+function preorder2(){
+	var usePoints = $("#confirmorder input[name=usePoints]:checked");
+	var pay_method = $("#pay_method").val();
+	if(usePoints.length==1||pay_method==4){
+		poppaypassword();
+	}else{
+		genernateOrder2();
+	}
+}
+function checkpaypassword2(){
+	var upaypassword = $("#upaypassword").val();
+	if(upaypassword==""||upaypassword.length<6){
+		alert("请填写支付密码，6-15位字符！");
+		return ;
+	}
+	var url = basePath+"/shoppingcart/checkpaypassword";
+	var postData = $("#paypassword").serializeArray();
+	$.post(url,postData,checkpaypasswordCallback2,"text");
+}
+
+function checkpaypasswordCallback2(data){
+	var result = eval("("+data+")");
+	if(result.code==1){
+		genernateOrder2();
+	}else{
+		alert('支付密码错误!');
+		$("#upaypassword").val("");
+	}
 }

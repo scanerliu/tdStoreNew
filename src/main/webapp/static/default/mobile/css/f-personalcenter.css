@@ -480,7 +480,7 @@
       color: #333; }
     .chuangke-list .member > div .man, .chuangke-list .member > div .woman {
       padding-left: .35rem;
-      position: relative; }
+      position: relative; display: inline;}
       .chuangke-list .member > div .man:before, .chuangke-list .member > div .woman:before {
         position: absolute;
         left: 0;
@@ -509,6 +509,48 @@
   .chuangke-list .member .grade3 {
     background: url("../images/grade3.png") center center no-repeat;
     background-size: .44rem .26rem; }
+    
+/*12.19改*/
+.chuangke-list .member2{    display: inline-block;
+  width: 5.5rem;
+  padding: .2rem .2rem .2rem 0.7rem;
+  margin-bottom: .2rem;
+  background: #fff url("../images/l.png") no-repeat 0.3rem 0.6rem;
+  background-size: 0.3rem 0.5rem;}
+.chuangke-list .member2 img{float:left;height:1.7rem;width:1.7rem;margin-right:.2rem;border-radius:100%}
+.chuangke-list .member2>div{float:left;position:relative;height:1.7rem;width:3rem;color:#999}
+.chuangke-list .member2>div span{display:block;font-size:.24rem;line-height:.42rem;margin-top:2px}
+.chuangke-list .member2>div .title{margin-top:.2rem}
+.chuangke-list .member2>div .membername{font-size:.3rem;color:#333;display:inline}
+.chuangke-list .member2>div .man,.chuangke-list .member2>div .woman{padding-left:.35rem;position:relative;display:inline}
+.chuangke-list .member2>div .man:before,.chuangke-list .member2>div .woman:before{position:absolute;left:.1rem;top:0;content:" ";width:.28rem;height:.28rem}
+.chuangke-list .member2>div .man:before{background:url(../images/man.png) no-repeat;background-size:.28rem .28rem}
+.chuangke-list .member2>div .woman:before{background:url(../images/woman.png) no-repeat;background-size:.28rem .28rem}
+.chuangke-list .member2 .grade1,.chuangke-list .member2 .grade2,.chuangke-list .member2 .grade3{position:absolute;right:.3rem;top:0.45rem;}
+.chuangke-list .member2 .grade1{background:url(../images/grade1.png) center center no-repeat;background-size:.44rem .26rem;}
+.chuangke-list .member2 .grade2{background:url(../images/grade2.png) center center no-repeat;background-size:.44rem .26rem}
+.chuangke-list .member2 .grade3{display: block;    background: #f1f1f1;
+  padding:.01rem .1rem;color:#989898;}
+
+.chuangke-list .member3{    display: inline-block;
+  width: 5rem;
+  padding: .2rem .2rem .2rem 1.2rem;
+  margin-bottom: .2rem;
+  background: #fff url("../images/l.png") no-repeat 0.6rem 0.6rem;
+  background-size: 0.3rem 0.5rem;}
+.chuangke-list .member3 img{float:left;height:1.7rem;width:1.7rem;margin-right:.2rem;border-radius:100%}
+.chuangke-list .member3>div{float:left;position:relative;height:1.7rem;width:2.5rem;color:#999}
+.chuangke-list .member3>div span{display:block;font-size:.24rem;line-height:.42rem;margin-top:2px}
+.chuangke-list .member3>div .title{margin-top:.2rem}
+.chuangke-list .member3>div .membername{font-size:.3rem;color:#333;display:inline}
+.chuangke-list .member3>div .man,.chuangke-list .member3>div .woman{padding-left:.35rem;position:relative;display:inline}
+.chuangke-list .member3>div .man:before,.chuangke-list .member3>div .woman:before{position:absolute;left:.1rem;top:0;content:" ";width:.28rem;height:.28rem}
+.chuangke-list .member3>div .man:before{background:url(../images/man.png) no-repeat;background-size:.28rem .28rem}
+.chuangke-list .member3>div .woman:before{background:url(../images/woman.png) no-repeat;background-size:.28rem .28rem}
+.chuangke-list .member3 .grade1,.chuangke-list .member3 .grade2,.chuangke-list .member3 .grade3{position:absolute;right:.3rem;top:0.45rem;}
+.chuangke-list .member3 .grade1{background:url(../images/grade1.png) center center no-repeat;background-size:.44rem .26rem}
+.chuangke-list .member3 .grade2{background:url(../images/grade2.png) center center no-repeat;background-size:.44rem .26rem}
+.chuangke-list .member3 .grade3{display: block;    background: #f1f1f1;color:#989898;padding:.01rem .1rem;}    
 
 /*竞选说明*/
 .jingxuan-description .banner {

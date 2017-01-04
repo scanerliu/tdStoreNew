@@ -17,11 +17,11 @@
     <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/common.css"/>
     <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/main.css"/>
     <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/index.css"/>
-    <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/swipe.css"/>
+    <link rel="stylesheet" href="${app.basePath}/static/default/mobile/css/swiper.min.css"/>
     <script src="${app.basePath}/static/js/jquery-1.12.3.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="${app.basePath}/static/js/mobile/common.js"></script>
     <script type="text/javascript" src="${app.basePath}/static/js/mobile/core.js"></script>
-    <script type="text/javascript" src="${app.basePath}/static/js/mobile/swipe.js"></script>
+    <script type="text/javascript" src="${app.basePath}/static/js/mobile/swiper.min.js"></script>
     <script src="${app.basePath}/static/js/mobile/index.js" type="text/javascript"></script>
     <script src="${app.basePath}/static/js/mobile/product/productdetail.js" type="text/javascript"></script>
 </head>
@@ -56,54 +56,30 @@
     <span>商品详情</span>
 </div>
 <!-- header_top end -->
-
-	    <div class="my_banner1">
-			<!-- ****广告轮播**** -->
-			<div class="addWrap">
-			    <div class="swipe swip2" id="mySwipe">
-			        <div class="swipe-wrap">
-			        	<#if attachmentList?? && (attachmentList?size > 0)>
-			        	<#list attachmentList as attachment>
-		                <div><a href="javascript:;"><img class="img-responsive" src="${app.basePath}${attachment.attachment!''}" alt="商品图片"/></a></div>
-		                </#list>
-		                <#else>
-		                <div><a href="javascript:;"><img class="img-responsive" src="${app.basePath}${product.imageUrl!''}" alt="商品图片"/></a></div>
-		        		</#if>
-			        </div>
-			        <script>
-			        	$(function(){
-			        	})
-			        </script>
-			    </div>
-			    <ul id="position">
-			    	<#if attachmentList?? && (attachmentList?size > 0)>
-			        	<#list attachmentList as attachment>
-			          	<li class="curr"></li>
-			            </#list>
-		            <#else>
-		                <li class="curr"></li>
-		        	</#if>
-			    </ul>
-			</div> 
-			<script type="text/javascript">
-			    var bullets = document.getElementById('position').getElementsByTagName('li');
-			    var banner = Swipe(document.getElementById('mySwipe'), {
-			        auto: 3000,
-			        continuous: true,
-			        disableScroll:false,
-			        callback: function(pos) {
-			            var i = bullets.length;
-			            while (i--) {
-			              bullets[i].className = ' ';
-			            }
-			            bullets[pos].className = 'cur';
-			        }
-			    });
-			</script>
-			<!-- ****广告轮播-结束**** -->
-		</div>
 <!-- Center Start -->
 <section class="container">
+	<div class="swiper-container">
+	        <div class="swiper-wrapper">
+	        	<#if attachmentList?? && (attachmentList?size > 0)>
+	        	<#list attachmentList as attachment>
+                <div class="swiper-slide"><img class="img-responsive" src="${app.basePath}${attachment.attachment!''}" alt="商品图片"/></div>
+                </#list>
+                <#else>
+                <div class="swiper-slide"><img class="img-responsive" src="${app.basePath}${product.imageUrl!''}" alt="商品图片"/></div>
+        		</#if>
+	        </div>
+	        <!-- Add Pagination -->
+	        <div class="swiper-pagination"></div>
+	    </div>
+	    <script>
+		$(document).ready(function(){
+		    var swiper = new Swiper('.swiper-container', {
+		            pagination: '.swiper-pagination',
+		            paginationClickable: true
+		        });
+		    car();
+		});
+		</script>
     <div class="detail2">
         <p>${product.name!''}</p>
         <p>${product.title!''}</p>
@@ -116,6 +92,11 @@
 $(document).ready(function(){
     timer();
     setInterval("timer()",1000);
+    var swiper = new Swiper('.swiper-container', {
+            pagination: '.swiper-pagination',
+            paginationClickable: true
+        });
+    car();
 });
 
 function checkTime(i)  
@@ -249,6 +230,14 @@ function timer()
         <input type="hidden" id="pointpercent" value="${integralexchangerate!'1000'}">
     </div>
     <div class="detail4">
+        <h3>图文详情</h3>
+        <p>${productdesc.description!''}</p>
+        <h3>包装配送</h3>
+        <p>${delivedesc.description!''}</p>
+        <h3>售后服务</h3>
+        <p>${servicedesc.description!''}</p>
+    </div>
+    <div class="detail4">
         <section>
             <label class="fl">运费</label>
             <aside class="fl">${product.postage!'0'}元</aside>
@@ -263,10 +252,7 @@ function timer()
         </section>
     </div>
     <div class="detail5">
-        <a href="${app.basePath}/mobile/product/describe/1/${product.id}" title="">图文详情</a>
         <a href="${app.basePath}/mobile/product/comment/${product.id}" title="">评价晒单</a>
-        <a href="${app.basePath}/mobile/product/describe/2/${product.id}" title="">包装与配送</a>
-        <a href="${app.basePath}/mobile/product/describe/3/${product.id}" title="">售后服务</a>
     </div>
     <#if recommendList??>
     <div class="detail6">

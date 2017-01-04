@@ -415,7 +415,41 @@ public class MUserController extends BaseController {
 	public String changePassword(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		return "/mobile/user/changePassword";		
 	}
+	/*
+	 * 修改密码
+	 */
+	@RequestMapping("/changepaypassword")
+	public String changepaypassword(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		return "/mobile/user/changepaypassword";		
+	}
 	
+	// 保存修改密码
+	@RequestMapping(value="/savepaypassword", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> savepaypassword(String oldPassword, String valideCode, String newPassword, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>();
+		String changePasswordValidCode = (String) request.getSession().getAttribute("changePasswordValidCode");
+		if(changePasswordValidCode == null || !valideCode.equals(changePasswordValidCode)){
+			res.put("info", "验证码错误！");
+			res.put("status", "n");
+			request.getSession().removeAttribute("changePasswordValidCode");
+			return res;
+		}
+		
+		TdUser currentUser = this.getCurrentUser();
+		currentUser = tdUserService.findOne(currentUser.getUid());
+		
+		Date now = new Date();
+		currentUser.setUpdateBy(currentUser.getUid());
+		currentUser.setUpdateTime(now);
+		currentUser.setCreateTime(now);
+		currentUser.setUpaypassword(newPassword);
+    	tdUserService.saveUserPayPassword(currentUser);
+    	res.put("info", "密码修改成功！");
+		res.put("status", "y");
+		request.getSession().removeAttribute("changePasswordValidCode");
+		return res;
+	}
 	/*
 	 * 修改手机号
 	 */
@@ -1563,10 +1597,50 @@ public class MUserController extends BaseController {
 	/*
 	 * 下级会员
 	 */
-	@RequestMapping("/downUserList")
+	/*@RequestMapping("/downUserList")
 	public String downThreeUserList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		modelMap.addAttribute("isTheFirstTime", "yes");
 		modelMap.addAttribute("pageNo", "1");
+		return "/mobile/user/downUserList";	
+	}*/
+	
+	/*
+	 * 下级会员
+	 */
+	@RequestMapping("/downUserList")
+	public String downThreeUserList(TdUserSearchCriteria sc, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		TdUser currentUser = this.getCurrentUser();
+		sc.setParentId(currentUser.getUid());
+		sc.setFlag(false);
+		//总会员数
+		Integer subcount = 0;
+		//一级会员
+		List<TdUser> subList = tdUserService.findBySearchCriteria(sc);
+		//二级会员
+		if(null!=subList && subList.size()>0){
+			subcount += subList.size();
+			for(TdUser subu : subList){
+				if(null!=subu && null!=subu.getUid()){
+					sc.setParentId(subu.getUid());
+					List<TdUser> sub2List = tdUserService.findBySearchCriteria(sc);
+					//三级会员
+					if(null!=sub2List && sub2List.size()>0){
+						subcount += sub2List.size();
+						for(TdUser sub2u : sub2List){
+							if(null!=sub2u && null!=sub2u.getUid()){
+								sc.setParentId(sub2u.getUid());
+								List<TdUser> sub3List = tdUserService.findBySearchCriteria(sc);
+								subcount += sub3List.size();
+								sub2u.setChildren(sub3List);
+							}
+						}
+					}
+					subu.setChildren(sub2List);
+				}
+			}
+		}
+		modelMap.addAttribute("subList", subList);
+		modelMap.addAttribute("subcount", subcount);
 		return "/mobile/user/downUserList";	
 	}
 	

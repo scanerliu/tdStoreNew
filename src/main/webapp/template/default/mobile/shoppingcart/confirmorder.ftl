@@ -101,7 +101,7 @@
 	    <ul class="payinfo">
 	        <li class="sli">
 	            <span>支付方式</span>
-	            <select name="paymentId" class="fr" style="height:100%;border:none;appearance:none;-webkit-appearance:none;font-size:.3rem;color:#999;background:#fff;">
+	            <select name="paymentId" id="pay_method" class="fr" style="height:100%;border:none;appearance:none;-webkit-appearance:none;font-size:.3rem;color:#999;background:#fff;">
 	                <#if shoppingcart.canUserAccount==true>
 	            	<option value="4">钱包余额支付</option>
 	            	</#if>
@@ -158,14 +158,27 @@
 	<footer>
 	    <div class="gopay">
 	        <span class="totalprice">总计：<font color="red" id="totalAmountdv">￥${shoppingcart.totalAmount!''}</font></span>
-	        <a href="javascript:;"  onclick="genernateOrder()" class="a-pay" title="">提交订单</a>
+	        <a href="javascript:;"  onclick="preorder()" class="a-pay" title="">提交订单</a>
 	    </div>
 	    <span class="footclear"></span>
 	</footer>
 	<!-- Footer End -->
+	<div class="password_wrap">
+		<form id="paypassword" method="post" action ="">
+	    <div class="password">
+	        <h3>输入支付密码</h3>
+	        <input type="password" id="upaypassword" name="paypassword" class="pass"/>
+	        <div>
+	            <input type="button" onclick="checkpaypassword()" class="submit" value="提交"/>
+	            <a href="${app.basePath}/mobile/user/changepaypassword" class="forget">忘记密码？</a>
+	        </div>
+	        <a href="javascript:void(0)" class="quit"><</a>
+	    </div>
+	    </form>
+	</div>
 <script>
 $(function(){
-	
+	passWord();
 });
 </script>
 </body>  

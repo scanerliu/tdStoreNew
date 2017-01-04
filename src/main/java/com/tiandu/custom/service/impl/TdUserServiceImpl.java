@@ -259,6 +259,14 @@ public class TdUserServiceImpl implements TdUserService {
 		user.setUpassword(password);
 		return userMapper.saveUserPassword(user);
 	}
+	
+	@Override
+	public Integer saveUserPayPassword(TdUser user) {
+		String password = WebUtils.generatePassword(user.getUname(), user.getUpaypassword());
+		user.setUpaypassword(password);
+		return userMapper.saveUserPayPassword(user);
+	}
+
 	@Override
 	public Integer saveUserStatus(TdUser user) {
 		return userMapper.saveUserStatus(user);

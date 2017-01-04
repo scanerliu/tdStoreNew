@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tiandu.common.controller.BaseController;
 import com.tiandu.common.utils.ConstantsUtils;
+import com.tiandu.common.utils.WebUtils;
 import com.tiandu.custom.entity.TdAgent;
 import com.tiandu.custom.entity.TdBrancheCompany;
 import com.tiandu.custom.entity.TdUser;
@@ -790,5 +791,36 @@ public class CShoppingcartController extends BaseController {
 			}
 		}
 		return "/client/shoppingCart/selectAddressAdd";
+	}
+	
+	/**
+	 * 验证支付密码
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/checkpaypassword", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> checkpaypassword(String paypassword, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> res = new HashMap<String,String>(); 
+		if(null!=paypassword){
+			try {
+				TdUser currUser = this.getCurrentUser();
+				if(WebUtils.generatePassword(currUser.getUname(), paypassword).equals(currUser.getUpaypassword())){
+					res.put("code", "1");
+					return res;
+				}else{
+					res.put("code", "0");
+					return res;
+				}
+			}catch (Exception e) {
+				logger.error("验证支付密码失败错误信息:"+e);
+				res.put("code", "0");
+				return res;
+			}
+		}else{
+			res.put("code", "0");
+			return res;
+		}
 	}
 }

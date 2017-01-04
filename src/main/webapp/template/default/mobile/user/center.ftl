@@ -113,6 +113,11 @@
         <label>修改密码</label>
         <i class="icon-next"></i>
       </a>
+      <a href="${app.basePath}/mobile/user/changepaypassword" title="修改支付密码">
+        <i class="icon bg_icon_2"></i>
+        <label>修改支付密码</label>
+        <i class="icon-next"></i>
+      </a>
       <a href="${app.basePath}/mobile/user/recommendPeople" title="推荐人">
         <i class="icon bg_icon_3"></i>
         <label>推荐人</label>

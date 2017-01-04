@@ -210,6 +210,28 @@ public class MProductController extends BaseController {
 			Integer points = product.getPrice().multiply(new BigDecimal(integralexchangerate)).setScale(0, BigDecimal.ROUND_FLOOR).intValue();
 			product.setExchangepoints(points);
 		}
+		//商品详情
+		TdProductDescriptionCriteria dsc = new TdProductDescriptionCriteria();
+		dsc.setProductId(id);
+		List<TdProductDescription>  descList  = tdProductDescriptionService.findBySearchCriteria(dsc);
+		//图文说明
+		TdProductDescription productdesc = new TdProductDescription();
+		//配送说明
+		TdProductDescription delivedesc = new TdProductDescription();
+		//售后说明
+		TdProductDescription servicedesc = new TdProductDescription();
+		for(TdProductDescription desc : descList){
+			if(Byte.valueOf("1").equals(desc.getType())){
+				productdesc = desc;
+			}else if(Byte.valueOf("2").equals(desc.getType())){
+				delivedesc = desc;
+			}else if(Byte.valueOf("3").equals(desc.getType())){
+				servicedesc = desc;
+			}
+		}
+		map.addAttribute("productdesc", productdesc);
+		map.addAttribute("delivedesc", delivedesc);
+		map.addAttribute("servicedesc", servicedesc);
 		//推荐商品
 		TdProductCriteria sc = new TdProductCriteria();
 		sc.setKind(ConstantsUtils.PRODUCT_KIND_COMMON);

@@ -40,7 +40,21 @@ Rich.pageSize = function ()
 
 Rich.pageSize();//页面计算 rem
 
-
+function tree(){
+	$('.inactive').click(function(){
+		if($(this).siblings('ul').css('display')=='none'){
+			$(this).siblings('ul').slideDown().children('li');
+			if($(this).parents('li').siblings('li').children('ul').css('display')=='block'){
+				$(this).parents('li').siblings('li').children('ul').slideUp();
+			}
+		}else{
+			//控制自身菜单下子菜单隐藏
+			$(this).siblings('ul').slideUp();
+			//控制自身菜单下子菜单隐藏
+			$(this).siblings('ul').children('li').children('ul').slideUp();
+		}
+	})
+}
 
 
 

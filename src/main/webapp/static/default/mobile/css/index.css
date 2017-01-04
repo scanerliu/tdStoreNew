@@ -1265,6 +1265,9 @@ display:block;
 .detail4 section:nth-child(2) aside span{
 	color:#ff7700;
 }
+.detail4 h3{padding: .2rem 0;
+	border-bottom: 1px solid #ccc;
+}
 .detail5{
 	padding:0;
 }

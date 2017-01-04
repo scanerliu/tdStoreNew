@@ -35,8 +35,46 @@ Rich.pageSize = function ()
 // 		oHtml.style.height = win_hi + 'px';
 // 	};
 // }
+//创客联盟 密码校验
+function passWord(){
+	var btn = $(".gopay .a-pay");
+	var wrap = $(".password_wrap");
+	var input = $(".password_wrap .password input");
+	var quit = $(".password_wrap .password a.quit");
+	btn.click(function(){
+		$("body").css({overflow:"hidden"});
+		wrap.css({"display":"block"})
+		input.focus();
+	});
+	quit.click(function(){
+		$("body").css({overflow:"initial"});
+		wrap.css({"display":"none"})
+	})
+}
+//商品详情页 轮播放大
+function car(){
+	var img = $(".container .swiper-container .swiper-wrapper .swiper-slide img");
+	img.click(function(){
+		$(this).css({"width":"500px","height":"400"})
+	})
+}
 
-
+//创客联盟 密码校验
+function passWord(){
+	var btn = $(".gopay .a-pay");
+	var wrap = $(".password_wrap");
+	var input = $(".password_wrap .password input");
+	var quit = $(".password_wrap .password a.quit");
+/*	btn.click(function(){
+		$("body").css({overflow:"hidden"});
+		wrap.css({"display":"block"})
+		input.focus();
+	});*/
+	quit.click(function(){
+		$("body").css({overflow:"initial"});
+		wrap.css({"display":"none"})
+	})
+}
 
 
 

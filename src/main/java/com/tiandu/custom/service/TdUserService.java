@@ -57,6 +57,12 @@ public interface TdUserService {
 	 */
 	public Integer saveUserPassword(TdUser user);
 	/**
+	 * 保存用户支付密码
+	 * @param user
+	 * @return
+	 */
+	public Integer saveUserPayPassword(TdUser user);
+	/**
 	 * 保存用户状态
 	 * @param user
 	 * @return

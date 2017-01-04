@@ -24,6 +24,8 @@ public class TdUser {
     private String uname;
 
     private String upassword;
+    
+    private String upaypassword;
 
     private String jointId;
 
@@ -111,7 +113,7 @@ public class TdUser {
 	/**
 	 * 下级集合
 	 */
-	//private List<TdUser> children;
+	private List<TdUser> children;
 	/**
 	 * 下级会员级数
 	 */
@@ -145,7 +147,15 @@ public class TdUser {
         this.upassword = upassword == null ? null : upassword.trim();
     }
 
-    public String getJointId() {
+    public String getUpaypassword() {
+		return upaypassword;
+	}
+
+	public void setUpaypassword(String upaypassword) {
+		this.upaypassword = upaypassword == null ? null : upaypassword.trim();
+	}
+
+	public String getJointId() {
         return jointId;
     }
 
@@ -391,7 +401,7 @@ public class TdUser {
 
 	public void setParent(TdUser parent) {
 		this.parent = parent;
-	}
+	}*/
 
 	public List<TdUser> getChildren() {
 		return children;
@@ -399,7 +409,7 @@ public class TdUser {
 
 	public void setChildren(List<TdUser> children) {
 		this.children = children;
-	}*/
+	}
 
 	public Integer getUmlevel() {
 		return umlevel;

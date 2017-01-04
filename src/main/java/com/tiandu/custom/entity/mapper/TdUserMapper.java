@@ -29,6 +29,7 @@ public interface TdUserMapper {
     public TdUser selectByPrimaryKeyWithRoles(Integer uid);
     
     public int saveUserPassword(TdUser record);
+    public int saveUserPayPassword(TdUser record);
     public int saveUserStatus(TdUser record);
     
     public TdUser selectDetailByPrimaryKey(Integer uid);
