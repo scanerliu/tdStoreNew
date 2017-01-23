@@ -658,6 +658,13 @@
         	#{item,jdbcType=INTEGER}
         </foreach>  
   </update>  
+  <update id="deleteBatch" parameterType="Map">    
+        delete from td_product
+        where id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+        	#{item,jdbcType=INTEGER}
+        </foreach>  
+  </update>  
   
   <update id="updateStock" parameterType="com.tiandu.product.entity.TdProduct" >
     update td_product

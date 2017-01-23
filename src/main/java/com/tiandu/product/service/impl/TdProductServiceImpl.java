@@ -77,7 +77,7 @@ public class TdProductServiceImpl implements TdProductService{
 
 	@Override
 	public Integer batchOperProducts(Integer type, String productIds) {
-		if(null!=type && type>0 && type<13 && StringUtils.isNotEmpty(productIds)){
+		if(null!=type && type>0 && type<14 && StringUtils.isNotEmpty(productIds)){
 			String[] pids = productIds.split(",");
 			List<Integer> idlist = new ArrayList<Integer>();
 			if(pids.length>0){
@@ -88,7 +88,11 @@ public class TdProductServiceImpl implements TdProductService{
 				Map<String,Object> map = new HashMap<String,Object>();
 				map.put("optype", type);
 				map.put("ids", idlist);
-				return tdProductMapper.updateBatch(map);
+				if(type==13){
+					return tdProductMapper.deleteBatch(map);
+				}else{
+					return tdProductMapper.updateBatch(map);
+				}
 			}
 			
 			return 0;

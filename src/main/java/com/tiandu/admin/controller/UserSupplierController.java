@@ -166,7 +166,7 @@ public class UserSupplierController extends BaseController {
 		List<TdDrawapply> drawapplyList = tdDrawapplyService.findBySearchCriteria(sc);
 	    modelMap.addAttribute("drawapplyList", drawapplyList);
 	    modelMap.addAttribute("sc", sc) ;
-		return "/admin/userSupplier/drawapplyListBody";
+		return "/admin/userSupplier/drawapplyListbody";
 	}
 	
 	@RequestMapping("/editdrawapply")

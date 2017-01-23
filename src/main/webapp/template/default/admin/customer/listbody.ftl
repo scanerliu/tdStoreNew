@@ -60,6 +60,8 @@
 	<input type="hidden" name="supplierType" value="${sc.supplierType!''}"/>
 	<input type="hidden" name="agent" value="${sc.agent?c}"/>
 	<input type="hidden" name="branch" value="${sc.branch?c}"/>
+	<input type="hidden" name="startTime" value="<#if sc.startTime??>${sc.startTime?string('yyyy-MM-dd')}</#if>">
+	<input type="hidden" name="endTime" value="<#if sc.endTime??>${sc.endTime?string('yyyy-MM-dd')}</#if>">
 </div>
 </div>
 <div class="btn_wrap_fixed">

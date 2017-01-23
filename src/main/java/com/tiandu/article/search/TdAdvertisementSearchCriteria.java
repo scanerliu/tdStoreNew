@@ -21,6 +21,8 @@ public class TdAdvertisementSearchCriteria extends SearchCriteria{
     private Integer floorId;
     
     private Integer createBy;
+    
+    private String keyword;
 
 	public Byte getStatus() {
 		return status;
@@ -85,5 +87,14 @@ public class TdAdvertisementSearchCriteria extends SearchCriteria{
 	public void setFloorId(Integer floorId) {
 		this.floorId = floorId;
 	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+	
 	
 }

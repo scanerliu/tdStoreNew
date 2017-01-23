@@ -284,6 +284,8 @@ function timer()
     <span class="footclear"></span>
 </footer>
 <!-- Footer End -->
+<!--遮罩层-->
+<div class="mask" style="width:100%;height:100%;position: fixed;background: rgba(0,0,0,.8);z-index: 100;top:0;left:0;display: none;"></div>
 <script>
 	var __skuJsons = ${productjson};
 	__integralexchangerate = ${integralexchangerate!'1000'};

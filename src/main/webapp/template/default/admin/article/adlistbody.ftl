@@ -1,24 +1,6 @@
 <#import "/common/app.ftl" as app>
-<div class="subnav"><div class="content_menu ib_a blue line_x"><a data-height="190" data-width="450" data-id="add" data-title="添加广告" href="javascript:;" class="add fb J_showdialog" onclick="editAd(0)"><em>添加广告</em></a>&#12288;</div></div>
 <div class="pad_lr_10">
 <div class="J_tablelist table_list">
-	<div id="district">
-		<select style="width: 100px;" name="adsId" onchange="searchAd(false)">
-		    <option value="">请选择类别...</option>
-		    <#if adsenseList??>
-		    <#list adsenseList as ads>
-		    		<#if branch?? && branch==true>
-	        			<#if ads.id==3||ads.id==4>
-	        			<option value="${ads.id?c}" <#if ad?? && ad.adsId == ads.id>selected</#if>>${ads.name!''}</option>
-	        			</#if>
-        			<#else>
-		    			<option value="${ads.id?c}" <#if sc.adsId?? && sc.adsId==ads.id>selected="selected"</#if>>${ads.name!''}</option>
-		    		</#if>
-		    </#list>
-		    </#if>
-		</select>
-    </div>
-    
 <table width="100%" cellspacing="0">
 	<thead>
 		<tr>
@@ -64,6 +46,8 @@
 </table>
 </div>
 <div class="btn_wrap_fixed">
+<input type="hidden" name="keyword" value="${sc.keyword!''}"/>
+<input type="hidden" name="adsId" value="${sc.adsId!''}"/>
 </div>
 </div>
 <div class="btn_wrap_fixed">

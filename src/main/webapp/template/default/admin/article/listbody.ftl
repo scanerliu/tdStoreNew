@@ -1,8 +1,4 @@
 <#import "/common/app.ftl" as app>
-<div class="subnav"><div class="content_menu ib_a blue line_x">
-	<a data-height="190" data-width="450" data-id="add" data-title="添加资讯" href="javascript:;" class="add fb J_showdialog" onclick="editArticle(0)"><em>添加资讯</em></a>&#12288;
-	<input type="button" value="批量删除" onclick="batchDelete()">&nbsp;&nbsp;&nbsp;
-</div></div>
 <div class="pad_lr_10">
 <div class="J_tablelist table_list">
 <table width="100%" cellspacing="0">
@@ -51,6 +47,7 @@
 </table>
 </div>
 <div class="btn_wrap_fixed">
+<input type="hidden" name="keyword" value="${sc.keyword!''}"/>
 </div>
 </div>
 <div class="btn_wrap_fixed">

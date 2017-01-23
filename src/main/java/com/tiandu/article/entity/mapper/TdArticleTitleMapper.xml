@@ -201,6 +201,9 @@
     <if test="uid != null" >
         and uid=#{uid,jdbcType=INTEGER}
     </if>
+    <if test="keyword != null and keyword !=''" >
+        and (title like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%') or keyword like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%') )
+    </if>
   </select>
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.article.search.TdArticleTitleSearchCriteria" >
     select 
@@ -218,6 +221,9 @@
     </if>
     <if test="status != null" >
         and status=#{status,jdbcType=TINYINT}
+    </if>
+    <if test="keyword != null and keyword !=''" >
+        and (title like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%') or keyword like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%') )
     </if>
     order by sort asc
   </select>

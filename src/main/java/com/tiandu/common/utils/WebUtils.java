@@ -45,7 +45,7 @@ public class WebUtils {
 	
 	public static Boolean isAjaxRequest(HttpServletRequest request){
 		String requestType = request.getHeader("X-Requested-With");
-		if(StringUtils.isNotEmpty(requestType)){
+		if(StringUtils.isNotBlank(requestType) && requestType.equalsIgnoreCase("XMLHttpRequest")){
 			return true;
 		}
 		return false;

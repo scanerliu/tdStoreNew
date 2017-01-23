@@ -183,6 +183,12 @@
     <if test="uverification != null" >
         and a.uverification =#{uverification,jdbcType=TINYINT}
     </if>
+    <if test="startTime != null" >
+        and a.create_time <![CDATA[ >= ]]> #{startTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endTime != null" >
+        and a.create_time <![CDATA[ < ]]> #{endTime,jdbcType=TIMESTAMP}
+    </if>
     <if test="uname != null and uname !=''" >
         and a.uname like CONCAT('%',#{uname,jdbcType=VARCHAR},'%')
     </if>
@@ -227,6 +233,12 @@
     </if>
     <if test="uverification != null" >
         and a.uverification =#{uverification,jdbcType=TINYINT}
+    </if>
+    <if test="startTime != null" >
+        and a.create_time <![CDATA[ >= ]]> #{startTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endTime != null" >
+        and a.create_time <![CDATA[ < ]]> #{endTime,jdbcType=TIMESTAMP}
     </if>
     <if test="uname != null and uname !=''" >
         and a.uname like CONCAT('%',#{uname,jdbcType=VARCHAR},'%')

@@ -27,6 +27,12 @@ public interface TdProductMapper {
      * @return
      */
     Integer updateBatch(Map map);
+    /**
+     * 批量删除
+     * @param map
+     * @return
+     */
+    Integer deleteBatch(Map map);
 
 	int updateStock(TdProduct product);
 }

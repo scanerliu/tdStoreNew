@@ -13,10 +13,10 @@
 		<tr>
 			<td>
 				<div class="explain_col">
-					<!--发布时间：
-					<input type="text" value="" size="12" class="date" id="time_start" name="time_start">
-					-<input type="text" value="" size="12" class="date" id="time_end" name="time_end">
-					&nbsp;&nbsp;-->
+					注册时间：
+					<input type="text" value="" style="width:100px;" size="12" class="easyui-datebox"  id="startTime" name="startTime">
+						-<input type="text" value="" style="width:100px;" size="12" class="easyui-datebox" id="endTime" name="endTime">
+					&nbsp;&nbsp;
 					<select name="ustatus" class="J_cate_select mr10">
 						<option value="">-会员状态-</option>
 						<option value="1">启用</option>

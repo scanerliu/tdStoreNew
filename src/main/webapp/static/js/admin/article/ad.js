@@ -92,7 +92,7 @@ function searchAd(t){
 	var loadData = null;
 	
 	if(t){
-		loadData = null;
+		loadData = $("#searchform").serializeArray();
 	}else{
 		loadData = $("#adform").serializeArray();
 	}

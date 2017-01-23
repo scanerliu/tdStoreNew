@@ -244,6 +244,9 @@
       <if test="endTime != null" >
        	and  a.end_time <![CDATA[>=]]> #{endTime,jdbcType=TIMESTAMP}
       </if>
+      <if test="keyword != null and keyword !=''" >
+        and a.title like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%')
+      </if>
   </select>
   
   <select id="findBySearchCriteria" resultMap="BaseResultMap" parameterType="com.tiandu.article.search.TdAdvertisementSearchCriteria">
@@ -276,6 +279,9 @@
       </if>
       <if test="endTime != null" >
        	and  a.end_time <![CDATA[>=]]> #{endTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="keyword != null and keyword !=''" >
+        and a.title like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%')
       </if>
       <choose>
 	      <when test="orderBy != null and orderBy ==1">

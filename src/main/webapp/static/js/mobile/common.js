@@ -53,9 +53,27 @@ function passWord(){
 }
 //商品详情页 轮播放大
 function car(){
+	var wrap = $(".swiper-container");
 	var img = $(".container .swiper-container .swiper-wrapper .swiper-slide img");
+	var mask = $(".mask");
 	img.click(function(){
-		$(this).css({"width":"500px","height":"400"})
+		if(mask.css("display")=="none"){
+			//console.log(0)
+			$("body").css({"overflow":"hidden","background":"rgba(0,0,0,.8)"});
+			wrap.css({"height":"6rem","position":"fixed","top":"2rem","z-index":"105"});
+			mask.show();
+		}
+		else{
+			//console.log(1)
+			$("body").css({"overflow":"visible","background":"#f2f2f2"});
+			wrap.css({"height":"100%","position":"relative","top":"0","z-index":"105"});
+			mask.hide();
+		}
+	})
+	mask.click(function(){
+		$("body").css({"overflow":"visible","background":"#f2f2f2"});
+		wrap.css({"height":"100%","position":"relative","top":"0","z-index":"105"});
+		mask.hide();
 	})
 }
 

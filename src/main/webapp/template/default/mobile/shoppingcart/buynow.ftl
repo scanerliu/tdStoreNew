@@ -132,7 +132,7 @@
 	        </style>
 	        <li class="sli">
 	            <span>支付方式</span>
-	            <select name="paymentId" class="fr" style="height:100%;border:none;appearance:none;-webkit-appearance:none;font-size:.3rem;color:#999; background:#fff;">
+	            <select name="paymentId" id="pay_method" class="fr" style="height:100%;border:none;appearance:none;-webkit-appearance:none;font-size:.3rem;color:#999; background:#fff;">
 	                <#if shoppingcart.canUserAccount==true>
 	            	<option value="4">钱包余额支付</option>
 	            	</#if>

@@ -147,6 +147,17 @@ public class AdSenseController extends BaseController{
 	@RequestMapping(value="/advert/list")
 	public String advertList(HttpServletRequest req,ModelMap map)
 	{
+		TdUser currentUser = this.getCurrentUser();
+		TdBrancheCompanySearchCriteria bsc = new TdBrancheCompanySearchCriteria();
+		bsc.setFlag(false);
+		bsc.setUid(currentUser.getUid());
+		List<TdBrancheCompany> bclist = tdBrancheCompanyService.findBySearchCriteria(bsc);
+		if(bclist != null && bclist.size() == 1){
+			map.addAttribute("branch", true);
+		}
+		TdAdsenseSearchCriteria criteria = new TdAdsenseSearchCriteria();
+		criteria.setFlag(false);
+		map.addAttribute("adsenseList", tdAdsenseService.findBySearchCriteria(criteria));
 		return "/admin/article/adlist";
 	}
 	
@@ -165,10 +176,6 @@ public class AdSenseController extends BaseController{
 		
 		map.addAttribute("adlist", tdAdvertService.findBySearchCriteria(sc));
 		map.addAttribute("sc", sc);
-		
-		TdAdsenseSearchCriteria criteria = new TdAdsenseSearchCriteria();
-		criteria.setFlag(false);
-		map.addAttribute("adsenseList", tdAdsenseService.findBySearchCriteria(criteria));
 		
 		return "/admin/article/adlistbody";
 	}

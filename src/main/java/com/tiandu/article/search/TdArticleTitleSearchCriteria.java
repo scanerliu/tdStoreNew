@@ -6,6 +6,7 @@ public class TdArticleTitleSearchCriteria extends SearchCriteria {
 	private Integer cid;
 	private Byte status;
 	private Integer regionId;
+	private String keyword;
 	
 	private Integer uid;
 	
@@ -49,6 +50,14 @@ public class TdArticleTitleSearchCriteria extends SearchCriteria {
 
 	public void setBranch(Boolean branch) {
 		this.branch = branch;
+	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
 	
 }

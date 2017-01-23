@@ -1,5 +1,7 @@
 package com.tiandu.custom.search;
 
+import java.util.Date;
+
 import com.tiandu.common.search.SearchCriteria;
 
 public class TdUserSearchCriteria extends SearchCriteria {
@@ -30,6 +32,9 @@ public class TdUserSearchCriteria extends SearchCriteria {
 	private Integer uprovinceId; // 所属省id
 	
 	private Integer clevelType;	//下属类别查询，1-一级下属，2-二级下属，3-三级下属
+	
+	private Date startTime;
+	private Date endTime;
 
 	public String getUname() {
 		return uname;
@@ -166,5 +171,22 @@ public class TdUserSearchCriteria extends SearchCriteria {
 	public void setUgenter(Byte ugenter) {
 		this.ugenter = ugenter;
 	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+	
 	
 }

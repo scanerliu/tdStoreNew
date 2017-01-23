@@ -2,7 +2,7 @@ function searchArticle(f){
 	var url = basePath+"/admin/article/search";
 	var loadData = "";
 	if(f){
-		loadData = null;
+		loadData = $("#searchform").serializeArray();
 	}else{
 		loadData = $("#articlelistform").serializeArray();
 	}

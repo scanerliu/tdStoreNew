@@ -652,7 +652,7 @@ public class TdProductContrller extends BaseController{
 	public Map<String,String> batchOperProducts(Integer type, String productIds, HttpServletRequest request, HttpServletResponse response)
 	{
 		Map<String, String> res = new HashMap<>();
-		if(null!=type && type>0 && type<13 && StringUtils.isNotEmpty(productIds)){
+		if(null!=type && type>0 && type<14 && StringUtils.isNotEmpty(productIds)){
 			int count = tdProductService.batchOperProducts(type,productIds);
 			if(count>0){
 				res.put("code", "1");
